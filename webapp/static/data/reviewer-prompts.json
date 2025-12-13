@@ -1,0 +1,317 @@
+{
+  "$schema": "../schemas/reviewer-prompts.schema.json",
+  "version": "1.0.0",
+  "source": "AIHSR Risk Reference Tool v1.5 (Tamiko Eto)",
+  "lastUpdated": "2025-09-02",
+  "reviewerPrompts": {
+    "unfair-discrimination-1.1": {
+      "shortName": "Biased Results or Misrepresentation",
+      "prompts": [
+        {
+          "text": "Please report the demographics of your training dataset and note any known gaps or limitations",
+          "phases": ["phase-1"]
+        },
+        {
+          "text": "Please describe how you will evaluate potential bias in the dataset before model training",
+          "phases": ["phase-1"]
+        },
+        {
+          "text": "Your training data may be biased. Please add your plan for checking and reducing bias so that no group is unfairly treated",
+          "phases": ["phase-2", "phase-3"]
+        },
+        {
+          "text": "Please explain how you will check that AI does not unfairly harm or exclude marginalized groups",
+          "phases": ["phase-3"]
+        }
+      ]
+    },
+    "toxic-content-1.2": {
+      "shortName": "Harmful Content Exposure",
+      "prompts": [
+        {
+          "text": "Please describe what safeguards are in place to ensure participants will not be exposed to harmful, offensive, or distressing AI-generated content during the study",
+          "phases": ["phase-2", "phase-3"]
+        },
+        {
+          "text": "If participants are accidentally exposed to inappropriate or toxic material, what immediate protections (e.g., withdrawal, reporting, counseling referral) will be provided?",
+          "phases": ["phase-2", "phase-3"]
+        }
+      ]
+    },
+    "unequal-performance-1.3": {
+      "shortName": "Inequity or Fairness",
+      "prompts": [
+        {
+          "text": "Please describe how you will test your model on new and diverse datasets beyond those used in training",
+          "phases": ["phase-2"]
+        },
+        {
+          "text": "Please describe your strategy for bias evaluation and fairness testing across subgroups (e.g., race, gender, age)",
+          "phases": ["phase-2"]
+        },
+        {
+          "text": "Please report training data demographics and known limits of the dataset",
+          "phases": ["phase-2", "phase-3"]
+        },
+        {
+          "text": "Please add subgroup analysis or fairness checks in your prediction study",
+          "phases": ["phase-2", "phase-3"]
+        },
+        {
+          "text": "Please describe your plan for ongoing monitoring of AI performance after deployment, including how you will detect performance drift, new biases, or unintended harms over time",
+          "phases": ["phase-3"]
+        },
+        {
+          "text": "Please describe your plan for ongoing fairness evaluations to ensure the tool continues to perform equitably across subgroups",
+          "phases": ["phase-3"]
+        },
+        {
+          "text": "Please describe how you will make sure subgroups are not at greater risk (e.g., checking for bias in your dataset)",
+          "phases": ["phase-3"]
+        }
+      ]
+    },
+    "privacy-breach-2.1": {
+      "shortName": "Privacy or Confidentiality Breach",
+      "prompts": [
+        {
+          "text": "Please describe your process of de-identification to reduce re-identification risk",
+          "phases": ["phase-1"]
+        },
+        {
+          "text": "Please describe your approach to ensure secondary data use complies with privacy requirements and participant consent limitations",
+          "phases": ["phase-1"]
+        },
+        {
+          "text": "There is a re-identification risk in AI prompts/embeddings. Please describe how you will reduce this risk",
+          "phases": ["phase-1", "phase-2", "phase-3"]
+        },
+        {
+          "text": "Please explain what de-identification or aggregation methods you will use to protect identities",
+          "phases": ["phase-1", "phase-2", "phase-3"]
+        },
+        {
+          "text": "AI can expose sensitive personal data. Please add a plan to prevent this",
+          "phases": ["phase-1", "phase-2", "phase-3"]
+        },
+        {
+          "text": "Please describe how patient privacy will be maintained during real-world use, including any protections against re-identification or unintended inference",
+          "phases": ["phase-3"]
+        }
+      ]
+    },
+    "security-vulnerabilities-2.2": {
+      "shortName": "Data Insecurity",
+      "prompts": [
+        {
+          "text": "Please outline how the dataset will be secured to prevent unauthorized access or breaches",
+          "phases": ["phase-1"]
+        },
+        {
+          "text": "Please explain how study data and AI system access will be protected against unauthorized use or cyberattacks. For example, who will be responsible for monitoring for breaches?",
+          "phases": ["phase-2", "phase-3"]
+        },
+        {
+          "text": "If the AI system is compromised, what corrective steps are in place to stop the attack, notify participants, and prevent harm?",
+          "phases": ["phase-2", "phase-3"]
+        }
+      ]
+    },
+    "false-information-3.1": {
+      "shortName": "Inaccurate Findings",
+      "prompts": [
+        {
+          "text": "Please explain how your project ensures real-world relevance (For example, that correlations you find are linked to meaningful clinical associations, not just statistical patterns)",
+          "phases": ["phase-1"]
+        },
+        {
+          "text": "Your tool could give wrong or misleading results. Please add a plan in the protocol for how you will prevent harm if this happens",
+          "phases": ["phase-2", "phase-3"]
+        }
+      ]
+    },
+    "information-pollution-3.2": {
+      "shortName": "Misleading Information",
+      "prompts": [
+        {
+          "text": "Please describe your plan for documenting early limitations of the model and how those will be addressed before moving to validation",
+          "phases": ["phase-1"]
+        },
+        {
+          "text": "Please add a plan for testing model performance on incomplete or messy records ('edge cases')",
+          "phases": ["phase-2"]
+        }
+      ]
+    },
+    "disinformation-surveillance-4.1": {
+      "shortName": "Participant or End-User Manipulation",
+      "prompts": [
+        {
+          "text": "How will you ensure the AI does not mislead participants or present biased/misinformation that could influence their decisions?",
+          "phases": ["phase-2", "phase-3"]
+        },
+        {
+          "text": "Please describe how participant data will be used so that the system does not engage in hidden tracking, surveillance, or manipulation of vulnerable groups",
+          "phases": ["phase-2", "phase-3"]
+        }
+      ]
+    },
+    "cyberattacks-mass-harm-4.2": {
+      "shortName": "Malicious Misuse",
+      "prompts": [
+        {
+          "text": "Please clarify what safeguards are in place to prevent the AI system from being misused in ways that could cause large-scale harm (e.g., altering medical devices, mass data leaks)",
+          "phases": ["phase-2", "phase-3"]
+        },
+        {
+          "text": "Please clarify and document who is responsible for monitoring the AI system for misuse, and what steps will be taken if harmful use is detected?",
+          "phases": ["phase-2", "phase-3"]
+        }
+      ]
+    },
+    "fraud-manipulation-4.3": {
+      "shortName": "Tool Involves Any Form of Deception",
+      "prompts": [
+        {
+          "text": "Please confirm what measures will be used to prevent the AI system from generating deceptive or manipulative outputs that could affect participant decision-making",
+          "phases": ["phase-2", "phase-3"]
+        },
+        {
+          "text": "Describe how participants will be informed, in plain language, about the risks of fraud or manipulation if interacting with the AI system",
+          "phases": ["phase-2", "phase-3"]
+        }
+      ]
+    },
+    "overreliance-5.1": {
+      "shortName": "Trusting Output Without Confirmation",
+      "prompts": [
+        {
+          "text": "Please describe in your protocol how you will compare your AI's performance against existing practice (e.g., standard-of-care approaches) and what those existing practices are",
+          "phases": ["phase-2"]
+        },
+        {
+          "text": "Please describe your plan for human oversight (who checks the AI output and how)",
+          "phases": ["phase-2", "phase-3"]
+        },
+        {
+          "text": "Please outline safeguards against automation bias (clinicians over-relying on AI without critical judgment)",
+          "phases": ["phase-3"]
+        }
+      ]
+    },
+    "loss-of-agency-5.2": {
+      "shortName": "Respect for Person (End-User or Participant Does Not Have Choice if AI is Used)",
+      "prompts": [
+        {
+          "text": "Please describe the authorization and consent process by which you will gain access to the data (e.g., IRB approval, consent, HIPAA authorization, data use agreements)",
+          "phases": ["phase-1"]
+        },
+        {
+          "text": "Participants may not understand the AI's role or how AI affects their care or data. Please describe how you will explain this",
+          "phases": ["phase-2", "phase-3"]
+        },
+        {
+          "text": "Please describe how chatbot responses will be explained to users. For example, will they be informed of the intended use, limitations, and potential hallucination? How should they engage with the tool? What should they not do?",
+          "phases": ["phase-2", "phase-3"]
+        },
+        {
+          "text": "Please clarify how you will ensure human-in-the-loop oversight for all AI-supported decisions that could affect patient safety or clinical outcomes",
+          "phases": ["phase-3"]
+        },
+        {
+          "text": "Please describe how you will communicate risks and limitations of the AI tool to participants, clinicians, and other stakeholders",
+          "phases": ["phase-3"]
+        }
+      ]
+    },
+    "power-centralization-6.1": {
+      "shortName": "Inequity/Unfair Advantage",
+      "prompts": [
+        {
+          "text": "Please explain how you will ensure that benefits of this AI system are shared fairly across participant groups and not restricted to one group or institution",
+          "phases": ["phase-2", "phase-3"]
+        },
+        {
+          "text": "What steps will be taken to avoid concentrating control or decision-making power in one entity, to the detriment of research participants?",
+          "phases": ["phase-2", "phase-3"]
+        }
+      ]
+    },
+    "inequality-employment-6.2": {
+      "shortName": "Inequity/Widening Disparities",
+      "prompts": [
+        {
+          "text": "Please describe how your project accounts for the risk that the AI may replace or reduce the role of teachers, clinicians, or staff, and how you will mitigate participant concerns about job loss",
+          "phases": ["phase-2", "phase-3"]
+        },
+        {
+          "text": "How will you ensure that the study does not worsen disparities in workforce opportunities, particularly for vulnerable or underrepresented groups?",
+          "phases": ["phase-2", "phase-3"]
+        }
+      ]
+    },
+    "devaluation-human-effort-6.3": {
+      "shortName": "Devaluing or Replacing Human Role",
+      "prompts": [
+        {
+          "text": "How will you address concerns that the AI system devalues human contributions (e.g., replacing teachers' feedback or clinicians' judgment) in this study?",
+          "phases": ["phase-2", "phase-3"]
+        },
+        {
+          "text": "Please describe how participants will be informed that human oversight remains central, and how their input will be recognized and respected",
+          "phases": ["phase-2", "phase-3"]
+        }
+      ]
+    },
+    "governance-failure-6.5": {
+      "shortName": "Lacking Required Oversight or Failing to Adhere to Required Standards",
+      "prompts": [
+        {
+          "text": "Please describe how your study aligns with FDA or other regulatory expectations for validation",
+          "phases": ["phase-2"]
+        },
+        {
+          "text": "Please provide your governance plan for accountability: Who is responsible for oversight of AI outputs, and how will adverse events or errors be reported and acted upon?",
+          "phases": ["phase-3"]
+        },
+        {
+          "text": "Please outline the process for participant recourse if they believe they were harmed or excluded due to AI-driven decisions",
+          "phases": ["phase-3"]
+        },
+        {
+          "text": "Please explain how the study ensures compliance with FDA post-market surveillance (if classified as a device) or other applicable regulatory requirements",
+          "phases": ["phase-3"]
+        },
+        {
+          "text": "Please add a plan for how you will handle errors so patients are not harmed or excluded",
+          "phases": ["phase-3"]
+        }
+      ]
+    },
+    "lack-transparency-7.4": {
+      "shortName": "Transparency/Interpretability",
+      "prompts": [
+        {
+          "text": "Please describe how end-users (e.g., clinicians) will provide structured feedback on the AI's usefulness, clarity, and transparency when using/testing it",
+          "phases": ["phase-2"]
+        },
+        {
+          "text": "Your tool's output may be hard to interpret by the end-user (clinician, patient, participant, etc). Please add how you will explain results to researchers and participants",
+          "phases": ["phase-2", "phase-3"]
+        },
+        {
+          "text": "Researchers may not understand model behavior. Please add how you will explain outputs and limits",
+          "phases": ["phase-2", "phase-3"]
+        },
+        {
+          "text": "Please explain how clinicians will be trained to interpret AI outputs",
+          "phases": ["phase-2", "phase-3"]
+        },
+        {
+          "text": "Please describe how end-users (e.g., participants, students, clinicians, etc.) are trained to interpret AI recommendations and when to override them",
+          "phases": ["phase-3"]
+        }
+      ]
+    }
+  }
+}

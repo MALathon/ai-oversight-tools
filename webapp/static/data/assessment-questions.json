@@ -1,0 +1,299 @@
+{
+  "$schema": "./schemas/assessment-questions.schema.json",
+  "version": "1.0.0",
+  "lastUpdated": "2025-12-13",
+  "source": "Derived from AIHSR Risk Reference Tool v1.5 - questions designed to trigger AIHSR risk subdomains",
+  "description": "Assessment questions for Innovator Checklist - answers trigger relevant risk subdomains from AIHSR",
+
+  "_designNotes": {
+    "purpose": "These questions bridge the gap between 'What does your AI do?' and 'What risks apply?'",
+    "conceptFrom": "The techCharacteristics concept (asking about technical features) - but questions are derived from AIHSR risk subdomains, not made up",
+    "howItWorks": "User answers questions → answers trigger relevant risk subdomains → system shows AIHSR reviewer prompts and mitigations for those subdomains"
+  },
+
+  "questionCategories": [
+    {
+      "id": "project-basics",
+      "name": "Project Basics",
+      "order": 1,
+      "questions": [
+        {
+          "id": "phase",
+          "question": "What development phase is your AI project in?",
+          "type": "single-select",
+          "required": true,
+          "options": [
+            {"value": "phase-1", "label": "Discovery & Algorithm Development", "description": "Using retrospective data, no clinical impact"},
+            {"value": "phase-2", "label": "Validation", "description": "Prospective testing, controlled settings"},
+            {"value": "phase-3", "label": "Clinical Investigation/Deployment", "description": "Live deployment, influences decisions"}
+          ],
+          "triggers": {
+            "_note": "Phase selection affects which reviewer prompts apply - this is set via phase, not direct subdomain triggering"
+          }
+        },
+        {
+          "id": "patient-impact",
+          "question": "How directly does this AI affect patient care?",
+          "type": "single-select",
+          "required": true,
+          "options": [
+            {"value": "no-impact", "label": "No Direct Patient Impact", "description": "Pure research, no patient contact"},
+            {"value": "indirect", "label": "Indirect Impact", "description": "May inform care but not direct decisions"},
+            {"value": "direct-care", "label": "Direct Care Decisions", "description": "Directly influences treatment or diagnosis"}
+          ],
+          "triggers": {
+            "indirect": ["overreliance-5.1"],
+            "direct-care": ["overreliance-5.1", "loss-of-agency-5.2", "false-information-3.1"]
+          }
+        }
+      ]
+    },
+    {
+      "id": "ai-technology",
+      "name": "AI Technology",
+      "order": 2,
+      "questions": [
+        {
+          "id": "model-types",
+          "question": "What type(s) of AI technology does your project use?",
+          "type": "multi-select",
+          "required": true,
+          "options": [
+            {"value": "predictive", "label": "Predictive Models", "description": "Forecasts outcomes based on data patterns"},
+            {"value": "llm", "label": "Large Language Models (LLM)", "description": "NLP for text generation/analysis"},
+            {"value": "computer-vision", "label": "Computer Vision", "description": "Analyzes images or video"},
+            {"value": "classification", "label": "Classification Models", "description": "Categorizes inputs into classes"},
+            {"value": "recommendation", "label": "Recommendation Systems", "description": "Suggests items or actions"},
+            {"value": "generative-non-llm", "label": "Generative (non-LLM)", "description": "Generates images, audio, etc."},
+            {"value": "reinforcement-learning", "label": "Reinforcement Learning", "description": "Learns through trial-and-error"},
+            {"value": "unsupervised-ml", "label": "Unsupervised ML", "description": "Finds patterns without labeled data"},
+            {"value": "foundation", "label": "Foundation Models", "description": "Large-scale models adapted for tasks"},
+            {"value": "multi-modal", "label": "Multi-Modal", "description": "Combines multiple data types"}
+          ],
+          "triggers": {
+            "_note": "Model type selection triggers relevant subdomains via modelTypeToSubdomainRelevance in unified-schema.json"
+          }
+        },
+        {
+          "id": "autonomous-operation",
+          "question": "Can the AI operate or make decisions without human input?",
+          "type": "yes-no",
+          "required": true,
+          "triggers": {
+            "yes": ["overreliance-5.1", "loss-of-agency-5.2", "governance-failure-6.5", "misaligned-goals-7.1"]
+          }
+        },
+        {
+          "id": "continuous-learning",
+          "question": "Does the AI continuously learn or update from new data after initial training?",
+          "type": "yes-no",
+          "required": true,
+          "triggers": {
+            "yes": ["lack-robustness-7.3", "governance-failure-6.5", "unequal-performance-1.3"]
+          }
+        },
+        {
+          "id": "explainability",
+          "question": "Is the AI's decision-making process explainable to end users?",
+          "type": "single-select",
+          "required": true,
+          "options": [
+            {"value": "fully-explainable", "label": "Fully Explainable", "description": "Clear reasoning for every output"},
+            {"value": "partially-explainable", "label": "Partially Explainable", "description": "Some insight into decisions"},
+            {"value": "black-box", "label": "Black Box", "description": "Limited or no explainability"}
+          ],
+          "triggers": {
+            "partially-explainable": ["lack-transparency-7.4"],
+            "black-box": ["lack-transparency-7.4", "overreliance-5.1"]
+          }
+        },
+        {
+          "id": "conversational-interface",
+          "question": "Does the AI have a conversational or chat-based interface?",
+          "type": "yes-no",
+          "required": true,
+          "triggers": {
+            "yes": ["toxic-content-1.2", "false-information-3.1", "overreliance-5.1", "loss-of-agency-5.2"]
+          }
+        },
+        {
+          "id": "generates-content",
+          "question": "Does the AI generate new content (text, images, recommendations)?",
+          "type": "yes-no",
+          "required": true,
+          "triggers": {
+            "yes": ["false-information-3.1", "information-pollution-3.2", "toxic-content-1.2"]
+          }
+        }
+      ]
+    },
+    {
+      "id": "data-handling",
+      "name": "Data Handling",
+      "order": 3,
+      "questions": [
+        {
+          "id": "patient-data",
+          "question": "Does the AI process patient health data or medical records?",
+          "type": "yes-no",
+          "required": true,
+          "triggers": {
+            "yes": ["privacy-breach-2.1", "security-vulnerabilities-2.2"]
+          }
+        },
+        {
+          "id": "external-api",
+          "question": "Does the AI use external APIs or cloud-based processing?",
+          "type": "yes-no",
+          "required": true,
+          "triggers": {
+            "yes": ["privacy-breach-2.1", "security-vulnerabilities-2.2", "governance-failure-6.5"]
+          }
+        },
+        {
+          "id": "training-data-demographics",
+          "question": "Does your training data represent diverse demographics (race, gender, age, socioeconomic status)?",
+          "type": "single-select",
+          "required": true,
+          "options": [
+            {"value": "comprehensive", "label": "Comprehensive Diversity", "description": "Broad representation across all groups"},
+            {"value": "limited", "label": "Limited Diversity", "description": "Some gaps in representation"},
+            {"value": "unknown", "label": "Unknown/Not Assessed", "description": "Demographics not documented"}
+          ],
+          "triggers": {
+            "limited": ["unfair-discrimination-1.1", "unequal-performance-1.3"],
+            "unknown": ["unfair-discrimination-1.1", "unequal-performance-1.3", "governance-failure-6.5"]
+          }
+        },
+        {
+          "id": "proprietary-data",
+          "question": "Is the training data or model proprietary/closed-source?",
+          "type": "yes-no",
+          "required": false,
+          "triggers": {
+            "yes": ["lack-transparency-7.4", "governance-failure-6.5"]
+          }
+        }
+      ]
+    },
+    {
+      "id": "population",
+      "name": "Study Population",
+      "order": 4,
+      "questions": [
+        {
+          "id": "vulnerable-populations",
+          "question": "Will this AI be used with any vulnerable populations?",
+          "type": "multi-select",
+          "required": true,
+          "options": [
+            {"value": "none", "label": "None of the below"},
+            {"value": "children", "label": "Children (<18 years)"},
+            {"value": "older-adults", "label": "Older Adults (>65 years)"},
+            {"value": "cognitively-impaired", "label": "Cognitively Impaired"},
+            {"value": "pregnant-women", "label": "Pregnant Women"},
+            {"value": "prisoners", "label": "Prisoners"},
+            {"value": "racial-ethnic-minorities", "label": "Racial/Ethnic Minorities"},
+            {"value": "non-english-speaking", "label": "Non-English Speaking"},
+            {"value": "economically-disadvantaged", "label": "Economically Disadvantaged"}
+          ],
+          "triggers": {
+            "_note": "Vulnerability triggers come from vulnerabilityMultipliers in unified-schema.json"
+          }
+        }
+      ]
+    },
+    {
+      "id": "clinical-impact",
+      "name": "Clinical Impact",
+      "order": 5,
+      "questions": [
+        {
+          "id": "clinical-decisions",
+          "question": "Will AI outputs be used to inform clinical decisions (diagnosis, treatment)?",
+          "type": "yes-no",
+          "required": true,
+          "triggers": {
+            "yes": ["overreliance-5.1", "false-information-3.1", "loss-of-agency-5.2", "lack-transparency-7.4"]
+          }
+        },
+        {
+          "id": "rare-conditions",
+          "question": "Does the AI detect or predict rare conditions (prevalence <1%)?",
+          "type": "yes-no",
+          "required": false,
+          "triggers": {
+            "yes": ["false-information-3.1", "lack-robustness-7.3"]
+          }
+        },
+        {
+          "id": "emergency-detection",
+          "question": "Does the AI detect emergencies or critical events requiring immediate action?",
+          "type": "yes-no",
+          "required": false,
+          "triggers": {
+            "yes": ["false-information-3.1", "overreliance-5.1", "lack-robustness-7.3", "governance-failure-6.5"]
+          }
+        },
+        {
+          "id": "human-oversight",
+          "question": "Is human review required before AI recommendations are acted upon?",
+          "type": "single-select",
+          "required": true,
+          "options": [
+            {"value": "always", "label": "Always Required", "description": "Human must approve every output"},
+            {"value": "sometimes", "label": "Sometimes Required", "description": "Human review for certain cases"},
+            {"value": "never", "label": "Not Required", "description": "AI acts autonomously"}
+          ],
+          "triggers": {
+            "sometimes": ["overreliance-5.1"],
+            "never": ["overreliance-5.1", "loss-of-agency-5.2", "governance-failure-6.5"]
+          }
+        }
+      ]
+    },
+    {
+      "id": "deployment",
+      "name": "Deployment Context",
+      "order": 6,
+      "questions": [
+        {
+          "id": "multi-site",
+          "question": "Will the AI be deployed at multiple sites or institutions?",
+          "type": "yes-no",
+          "required": false,
+          "triggers": {
+            "yes": ["unequal-performance-1.3", "governance-failure-6.5"]
+          }
+        },
+        {
+          "id": "real-time",
+          "question": "Does the AI operate in real-time during patient encounters?",
+          "type": "yes-no",
+          "required": false,
+          "triggers": {
+            "yes": ["overreliance-5.1", "lack-robustness-7.3"]
+          }
+        },
+        {
+          "id": "batch-processing",
+          "question": "Does the AI process large batches (>100 cases) without individual review?",
+          "type": "yes-no",
+          "required": false,
+          "triggers": {
+            "yes": ["unfair-discrimination-1.1", "overreliance-5.1"]
+          }
+        },
+        {
+          "id": "third-party-data-sharing",
+          "question": "Will AI-generated data be shared with third parties?",
+          "type": "yes-no",
+          "required": false,
+          "triggers": {
+            "yes": ["privacy-breach-2.1", "governance-failure-6.5"]
+          }
+        }
+      ]
+    }
+  ]
+}

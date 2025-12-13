@@ -1,0 +1,260 @@
+{
+  "$schema": "../schemas/risk-subdomains.schema.json",
+  "version": "1.0.0",
+  "source": "AIHSR Risk Reference Tool v1.5 (Tamiko Eto), based on MIT AI Risk Repository",
+  "lastUpdated": "2025-09-02",
+  "riskSubdomains": [
+    {
+      "id": "unfair-discrimination-1.1",
+      "code": "1.1",
+      "name": "Unfair discrimination and misrepresentation",
+      "shortName": "Biased results or misrepresentation",
+      "domain": "discrimination-toxicity",
+      "description": "AI system produces biased outputs that unfairly discriminate against or misrepresent certain groups",
+      "cfrReferences": [
+        "45 CFR 46.111(a)(3) – equitable subject selection",
+        "21 CFR 56.111(a)(3)"
+      ]
+    },
+    {
+      "id": "toxic-content-1.2",
+      "code": "1.2",
+      "name": "Exposure to toxic content",
+      "shortName": "Harmful content exposure",
+      "domain": "discrimination-toxicity",
+      "description": "Participants may be exposed to harmful, offensive, or distressing AI-generated content",
+      "cfrReferences": [
+        "45 CFR 46.111(a)(1) – minimize risks",
+        "45 CFR 46.111(a)(2) – reasonable risk-benefit",
+        "21 CFR 56.111"
+      ]
+    },
+    {
+      "id": "unequal-performance-1.3",
+      "code": "1.3",
+      "name": "Unequal performance across groups",
+      "shortName": "Inequity or fairness",
+      "domain": "discrimination-toxicity",
+      "description": "AI system performs differently across demographic or population subgroups",
+      "cfrReferences": [
+        "45 CFR 46.111(a)(3) & (a)(4)"
+      ]
+    },
+    {
+      "id": "privacy-breach-2.1",
+      "code": "2.1",
+      "name": "Compromise of privacy by leaking or correctly inferring sensitive information",
+      "shortName": "Privacy or confidentiality breach",
+      "domain": "privacy-security",
+      "description": "AI system may leak or enable inference of sensitive personal information",
+      "cfrReferences": [
+        "45 CFR 46.111(a)(7) – confidentiality",
+        "21 CFR 812.38",
+        "21 CFR 820.30(g)"
+      ]
+    },
+    {
+      "id": "security-vulnerabilities-2.2",
+      "code": "2.2",
+      "name": "AI system security vulnerabilities and attacks",
+      "shortName": "Data insecurity",
+      "domain": "privacy-security",
+      "description": "AI system may be vulnerable to security breaches or adversarial attacks",
+      "cfrReferences": [
+        "21 CFR 820.100 – Corrective & Preventive Actions (CAPA)",
+        "21 CFR 820.30(g) – Design Validation"
+      ]
+    },
+    {
+      "id": "false-information-3.1",
+      "code": "3.1",
+      "name": "False or misleading information",
+      "shortName": "Inaccurate findings",
+      "domain": "misinformation",
+      "description": "AI system generates false, inaccurate, or misleading outputs (hallucinations)",
+      "cfrReferences": [
+        "45 CFR 46.116 – informed consent accuracy",
+        "21 CFR 50.20"
+      ]
+    },
+    {
+      "id": "information-pollution-3.2",
+      "code": "3.2",
+      "name": "Pollution of information ecosystem and loss of consensus reality",
+      "shortName": "Misleading information",
+      "domain": "misinformation",
+      "description": "AI-generated content degrades the quality of information environment",
+      "cfrReferences": [
+        "45 CFR 46.111(a)(1) & (a)(2)"
+      ]
+    },
+    {
+      "id": "disinformation-surveillance-4.1",
+      "code": "4.1",
+      "name": "Disinformation, surveillance, and influence at scale",
+      "shortName": "Participant or end-user manipulation",
+      "domain": "malicious-misuse",
+      "description": "AI system used for manipulation, surveillance, or spreading disinformation",
+      "cfrReferences": [
+        "45 CFR 46.111(b) – additional safeguards for vulnerable groups"
+      ]
+    },
+    {
+      "id": "cyberattacks-mass-harm-4.2",
+      "code": "4.2",
+      "name": "Cyberattacks, weapon development or use, and mass harm",
+      "shortName": "Malicious misuse",
+      "domain": "malicious-misuse",
+      "description": "AI system could be exploited for cyberattacks or to cause large-scale harm",
+      "cfrReferences": []
+    },
+    {
+      "id": "fraud-manipulation-4.3",
+      "code": "4.3",
+      "name": "Fraud, scams, and targeted manipulation",
+      "shortName": "Tool involves any form of deception",
+      "domain": "malicious-misuse",
+      "description": "AI system could be used for fraud, scams, or targeted manipulation",
+      "cfrReferences": [
+        "45 CFR 46.116",
+        "21 CFR 50.20"
+      ]
+    },
+    {
+      "id": "overreliance-5.1",
+      "code": "5.1",
+      "name": "Overreliance and unsafe use",
+      "shortName": "Trusting output without confirmation",
+      "domain": "human-computer-interaction",
+      "description": "Users may over-trust AI outputs without appropriate verification",
+      "cfrReferences": [
+        "21 CFR 812.30(b)(4) – risk/benefit analysis",
+        "21 CFR 820.70 – production/process controls"
+      ]
+    },
+    {
+      "id": "loss-of-agency-5.2",
+      "code": "5.2",
+      "name": "Loss of human agency and autonomy",
+      "shortName": "Respect for person (end-user or participant does not have choice if AI is used)",
+      "domain": "human-computer-interaction",
+      "description": "AI system undermines human decision-making autonomy",
+      "cfrReferences": [
+        "45 CFR 46.116(a)(8) – consent can be withdrawn anytime"
+      ]
+    },
+    {
+      "id": "power-centralization-6.1",
+      "code": "6.1",
+      "name": "Power centralization and unfair distribution of benefits",
+      "shortName": "Inequity/unfair advantage",
+      "domain": "socioeconomic-environmental",
+      "description": "AI benefits concentrated among few entities while harms distributed widely",
+      "cfrReferences": [
+        "45 CFR 46.111(a)(3)"
+      ]
+    },
+    {
+      "id": "inequality-employment-6.2",
+      "code": "6.2",
+      "name": "Increased inequality and decline in employment quality",
+      "shortName": "Inequity/widening disparities",
+      "domain": "socioeconomic-environmental",
+      "description": "AI adoption may worsen economic inequality or displace workers",
+      "cfrReferences": []
+    },
+    {
+      "id": "devaluation-human-effort-6.3",
+      "code": "6.3",
+      "name": "Economic and cultural devaluation of human effort",
+      "shortName": "Devaluing or replacing human role",
+      "domain": "socioeconomic-environmental",
+      "description": "AI may undermine the value of human creativity and labor",
+      "cfrReferences": []
+    },
+    {
+      "id": "competitive-dynamics-6.4",
+      "code": "6.4",
+      "name": "Competitive dynamics",
+      "shortName": "Unethical competition",
+      "domain": "socioeconomic-environmental",
+      "description": "AI development race may lead to cutting corners on safety",
+      "cfrReferences": []
+    },
+    {
+      "id": "governance-failure-6.5",
+      "code": "6.5",
+      "name": "Governance failure",
+      "shortName": "Lacking required oversight or failing to adhere to required standards",
+      "domain": "socioeconomic-environmental",
+      "description": "Inadequate oversight, accountability, or regulatory compliance",
+      "cfrReferences": []
+    },
+    {
+      "id": "environmental-harm-6.6",
+      "code": "6.6",
+      "name": "Environmental harm",
+      "shortName": "Environmental impact",
+      "domain": "socioeconomic-environmental",
+      "description": "AI development and operation consumes significant energy resources",
+      "cfrReferences": []
+    },
+    {
+      "id": "misaligned-goals-7.1",
+      "code": "7.1",
+      "name": "AI pursuing its own goals in conflict with human goals or values",
+      "shortName": "AI acting outside human control",
+      "domain": "ai-safety-limitations",
+      "description": "AI system may develop or pursue objectives misaligned with human intent",
+      "cfrReferences": []
+    },
+    {
+      "id": "dangerous-capabilities-7.2",
+      "code": "7.2",
+      "name": "AI possessing dangerous capabilities",
+      "shortName": "Mass harm or manipulation",
+      "domain": "ai-safety-limitations",
+      "description": "AI system may have capabilities that could enable mass harm",
+      "cfrReferences": []
+    },
+    {
+      "id": "lack-robustness-7.3",
+      "code": "7.3",
+      "name": "Lack of capability or robustness",
+      "shortName": "Unreliable system or performance",
+      "domain": "ai-safety-limitations",
+      "description": "AI system may fail unexpectedly or perform inconsistently",
+      "cfrReferences": []
+    },
+    {
+      "id": "lack-transparency-7.4",
+      "code": "7.4",
+      "name": "Lack of transparency or interpretability",
+      "shortName": "Transparency/interpretability",
+      "domain": "ai-safety-limitations",
+      "description": "AI decision-making process cannot be explained or understood",
+      "cfrReferences": [
+        "45 CFR 46.116(a)(4) – adequate explanation in consent",
+        "21 CFR 50.20"
+      ]
+    },
+    {
+      "id": "ai-welfare-7.5",
+      "code": "7.5",
+      "name": "AI welfare and rights",
+      "shortName": "AI treated unethically",
+      "domain": "ai-safety-limitations",
+      "description": "Considerations about potential AI sentience or moral status",
+      "cfrReferences": []
+    },
+    {
+      "id": "multi-agent-risks-7.6",
+      "code": "7.6",
+      "name": "Multi-agent risks",
+      "shortName": "Agents work together making risk-mitigation challenging",
+      "domain": "ai-safety-limitations",
+      "description": "Multiple AI systems interacting may create emergent risks",
+      "cfrReferences": []
+    }
+  ]
+}

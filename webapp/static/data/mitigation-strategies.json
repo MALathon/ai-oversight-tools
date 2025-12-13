@@ -1,0 +1,190 @@
+{
+  "$schema": "../schemas/mitigation-strategies.schema.json",
+  "version": "1.0.0",
+  "source": "AIHSR Risk Reference Tool v1.5 (Tamiko Eto)",
+  "lastUpdated": "2025-09-02",
+  "mitigationCategories": [
+    {
+      "id": "governance-oversight",
+      "name": "Governance & Oversight Controls",
+      "strategies": [
+        {
+          "id": "board-oversight-1.1",
+          "code": "1.1",
+          "name": "Board Structure & Oversight",
+          "description": "Establish appropriate governance boards and oversight committees"
+        },
+        {
+          "id": "risk-management-1.2",
+          "code": "1.2",
+          "name": "Risk Management",
+          "description": "Pre-deployment risk assessments, independent risk assessment"
+        },
+        {
+          "id": "conflict-interest-1.3",
+          "code": "1.3",
+          "name": "Conflict of Interest Protections",
+          "description": "Identify and manage conflicts of interest in AI development and deployment"
+        },
+        {
+          "id": "whistleblower-1.4",
+          "code": "1.4",
+          "name": "Whistleblower Reporting & Protection",
+          "description": "Establish channels for reporting concerns with protection for reporters"
+        },
+        {
+          "id": "safety-frameworks-1.5",
+          "code": "1.5",
+          "name": "Safety Decision Frameworks",
+          "description": "Structured frameworks for making safety-related decisions"
+        },
+        {
+          "id": "environmental-1.6",
+          "code": "1.6",
+          "name": "Environmental Impact Management",
+          "description": "Assess and mitigate environmental impacts of AI systems"
+        },
+        {
+          "id": "societal-impact-1.7",
+          "code": "1.7",
+          "name": "Societal Impact Assessment",
+          "description": "Evaluate broader societal implications of AI deployment"
+        }
+      ]
+    },
+    {
+      "id": "technical-security",
+      "name": "Technical & Security Controls",
+      "strategies": [
+        {
+          "id": "infrastructure-security-2.1",
+          "code": "2.1",
+          "name": "Model & Infrastructure Security",
+          "description": "Secure model storage, access controls, and infrastructure protection"
+        },
+        {
+          "id": "model-alignment-2.2",
+          "code": "2.2",
+          "name": "Model Alignment",
+          "description": "Ensure model behavior aligns with intended objectives and values"
+        },
+        {
+          "id": "safety-engineering-2.3",
+          "code": "2.3",
+          "name": "Model Safety Engineering",
+          "description": "Design and implement safety features in model architecture"
+        },
+        {
+          "id": "content-safety-2.4",
+          "code": "2.4",
+          "name": "Content Safety Controls",
+          "description": "Filters and controls to prevent harmful content generation"
+        }
+      ]
+    },
+    {
+      "id": "operational-process",
+      "name": "Operational Process Controls",
+      "strategies": [
+        {
+          "id": "testing-auditing-3.1",
+          "code": "3.1",
+          "name": "Testing & Auditing",
+          "description": "Comprehensive testing and regular auditing of AI systems"
+        },
+        {
+          "id": "data-governance-3.2",
+          "code": "3.2",
+          "name": "Data Governance",
+          "description": "Policies and procedures for data management and quality"
+        },
+        {
+          "id": "access-management-3.3",
+          "code": "3.3",
+          "name": "Access Management",
+          "description": "Control and monitor access to AI systems and data"
+        },
+        {
+          "id": "staged-deployment-3.4",
+          "code": "3.4",
+          "name": "Staged Deployment",
+          "description": "Gradual rollout with checkpoints and evaluation"
+        },
+        {
+          "id": "post-deployment-3.5",
+          "code": "3.5",
+          "name": "Post-Deployment Monitoring",
+          "description": "Ongoing monitoring of AI performance after deployment"
+        },
+        {
+          "id": "incident-response-3.6",
+          "code": "3.6",
+          "name": "Incident Response & Recovery",
+          "description": "Procedures for responding to and recovering from incidents"
+        }
+      ]
+    },
+    {
+      "id": "transparency-accountability",
+      "name": "Transparency & Accountability Controls",
+      "strategies": [
+        {
+          "id": "documentation-4.1",
+          "code": "4.1",
+          "name": "System Documentation",
+          "description": "Comprehensive documentation of AI system design and behavior"
+        },
+        {
+          "id": "risk-disclosure-4.2",
+          "code": "4.2",
+          "name": "Risk Disclosure",
+          "description": "Clear communication of risks to stakeholders"
+        },
+        {
+          "id": "incident-reporting-4.3",
+          "code": "4.3",
+          "name": "Incident Reporting",
+          "description": "Systems for reporting and tracking incidents"
+        },
+        {
+          "id": "governance-disclosure-4.4",
+          "code": "4.4",
+          "name": "Governance Disclosure",
+          "description": "Transparency about governance structures and decisions"
+        },
+        {
+          "id": "third-party-access-4.5",
+          "code": "4.5",
+          "name": "Third-Party System Access",
+          "description": "Controls for third-party access and integration"
+        },
+        {
+          "id": "user-rights-4.6",
+          "code": "4.6",
+          "name": "User Rights & Recourse",
+          "description": "Mechanisms for users to understand and contest AI decisions"
+        }
+      ]
+    }
+  ],
+  "riskTypes": [
+    {
+      "id": "distributional",
+      "code": "D",
+      "name": "Distributional",
+      "description": "Risks that affect how benefits and harms are distributed across groups"
+    },
+    {
+      "id": "interactional",
+      "code": "I",
+      "name": "Interactional",
+      "description": "Risks that arise from human-AI interaction"
+    },
+    {
+      "id": "systemic",
+      "code": "S",
+      "name": "Systemic",
+      "description": "Risks that affect broader systems and structures"
+    }
+  ]
+}
