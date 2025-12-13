@@ -2,314 +2,304 @@
 	import { base } from '$app/paths';
 	import { onMount } from 'svelte';
 
-	interface RiskSubdomain {
+	interface RiskArea {
 		id: string;
-		code: string;
-		name: string;
-		shortName: string;
-		domain: string;
+		title: string;
 		description: string;
+		guidance: Record<string, string>;
+		triggers: string[];
 	}
 
-	interface Mitigation {
-		[phase: string]: string;
-	}
-
-	let riskSubdomains: RiskSubdomain[] = $state([]);
-	let phaseMitigations: Record<string, Mitigation> = $state({});
 	let loading = $state(true);
 
-	// Direct selections - no pagination
-	let selectedPhase = $state('phase-1');
+	// Project setup
+	let selectedPhase = $state('');
 	let selectedModelTypes = $state<Set<string>>(new Set());
-	let toggles = $state<Record<string, boolean>>({
-		'patient-data': false,
-		'direct-care': false,
-		'autonomous': false,
-		'continuous-learning': false,
-		'black-box': false,
-		'generates-content': false,
-		'external-api': false,
-		'vulnerable-pop': false
-	});
+	let projectCharacteristics = $state<Set<string>>(new Set());
 
-	// Active view tab
-	let activeTab = $state<'risks' | 'controls'>('risks');
-
-	// Risk trigger mappings
-	const triggerMap: Record<string, string[]> = {
-		'patient-data': ['privacy-breach-2.1', 'security-vulnerabilities-2.2'],
-		'direct-care': ['overreliance-5.1', 'loss-of-agency-5.2', 'false-information-3.1'],
-		'autonomous': ['overreliance-5.1', 'loss-of-agency-5.2', 'governance-failure-6.5', 'misaligned-goals-7.1'],
-		'continuous-learning': ['lack-robustness-7.3', 'governance-failure-6.5', 'unequal-performance-1.3'],
-		'black-box': ['lack-transparency-7.4', 'overreliance-5.1'],
-		'generates-content': ['false-information-3.1', 'information-pollution-3.2', 'toxic-content-1.2'],
-		'external-api': ['privacy-breach-2.1', 'security-vulnerabilities-2.2', 'governance-failure-6.5'],
-		'vulnerable-pop': ['unfair-discrimination-1.1', 'unequal-performance-1.3']
-	};
-
-	const modelTypeTriggers: Record<string, string[]> = {
-		'llm': ['toxic-content-1.2', 'false-information-3.1', 'privacy-breach-2.1', 'overreliance-5.1'],
-		'computer-vision': ['unfair-discrimination-1.1', 'unequal-performance-1.3', 'lack-transparency-7.4'],
-		'predictive': ['unfair-discrimination-1.1', 'false-information-3.1', 'lack-robustness-7.3'],
-		'recommendation': ['unfair-discrimination-1.1', 'overreliance-5.1', 'loss-of-agency-5.2'],
-		'generative': ['false-information-3.1', 'information-pollution-3.2', 'toxic-content-1.2'],
-		'foundation': ['lack-transparency-7.4', 'governance-failure-6.5', 'privacy-breach-2.1']
-	};
-
-	const modelTypes = [
-		{ id: 'llm', label: 'LLM / Chat', icon: '💬' },
-		{ id: 'computer-vision', label: 'Vision', icon: '👁️' },
-		{ id: 'predictive', label: 'Predictive', icon: '📊' },
-		{ id: 'recommendation', label: 'Recommender', icon: '🎯' },
-		{ id: 'generative', label: 'Generative', icon: '🎨' },
-		{ id: 'foundation', label: 'Foundation', icon: '🏗️' }
-	];
+	// User responses
+	let responses = $state<Record<string, { addressed: boolean; notes: string }>>({});
+	let customNotes = $state<Record<string, string>>({});
 
 	const phases = [
-		{ id: 'phase-1', label: 'Phase 1', name: 'Discovery', desc: 'Retrospective data, no clinical impact' },
-		{ id: 'phase-2', label: 'Phase 2', name: 'Validation', desc: 'Prospective testing, controlled' },
-		{ id: 'phase-3', label: 'Phase 3', name: 'Deployment', desc: 'Live clinical use' }
+		{ id: 'phase-1', name: 'Phase 1: Discovery', desc: 'Developing algorithms using retrospective/existing data. No clinical decisions.' },
+		{ id: 'phase-2', name: 'Phase 2: Validation', desc: 'Prospective testing in controlled settings. Clinicians see outputs but don\'t rely on them.' },
+		{ id: 'phase-3', name: 'Phase 3: Deployment', desc: 'Live clinical use. AI outputs may influence real patient care decisions.' }
 	];
 
-	// Derived: triggered subdomains
-	let triggeredIds = $derived.by(() => {
-		const ids = new Set<string>();
-		for (const [key, active] of Object.entries(toggles)) {
-			if (active && triggerMap[key]) {
-				triggerMap[key].forEach(id => ids.add(id));
+	const modelTypes = [
+		{ id: 'llm', label: 'Large Language Model (ChatGPT-like)' },
+		{ id: 'computer-vision', label: 'Computer Vision / Image Analysis' },
+		{ id: 'predictive', label: 'Predictive / Risk Scoring Model' },
+		{ id: 'recommendation', label: 'Recommendation System' },
+		{ id: 'generative', label: 'Generative AI (images, text, etc.)' }
+	];
+
+	const characteristics = [
+		{ id: 'patient-data', label: 'Uses patient health records or PHI' },
+		{ id: 'direct-care', label: 'Outputs inform clinical decisions' },
+		{ id: 'autonomous', label: 'Can operate without human review' },
+		{ id: 'continuous-learning', label: 'Updates/learns after deployment' },
+		{ id: 'black-box', label: 'Decision process is not fully explainable' },
+		{ id: 'external-api', label: 'Uses cloud services or external APIs' },
+		{ id: 'vulnerable-pop', label: 'Involves vulnerable populations' }
+	];
+
+	// Risk areas with phase-specific guidance
+	const riskAreas: RiskArea[] = [
+		{
+			id: 'privacy',
+			title: 'Data Privacy & Security',
+			description: 'Protecting patient information and preventing unauthorized access',
+			triggers: ['patient-data', 'external-api'],
+			guidance: {
+				'phase-1': 'De-identify your training data to HIPAA Safe Harbor standards. Use access controls so only approved team members can access the data. If using cloud services, ensure your institution has approved the vendor and a BAA is in place.',
+				'phase-2': 'Continue Phase 1 protections. Add monitoring for re-identification risks in your data pipeline. Document your data flow and where PHI might be exposed.',
+				'phase-3': 'All previous protections carry over. Implement audit logging for data access. Provide opt-out mechanisms for participants. Have a breach response plan ready.'
+			}
+		},
+		{
+			id: 'bias',
+			title: 'Bias & Fairness',
+			description: 'Ensuring equitable performance across demographic groups',
+			triggers: ['predictive', 'computer-vision', 'recommendation', 'vulnerable-pop'],
+			guidance: {
+				'phase-1': 'Audit your training data for demographic gaps. Check if certain groups (race, gender, age, socioeconomic) are underrepresented. Run initial bias tests before finalizing your model.',
+				'phase-2': 'Test model performance across demographic subgroups. Establish fairness thresholds - how much performance difference is acceptable? Document any disparities found.',
+				'phase-3': 'Set up ongoing monitoring for demographic performance gaps. Report fairness metrics quarterly. Have a plan for what to do if bias is detected post-deployment.'
+			}
+		},
+		{
+			id: 'accuracy',
+			title: 'Accuracy & Reliability',
+			description: 'Ensuring outputs are trustworthy and errors are minimized',
+			triggers: ['llm', 'generative', 'direct-care', 'predictive'],
+			guidance: {
+				'phase-1': 'Validate outputs against trusted reference sources. Include confidence scores or uncertainty estimates in your model design.',
+				'phase-2': 'Stress test with edge cases and out-of-distribution data. Have domain experts review a sample of outputs for correctness.',
+				'phase-3': 'Add disclaimers to outputs. Create a mechanism for users to flag errors. Have rollback procedures if accuracy drops.'
+			}
+		},
+		{
+			id: 'content-safety',
+			title: 'Content Safety',
+			description: 'Preventing harmful, toxic, or misleading outputs',
+			triggers: ['llm', 'generative'],
+			guidance: {
+				'phase-1': 'Screen training data for toxic or harmful content. Implement safety guardrails in your model design.',
+				'phase-2': 'Test how the model responds to adversarial prompts. Have humans review flagged outputs before they reach participants.',
+				'phase-3': 'Deploy content filters to catch harmful outputs before users see them. Log incidents and review them regularly. Have a process for updating filters.'
+			}
+		},
+		{
+			id: 'human-oversight',
+			title: 'Human Oversight & Autonomy',
+			description: 'Keeping humans appropriately in the loop',
+			triggers: ['direct-care', 'autonomous'],
+			guidance: {
+				'phase-1': 'Design outputs to be suggestive, not directive. The AI should support human decision-making, not replace it.',
+				'phase-2': 'Require human review before any AI recommendation is acted upon. Track how often clinicians override the AI.',
+				'phase-3': 'Train end users on AI limitations. Monitor for signs of over-reliance (always following AI, not questioning outputs). Keep human override mechanisms prominent.'
+			}
+		},
+		{
+			id: 'transparency',
+			title: 'Transparency & Explainability',
+			description: 'Making AI decisions understandable',
+			triggers: ['black-box', 'direct-care'],
+			guidance: {
+				'phase-1': 'Document your model architecture and design decisions. Where possible, add explainability features (feature importance, attention visualization).',
+				'phase-2': 'Share model explanations with clinicians/users and get feedback. Are the explanations actually helpful?',
+				'phase-3': 'Inform participants when AI is being used. Provide lay-language explanations of how it works. Make technical documentation available for auditors.'
+			}
+		},
+		{
+			id: 'governance',
+			title: 'Governance & Accountability',
+			description: 'Having clear oversight and response procedures',
+			triggers: [],
+			guidance: {
+				'phase-1': 'Identify what approvals you need before training (IRB, IT security, data governance). Document who is responsible for what.',
+				'phase-2': 'Conduct a mock incident drill. What would you do if something goes wrong? Who needs to be notified?',
+				'phase-3': 'Establish regular audits. Have a kill switch to halt the system if needed. Report to oversight bodies on a defined schedule.'
 			}
 		}
-		for (const mt of selectedModelTypes) {
-			if (modelTypeTriggers[mt]) {
-				modelTypeTriggers[mt].forEach(id => ids.add(id));
-			}
-		}
-		return ids;
+	];
+
+	// Get applicable risk areas
+	let applicableRisks = $derived.by(() => {
+		if (!selectedPhase) return [];
+
+		const allTriggers = new Set([...selectedModelTypes, ...projectCharacteristics]);
+
+		return riskAreas.filter(risk => {
+			// Governance applies to everyone
+			if (risk.triggers.length === 0) return true;
+			return risk.triggers.some(t => allTriggers.has(t));
+		});
 	});
 
-	let relevantSubdomains = $derived(
-		riskSubdomains.filter(s => triggeredIds.has(s.id))
-	);
+	let showResults = $derived(selectedPhase !== '' && (selectedModelTypes.size > 0 || projectCharacteristics.size > 0));
 
-	// Group by domain for display
-	let groupedRisks = $derived.by(() => {
-		const groups: Record<string, RiskSubdomain[]> = {};
-		for (const sub of relevantSubdomains) {
-			if (!groups[sub.domain]) groups[sub.domain] = [];
-			groups[sub.domain].push(sub);
-		}
-		return groups;
-	});
-
-	let riskLevel = $derived.by(() => {
-		const count = relevantSubdomains.length;
-		if (count === 0) return { label: 'Minimal', color: '#22c55e', bg: 'rgba(34, 197, 94, 0.15)' };
-		if (count <= 3) return { label: 'Low', color: '#84cc16', bg: 'rgba(132, 204, 22, 0.15)' };
-		if (count <= 6) return { label: 'Moderate', color: '#f59e0b', bg: 'rgba(245, 158, 11, 0.15)' };
-		if (count <= 9) return { label: 'Elevated', color: '#f97316', bg: 'rgba(249, 115, 22, 0.15)' };
-		return { label: 'High', color: '#ef4444', bg: 'rgba(239, 68, 68, 0.15)' };
-	});
-
-	onMount(async () => {
-		try {
-			const [subdomainsRes, mitigationsRes] = await Promise.all([
-				fetch(`${base}/data/risk-subdomains.json`),
-				fetch(`${base}/data/phase-mitigations.json`)
-			]);
-			const subdomainsData = await subdomainsRes.json();
-			const mitigationsData = await mitigationsRes.json();
-			riskSubdomains = subdomainsData.riskSubdomains;
-			phaseMitigations = mitigationsData.phaseMitigations;
-		} catch (e) {
-			console.error('Failed to load data:', e);
-		} finally {
-			loading = false;
-		}
+	onMount(() => {
+		loading = false;
 	});
 
 	function toggleModelType(id: string) {
 		const newSet = new Set(selectedModelTypes);
-		if (newSet.has(id)) {
-			newSet.delete(id);
-		} else {
-			newSet.add(id);
-		}
+		if (newSet.has(id)) newSet.delete(id);
+		else newSet.add(id);
 		selectedModelTypes = newSet;
 	}
 
-	function getMitigation(subdomainId: string): string {
-		const mitigation = phaseMitigations[subdomainId];
-		if (!mitigation) return 'No specific mitigation guidance available.';
-		return mitigation[selectedPhase] || mitigation['phase-1'] || 'No specific mitigation guidance available.';
+	function toggleCharacteristic(id: string) {
+		const newSet = new Set(projectCharacteristics);
+		if (newSet.has(id)) newSet.delete(id);
+		else newSet.add(id);
+		projectCharacteristics = newSet;
 	}
 
-	function getPhaseName(phaseId: string): string {
-		return phases.find(p => p.id === phaseId)?.name || phaseId;
+	function toggleAddressed(riskId: string) {
+		responses = {
+			...responses,
+			[riskId]: {
+				addressed: !responses[riskId]?.addressed,
+				notes: responses[riskId]?.notes || ''
+			}
+		};
+	}
+
+	function setNotes(riskId: string, notes: string) {
+		responses = {
+			...responses,
+			[riskId]: {
+				addressed: responses[riskId]?.addressed || false,
+				notes
+			}
+		};
+	}
+
+	function getPhaseName(): string {
+		return phases.find(p => p.id === selectedPhase)?.name.split(':')[1]?.trim() || '';
 	}
 </script>
 
 <svelte:head>
-	<title>Innovator Self-Assessment - AI Oversight Tools</title>
+	<title>AI Project Self-Assessment - AI Oversight Tools</title>
 </svelte:head>
 
 {#if loading}
 	<div class="loading">Loading...</div>
 {:else}
-	<div class="dashboard">
-		<!-- Left: Controls -->
-		<div class="controls">
-			<div class="control-section">
-				<h2>Development Phase</h2>
-				<div class="phase-selector">
-					{#each phases as phase}
-						<button
-							class="phase-btn"
-							class:active={selectedPhase === phase.id}
-							onclick={() => selectedPhase = phase.id}
-						>
-							<span class="phase-label">{phase.label}</span>
-							<span class="phase-name">{phase.name}</span>
-						</button>
-					{/each}
-				</div>
-			</div>
+	<div class="self-assessment">
+		<div class="intro">
+			<h1>AI Project Self-Assessment</h1>
+			<p>Answer a few questions about your AI project to see what risks to consider and how to address them at your current development phase.</p>
+		</div>
 
-			<div class="control-section">
-				<h2>AI Model Type</h2>
-				<div class="model-grid">
-					{#each modelTypes as mt}
-						<button
-							class="model-chip"
-							class:active={selectedModelTypes.has(mt.id)}
-							onclick={() => toggleModelType(mt.id)}
-						>
-							<span class="model-icon">{mt.icon}</span>
-							<span>{mt.label}</span>
-						</button>
-					{/each}
-				</div>
-			</div>
-
-			<div class="control-section">
-				<h2>Risk Factors</h2>
-				<div class="toggles">
-					<label class="toggle-row">
-						<input type="checkbox" bind:checked={toggles['patient-data']} />
-						<span class="toggle-label">Uses patient health data</span>
-					</label>
-					<label class="toggle-row">
-						<input type="checkbox" bind:checked={toggles['direct-care']} />
-						<span class="toggle-label">Directly affects care decisions</span>
-					</label>
-					<label class="toggle-row">
-						<input type="checkbox" bind:checked={toggles['autonomous']} />
-						<span class="toggle-label">Operates autonomously</span>
-					</label>
-					<label class="toggle-row">
-						<input type="checkbox" bind:checked={toggles['continuous-learning']} />
-						<span class="toggle-label">Continuously learns/updates</span>
-					</label>
-					<label class="toggle-row">
-						<input type="checkbox" bind:checked={toggles['black-box']} />
-						<span class="toggle-label">Limited explainability</span>
-					</label>
-					<label class="toggle-row">
-						<input type="checkbox" bind:checked={toggles['generates-content']} />
-						<span class="toggle-label">Generates content/recommendations</span>
-					</label>
-					<label class="toggle-row">
-						<input type="checkbox" bind:checked={toggles['external-api']} />
-						<span class="toggle-label">Uses external APIs/cloud</span>
-					</label>
-					<label class="toggle-row">
-						<input type="checkbox" bind:checked={toggles['vulnerable-pop']} />
-						<span class="toggle-label">Vulnerable populations</span>
-					</label>
-				</div>
+		<!-- Step 1: Phase Selection -->
+		<div class="section">
+			<h2><span class="step-num">1</span> What phase is your project in?</h2>
+			<div class="phase-cards">
+				{#each phases as phase}
+					<button
+						class="phase-card"
+						class:selected={selectedPhase === phase.id}
+						onclick={() => selectedPhase = phase.id}
+					>
+						<strong>{phase.name}</strong>
+						<p>{phase.desc}</p>
+					</button>
+				{/each}
 			</div>
 		</div>
 
-		<!-- Right: Results -->
-		<div class="results">
-			<!-- Summary Bar -->
-			<div class="risk-summary" style="background: {riskLevel.bg}; border-color: {riskLevel.color}">
-				<div class="risk-indicator">
-					<span class="risk-count" style="color: {riskLevel.color}">{relevantSubdomains.length}</span>
-					<span class="risk-text">Risk Areas</span>
-				</div>
-				<div class="risk-level" style="color: {riskLevel.color}">
-					{riskLevel.label} Risk Profile
-				</div>
+		<!-- Step 2: Model Type -->
+		<div class="section">
+			<h2><span class="step-num">2</span> What type of AI are you building?</h2>
+			<p class="section-hint">Select all that apply</p>
+			<div class="option-grid">
+				{#each modelTypes as mt}
+					<button
+						class="option-btn"
+						class:selected={selectedModelTypes.has(mt.id)}
+						onclick={() => toggleModelType(mt.id)}
+					>
+						{mt.label}
+					</button>
+				{/each}
 			</div>
+		</div>
 
-			<!-- Tab Navigation -->
-			{#if relevantSubdomains.length > 0}
-				<div class="tab-nav">
+		<!-- Step 3: Characteristics -->
+		<div class="section">
+			<h2><span class="step-num">3</span> Which of these apply to your project?</h2>
+			<p class="section-hint">Select all that apply</p>
+			<div class="option-grid">
+				{#each characteristics as char}
 					<button
-						class="tab-btn"
-						class:active={activeTab === 'risks'}
-						onclick={() => activeTab = 'risks'}
+						class="option-btn"
+						class:selected={projectCharacteristics.has(char.id)}
+						onclick={() => toggleCharacteristic(char.id)}
 					>
-						Risk Areas
+						{char.label}
 					</button>
-					<button
-						class="tab-btn"
-						class:active={activeTab === 'controls'}
-						onclick={() => activeTab = 'controls'}
-					>
-						Risk Control Measures
-					</button>
-				</div>
-			{/if}
+				{/each}
+			</div>
+		</div>
 
-			{#if relevantSubdomains.length === 0}
-				<div class="empty-state">
-					<p>Select options on the left to identify relevant risk areas and control measures for your AI project.</p>
+		<!-- Results -->
+		{#if showResults}
+			<div class="results-section">
+				<div class="results-header">
+					<h2>Risk Areas to Address in {getPhaseName()}</h2>
+					<p>Based on your selections, here are the key areas to consider. Use the checkboxes to track your progress and add notes about your approach.</p>
 				</div>
-			{:else if activeTab === 'risks'}
-				<!-- Risk Areas View -->
-				<div class="risk-list">
-					{#each Object.entries(groupedRisks) as [domain, subs]}
-						<div class="domain-group">
-							<h3 class="domain-title">{domain}</h3>
-							{#each subs as sub}
-								<div class="risk-item">
-									<span class="risk-code">{sub.code}</span>
-									<div class="risk-info">
-										<span class="risk-name">{sub.shortName}</span>
-										<span class="risk-desc">{sub.description}</span>
-									</div>
-								</div>
-							{/each}
+
+				{#each applicableRisks as risk}
+					<div class="risk-card" class:addressed={responses[risk.id]?.addressed}>
+						<div class="risk-header">
+							<label class="risk-checkbox">
+								<input
+									type="checkbox"
+									checked={responses[risk.id]?.addressed || false}
+									onchange={() => toggleAddressed(risk.id)}
+								/>
+								<span class="checkmark"></span>
+							</label>
+							<div class="risk-title">
+								<h3>{risk.title}</h3>
+								<p>{risk.description}</p>
+							</div>
 						</div>
-					{/each}
-				</div>
-			{:else}
-				<!-- Risk Controls View -->
-				<div class="controls-list">
-					<div class="controls-header">
-						<h3>Tailored Control Measures for {getPhaseName(selectedPhase)}</h3>
-						<p class="controls-intro">Based on your selections, implement these controls to mitigate identified risks:</p>
+
+						<div class="risk-guidance">
+							<h4>What to do in {getPhaseName()}:</h4>
+							<p>{risk.guidance[selectedPhase]}</p>
+						</div>
+
+						<div class="risk-notes">
+							<label for="notes-{risk.id}">Your approach / notes:</label>
+							<textarea
+								id="notes-{risk.id}"
+								placeholder="How will you address this? What have you already done?"
+								value={responses[risk.id]?.notes || ''}
+								oninput={(e) => setNotes(risk.id, e.currentTarget.value)}
+							></textarea>
+						</div>
 					</div>
+				{/each}
 
-					{#each relevantSubdomains as sub, idx}
-						<div class="control-card">
-							<div class="control-header">
-								<span class="control-number">{idx + 1}</span>
-								<div class="control-meta">
-									<span class="control-code">{sub.code}</span>
-									<span class="control-name">{sub.shortName}</span>
-								</div>
-							</div>
-							<div class="control-content">
-								<p>{getMitigation(sub.id)}</p>
-							</div>
-						</div>
-					{/each}
+				<div class="next-steps">
+					<h3>Next Steps</h3>
+					<ul>
+						<li>Review the <a href="{base}/reviewer/">IRB Reviewer Checklist</a> to see what reviewers will look for</li>
+						<li>Use the <a href="{base}/risk-matrix/">Risk Matrix</a> to understand severity and likelihood</li>
+						<li>Document your risk mitigation approach in your IRB protocol</li>
+					</ul>
 				</div>
-			{/if}
-		</div>
+			</div>
+		{/if}
 	</div>
 {/if}
 
@@ -320,327 +310,44 @@
 		padding: 3rem;
 	}
 
-	.dashboard {
-		display: grid;
-		grid-template-columns: 340px 1fr;
-		gap: 1.5rem;
-		min-height: calc(100vh - 200px);
+	.self-assessment {
+		max-width: 900px;
+		margin: 0 auto;
 	}
 
-	.controls {
-		display: flex;
-		flex-direction: column;
-		gap: 1.25rem;
+	.intro {
+		margin-bottom: 2rem;
 	}
 
-	.control-section {
-		background: #1e293b;
-		border: 1px solid #334155;
-		border-radius: 0.75rem;
-		padding: 1rem;
-	}
-
-	.control-section h2 {
-		font-size: 0.8125rem;
-		font-weight: 600;
-		color: #94a3b8;
-		text-transform: uppercase;
-		letter-spacing: 0.05em;
-		margin-bottom: 0.75rem;
-	}
-
-	.phase-selector {
-		display: flex;
-		gap: 0.5rem;
-	}
-
-	.phase-btn {
-		flex: 1;
-		padding: 0.5rem;
-		background: #0f172a;
-		border: 2px solid #334155;
-		border-radius: 0.5rem;
-		cursor: pointer;
-		transition: all 0.15s ease;
-		text-align: center;
-	}
-
-	.phase-btn:hover {
-		border-color: #60a5fa;
-	}
-
-	.phase-btn.active {
-		border-color: #60a5fa;
-		background: rgba(96, 165, 250, 0.15);
-	}
-
-	.phase-label {
-		display: block;
-		font-size: 0.75rem;
-		color: #64748b;
-	}
-
-	.phase-name {
-		display: block;
-		font-size: 0.8125rem;
-		font-weight: 600;
-		color: #e2e8f0;
-	}
-
-	.model-grid {
-		display: grid;
-		grid-template-columns: repeat(2, 1fr);
-		gap: 0.5rem;
-	}
-
-	.model-chip {
-		display: flex;
-		align-items: center;
-		gap: 0.5rem;
-		padding: 0.5rem 0.75rem;
-		background: #0f172a;
-		border: 2px solid #334155;
-		border-radius: 0.5rem;
-		color: #94a3b8;
-		font-size: 0.8125rem;
-		cursor: pointer;
-		transition: all 0.15s ease;
-	}
-
-	.model-chip:hover {
-		border-color: #60a5fa;
-		color: #e2e8f0;
-	}
-
-	.model-chip.active {
-		border-color: #60a5fa;
-		background: rgba(96, 165, 250, 0.15);
+	.intro h1 {
+		font-size: 1.75rem;
 		color: #f1f5f9;
+		margin-bottom: 0.5rem;
 	}
 
-	.model-icon {
+	.intro p {
+		color: #94a3b8;
 		font-size: 1rem;
 	}
 
-	.toggles {
-		display: flex;
-		flex-direction: column;
-		gap: 0.5rem;
+	.section {
+		background: #1e293b;
+		border: 1px solid #334155;
+		border-radius: 0.75rem;
+		padding: 1.5rem;
+		margin-bottom: 1.5rem;
 	}
 
-	.toggle-row {
+	.section h2 {
 		display: flex;
 		align-items: center;
 		gap: 0.75rem;
-		padding: 0.5rem;
-		background: #0f172a;
-		border-radius: 0.375rem;
-		cursor: pointer;
-		transition: background 0.15s ease;
-	}
-
-	.toggle-row:hover {
-		background: #1e293b;
-	}
-
-	.toggle-row input[type="checkbox"] {
-		width: 1rem;
-		height: 1rem;
-		accent-color: #60a5fa;
-		cursor: pointer;
-	}
-
-	.toggle-label {
-		font-size: 0.8125rem;
-		color: #e2e8f0;
-	}
-
-	.results {
-		display: flex;
-		flex-direction: column;
-		gap: 1rem;
-	}
-
-	.risk-summary {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		padding: 1.25rem 1.5rem;
-		border: 2px solid;
-		border-radius: 0.75rem;
-		transition: all 0.3s ease;
-	}
-
-	.risk-indicator {
-		display: flex;
-		align-items: baseline;
-		gap: 0.5rem;
-	}
-
-	.risk-count {
-		font-size: 2.5rem;
-		font-weight: 700;
-		line-height: 1;
-	}
-
-	.risk-text {
-		font-size: 0.875rem;
-		color: #94a3b8;
-	}
-
-	.risk-level {
 		font-size: 1.125rem;
-		font-weight: 600;
+		color: #f1f5f9;
+		margin-bottom: 1rem;
 	}
 
-	.tab-nav {
-		display: flex;
-		gap: 0.5rem;
-		background: #1e293b;
-		padding: 0.375rem;
-		border-radius: 0.5rem;
-	}
-
-	.tab-btn {
-		flex: 1;
-		padding: 0.625rem 1rem;
-		background: transparent;
-		border: none;
-		border-radius: 0.375rem;
-		color: #94a3b8;
-		font-size: 0.875rem;
-		font-weight: 500;
-		cursor: pointer;
-		transition: all 0.15s ease;
-	}
-
-	.tab-btn:hover {
-		color: #e2e8f0;
-	}
-
-	.tab-btn.active {
-		background: #60a5fa;
-		color: #0f172a;
-	}
-
-	.empty-state {
-		background: #1e293b;
-		border: 1px dashed #334155;
-		border-radius: 0.75rem;
-		padding: 3rem;
-		text-align: center;
-		color: #64748b;
-	}
-
-	.risk-list {
-		display: flex;
-		flex-direction: column;
-		gap: 1rem;
-	}
-
-	.domain-group {
-		background: #1e293b;
-		border: 1px solid #334155;
-		border-radius: 0.75rem;
-		padding: 1rem;
-	}
-
-	.domain-title {
-		font-size: 0.75rem;
-		font-weight: 600;
-		color: #64748b;
-		text-transform: uppercase;
-		letter-spacing: 0.05em;
-		margin-bottom: 0.75rem;
-		padding-bottom: 0.5rem;
-		border-bottom: 1px solid #334155;
-	}
-
-	.risk-item {
-		display: flex;
-		align-items: flex-start;
-		gap: 0.75rem;
-		padding: 0.75rem;
-		background: #0f172a;
-		border-radius: 0.5rem;
-		margin-bottom: 0.5rem;
-	}
-
-	.risk-item:last-child {
-		margin-bottom: 0;
-	}
-
-	.risk-code {
-		background: #f59e0b;
-		color: #0f172a;
-		padding: 0.125rem 0.5rem;
-		border-radius: 0.25rem;
-		font-size: 0.6875rem;
-		font-weight: 700;
-		flex-shrink: 0;
-	}
-
-	.risk-info {
-		display: flex;
-		flex-direction: column;
-		gap: 0.25rem;
-	}
-
-	.risk-name {
-		font-size: 0.875rem;
-		font-weight: 500;
-		color: #e2e8f0;
-	}
-
-	.risk-desc {
-		font-size: 0.75rem;
-		color: #94a3b8;
-		line-height: 1.4;
-	}
-
-	/* Controls Tab Styles */
-	.controls-list {
-		display: flex;
-		flex-direction: column;
-		gap: 1rem;
-	}
-
-	.controls-header {
-		background: linear-gradient(135deg, rgba(96, 165, 250, 0.15), rgba(34, 197, 94, 0.1));
-		border: 1px solid #334155;
-		border-radius: 0.75rem;
-		padding: 1.25rem;
-	}
-
-	.controls-header h3 {
-		font-size: 1rem;
-		font-weight: 600;
-		color: #60a5fa;
-		margin-bottom: 0.5rem;
-	}
-
-	.controls-intro {
-		font-size: 0.8125rem;
-		color: #94a3b8;
-	}
-
-	.control-card {
-		background: #1e293b;
-		border: 1px solid #334155;
-		border-radius: 0.75rem;
-		overflow: hidden;
-	}
-
-	.control-header {
-		display: flex;
-		align-items: center;
-		gap: 1rem;
-		padding: 1rem;
-		background: #0f172a;
-		border-bottom: 1px solid #334155;
-	}
-
-	.control-number {
+	.step-num {
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -648,46 +355,261 @@
 		height: 28px;
 		background: #60a5fa;
 		color: #0f172a;
-		font-size: 0.8125rem;
+		font-size: 0.875rem;
 		font-weight: 700;
 		border-radius: 50%;
 		flex-shrink: 0;
 	}
 
-	.control-meta {
+	.section-hint {
+		color: #64748b;
+		font-size: 0.875rem;
+		margin-bottom: 1rem;
+	}
+
+	.phase-cards {
 		display: flex;
-		align-items: center;
+		flex-direction: column;
 		gap: 0.75rem;
 	}
 
-	.control-code {
-		background: #f59e0b;
-		color: #0f172a;
-		padding: 0.125rem 0.5rem;
-		border-radius: 0.25rem;
-		font-size: 0.6875rem;
-		font-weight: 700;
+	.phase-card {
+		text-align: left;
+		padding: 1rem 1.25rem;
+		background: #0f172a;
+		border: 2px solid #334155;
+		border-radius: 0.5rem;
+		cursor: pointer;
+		transition: all 0.15s ease;
 	}
 
-	.control-name {
-		font-size: 0.9375rem;
-		font-weight: 600;
+	.phase-card strong {
+		display: block;
+		font-size: 1rem;
+		color: #e2e8f0;
+		margin-bottom: 0.25rem;
+	}
+
+	.phase-card p {
+		font-size: 0.8125rem;
+		color: #64748b;
+		margin: 0;
+	}
+
+	.phase-card:hover {
+		border-color: #60a5fa;
+	}
+
+	.phase-card.selected {
+		border-color: #60a5fa;
+		background: rgba(96, 165, 250, 0.1);
+	}
+
+	.phase-card.selected strong {
+		color: #60a5fa;
+	}
+
+	.option-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+		gap: 0.5rem;
+	}
+
+	.option-btn {
+		text-align: left;
+		padding: 0.75rem 1rem;
+		background: #0f172a;
+		border: 2px solid #334155;
+		border-radius: 0.5rem;
+		color: #94a3b8;
+		font-size: 0.875rem;
+		cursor: pointer;
+		transition: all 0.15s ease;
+	}
+
+	.option-btn:hover {
+		border-color: #60a5fa;
+		color: #e2e8f0;
+	}
+
+	.option-btn.selected {
+		border-color: #60a5fa;
+		background: rgba(96, 165, 250, 0.1);
 		color: #f1f5f9;
 	}
 
-	.control-content {
-		padding: 1rem;
+	.results-section {
+		margin-top: 2rem;
 	}
 
-	.control-content p {
+	.results-header {
+		margin-bottom: 1.5rem;
+	}
+
+	.results-header h2 {
+		font-size: 1.25rem;
+		color: #60a5fa;
+		margin-bottom: 0.5rem;
+	}
+
+	.results-header p {
+		color: #94a3b8;
+		font-size: 0.9375rem;
+	}
+
+	.risk-card {
+		background: #1e293b;
+		border: 1px solid #334155;
+		border-radius: 0.75rem;
+		padding: 1.25rem;
+		margin-bottom: 1rem;
+		transition: all 0.15s ease;
+	}
+
+	.risk-card.addressed {
+		border-color: #22c55e;
+		background: rgba(34, 197, 94, 0.05);
+	}
+
+	.risk-header {
+		display: flex;
+		gap: 1rem;
+		margin-bottom: 1rem;
+	}
+
+	.risk-checkbox {
+		position: relative;
+		cursor: pointer;
+		flex-shrink: 0;
+	}
+
+	.risk-checkbox input {
+		position: absolute;
+		opacity: 0;
+		cursor: pointer;
+	}
+
+	.checkmark {
+		display: block;
+		width: 24px;
+		height: 24px;
+		background: #0f172a;
+		border: 2px solid #475569;
+		border-radius: 0.375rem;
+		transition: all 0.15s ease;
+	}
+
+	.risk-checkbox input:checked ~ .checkmark {
+		background: #22c55e;
+		border-color: #22c55e;
+	}
+
+	.risk-checkbox input:checked ~ .checkmark::after {
+		content: '✓';
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		color: #0f172a;
+		font-weight: bold;
+		font-size: 0.875rem;
+	}
+
+	.risk-title h3 {
+		font-size: 1rem;
+		color: #f1f5f9;
+		margin-bottom: 0.25rem;
+	}
+
+	.risk-title p {
 		font-size: 0.8125rem;
+		color: #64748b;
+		margin: 0;
+	}
+
+	.risk-guidance {
+		background: #0f172a;
+		border-radius: 0.5rem;
+		padding: 1rem;
+		margin-bottom: 1rem;
+	}
+
+	.risk-guidance h4 {
+		font-size: 0.75rem;
+		font-weight: 600;
+		color: #60a5fa;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+		margin-bottom: 0.5rem;
+	}
+
+	.risk-guidance p {
+		font-size: 0.875rem;
 		color: #cbd5e1;
 		line-height: 1.6;
+		margin: 0;
 	}
 
-	@media (max-width: 900px) {
-		.dashboard {
-			grid-template-columns: 1fr;
-		}
+	.risk-notes label {
+		display: block;
+		font-size: 0.75rem;
+		font-weight: 600;
+		color: #64748b;
+		margin-bottom: 0.5rem;
+	}
+
+	.risk-notes textarea {
+		width: 100%;
+		min-height: 80px;
+		padding: 0.75rem;
+		background: #0f172a;
+		border: 1px solid #334155;
+		border-radius: 0.5rem;
+		color: #e2e8f0;
+		font-size: 0.875rem;
+		font-family: inherit;
+		resize: vertical;
+	}
+
+	.risk-notes textarea:focus {
+		outline: none;
+		border-color: #60a5fa;
+	}
+
+	.risk-notes textarea::placeholder {
+		color: #475569;
+	}
+
+	.next-steps {
+		background: linear-gradient(135deg, rgba(96, 165, 250, 0.1), rgba(34, 197, 94, 0.05));
+		border: 1px solid #334155;
+		border-radius: 0.75rem;
+		padding: 1.25rem;
+		margin-top: 2rem;
+	}
+
+	.next-steps h3 {
+		font-size: 1rem;
+		color: #f1f5f9;
+		margin-bottom: 0.75rem;
+	}
+
+	.next-steps ul {
+		margin: 0;
+		padding-left: 1.25rem;
+	}
+
+	.next-steps li {
+		color: #94a3b8;
+		font-size: 0.875rem;
+		margin-bottom: 0.5rem;
+	}
+
+	.next-steps a {
+		color: #60a5fa;
+		text-decoration: none;
+	}
+
+	.next-steps a:hover {
+		text-decoration: underline;
 	}
 </style>
