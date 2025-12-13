@@ -2,22 +2,6 @@
 	import { base } from '$app/paths';
 	import { onMount } from 'svelte';
 
-	interface Question {
-		id: string;
-		question: string;
-		type: string;
-		required: boolean;
-		options?: { value: string; label: string; description?: string }[];
-		triggers?: Record<string, string[]>;
-	}
-
-	interface Category {
-		id: string;
-		name: string;
-		order: number;
-		questions: Question[];
-	}
-
 	interface RiskSubdomain {
 		id: string;
 		code: string;
@@ -31,36 +15,110 @@
 		[phase: string]: string;
 	}
 
-	let categories: Category[] = $state([]);
 	let riskSubdomains: RiskSubdomain[] = $state([]);
 	let phaseMitigations: Record<string, Mitigation> = $state({});
-	let answers: Record<string, string | string[]> = $state({});
 	let loading = $state(true);
-	let currentStep = $state(0);
 
-	// Derived values for results
-	let relevantSubdomains = $derived(getRelevantSubdomainsComputed());
-	let selectedPhaseValue = $derived(getSelectedPhase());
+	// Direct selections - no pagination
+	let selectedPhase = $state('phase-1');
+	let selectedModelTypes = $state<Set<string>>(new Set());
+	let toggles = $state<Record<string, boolean>>({
+		'patient-data': false,
+		'direct-care': false,
+		'autonomous': false,
+		'continuous-learning': false,
+		'black-box': false,
+		'generates-content': false,
+		'external-api': false,
+		'vulnerable-pop': false
+	});
 
-	function getRelevantSubdomainsComputed(): RiskSubdomain[] {
-		const triggered = getTriggeredSubdomains();
-		if (triggered.size === 0) return [];
-		return riskSubdomains.filter(s => triggered.has(s.id));
-	}
+	// Active view tab
+	let activeTab = $state<'risks' | 'controls'>('risks');
+
+	// Risk trigger mappings
+	const triggerMap: Record<string, string[]> = {
+		'patient-data': ['privacy-breach-2.1', 'security-vulnerabilities-2.2'],
+		'direct-care': ['overreliance-5.1', 'loss-of-agency-5.2', 'false-information-3.1'],
+		'autonomous': ['overreliance-5.1', 'loss-of-agency-5.2', 'governance-failure-6.5', 'misaligned-goals-7.1'],
+		'continuous-learning': ['lack-robustness-7.3', 'governance-failure-6.5', 'unequal-performance-1.3'],
+		'black-box': ['lack-transparency-7.4', 'overreliance-5.1'],
+		'generates-content': ['false-information-3.1', 'information-pollution-3.2', 'toxic-content-1.2'],
+		'external-api': ['privacy-breach-2.1', 'security-vulnerabilities-2.2', 'governance-failure-6.5'],
+		'vulnerable-pop': ['unfair-discrimination-1.1', 'unequal-performance-1.3']
+	};
+
+	const modelTypeTriggers: Record<string, string[]> = {
+		'llm': ['toxic-content-1.2', 'false-information-3.1', 'privacy-breach-2.1', 'overreliance-5.1'],
+		'computer-vision': ['unfair-discrimination-1.1', 'unequal-performance-1.3', 'lack-transparency-7.4'],
+		'predictive': ['unfair-discrimination-1.1', 'false-information-3.1', 'lack-robustness-7.3'],
+		'recommendation': ['unfair-discrimination-1.1', 'overreliance-5.1', 'loss-of-agency-5.2'],
+		'generative': ['false-information-3.1', 'information-pollution-3.2', 'toxic-content-1.2'],
+		'foundation': ['lack-transparency-7.4', 'governance-failure-6.5', 'privacy-breach-2.1']
+	};
+
+	const modelTypes = [
+		{ id: 'llm', label: 'LLM / Chat', icon: '💬' },
+		{ id: 'computer-vision', label: 'Vision', icon: '👁️' },
+		{ id: 'predictive', label: 'Predictive', icon: '📊' },
+		{ id: 'recommendation', label: 'Recommender', icon: '🎯' },
+		{ id: 'generative', label: 'Generative', icon: '🎨' },
+		{ id: 'foundation', label: 'Foundation', icon: '🏗️' }
+	];
+
+	const phases = [
+		{ id: 'phase-1', label: 'Phase 1', name: 'Discovery', desc: 'Retrospective data, no clinical impact' },
+		{ id: 'phase-2', label: 'Phase 2', name: 'Validation', desc: 'Prospective testing, controlled' },
+		{ id: 'phase-3', label: 'Phase 3', name: 'Deployment', desc: 'Live clinical use' }
+	];
+
+	// Derived: triggered subdomains
+	let triggeredIds = $derived.by(() => {
+		const ids = new Set<string>();
+		for (const [key, active] of Object.entries(toggles)) {
+			if (active && triggerMap[key]) {
+				triggerMap[key].forEach(id => ids.add(id));
+			}
+		}
+		for (const mt of selectedModelTypes) {
+			if (modelTypeTriggers[mt]) {
+				modelTypeTriggers[mt].forEach(id => ids.add(id));
+			}
+		}
+		return ids;
+	});
+
+	let relevantSubdomains = $derived(
+		riskSubdomains.filter(s => triggeredIds.has(s.id))
+	);
+
+	// Group by domain for display
+	let groupedRisks = $derived.by(() => {
+		const groups: Record<string, RiskSubdomain[]> = {};
+		for (const sub of relevantSubdomains) {
+			if (!groups[sub.domain]) groups[sub.domain] = [];
+			groups[sub.domain].push(sub);
+		}
+		return groups;
+	});
+
+	let riskLevel = $derived.by(() => {
+		const count = relevantSubdomains.length;
+		if (count === 0) return { label: 'Minimal', color: '#22c55e', bg: 'rgba(34, 197, 94, 0.15)' };
+		if (count <= 3) return { label: 'Low', color: '#84cc16', bg: 'rgba(132, 204, 22, 0.15)' };
+		if (count <= 6) return { label: 'Moderate', color: '#f59e0b', bg: 'rgba(245, 158, 11, 0.15)' };
+		if (count <= 9) return { label: 'Elevated', color: '#f97316', bg: 'rgba(249, 115, 22, 0.15)' };
+		return { label: 'High', color: '#ef4444', bg: 'rgba(239, 68, 68, 0.15)' };
+	});
 
 	onMount(async () => {
 		try {
-			const [questionsRes, subdomainsRes, mitigationsRes] = await Promise.all([
-				fetch(`${base}/data/assessment-questions.json`),
+			const [subdomainsRes, mitigationsRes] = await Promise.all([
 				fetch(`${base}/data/risk-subdomains.json`),
 				fetch(`${base}/data/phase-mitigations.json`)
 			]);
-
-			const questionsData = await questionsRes.json();
 			const subdomainsData = await subdomainsRes.json();
 			const mitigationsData = await mitigationsRes.json();
-
-			categories = questionsData.questionCategories;
 			riskSubdomains = subdomainsData.riskSubdomains;
 			phaseMitigations = mitigationsData.phaseMitigations;
 		} catch (e) {
@@ -70,567 +128,566 @@
 		}
 	});
 
-	function setAnswer(questionId: string, value: string | string[]) {
-		answers = { ...answers, [questionId]: value };
-	}
-
-	function toggleMultiSelect(questionId: string, value: string) {
-		const current = (answers[questionId] as string[]) || [];
-		if (current.includes(value)) {
-			setAnswer(questionId, current.filter(v => v !== value));
+	function toggleModelType(id: string) {
+		const newSet = new Set(selectedModelTypes);
+		if (newSet.has(id)) {
+			newSet.delete(id);
 		} else {
-			setAnswer(questionId, [...current, value]);
+			newSet.add(id);
 		}
-	}
-
-	function getTriggeredSubdomains(): Set<string> {
-		const triggered = new Set<string>();
-		for (const category of categories) {
-			for (const question of category.questions) {
-				const answer = answers[question.id];
-				if (!answer || !question.triggers) continue;
-
-				if (question.type === 'yes-no') {
-					const triggerIds = question.triggers[answer as string] || [];
-					triggerIds.forEach(id => triggered.add(id));
-				} else if (question.type === 'single-select') {
-					const triggerIds = question.triggers[answer as string] || [];
-					triggerIds.forEach(id => triggered.add(id));
-				} else if (question.type === 'multi-select') {
-					const selectedValues = answer as string[];
-					for (const val of selectedValues) {
-						const triggerIds = question.triggers[val] || [];
-						triggerIds.forEach(id => triggered.add(id));
-					}
-				}
-			}
-		}
-		return triggered;
-	}
-
-	function getRelevantSubdomains(): RiskSubdomain[] {
-		const triggered = getTriggeredSubdomains();
-		if (triggered.size === 0) return [];
-		return riskSubdomains.filter(s => triggered.has(s.id));
-	}
-
-	function getSelectedPhase(): string {
-		return (answers['phase'] as string) || 'phase-1';
+		selectedModelTypes = newSet;
 	}
 
 	function getMitigation(subdomainId: string): string {
-		const phase = getSelectedPhase();
 		const mitigation = phaseMitigations[subdomainId];
 		if (!mitigation) return 'No specific mitigation guidance available.';
-		return mitigation[phase] || mitigation['phase-1'] || 'No specific mitigation guidance available.';
+		return mitigation[selectedPhase] || mitigation['phase-1'] || 'No specific mitigation guidance available.';
 	}
 
-	function nextStep() {
-		if (currentStep < categories.length) {
-			currentStep++;
-		}
-	}
-
-	function prevStep() {
-		if (currentStep > 0) {
-			currentStep--;
-		}
-	}
-
-	function getProgressPercent(): number {
-		const totalQuestions = categories.reduce((sum, cat) => sum + cat.questions.filter(q => q.required).length, 0);
-		const answeredQuestions = Object.keys(answers).filter(key => {
-			const val = answers[key];
-			return val && (typeof val === 'string' ? val.length > 0 : val.length > 0);
-		}).length;
-		return totalQuestions > 0 ? Math.round((answeredQuestions / totalQuestions) * 100) : 0;
+	function getPhaseName(phaseId: string): string {
+		return phases.find(p => p.id === phaseId)?.name || phaseId;
 	}
 </script>
 
 <svelte:head>
-	<title>Innovator Checklist - AI Oversight Tools</title>
+	<title>Innovator Self-Assessment - AI Oversight Tools</title>
 </svelte:head>
 
-<div class="page-header">
-	<h1>AI Research Self-Assessment</h1>
-	<p>Answer questions about your AI project to identify potential risks and get mitigation guidance</p>
-</div>
-
 {#if loading}
-	<div class="loading">Loading assessment questions...</div>
+	<div class="loading">Loading...</div>
 {:else}
-	<!-- Progress indicator -->
-	<div class="progress-bar">
-		<div class="progress-text">
-			<span>Step {Math.min(currentStep + 1, categories.length + 1)} of {categories.length + 1}</span>
-			<span>{getProgressPercent()}% complete</span>
-		</div>
-		<div class="progress-track">
-			<div class="progress-fill" style="width: {(currentStep / (categories.length)) * 100}%"></div>
-		</div>
-	</div>
-
-	<!-- Step navigation -->
-	<div class="step-nav">
-		{#each categories as cat, idx}
-			<button
-				class="step-dot"
-				class:active={currentStep === idx}
-				class:completed={currentStep > idx}
-				onclick={() => currentStep = idx}
-			>
-				{idx + 1}
-			</button>
-		{/each}
-		<button
-			class="step-dot"
-			class:active={currentStep === categories.length}
-			onclick={() => currentStep = categories.length}
-		>
-			Results
-		</button>
-	</div>
-
-	<!-- Question steps -->
-	{#if currentStep < categories.length}
-		{@const category = categories[currentStep]}
-		<div class="question-panel">
-			<h2>{category.name}</h2>
-
-			{#each category.questions as question}
-				<div class="question">
-					<label class="question-label">
-						{question.question}
-						{#if question.required}<span class="required">*</span>{/if}
-					</label>
-
-					{#if question.type === 'yes-no'}
-						<div class="options-row">
-							<button
-								class="option-btn"
-								class:selected={answers[question.id] === 'yes'}
-								onclick={() => setAnswer(question.id, 'yes')}
-							>Yes</button>
-							<button
-								class="option-btn"
-								class:selected={answers[question.id] === 'no'}
-								onclick={() => setAnswer(question.id, 'no')}
-							>No</button>
-						</div>
-					{:else if question.type === 'single-select' && question.options}
-						<div class="options-list">
-							{#each question.options as option}
-								<button
-									class="option-card"
-									class:selected={answers[question.id] === option.value}
-									onclick={() => setAnswer(question.id, option.value)}
-								>
-									<span class="option-label">{option.label}</span>
-									{#if option.description}
-										<span class="option-desc">{option.description}</span>
-									{/if}
-								</button>
-							{/each}
-						</div>
-					{:else if question.type === 'multi-select' && question.options}
-						<div class="options-list">
-							{#each question.options as option}
-								<button
-									class="option-card"
-									class:selected={(answers[question.id] as string[] || []).includes(option.value)}
-									onclick={() => toggleMultiSelect(question.id, option.value)}
-								>
-									<span class="option-label">{option.label}</span>
-									{#if option.description}
-										<span class="option-desc">{option.description}</span>
-									{/if}
-								</button>
-							{/each}
-						</div>
-					{/if}
+	<div class="dashboard">
+		<!-- Left: Controls -->
+		<div class="controls">
+			<div class="control-section">
+				<h2>Development Phase</h2>
+				<div class="phase-selector">
+					{#each phases as phase}
+						<button
+							class="phase-btn"
+							class:active={selectedPhase === phase.id}
+							onclick={() => selectedPhase = phase.id}
+						>
+							<span class="phase-label">{phase.label}</span>
+							<span class="phase-name">{phase.name}</span>
+						</button>
+					{/each}
 				</div>
-			{/each}
+			</div>
 
-			<div class="nav-buttons">
-				<button class="nav-btn secondary" onclick={prevStep} disabled={currentStep === 0}>
-					← Previous
-				</button>
-				<button class="nav-btn primary" onclick={nextStep}>
-					{currentStep === categories.length - 1 ? 'View Results' : 'Next →'}
-				</button>
+			<div class="control-section">
+				<h2>AI Model Type</h2>
+				<div class="model-grid">
+					{#each modelTypes as mt}
+						<button
+							class="model-chip"
+							class:active={selectedModelTypes.has(mt.id)}
+							onclick={() => toggleModelType(mt.id)}
+						>
+							<span class="model-icon">{mt.icon}</span>
+							<span>{mt.label}</span>
+						</button>
+					{/each}
+				</div>
+			</div>
+
+			<div class="control-section">
+				<h2>Risk Factors</h2>
+				<div class="toggles">
+					<label class="toggle-row">
+						<input type="checkbox" bind:checked={toggles['patient-data']} />
+						<span class="toggle-label">Uses patient health data</span>
+					</label>
+					<label class="toggle-row">
+						<input type="checkbox" bind:checked={toggles['direct-care']} />
+						<span class="toggle-label">Directly affects care decisions</span>
+					</label>
+					<label class="toggle-row">
+						<input type="checkbox" bind:checked={toggles['autonomous']} />
+						<span class="toggle-label">Operates autonomously</span>
+					</label>
+					<label class="toggle-row">
+						<input type="checkbox" bind:checked={toggles['continuous-learning']} />
+						<span class="toggle-label">Continuously learns/updates</span>
+					</label>
+					<label class="toggle-row">
+						<input type="checkbox" bind:checked={toggles['black-box']} />
+						<span class="toggle-label">Limited explainability</span>
+					</label>
+					<label class="toggle-row">
+						<input type="checkbox" bind:checked={toggles['generates-content']} />
+						<span class="toggle-label">Generates content/recommendations</span>
+					</label>
+					<label class="toggle-row">
+						<input type="checkbox" bind:checked={toggles['external-api']} />
+						<span class="toggle-label">Uses external APIs/cloud</span>
+					</label>
+					<label class="toggle-row">
+						<input type="checkbox" bind:checked={toggles['vulnerable-pop']} />
+						<span class="toggle-label">Vulnerable populations</span>
+					</label>
+				</div>
 			</div>
 		</div>
-	{:else}
-		<!-- Results panel -->
-		<div class="results-panel">
-			<h2>Assessment Results</h2>
+
+		<!-- Right: Results -->
+		<div class="results">
+			<!-- Summary Bar -->
+			<div class="risk-summary" style="background: {riskLevel.bg}; border-color: {riskLevel.color}">
+				<div class="risk-indicator">
+					<span class="risk-count" style="color: {riskLevel.color}">{relevantSubdomains.length}</span>
+					<span class="risk-text">Risk Areas</span>
+				</div>
+				<div class="risk-level" style="color: {riskLevel.color}">
+					{riskLevel.label} Risk Profile
+				</div>
+			</div>
+
+			<!-- Tab Navigation -->
+			{#if relevantSubdomains.length > 0}
+				<div class="tab-nav">
+					<button
+						class="tab-btn"
+						class:active={activeTab === 'risks'}
+						onclick={() => activeTab = 'risks'}
+					>
+						Risk Areas
+					</button>
+					<button
+						class="tab-btn"
+						class:active={activeTab === 'controls'}
+						onclick={() => activeTab = 'controls'}
+					>
+						Risk Control Measures
+					</button>
+				</div>
+			{/if}
 
 			{#if relevantSubdomains.length === 0}
-				<div class="no-results">
-					<p>Answer more questions to see relevant risk areas and mitigations.</p>
-					<button class="nav-btn primary" onclick={() => currentStep = 0}>Start Assessment</button>
+				<div class="empty-state">
+					<p>Select options on the left to identify relevant risk areas and control measures for your AI project.</p>
+				</div>
+			{:else if activeTab === 'risks'}
+				<!-- Risk Areas View -->
+				<div class="risk-list">
+					{#each Object.entries(groupedRisks) as [domain, subs]}
+						<div class="domain-group">
+							<h3 class="domain-title">{domain}</h3>
+							{#each subs as sub}
+								<div class="risk-item">
+									<span class="risk-code">{sub.code}</span>
+									<div class="risk-info">
+										<span class="risk-name">{sub.shortName}</span>
+										<span class="risk-desc">{sub.description}</span>
+									</div>
+								</div>
+							{/each}
+						</div>
+					{/each}
 				</div>
 			{:else}
-				<div class="results-summary">
-					<div class="summary-stat">
-						<span class="stat-number">{relevantSubdomains.length}</span>
-						<span class="stat-label">Risk Areas Identified</span>
+				<!-- Risk Controls View -->
+				<div class="controls-list">
+					<div class="controls-header">
+						<h3>Tailored Control Measures for {getPhaseName(selectedPhase)}</h3>
+						<p class="controls-intro">Based on your selections, implement these controls to mitigate identified risks:</p>
 					</div>
-					<div class="summary-stat">
-						<span class="stat-number">{selectedPhaseValue.replace('phase-', 'Phase ')}</span>
-						<span class="stat-label">Development Stage</span>
-					</div>
-				</div>
 
-				<h3>Identified Risk Areas & Mitigations</h3>
-
-				<div class="mitigations">
-					{#each relevantSubdomains as subdomain}
-						<div class="mitigation-card">
-							<div class="mitigation-header">
-								<span class="code">{subdomain.code}</span>
-								<h4>{subdomain.shortName}</h4>
+					{#each relevantSubdomains as sub, idx}
+						<div class="control-card">
+							<div class="control-header">
+								<span class="control-number">{idx + 1}</span>
+								<div class="control-meta">
+									<span class="control-code">{sub.code}</span>
+									<span class="control-name">{sub.shortName}</span>
+								</div>
 							</div>
-							<p class="mitigation-desc">{subdomain.description}</p>
-							<div class="mitigation-content">
-								<strong>Recommended Mitigation ({selectedPhaseValue.replace('phase-', 'Phase ')}):</strong>
-								<p>{getMitigation(subdomain.id)}</p>
+							<div class="control-content">
+								<p>{getMitigation(sub.id)}</p>
 							</div>
 						</div>
 					{/each}
 				</div>
-
-				<div class="nav-buttons">
-					<button class="nav-btn secondary" onclick={() => currentStep = 0}>
-						← Edit Responses
-					</button>
-					<a href="{base}/reviewer" class="nav-btn primary">
-						View Full Reviewer Checklist →
-					</a>
-				</div>
 			{/if}
 		</div>
-	{/if}
+	</div>
 {/if}
 
 <style>
-	.page-header {
-		margin-bottom: 2rem;
-	}
-
-	.page-header h1 {
-		font-size: 1.75rem;
-		color: #f1f5f9;
-		margin-bottom: 0.5rem;
-	}
-
-	.page-header p {
-		color: #94a3b8;
-	}
-
 	.loading {
 		text-align: center;
 		color: #94a3b8;
 		padding: 3rem;
 	}
 
-	.progress-bar {
-		background: #1e293b;
-		border: 1px solid #334155;
-		border-radius: 0.5rem;
-		padding: 1rem;
-		margin-bottom: 1rem;
+	.dashboard {
+		display: grid;
+		grid-template-columns: 340px 1fr;
+		gap: 1.5rem;
+		min-height: calc(100vh - 200px);
 	}
 
-	.progress-text {
+	.controls {
 		display: flex;
-		justify-content: space-between;
-		font-size: 0.875rem;
-		color: #94a3b8;
-		margin-bottom: 0.5rem;
+		flex-direction: column;
+		gap: 1.25rem;
 	}
 
-	.progress-track {
-		height: 8px;
-		background: #0f172a;
-		border-radius: 4px;
-		overflow: hidden;
-	}
-
-	.progress-fill {
-		height: 100%;
-		background: #60a5fa;
-		border-radius: 4px;
-		transition: width 0.3s ease;
-	}
-
-	.step-nav {
-		display: flex;
-		justify-content: center;
-		gap: 0.5rem;
-		margin-bottom: 1.5rem;
-	}
-
-	.step-dot {
-		width: 32px;
-		height: 32px;
-		border-radius: 50%;
-		border: 2px solid #334155;
-		background: #1e293b;
-		color: #94a3b8;
-		font-size: 0.75rem;
-		font-weight: 600;
-		cursor: pointer;
-		transition: all 0.15s ease;
-	}
-
-	.step-dot.active {
-		border-color: #60a5fa;
-		background: #60a5fa;
-		color: #0f172a;
-	}
-
-	.step-dot.completed {
-		border-color: #22c55e;
-		background: #22c55e;
-		color: #0f172a;
-	}
-
-	.question-panel, .results-panel {
+	.control-section {
 		background: #1e293b;
 		border: 1px solid #334155;
 		border-radius: 0.75rem;
-		padding: 1.5rem;
+		padding: 1rem;
 	}
 
-	.question-panel h2, .results-panel h2 {
-		font-size: 1.25rem;
-		color: #f1f5f9;
-		margin-bottom: 1.5rem;
-	}
-
-	.question {
-		margin-bottom: 1.5rem;
-	}
-
-	.question-label {
-		display: block;
-		font-size: 0.9375rem;
-		color: #e2e8f0;
+	.control-section h2 {
+		font-size: 0.8125rem;
+		font-weight: 600;
+		color: #94a3b8;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
 		margin-bottom: 0.75rem;
-		line-height: 1.4;
 	}
 
-	.required {
-		color: #ef4444;
-	}
-
-	.options-row {
+	.phase-selector {
 		display: flex;
-		gap: 0.75rem;
+		gap: 0.5rem;
 	}
 
-	.option-btn {
+	.phase-btn {
 		flex: 1;
-		max-width: 120px;
-		padding: 0.75rem 1.5rem;
+		padding: 0.5rem;
+		background: #0f172a;
 		border: 2px solid #334155;
 		border-radius: 0.5rem;
+		cursor: pointer;
+		transition: all 0.15s ease;
+		text-align: center;
+	}
+
+	.phase-btn:hover {
+		border-color: #60a5fa;
+	}
+
+	.phase-btn.active {
+		border-color: #60a5fa;
+		background: rgba(96, 165, 250, 0.15);
+	}
+
+	.phase-label {
+		display: block;
+		font-size: 0.75rem;
+		color: #64748b;
+	}
+
+	.phase-name {
+		display: block;
+		font-size: 0.8125rem;
+		font-weight: 600;
+		color: #e2e8f0;
+	}
+
+	.model-grid {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 0.5rem;
+	}
+
+	.model-chip {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		padding: 0.5rem 0.75rem;
 		background: #0f172a;
+		border: 2px solid #334155;
+		border-radius: 0.5rem;
 		color: #94a3b8;
-		font-size: 0.875rem;
-		font-weight: 500;
+		font-size: 0.8125rem;
 		cursor: pointer;
 		transition: all 0.15s ease;
 	}
 
-	.option-btn:hover {
+	.model-chip:hover {
 		border-color: #60a5fa;
 		color: #e2e8f0;
 	}
 
-	.option-btn.selected {
+	.model-chip.active {
 		border-color: #60a5fa;
-		background: #1e40af;
+		background: rgba(96, 165, 250, 0.15);
 		color: #f1f5f9;
 	}
 
-	.options-list {
+	.model-icon {
+		font-size: 1rem;
+	}
+
+	.toggles {
 		display: flex;
 		flex-direction: column;
 		gap: 0.5rem;
 	}
 
-	.option-card {
-		padding: 0.75rem 1rem;
-		border: 2px solid #334155;
-		border-radius: 0.5rem;
-		background: #0f172a;
-		text-align: left;
-		cursor: pointer;
-		transition: all 0.15s ease;
-	}
-
-	.option-card:hover {
-		border-color: #60a5fa;
-	}
-
-	.option-card.selected {
-		border-color: #60a5fa;
-		background: rgba(30, 64, 175, 0.3);
-	}
-
-	.option-label {
-		display: block;
-		color: #e2e8f0;
-		font-weight: 500;
-		font-size: 0.875rem;
-	}
-
-	.option-desc {
-		display: block;
-		color: #94a3b8;
-		font-size: 0.75rem;
-		margin-top: 0.25rem;
-	}
-
-	.nav-buttons {
+	.toggle-row {
 		display: flex;
-		justify-content: space-between;
-		margin-top: 2rem;
-		padding-top: 1.5rem;
-		border-top: 1px solid #334155;
-	}
-
-	.nav-btn {
-		padding: 0.75rem 1.5rem;
-		border-radius: 0.5rem;
-		font-size: 0.875rem;
-		font-weight: 500;
+		align-items: center;
+		gap: 0.75rem;
+		padding: 0.5rem;
+		background: #0f172a;
+		border-radius: 0.375rem;
 		cursor: pointer;
-		transition: all 0.15s ease;
-		text-decoration: none;
+		transition: background 0.15s ease;
 	}
 
-	.nav-btn.primary {
-		background: #60a5fa;
-		color: #0f172a;
-		border: none;
+	.toggle-row:hover {
+		background: #1e293b;
 	}
 
-	.nav-btn.primary:hover {
-		background: #3b82f6;
+	.toggle-row input[type="checkbox"] {
+		width: 1rem;
+		height: 1rem;
+		accent-color: #60a5fa;
+		cursor: pointer;
 	}
 
-	.nav-btn.secondary {
-		background: transparent;
-		color: #94a3b8;
-		border: 1px solid #334155;
-	}
-
-	.nav-btn.secondary:hover:not(:disabled) {
-		border-color: #60a5fa;
+	.toggle-label {
+		font-size: 0.8125rem;
 		color: #e2e8f0;
 	}
 
-	.nav-btn:disabled {
-		opacity: 0.5;
-		cursor: not-allowed;
-	}
-
-	.results-panel h3 {
-		font-size: 1rem;
-		color: #f1f5f9;
-		margin: 1.5rem 0 1rem;
-	}
-
-	.no-results {
-		text-align: center;
-		padding: 2rem;
-		color: #94a3b8;
-	}
-
-	.results-summary {
-		display: flex;
-		gap: 1.5rem;
-		margin-bottom: 1.5rem;
-	}
-
-	.summary-stat {
-		background: #0f172a;
-		border: 1px solid #334155;
-		border-radius: 0.5rem;
-		padding: 1rem 1.5rem;
-		text-align: center;
-	}
-
-	.stat-number {
-		display: block;
-		font-size: 1.5rem;
-		font-weight: 700;
-		color: #60a5fa;
-	}
-
-	.stat-label {
-		font-size: 0.75rem;
-		color: #94a3b8;
-	}
-
-	.mitigations {
+	.results {
 		display: flex;
 		flex-direction: column;
 		gap: 1rem;
 	}
 
-	.mitigation-card {
-		background: #0f172a;
-		border: 1px solid #334155;
+	.risk-summary {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 1.25rem 1.5rem;
+		border: 2px solid;
+		border-radius: 0.75rem;
+		transition: all 0.3s ease;
+	}
+
+	.risk-indicator {
+		display: flex;
+		align-items: baseline;
+		gap: 0.5rem;
+	}
+
+	.risk-count {
+		font-size: 2.5rem;
+		font-weight: 700;
+		line-height: 1;
+	}
+
+	.risk-text {
+		font-size: 0.875rem;
+		color: #94a3b8;
+	}
+
+	.risk-level {
+		font-size: 1.125rem;
+		font-weight: 600;
+	}
+
+	.tab-nav {
+		display: flex;
+		gap: 0.5rem;
+		background: #1e293b;
+		padding: 0.375rem;
 		border-radius: 0.5rem;
+	}
+
+	.tab-btn {
+		flex: 1;
+		padding: 0.625rem 1rem;
+		background: transparent;
+		border: none;
+		border-radius: 0.375rem;
+		color: #94a3b8;
+		font-size: 0.875rem;
+		font-weight: 500;
+		cursor: pointer;
+		transition: all 0.15s ease;
+	}
+
+	.tab-btn:hover {
+		color: #e2e8f0;
+	}
+
+	.tab-btn.active {
+		background: #60a5fa;
+		color: #0f172a;
+	}
+
+	.empty-state {
+		background: #1e293b;
+		border: 1px dashed #334155;
+		border-radius: 0.75rem;
+		padding: 3rem;
+		text-align: center;
+		color: #64748b;
+	}
+
+	.risk-list {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+	}
+
+	.domain-group {
+		background: #1e293b;
+		border: 1px solid #334155;
+		border-radius: 0.75rem;
 		padding: 1rem;
 	}
 
-	.mitigation-header {
+	.domain-title {
+		font-size: 0.75rem;
+		font-weight: 600;
+		color: #64748b;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+		margin-bottom: 0.75rem;
+		padding-bottom: 0.5rem;
+		border-bottom: 1px solid #334155;
+	}
+
+	.risk-item {
 		display: flex;
-		align-items: center;
+		align-items: flex-start;
 		gap: 0.75rem;
+		padding: 0.75rem;
+		background: #0f172a;
+		border-radius: 0.5rem;
 		margin-bottom: 0.5rem;
 	}
 
-	.code {
+	.risk-item:last-child {
+		margin-bottom: 0;
+	}
+
+	.risk-code {
 		background: #f59e0b;
 		color: #0f172a;
 		padding: 0.125rem 0.5rem;
 		border-radius: 0.25rem;
-		font-size: 0.75rem;
+		font-size: 0.6875rem;
 		font-weight: 700;
+		flex-shrink: 0;
 	}
 
-	.mitigation-header h4 {
-		color: #f1f5f9;
-		font-size: 0.9375rem;
+	.risk-info {
+		display: flex;
+		flex-direction: column;
+		gap: 0.25rem;
 	}
 
-	.mitigation-desc {
+	.risk-name {
+		font-size: 0.875rem;
+		font-weight: 500;
+		color: #e2e8f0;
+	}
+
+	.risk-desc {
+		font-size: 0.75rem;
 		color: #94a3b8;
-		font-size: 0.8125rem;
-		margin-bottom: 0.75rem;
+		line-height: 1.4;
 	}
 
-	.mitigation-content {
-		background: #1e293b;
-		padding: 0.75rem;
-		border-radius: 0.375rem;
-		font-size: 0.8125rem;
+	/* Controls Tab Styles */
+	.controls-list {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
 	}
 
-	.mitigation-content strong {
+	.controls-header {
+		background: linear-gradient(135deg, rgba(96, 165, 250, 0.15), rgba(34, 197, 94, 0.1));
+		border: 1px solid #334155;
+		border-radius: 0.75rem;
+		padding: 1.25rem;
+	}
+
+	.controls-header h3 {
+		font-size: 1rem;
+		font-weight: 600;
 		color: #60a5fa;
-		display: block;
 		margin-bottom: 0.5rem;
 	}
 
-	.mitigation-content p {
-		color: #e2e8f0;
-		line-height: 1.5;
+	.controls-intro {
+		font-size: 0.8125rem;
+		color: #94a3b8;
+	}
+
+	.control-card {
+		background: #1e293b;
+		border: 1px solid #334155;
+		border-radius: 0.75rem;
+		overflow: hidden;
+	}
+
+	.control-header {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+		padding: 1rem;
+		background: #0f172a;
+		border-bottom: 1px solid #334155;
+	}
+
+	.control-number {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 28px;
+		height: 28px;
+		background: #60a5fa;
+		color: #0f172a;
+		font-size: 0.8125rem;
+		font-weight: 700;
+		border-radius: 50%;
+		flex-shrink: 0;
+	}
+
+	.control-meta {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+	}
+
+	.control-code {
+		background: #f59e0b;
+		color: #0f172a;
+		padding: 0.125rem 0.5rem;
+		border-radius: 0.25rem;
+		font-size: 0.6875rem;
+		font-weight: 700;
+	}
+
+	.control-name {
+		font-size: 0.9375rem;
+		font-weight: 600;
+		color: #f1f5f9;
+	}
+
+	.control-content {
+		padding: 1rem;
+	}
+
+	.control-content p {
+		font-size: 0.8125rem;
+		color: #cbd5e1;
+		line-height: 1.6;
+	}
+
+	@media (max-width: 900px) {
+		.dashboard {
+			grid-template-columns: 1fr;
+		}
 	}
 </style>
