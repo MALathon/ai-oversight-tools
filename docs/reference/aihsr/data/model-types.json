@@ -1,0 +1,78 @@
+{
+  "$schema": "../schemas/model-types.schema.json",
+  "version": "1.0.0",
+  "source": "AIHSR Risk Reference Tool v1.5 (Tamiko Eto)",
+  "lastUpdated": "2025-09-02",
+  "modelTypes": [
+    {
+      "id": "predictive",
+      "name": "Predictive Models",
+      "description": "Models that forecast outcomes based on input data patterns"
+    },
+    {
+      "id": "llm",
+      "name": "Large Language Models (LLMs)",
+      "description": "Neural networks trained on large text corpora for natural language understanding and generation"
+    },
+    {
+      "id": "generative-non-llm",
+      "name": "Generative Models (non-LLM)",
+      "description": "Models that generate new content (images, audio, etc.) excluding large language models"
+    },
+    {
+      "id": "classification",
+      "name": "Classification Models",
+      "description": "Models that categorize inputs into predefined classes"
+    },
+    {
+      "id": "recommendation",
+      "name": "Recommendation Systems",
+      "description": "Models that suggest items or actions based on user preferences and behavior"
+    },
+    {
+      "id": "supervised-ml",
+      "name": "Supervised Machine Learning",
+      "description": "Models trained on labeled datasets with known input-output pairs"
+    },
+    {
+      "id": "computer-vision",
+      "name": "Computer Vision Models",
+      "description": "Models that analyze and interpret visual information from images or video"
+    },
+    {
+      "id": "unsupervised-ml",
+      "name": "Unsupervised Machine Learning",
+      "description": "Models that find patterns in unlabeled data without predefined outcomes"
+    },
+    {
+      "id": "speech-audio",
+      "name": "Speech & Audio Models",
+      "description": "Models that process, analyze, or generate speech and audio content"
+    },
+    {
+      "id": "reinforcement-learning",
+      "name": "Reinforcement Learning (RL) Systems",
+      "description": "Models that learn optimal behavior through trial-and-error interaction with an environment"
+    },
+    {
+      "id": "semi-supervised",
+      "name": "Semi-Supervised Learning",
+      "description": "Models trained on a mix of labeled and unlabeled data"
+    },
+    {
+      "id": "self-supervised",
+      "name": "Self-Supervised Learning",
+      "description": "Models that learn from unlabeled data by creating supervised tasks from the data itself"
+    },
+    {
+      "id": "multi-modal",
+      "name": "Multi-Modal Models",
+      "description": "Models that combine and process multiple data types (text, images, audio, etc.)"
+    },
+    {
+      "id": "foundation",
+      "name": "Foundation Models",
+      "description": "Large-scale models trained on broad data that can be adapted for many downstream tasks"
+    }
+  ]
+}

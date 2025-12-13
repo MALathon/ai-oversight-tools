@@ -1,0 +1,206 @@
+{
+  "$schema": "../schemas/cfr-regulations.schema.json",
+  "version": "1.0.0",
+  "source": "AIHSR Risk Reference Tool v1.5 (Tamiko Eto)",
+  "lastUpdated": "2025-09-02",
+  "description": "Code of Federal Regulations references relevant to AI in Human Subjects Research",
+  "regulations": {
+    "45-cfr-46": {
+      "title": "45 CFR 46 - Protection of Human Subjects",
+      "sections": [
+        {
+          "id": "46.111.a.1",
+          "citation": "45 CFR 46.111(a)(1)",
+          "description": "Minimize risks through sound research design",
+          "requirement": "Risks to subjects are minimized by using procedures consistent with sound research design"
+        },
+        {
+          "id": "46.111.a.2",
+          "citation": "45 CFR 46.111(a)(2)",
+          "description": "Reasonable risk-benefit ratio",
+          "requirement": "Risks to subjects are reasonable in relation to anticipated benefits"
+        },
+        {
+          "id": "46.111.a.3",
+          "citation": "45 CFR 46.111(a)(3)",
+          "description": "Equitable subject selection",
+          "requirement": "Selection of subjects is equitable"
+        },
+        {
+          "id": "46.111.a.4",
+          "citation": "45 CFR 46.111(a)(4)",
+          "description": "Informed consent documentation",
+          "requirement": "Informed consent will be sought and documented"
+        },
+        {
+          "id": "46.111.a.5",
+          "citation": "45 CFR 46.111(a)(5)",
+          "description": "Informed consent or waiver criteria",
+          "requirement": "Informed consent obtained or waiver criteria met"
+        },
+        {
+          "id": "46.111.a.6",
+          "citation": "45 CFR 46.111(a)(6)",
+          "description": "Data monitoring for safety",
+          "requirement": "When appropriate, research plan makes adequate provision for monitoring data to ensure safety"
+        },
+        {
+          "id": "46.111.a.7",
+          "citation": "45 CFR 46.111(a)(7)",
+          "description": "Privacy and confidentiality",
+          "requirement": "When appropriate, adequate provisions to protect privacy and maintain confidentiality"
+        },
+        {
+          "id": "46.111.b",
+          "citation": "45 CFR 46.111(b)",
+          "description": "Additional protections for vulnerable groups",
+          "requirement": "Additional safeguards when some or all subjects are likely to be vulnerable"
+        },
+        {
+          "id": "46.116.a",
+          "citation": "45 CFR 46.116(a)",
+          "description": "General informed consent requirements",
+          "requirement": "General requirements for informed consent"
+        },
+        {
+          "id": "46.116.b",
+          "citation": "45 CFR 46.116(b)",
+          "description": "Basic required elements of informed consent",
+          "requirement": "Basic elements that must be included in informed consent"
+        },
+        {
+          "id": "46.116.c",
+          "citation": "45 CFR 46.116(c)",
+          "description": "Additional required elements",
+          "requirement": "Additional elements when appropriate"
+        },
+        {
+          "id": "46.116.a.8",
+          "citation": "45 CFR 46.116(a)(8)",
+          "description": "Consent can be withdrawn",
+          "requirement": "Statement that participation is voluntary and can be withdrawn"
+        },
+        {
+          "id": "46.117.a",
+          "citation": "45 CFR 46.117(a)",
+          "description": "Informed consent and electronic consent",
+          "requirement": "Documentation of informed consent including electronic methods"
+        }
+      ]
+    },
+    "21-cfr-56": {
+      "title": "21 CFR 56 - Institutional Review Boards",
+      "sections": [
+        {
+          "id": "56.111.a.3",
+          "citation": "21 CFR 56.111(a)(3)",
+          "description": "Equitable subject selection",
+          "requirement": "Selection of subjects is equitable"
+        }
+      ]
+    },
+    "21-cfr-50": {
+      "title": "21 CFR 50 - Protection of Human Subjects",
+      "sections": [
+        {
+          "id": "50.20",
+          "citation": "21 CFR 50.20",
+          "description": "Informed consent general requirements",
+          "requirement": "General requirements for informed consent"
+        }
+      ]
+    },
+    "21-cfr-812": {
+      "title": "21 CFR 812 - Investigational Device Exemptions",
+      "sections": [
+        {
+          "id": "812.30.b.4",
+          "citation": "21 CFR 812.30(b)(4)",
+          "description": "Risk/benefit analysis",
+          "requirement": "IDE applications must include risk/benefit analysis"
+        },
+        {
+          "id": "812.38",
+          "citation": "21 CFR 812.38",
+          "description": "Confidentiality requirements",
+          "requirement": "Confidentiality of data and information"
+        },
+        {
+          "id": "812.40",
+          "citation": "21 CFR 812.40",
+          "description": "Responsibilities of sponsors",
+          "requirement": "Sponsor responsibilities for investigational devices"
+        },
+        {
+          "id": "812.140",
+          "citation": "21 CFR 812.140",
+          "description": "Records and reports",
+          "requirement": "Recordkeeping and reporting requirements"
+        }
+      ]
+    },
+    "21-cfr-820": {
+      "title": "21 CFR 820 - Quality System Regulation",
+      "sections": [
+        {
+          "id": "820.30",
+          "citation": "21 CFR 820.30",
+          "description": "Design controls",
+          "requirement": "Design control procedures for devices"
+        },
+        {
+          "id": "820.30.g",
+          "citation": "21 CFR 820.30(g)",
+          "description": "Design validation",
+          "requirement": "Design validation requirements"
+        },
+        {
+          "id": "820.70",
+          "citation": "21 CFR 820.70",
+          "description": "Production and process controls",
+          "requirement": "Production and process control requirements"
+        },
+        {
+          "id": "820.100",
+          "citation": "21 CFR 820.100",
+          "description": "Corrective and Preventive Actions (CAPA)",
+          "requirement": "CAPA procedures and requirements"
+        }
+      ]
+    },
+    "21-cfr-11": {
+      "title": "21 CFR Part 11 - Electronic Records and Signatures",
+      "sections": [
+        {
+          "id": "part-11",
+          "citation": "21 CFR Part 11",
+          "description": "Electronic records and signatures",
+          "requirement": "Requirements for electronic records and signatures"
+        }
+      ]
+    },
+    "45-cfr-160-164": {
+      "title": "45 CFR 160/164 - HIPAA Privacy Rule",
+      "sections": [
+        {
+          "id": "160",
+          "citation": "45 CFR 160",
+          "description": "Data standards",
+          "requirement": "General administrative requirements"
+        },
+        {
+          "id": "164.501",
+          "citation": "45 CFR 164.501",
+          "description": "Protected Health Information (PHI)",
+          "requirement": "Definitions related to PHI"
+        },
+        {
+          "id": "164.512.b",
+          "citation": "45 CFR 164.512(b)",
+          "description": "Permitted use and disclosure of PHI",
+          "requirement": "Permitted uses and disclosures for research"
+        }
+      ]
+    }
+  }
+}
