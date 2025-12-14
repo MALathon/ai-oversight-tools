@@ -88,6 +88,48 @@
 
 	// Matrix view state
 	let matrixType = $state<'triggers' | 'mitigations' | 'regulations'>('triggers');
+	let matrixVerbose = $state(false);
+	let matrixHoverRow = $state<string | null>(null);
+	let matrixHoverCol = $state<string | null>(null);
+
+	// Get hover info for matrix
+	let matrixHoverInfo = $derived.by(() => {
+		if (!matrixHoverRow && !matrixHoverCol) return null;
+
+		let rowInfo = '';
+		let colInfo = '';
+
+		if (matrixType === 'triggers') {
+			if (matrixHoverRow) {
+				const q = allQuestions.find(q => q.id === matrixHoverRow);
+				rowInfo = q ? `${q.id}: ${q.text}` : matrixHoverRow;
+			}
+			if (matrixHoverCol) {
+				const r = allRisks.find(r => r.id === matrixHoverCol);
+				colInfo = r ? `${r.code}: ${r.shortName}` : matrixHoverCol;
+			}
+		} else if (matrixType === 'mitigations') {
+			if (matrixHoverRow) {
+				const r = allRisks.find(r => r.id === matrixHoverRow);
+				rowInfo = r ? `${r.code}: ${r.shortName}` : matrixHoverRow;
+			}
+			if (matrixHoverCol) {
+				const m = allMitigations.find(m => m.id === matrixHoverCol);
+				colInfo = m ? `${m.code}: ${m.name}` : matrixHoverCol;
+			}
+		} else if (matrixType === 'regulations') {
+			if (matrixHoverRow) {
+				const r = allRisks.find(r => r.id === matrixHoverRow);
+				rowInfo = r ? `${r.code}: ${r.shortName}` : matrixHoverRow;
+			}
+			if (matrixHoverCol) {
+				const reg = allRegulations.find(r => r.id === matrixHoverCol);
+				colInfo = reg ? `${reg.citation}: ${reg.description}` : matrixHoverCol;
+			}
+		}
+
+		return { row: rowInfo, col: colInfo };
+	});
 
 	// Risk editor state
 	let selectedRiskId = $state<string | null>(null);
@@ -752,31 +794,80 @@
 					Risks → Regulations
 				</button>
 			</div>
-			<input type="text" placeholder="Search..." bind:value={searchQuery} class="search" />
+			<div class="matrix-options">
+				<label class="verbose-toggle">
+					<input type="checkbox" bind:checked={matrixVerbose} />
+					<span>Verbose labels</span>
+				</label>
+				<input type="text" placeholder="Search..." bind:value={searchQuery} class="search" />
+			</div>
 		</div>
 
-		<div class="matrix-container">
+		<!-- Hover info bar -->
+		{#if matrixHoverInfo}
+			<div class="matrix-hover-info">
+				{#if matrixHoverInfo.row}
+					<div class="hover-row">
+						<span class="hover-label">Row:</span>
+						<span class="hover-value">{matrixHoverInfo.row}</span>
+					</div>
+				{/if}
+				{#if matrixHoverInfo.col}
+					<div class="hover-col">
+						<span class="hover-label">Col:</span>
+						<span class="hover-value">{matrixHoverInfo.col}</span>
+					</div>
+				{/if}
+			</div>
+		{/if}
+
+		<div class="matrix-container" onmouseleave={() => { matrixHoverRow = null; matrixHoverCol = null; }}>
 			{#if matrixType === 'triggers'}
 				<table class="matrix">
 					<thead>
 						<tr>
 							<th class="row-header">Question</th>
 							{#each allRisks as risk}
-								<th class="col-header" title={risk.name}>{risk.code}</th>
+								<th
+									class="col-header"
+									class:highlighted={matrixHoverCol === risk.id}
+									title={risk.name}
+									onmouseenter={() => matrixHoverCol = risk.id}
+								>
+									{#if matrixVerbose}
+										<span class="verbose-label">{risk.shortName}</span>
+									{:else}
+										{risk.code}
+									{/if}
+								</th>
 							{/each}
 						</tr>
 					</thead>
 					<tbody>
 						{#each filterBySearch(allQuestions, q => q.text) as question}
-							<tr>
-								<td class="row-label" title={question.text}>{question.id}</td>
+							<tr class:row-highlighted={matrixHoverRow === question.id}>
+								<td
+									class="row-label"
+									class:highlighted={matrixHoverRow === question.id}
+									title={question.text}
+									onmouseenter={() => matrixHoverRow = question.id}
+								>
+									{#if matrixVerbose}
+										<span class="verbose-label">{question.text}</span>
+									{:else}
+										{question.id}
+									{/if}
+								</td>
 								{#each allRisks as risk}
 									{@const link = getTriggerLink(question.id, risk.id)}
 									<td
 										class="matrix-cell"
 										class:linked={link}
+										class:col-highlighted={matrixHoverCol === risk.id}
+										class:row-highlighted={matrixHoverRow === question.id}
 										onclick={() => toggleMatrixLink('trigger', question.id, risk.id)}
-										title={link ? `${question.id} triggers ${risk.code} (click to edit)` : `Click to link ${question.id} → ${risk.code}`}
+										onmouseenter={() => { matrixHoverRow = question.id; matrixHoverCol = risk.id; }}
+										title={link ? `Click to edit link` : `Click to link`}
 									>
 										{#if link}
 											<span class="cell-marker">✓</span>
@@ -793,21 +884,46 @@
 						<tr>
 							<th class="row-header">Risk</th>
 							{#each allMitigations as mit}
-								<th class="col-header" title={mit.name}>{mit.code}</th>
+								<th
+									class="col-header"
+									class:highlighted={matrixHoverCol === mit.id}
+									title={mit.name}
+									onmouseenter={() => matrixHoverCol = mit.id}
+								>
+									{#if matrixVerbose}
+										<span class="verbose-label">{mit.name}</span>
+									{:else}
+										{mit.code}
+									{/if}
+								</th>
 							{/each}
 						</tr>
 					</thead>
 					<tbody>
 						{#each filterBySearch(allRisks, r => r.shortName) as risk}
-							<tr>
-								<td class="row-label" title={risk.name}>{risk.code}</td>
+							<tr class:row-highlighted={matrixHoverRow === risk.id}>
+								<td
+									class="row-label"
+									class:highlighted={matrixHoverRow === risk.id}
+									title={risk.name}
+									onmouseenter={() => matrixHoverRow = risk.id}
+								>
+									{#if matrixVerbose}
+										<span class="verbose-label">{risk.shortName}</span>
+									{:else}
+										{risk.code}
+									{/if}
+								</td>
 								{#each allMitigations as mit}
 									{@const link = getMitigationLink(risk.id, mit.id)}
 									<td
 										class="matrix-cell"
 										class:linked={link}
+										class:col-highlighted={matrixHoverCol === mit.id}
+										class:row-highlighted={matrixHoverRow === risk.id}
 										onclick={() => toggleMatrixLink('mitigation', risk.id, mit.id)}
-										title={link ? `${risk.code} → ${mit.code} (click to edit)` : `Click to link ${risk.code} → ${mit.code}`}
+										onmouseenter={() => { matrixHoverRow = risk.id; matrixHoverCol = mit.id; }}
+										title={link ? `Click to edit link` : `Click to link`}
 									>
 										{#if link}
 											<span class="cell-marker">✓</span>
@@ -824,21 +940,46 @@
 						<tr>
 							<th class="row-header">Risk</th>
 							{#each allRegulations as reg}
-								<th class="col-header" title={reg.description}>{reg.citation}</th>
+								<th
+									class="col-header"
+									class:highlighted={matrixHoverCol === reg.id}
+									title={reg.description}
+									onmouseenter={() => matrixHoverCol = reg.id}
+								>
+									{#if matrixVerbose}
+										<span class="verbose-label">{reg.citation}</span>
+									{:else}
+										{reg.citation.split('(')[0].trim()}
+									{/if}
+								</th>
 							{/each}
 						</tr>
 					</thead>
 					<tbody>
 						{#each filterBySearch(allRisks, r => r.shortName) as risk}
-							<tr>
-								<td class="row-label" title={risk.name}>{risk.code}</td>
+							<tr class:row-highlighted={matrixHoverRow === risk.id}>
+								<td
+									class="row-label"
+									class:highlighted={matrixHoverRow === risk.id}
+									title={risk.name}
+									onmouseenter={() => matrixHoverRow = risk.id}
+								>
+									{#if matrixVerbose}
+										<span class="verbose-label">{risk.shortName}</span>
+									{:else}
+										{risk.code}
+									{/if}
+								</td>
 								{#each allRegulations as reg}
 									{@const link = getRegulationLink(risk.id, reg.id)}
 									<td
 										class="matrix-cell"
 										class:linked={link}
+										class:col-highlighted={matrixHoverCol === reg.id}
+										class:row-highlighted={matrixHoverRow === risk.id}
 										onclick={() => toggleMatrixLink('regulation', risk.id, reg.id)}
-										title={link ? `${risk.code} → ${reg.citation} (click to edit)` : `Click to link ${risk.code} → ${reg.citation}`}
+										onmouseenter={() => { matrixHoverRow = risk.id; matrixHoverCol = reg.id; }}
+										title={link ? `Click to edit link` : `Click to link`}
 									>
 										{#if link}
 											<span class="cell-marker">✓</span>
@@ -1775,6 +1916,69 @@
 	.matrix-tabs button:hover { border-color: #475569; color: #e2e8f0; }
 	.matrix-tabs button.active { background: #334155; color: #e2e8f0; border-color: #60a5fa; }
 
+	.matrix-options {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+	}
+
+	.verbose-toggle {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		font-size: 0.75rem;
+		color: #94a3b8;
+		cursor: pointer;
+	}
+
+	.verbose-toggle input {
+		cursor: pointer;
+	}
+
+	.verbose-toggle:hover {
+		color: #e2e8f0;
+	}
+
+	/* Matrix hover info bar */
+	.matrix-hover-info {
+		display: flex;
+		gap: 2rem;
+		padding: 0.5rem 0.75rem;
+		background: #1e293b;
+		border-bottom: 1px solid #334155;
+		font-size: 0.75rem;
+		min-height: 2rem;
+	}
+
+	.hover-row, .hover-col {
+		display: flex;
+		gap: 0.5rem;
+		align-items: center;
+		flex: 1;
+		overflow: hidden;
+	}
+
+	.hover-label {
+		color: #64748b;
+		font-weight: 600;
+		flex-shrink: 0;
+	}
+
+	.hover-value {
+		color: #e2e8f0;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	.hover-row .hover-value {
+		color: #60a5fa;
+	}
+
+	.hover-col .hover-value {
+		color: #22c55e;
+	}
+
 	.matrix-container {
 		flex: 1;
 		overflow: auto;
@@ -1817,6 +2021,18 @@
 		position: sticky;
 		top: 0;
 		z-index: 1;
+		transition: background 0.1s, color 0.1s;
+	}
+
+	.matrix .col-header.highlighted {
+		background: rgba(34, 197, 94, 0.15);
+		color: #22c55e;
+	}
+
+	.matrix .col-header .verbose-label {
+		max-height: 120px;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 
 	.matrix .row-label {
@@ -1833,6 +2049,29 @@
 		overflow: hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
+		transition: background 0.1s, color 0.1s;
+	}
+
+	.matrix .row-label.highlighted {
+		background: rgba(96, 165, 250, 0.15);
+		color: #60a5fa;
+	}
+
+	.matrix .row-label .verbose-label {
+		font-family: inherit;
+		display: block;
+		max-width: 250px;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	/* Verbose mode adjustments */
+	.matrix:has(.verbose-label) .col-header {
+		max-width: 3rem;
+	}
+
+	.matrix:has(.verbose-label) .row-label {
+		max-width: 250px;
 	}
 
 	.matrix-cell {
@@ -1840,19 +2079,43 @@
 		cursor: pointer;
 		min-width: 1.5rem;
 		height: 1.5rem;
-		transition: background 0.15s;
+		transition: background 0.1s;
 	}
 
 	.matrix-cell:hover {
-		background: #1e293b;
+		background: #334155;
+	}
+
+	.matrix-cell.col-highlighted {
+		background: rgba(34, 197, 94, 0.08);
+	}
+
+	.matrix-cell.row-highlighted {
+		background: rgba(96, 165, 250, 0.08);
+	}
+
+	.matrix-cell.col-highlighted.row-highlighted {
+		background: rgba(251, 191, 36, 0.2);
+		outline: 1px solid rgba(251, 191, 36, 0.5);
+		outline-offset: -1px;
 	}
 
 	.matrix-cell.linked {
 		background: rgba(34, 197, 94, 0.2);
 	}
 
-	.matrix-cell.linked:hover {
+	.matrix-cell.linked.col-highlighted,
+	.matrix-cell.linked.row-highlighted {
 		background: rgba(34, 197, 94, 0.3);
+	}
+
+	.matrix-cell.linked.col-highlighted.row-highlighted {
+		background: rgba(34, 197, 94, 0.4);
+		outline: 1px solid #22c55e;
+	}
+
+	.matrix-cell.linked:hover {
+		background: rgba(34, 197, 94, 0.35);
 	}
 
 	.cell-marker {
