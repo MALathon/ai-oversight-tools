@@ -150,13 +150,12 @@
 		);
 	}
 
-	// Check if two entities are transitively connected (via any path in the link graph)
-	function areTransitivelyConnected(type1: EntityType, id1: string, type2: EntityType, id2: string): { connected: boolean; path: string[] } {
-		if (type1 === type2 && id1 === id2) return { connected: true, path: [] };
-
-		// BFS to find path
+	// Get all entities reachable DOWNSTREAM from a source entity (directed traversal)
+	// Follows: Question→Risk→Mitigation→Control, Risk→Regulation, etc.
+	function getDownstreamReachable(sourceType: EntityType, sourceId: string): Set<string> {
+		const reachable = new Set<string>();
 		const visited = new Set<string>();
-		const queue: { type: string; id: string; path: string[] }[] = [{ type: type1, id: id1, path: [`${type1}:${id1}`] }];
+		const queue: { type: string; id: string }[] = [{ type: sourceType, id: sourceId }];
 
 		while (queue.length > 0) {
 			const current = queue.shift()!;
@@ -164,46 +163,36 @@
 
 			if (visited.has(key)) continue;
 			visited.add(key);
+			reachable.add(key);
 
-			// Find all connected nodes
+			// Follow ONLY outgoing edges (from.entity === current.type)
 			for (const link of filteredLinks) {
-				let nextType: string | null = null;
-				let nextId: string | null = null;
-
 				if (link.from.entity === current.type && link.from.id === current.id) {
-					nextType = link.to.entity;
-					nextId = link.to.id;
-				} else if (link.to.entity === current.type && link.to.id === current.id) {
-					nextType = link.from.entity;
-					nextId = link.from.id;
-				}
-
-				if (nextType && nextId) {
-					const nextKey = `${nextType}:${nextId}`;
+					const nextKey = `${link.to.entity}:${link.to.id}`;
 					if (!visited.has(nextKey)) {
-						const newPath = [...current.path, nextKey];
-						if (nextType === type2 && nextId === id2) {
-							return { connected: true, path: newPath };
-						}
-						queue.push({ type: nextType, id: nextId, path: newPath });
+						queue.push({ type: link.to.entity, id: link.to.id });
 					}
 				}
 			}
 		}
 
-		return { connected: false, path: [] };
+		return reachable;
 	}
 
-	// Get matrix connection - returns direct link, transitive path info, or null
+	// Get matrix connection - returns direct link, transitive info, or null
+	// Uses cached downstream reachability for performance
 	function getMatrixLink(rowType: EntityType, rowId: string, colType: EntityType, colId: string): any {
-		// First check for direct link
+		// First check for direct link (fast)
 		const direct = getDirectLink(rowType, rowId, colType, colId);
 		if (direct) return { ...direct, isDirect: true };
 
-		// Check for transitive connection
-		const transitive = areTransitivelyConnected(rowType, rowId, colType, colId);
-		if (transitive.connected) {
-			return { isDirect: false, isTransitive: true, path: transitive.path };
+		// For transitive: use pre-computed reachability map from matrixReachability
+		const reachableKey = `${colType}:${colId}`;
+		const rowKey = `${rowType}:${rowId}`;
+
+		// Check if col is reachable from row (downstream)
+		if (matrixReachability.get(rowKey)?.has(reachableKey)) {
+			return { isDirect: false, isTransitive: true };
 		}
 
 		return null;
@@ -219,13 +208,8 @@
 			editingLink = JSON.parse(JSON.stringify(linkData));
 			showLinkEditor = true;
 		} else if (existing?.isTransitive) {
-			// Show transitive path info - could navigate to trace view or create direct link
-			const pathStr = existing.path.map((p: string) => {
-				const [type, id] = p.split(':');
-				return `${type}(${id})`;
-			}).join(' → ');
-
-			if (confirm(`These are transitively connected via:\n${pathStr}\n\nCreate a direct link between them?`)) {
+			// Transitive connection exists - offer to create direct link
+			if (confirm(`These are transitively connected via the traceability chain.\n\nCreate a direct link between them?`)) {
 				createNewLink(rowType, rowId, colType, colId);
 			}
 		} else {
@@ -746,6 +730,24 @@
 	let matrixPairValid = $derived(true);
 	// Check if there's a defined direct link type for this pair
 	let matrixHasDirectLinkType = $derived(getLinkTypeForPair(matrixRowType, matrixColType) !== null);
+
+	// Pre-compute downstream reachability for all row items (for matrix performance)
+	let matrixReachability = $derived.by(() => {
+		const reachMap = new Map<string, Set<string>>();
+		const rowConfig = entityConfig[matrixRowType];
+		const items = rowConfig.getAll();
+
+		// Only compute if we need transitive (no direct link type between row/col)
+		if (getLinkTypeForPair(matrixRowType, matrixColType)) {
+			return reachMap; // Direct links exist, no need for transitive
+		}
+
+		for (const item of items) {
+			const key = `${matrixRowType}:${item.id}`;
+			reachMap.set(key, getDownstreamReachable(matrixRowType, item.id));
+		}
+		return reachMap;
+	});
 
 	// Get hover info for matrix (generic for any row/col type)
 	let matrixHoverInfo = $derived.by(() => {
@@ -1497,7 +1499,7 @@
 										class:row-highlighted={matrixHoverRow === rowItem.id}
 										onclick={() => toggleGenericMatrixLink(matrixRowType, rowItem.id, matrixColType, colItem.id)}
 										onmouseenter={() => { matrixHoverRow = rowItem.id; matrixHoverCol = colItem.id; }}
-										title={link?.isDirect ? `Direct link (click to edit)` : link?.isTransitive ? `Transitive via ${link.path.length - 1} hops` : `No connection (click to create)`}
+										title={link?.isDirect ? `Direct link (click to edit)` : link?.isTransitive ? `Transitive connection (click to create direct)` : `No connection (click to create)`}
 									>
 										{#if link?.isDirect}
 											<span class="cell-marker direct">✓</span>
