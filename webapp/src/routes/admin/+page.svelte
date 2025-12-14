@@ -382,10 +382,44 @@
 		if (!selectedNode) return new Set<string>();
 
 		const connected = new Set<string>();
-		const addNode = (type: string, id: string) => connected.add(`${type}:${id}`);
+		const selectedType = selectedNode.type;
 
-		// Add the selected node itself
-		addNode(selectedNode.type, selectedNode.id);
+		// Helper to add node, but skip same-type items (handled separately for dependencies)
+		const addNode = (type: string, id: string, allowSameType = false) => {
+			if (type === selectedType && !allowSameType) return; // Don't add same-column items
+			connected.add(`${type}:${id}`);
+		};
+
+		// Always add the selected node itself
+		connected.add(`${selectedNode.type}:${selectedNode.id}`);
+
+		// For questions: add dependent questions (via showIf)
+		if (selectedType === 'question') {
+			const selectedQ = allQuestions.find(q => q.id === selectedNode.id);
+			if (selectedQ?.showIf) {
+				// Find questions this one depends on
+				for (const depQId of Object.keys(selectedQ.showIf)) {
+					connected.add(`question:${depQId}`);
+				}
+			}
+			// Also find questions that depend on this one
+			for (const q of allQuestions) {
+				if (q.showIf && selectedNode.id in q.showIf) {
+					connected.add(`question:${q.id}`);
+				}
+			}
+		}
+
+		// For controls: add other controls in same subcategory
+		if (selectedType === 'control') {
+			const selectedCtrl = allControls.find(c => c.id === selectedNode.id);
+			if (selectedCtrl?.subcategoryId) {
+				const siblingControls = allControls.filter(c => c.subcategoryId === selectedCtrl.subcategoryId);
+				for (const ctrl of siblingControls) {
+					connected.add(`control:${ctrl.id}`);
+				}
+			}
+		}
 
 		// Get directly connected nodes (from links)
 		const directLinks = filteredLinks.filter((l: any) =>
@@ -419,7 +453,7 @@
 			}
 		}
 
-		// Second pass: expand from risks to all their connections
+		// Second pass: expand from risks to their connections (skip same-type as selected)
 		for (const riskId of connectedRisks) {
 			const riskLinks = filteredLinks.filter((l: any) =>
 				(l.from.entity === 'risk' && l.from.id === riskId) ||
@@ -435,12 +469,14 @@
 			}
 		}
 
-		// Third pass: expand from mitigations to get questions via risks, and controls
+		// Third pass: expand from mitigations to controls and regulations (skip same-type)
 		for (const mitId of connectedMitigations) {
-			// Add controls belonging to this mitigation/subcategory
-			const subcatControls = allControls.filter(c => c.subcategoryId === mitId);
-			for (const ctrl of subcatControls) {
-				addNode('control', ctrl.id);
+			// Add controls belonging to this mitigation/subcategory (unless selected is a control)
+			if (selectedType !== 'control') {
+				const subcatControls = allControls.filter(c => c.subcategoryId === mitId);
+				for (const ctrl of subcatControls) {
+					addNode('control', ctrl.id);
+				}
 			}
 
 			// Find risks linked to this mitigation
@@ -450,13 +486,6 @@
 			for (const link of mitLinks) {
 				const riskId = link.from.id;
 				addNode('risk', riskId);
-				// Find questions that trigger these risks
-				const questionLinks = filteredLinks.filter((l: any) =>
-					l.type === 'trigger' && l.to.entity === 'risk' && l.to.id === riskId
-				);
-				for (const qLink of questionLinks) {
-					addNode(qLink.from.entity, qLink.from.id);
-				}
 				// Find regulations linked to these risks
 				const regLinks = filteredLinks.filter((l: any) =>
 					l.type === 'regulation' && l.from.entity === 'risk' && l.from.id === riskId
