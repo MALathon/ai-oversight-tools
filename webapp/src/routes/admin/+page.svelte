@@ -77,7 +77,7 @@
 	];
 
 	// UI State
-	let currentView = $state<'matrix' | 'risk-editor' | 'graph'>('matrix');
+	let currentView = $state<'matrix' | 'risk-editor' | 'graph' | 'entities'>('matrix');
 	let selectedPhase = $state<string>('all');
 	let selectedNode = $state<{ type: string; id: string } | null>(null);
 	let connectingFrom = $state<{ type: string; id: string } | null>(null);
@@ -93,8 +93,66 @@
 	let selectedRiskId = $state<string | null>(null);
 	let selectedRisk = $derived(selectedRiskId ? getRisk(selectedRiskId) : null);
 
-	// Build flat lists for each entity type
-	let allQuestions = $derived.by(() => {
+	// Entity selector state (for link editor)
+	let entitySelectorOpen = $state<'from' | 'to' | null>(null);
+	let entitySelectorSearch = $state('');
+	let entitySelectorSort = $state<'name' | 'code' | 'category'>('name');
+
+	// Entity management state
+	let entityType = $state<'questions' | 'risks' | 'mitigations' | 'regulations'>('risks');
+	let entitySearch = $state('');
+	let showEntityEditor = $state(false);
+	let editingEntity = $state<any>(null);
+	let isNewEntity = $state(false);
+
+	// Editable entities (full copies that can be modified)
+	const ENTITIES_STORAGE_KEY = 'ai-oversight-entities';
+
+	function loadEditableEntities() {
+		if (browser) {
+			const saved = localStorage.getItem(ENTITIES_STORAGE_KEY);
+			if (saved) {
+				try {
+					return JSON.parse(saved);
+				} catch (e) {
+					console.error('Failed to parse saved entities:', e);
+				}
+			}
+		}
+		return null; // null means use defaults
+	}
+
+	let editableEntities = $state<{
+		questions: any[] | null;
+		risks: any[] | null;
+		mitigations: any[] | null;
+		regulations: any[] | null;
+	}>(loadEditableEntities() || { questions: null, risks: null, mitigations: null, regulations: null });
+
+	let hasEntityChanges = $derived(
+		editableEntities.questions !== null ||
+		editableEntities.risks !== null ||
+		editableEntities.mitigations !== null ||
+		editableEntities.regulations !== null
+	);
+
+	// Save editable entities
+	$effect(() => {
+		if (browser && hasEntityChanges) {
+			localStorage.setItem(ENTITIES_STORAGE_KEY, JSON.stringify(editableEntities));
+		}
+	});
+
+	// Reset entities to defaults
+	function resetEntities() {
+		if (confirm('Reset all entities to defaults? This will discard all entity changes.')) {
+			editableEntities = { questions: null, risks: null, mitigations: null, regulations: null };
+			localStorage.removeItem(ENTITIES_STORAGE_KEY);
+		}
+	}
+
+	// Build flat lists for each entity type (use editable if available, else defaults)
+	let defaultQuestions = $derived.by(() => {
 		const items: Array<{ id: string; text: string; type: string; category: string; options: Array<{ value: string; label: string }> }> = [];
 		for (const cat of data.questionCategories) {
 			for (const q of cat.questions) {
@@ -110,7 +168,7 @@
 		return items;
 	});
 
-	let allRisks = $derived(data.subdomains.map((s: any) => ({
+	let defaultRisks = $derived(data.subdomains.map((s: any) => ({
 		id: s.id,
 		code: s.code,
 		name: s.name,
@@ -118,7 +176,7 @@
 		domain: s.domain
 	})));
 
-	let allMitigations = $derived.by(() => {
+	let defaultMitigations = $derived.by(() => {
 		const items: Array<{ id: string; code: string; name: string; category: string }> = [];
 		for (const cat of data.mitigationCategories) {
 			for (const m of cat.strategies) {
@@ -128,7 +186,7 @@
 		return items;
 	});
 
-	let allRegulations = $derived.by(() => {
+	let defaultRegulations = $derived.by(() => {
 		const items: Array<{ id: string; citation: string; description: string; framework: string }> = [];
 		for (const [key, reg] of Object.entries(data.regulations) as [string, any][]) {
 			for (const sec of reg.sections) {
@@ -137,6 +195,12 @@
 		}
 		return items;
 	});
+
+	// Use editable entities if modified, otherwise defaults
+	let allQuestions = $derived(editableEntities.questions ?? defaultQuestions);
+	let allRisks = $derived(editableEntities.risks ?? defaultRisks);
+	let allMitigations = $derived(editableEntities.mitigations ?? defaultMitigations);
+	let allRegulations = $derived(editableEntities.regulations ?? defaultRegulations);
 
 	// Filter links by phase
 	let filteredLinks = $derived(
@@ -272,6 +336,199 @@
 	function getRisk(id: string) { return allRisks.find((r: any) => r.id === id); }
 	function getMitigation(id: string) { return allMitigations.find(m => m.id === id); }
 	function getRegulation(id: string) { return allRegulations.find(r => r.id === id); }
+
+	// Get available entities for selector based on link type and position
+	function getSelectableEntities(position: 'from' | 'to', linkType: string) {
+		if (linkType === 'trigger') {
+			if (position === 'from') return allQuestions.map(q => ({ id: q.id, name: q.text, code: q.id, category: q.category, type: 'question' }));
+			else return allRisks.map(r => ({ id: r.id, name: r.shortName, code: r.code, category: r.domain, type: 'risk' }));
+		} else if (linkType === 'mitigation') {
+			if (position === 'from') return allRisks.map(r => ({ id: r.id, name: r.shortName, code: r.code, category: r.domain, type: 'risk' }));
+			else return allMitigations.map(m => ({ id: m.id, name: m.name, code: m.code, category: m.category, type: 'mitigation' }));
+		} else if (linkType === 'regulation') {
+			if (position === 'from') return allRisks.map(r => ({ id: r.id, name: r.shortName, code: r.code, category: r.domain, type: 'risk' }));
+			else return allRegulations.map(r => ({ id: r.id, name: r.description, code: r.citation, category: r.framework, type: 'regulation' }));
+		}
+		return [];
+	}
+
+	// Filter and sort entities for selector
+	let filteredSelectorEntities = $derived.by(() => {
+		if (!entitySelectorOpen || !editingLink) return [];
+		const entities = getSelectableEntities(entitySelectorOpen, editingLink.type);
+		let filtered = entities;
+
+		if (entitySelectorSearch) {
+			const q = entitySelectorSearch.toLowerCase();
+			filtered = entities.filter(e =>
+				e.name.toLowerCase().includes(q) ||
+				e.code.toLowerCase().includes(q) ||
+				e.category.toLowerCase().includes(q)
+			);
+		}
+
+		// Sort
+		filtered.sort((a, b) => {
+			if (entitySelectorSort === 'name') return a.name.localeCompare(b.name);
+			if (entitySelectorSort === 'code') return a.code.localeCompare(b.code);
+			if (entitySelectorSort === 'category') return a.category.localeCompare(b.category);
+			return 0;
+		});
+
+		return filtered;
+	});
+
+	// Select entity from selector
+	function selectEntity(entity: { id: string; type: string }) {
+		if (!editingLink || !entitySelectorOpen) return;
+		editingLink[entitySelectorOpen] = { entity: entity.type, id: entity.id };
+		entitySelectorOpen = null;
+		entitySelectorSearch = '';
+	}
+
+	// Filter entities by search for entity manager
+	let filteredEntities = $derived.by(() => {
+		const q = entitySearch.toLowerCase();
+		if (entityType === 'questions') {
+			return allQuestions.filter(e => !q || e.text.toLowerCase().includes(q) || e.id.toLowerCase().includes(q) || e.category.toLowerCase().includes(q));
+		} else if (entityType === 'risks') {
+			return allRisks.filter(e => !q || e.name.toLowerCase().includes(q) || e.code.toLowerCase().includes(q) || e.shortName.toLowerCase().includes(q));
+		} else if (entityType === 'mitigations') {
+			return allMitigations.filter(e => !q || e.name.toLowerCase().includes(q) || e.code.toLowerCase().includes(q) || e.category.toLowerCase().includes(q));
+		} else if (entityType === 'regulations') {
+			return allRegulations.filter(e => !q || e.description.toLowerCase().includes(q) || e.citation.toLowerCase().includes(q));
+		}
+		return [];
+	});
+
+	// Ensure we have a mutable copy of entities for a type
+	function ensureEditableCopy(type: 'questions' | 'risks' | 'mitigations' | 'regulations') {
+		if (editableEntities[type] === null) {
+			if (type === 'questions') editableEntities.questions = JSON.parse(JSON.stringify(defaultQuestions));
+			else if (type === 'risks') editableEntities.risks = JSON.parse(JSON.stringify(defaultRisks));
+			else if (type === 'mitigations') editableEntities.mitigations = JSON.parse(JSON.stringify(defaultMitigations));
+			else if (type === 'regulations') editableEntities.regulations = JSON.parse(JSON.stringify(defaultRegulations));
+		}
+	}
+
+	// Create new entity
+	function createNewEntity() {
+		isNewEntity = true;
+		if (entityType === 'questions') {
+			editingEntity = { id: '', text: '', type: 'yes-no', category: 'Custom', options: [{ value: 'yes', label: 'Yes' }, { value: 'no', label: 'No' }] };
+		} else if (entityType === 'risks') {
+			editingEntity = { id: '', code: '', name: '', shortName: '', domain: '' };
+		} else if (entityType === 'mitigations') {
+			editingEntity = { id: '', code: '', name: '', category: '' };
+		} else if (entityType === 'regulations') {
+			editingEntity = { id: '', citation: '', description: '', framework: '' };
+		}
+		showEntityEditor = true;
+	}
+
+	// Edit entity
+	function editEntity(entity: any) {
+		isNewEntity = false;
+		editingEntity = JSON.parse(JSON.stringify(entity));
+		showEntityEditor = true;
+	}
+
+	// Save entity
+	function saveEntity() {
+		if (!editingEntity) return;
+
+		// Generate ID if new
+		if (isNewEntity && !editingEntity.id) {
+			editingEntity.id = `${entityType.slice(0, -1)}-${Date.now()}`;
+		}
+
+		ensureEditableCopy(entityType);
+		const list = editableEntities[entityType] as any[];
+		const idx = list.findIndex((e: any) => e.id === editingEntity.id);
+
+		if (idx >= 0) {
+			list[idx] = editingEntity;
+		} else {
+			list.push(editingEntity);
+		}
+
+		editableEntities = { ...editableEntities };
+		showEntityEditor = false;
+		editingEntity = null;
+	}
+
+	// Delete entity
+	function deleteEntity() {
+		if (!editingEntity) return;
+		if (!confirm('Delete this entity? This cannot be undone.')) return;
+
+		ensureEditableCopy(entityType);
+		editableEntities[entityType] = (editableEntities[entityType] as any[]).filter((e: any) => e.id !== editingEntity.id);
+		editableEntities = { ...editableEntities };
+		showEntityEditor = false;
+		editingEntity = null;
+	}
+
+	// Risk editor picker state
+	let showRiskPicker = $state<'trigger' | 'mitigation' | 'regulation' | null>(null);
+	let riskPickerSearch = $state('');
+
+	// Get items for risk picker based on type
+	let riskPickerItems = $derived.by(() => {
+		const q = riskPickerSearch.toLowerCase();
+		if (showRiskPicker === 'trigger') {
+			return allQuestions.filter(e => !q || e.text.toLowerCase().includes(q) || e.id.toLowerCase().includes(q));
+		} else if (showRiskPicker === 'mitigation') {
+			return allMitigations.filter(e => !q || e.name.toLowerCase().includes(q) || e.code.toLowerCase().includes(q));
+		} else if (showRiskPicker === 'regulation') {
+			return allRegulations.filter(e => !q || e.description.toLowerCase().includes(q) || e.citation.toLowerCase().includes(q));
+		}
+		return [];
+	});
+
+	// Add link from risk picker
+	function addLinkFromPicker(itemId: string) {
+		if (!selectedRiskId || !showRiskPicker) return;
+
+		const newLink: any = {
+			id: `link-${Date.now()}`,
+			phases: ['phase-1', 'phase-2', 'phase-3']
+		};
+
+		if (showRiskPicker === 'trigger') {
+			newLink.type = 'trigger';
+			newLink.from = { entity: 'question', id: itemId };
+			newLink.to = { entity: 'risk', id: selectedRiskId };
+			newLink.answerValues = [];
+			newLink.logic = 'OR';
+		} else if (showRiskPicker === 'mitigation') {
+			newLink.type = 'mitigation';
+			newLink.from = { entity: 'risk', id: selectedRiskId };
+			newLink.to = { entity: 'mitigation', id: itemId };
+			newLink.guidance = {};
+		} else if (showRiskPicker === 'regulation') {
+			newLink.type = 'regulation';
+			newLink.from = { entity: 'risk', id: selectedRiskId };
+			newLink.to = { entity: 'regulation', id: itemId };
+		}
+
+		links = [...links, newLink];
+		showRiskPicker = null;
+		riskPickerSearch = '';
+	}
+
+	// Check if item is already linked to selected risk
+	function isLinkedToRisk(type: 'trigger' | 'mitigation' | 'regulation', itemId: string): boolean {
+		if (!selectedRiskId) return false;
+		if (type === 'trigger') {
+			return links.some((l: any) => l.type === 'trigger' && l.from.id === itemId && l.to.id === selectedRiskId);
+		} else if (type === 'mitigation') {
+			return links.some((l: any) => l.type === 'mitigation' && l.from.id === selectedRiskId && l.to.id === itemId);
+		} else if (type === 'regulation') {
+			return links.some((l: any) => l.type === 'regulation' && l.from.id === selectedRiskId && l.to.id === itemId);
+		}
+		return false;
+	}
 
 	function getEntityName(entity: string, id: string): string {
 		if (entity === 'question') return getQuestion(id)?.text || id;
@@ -457,6 +714,7 @@
 				<button class:active={currentView === 'matrix'} onclick={() => currentView = 'matrix'}>Matrix</button>
 				<button class:active={currentView === 'risk-editor'} onclick={() => currentView = 'risk-editor'}>Risk Editor</button>
 				<button class:active={currentView === 'graph'} onclick={() => currentView = 'graph'}>Graph</button>
+				<button class:active={currentView === 'entities'} onclick={() => currentView = 'entities'}>Entities</button>
 			</div>
 		</div>
 		<div class="header-right">
@@ -648,21 +906,7 @@
 									</span>
 								</button>
 							{/each}
-							<button class="add-link-btn" onclick={() => {
-								const availableQuestions = allQuestions.filter(q => !getTriggersForRisk(selectedRisk.id).some(l => l.from.id === q.id));
-								if (availableQuestions.length === 0) { alert('All questions already linked'); return; }
-								const questionId = availableQuestions[0].id;
-								editingLink = {
-									id: `link-${Date.now()}`,
-									type: 'trigger',
-									from: { entity: 'question', id: questionId },
-									to: { entity: 'risk', id: selectedRisk.id },
-									phases: ['phase-1', 'phase-2', 'phase-3'],
-									answerValues: [],
-									logic: 'OR'
-								};
-								showLinkEditor = true;
-							}}>+ Add Trigger</button>
+							<button class="add-link-btn" onclick={() => { showRiskPicker = 'trigger'; riskPickerSearch = ''; }}>+ Add Trigger</button>
 						</div>
 					</div>
 
@@ -681,20 +925,7 @@
 									</span>
 								</button>
 							{/each}
-							<button class="add-link-btn" onclick={() => {
-								const availableMitigations = allMitigations.filter(m => !getMitigationsForRisk(selectedRisk.id).some(l => l.to.id === m.id));
-								if (availableMitigations.length === 0) { alert('All mitigations already linked'); return; }
-								const mitigationId = availableMitigations[0].id;
-								editingLink = {
-									id: `link-${Date.now()}`,
-									type: 'mitigation',
-									from: { entity: 'risk', id: selectedRisk.id },
-									to: { entity: 'mitigation', id: mitigationId },
-									phases: ['phase-1', 'phase-2', 'phase-3'],
-									guidance: {}
-								};
-								showLinkEditor = true;
-							}}>+ Add Mitigation</button>
+							<button class="add-link-btn" onclick={() => { showRiskPicker = 'mitigation'; riskPickerSearch = ''; }}>+ Add Mitigation</button>
 						</div>
 					</div>
 
@@ -709,19 +940,7 @@
 									<span class="link-meta">{regulation?.framework}</span>
 								</button>
 							{/each}
-							<button class="add-link-btn" onclick={() => {
-								const availableRegs = allRegulations.filter(r => !getRegulationsForRisk(selectedRisk.id).some(l => l.to.id === r.id));
-								if (availableRegs.length === 0) { alert('All regulations already linked'); return; }
-								const regId = availableRegs[0].id;
-								editingLink = {
-									id: `link-${Date.now()}`,
-									type: 'regulation',
-									from: { entity: 'risk', id: selectedRisk.id },
-									to: { entity: 'regulation', id: regId },
-									phases: ['phase-1', 'phase-2', 'phase-3']
-								};
-								showLinkEditor = true;
-							}}>+ Add Regulation</button>
+							<button class="add-link-btn" onclick={() => { showRiskPicker = 'regulation'; riskPickerSearch = ''; }}>+ Add Regulation</button>
 						</div>
 					</div>
 				{:else}
@@ -730,6 +949,54 @@
 					</div>
 				{/if}
 			</div>
+
+			<!-- Risk Picker Modal -->
+			{#if showRiskPicker && selectedRisk}
+				<div class="picker-overlay" onclick={() => showRiskPicker = null}>
+					<div class="picker-modal" onclick={(e) => e.stopPropagation()}>
+						<div class="picker-header">
+							<h3>
+								{#if showRiskPicker === 'trigger'}Add Trigger Question
+								{:else if showRiskPicker === 'mitigation'}Add Mitigation
+								{:else}Add Regulation{/if}
+							</h3>
+							<button class="close-btn" onclick={() => showRiskPicker = null}>×</button>
+						</div>
+						<div class="picker-search">
+							<input type="text" placeholder="Search..." bind:value={riskPickerSearch} />
+						</div>
+						<div class="picker-list">
+							{#each riskPickerItems as item}
+								{@const alreadyLinked = isLinkedToRisk(showRiskPicker, item.id)}
+								<button
+									class="picker-item"
+									class:linked={alreadyLinked}
+									disabled={alreadyLinked}
+									onclick={() => addLinkFromPicker(item.id)}
+								>
+									{#if showRiskPicker === 'trigger'}
+										<span class="picker-code question">{item.id}</span>
+										<span class="picker-name">{item.text}</span>
+									{:else if showRiskPicker === 'mitigation'}
+										<span class="picker-code mitigation">{item.code}</span>
+										<span class="picker-name">{item.name}</span>
+										<span class="picker-category">{item.category}</span>
+									{:else}
+										<span class="picker-code regulation">{item.citation}</span>
+										<span class="picker-name">{item.description}</span>
+										<span class="picker-category">{item.framework}</span>
+									{/if}
+									{#if alreadyLinked}
+										<span class="already-linked">Already linked</span>
+									{/if}
+								</button>
+							{:else}
+								<div class="picker-empty">No items found</div>
+							{/each}
+						</div>
+					</div>
+				</div>
+			{/if}
 		</div>
 
 	<!-- GRAPH VIEW -->
@@ -1005,7 +1272,220 @@
 		{/if}
 	</div>
 	{/if}
+
+	<!-- ENTITIES VIEW -->
+	{#if currentView === 'entities'}
+		<div class="entities-view">
+			<div class="entities-toolbar">
+				<div class="entity-type-tabs">
+					<button class:active={entityType === 'risks'} onclick={() => entityType = 'risks'}>
+						Risks ({allRisks.length})
+					</button>
+					<button class:active={entityType === 'mitigations'} onclick={() => entityType = 'mitigations'}>
+						Mitigations ({allMitigations.length})
+					</button>
+					<button class:active={entityType === 'questions'} onclick={() => entityType = 'questions'}>
+						Questions ({allQuestions.length})
+					</button>
+					<button class:active={entityType === 'regulations'} onclick={() => entityType = 'regulations'}>
+						Regulations ({allRegulations.length})
+					</button>
+				</div>
+				<div class="entities-actions">
+					<input type="text" placeholder="Search..." bind:value={entitySearch} class="search" />
+					<button class="btn primary" onclick={createNewEntity}>+ Add New</button>
+					{#if hasEntityChanges}
+						<button class="btn danger-outline" onclick={resetEntities}>Reset to Defaults</button>
+					{/if}
+				</div>
+			</div>
+
+			<div class="entities-list">
+				{#if entityType === 'risks'}
+					<div class="entity-table-header">
+						<span class="col-code">Code</span>
+						<span class="col-name">Name</span>
+						<span class="col-short">Short Name</span>
+						<span class="col-domain">Domain</span>
+						<span class="col-actions">Actions</span>
+					</div>
+					{#each filteredEntities as entity}
+						<div class="entity-row">
+							<span class="col-code">
+								<span class="code-badge risk">{entity.code}</span>
+							</span>
+							<span class="col-name">{entity.name}</span>
+							<span class="col-short">{entity.shortName}</span>
+							<span class="col-domain">{entity.domain}</span>
+							<span class="col-actions">
+								<button class="action-btn" onclick={() => editEntity(entity)}>Edit</button>
+							</span>
+						</div>
+					{:else}
+						<div class="no-entities">No risks found matching your search</div>
+					{/each}
+				{:else if entityType === 'mitigations'}
+					<div class="entity-table-header">
+						<span class="col-code">Code</span>
+						<span class="col-name">Name</span>
+						<span class="col-category">Category</span>
+						<span class="col-actions">Actions</span>
+					</div>
+					{#each filteredEntities as entity}
+						<div class="entity-row">
+							<span class="col-code">
+								<span class="code-badge mitigation">{entity.code}</span>
+							</span>
+							<span class="col-name">{entity.name}</span>
+							<span class="col-category">{entity.category}</span>
+							<span class="col-actions">
+								<button class="action-btn" onclick={() => editEntity(entity)}>Edit</button>
+							</span>
+						</div>
+					{:else}
+						<div class="no-entities">No mitigations found matching your search</div>
+					{/each}
+				{:else if entityType === 'questions'}
+					<div class="entity-table-header">
+						<span class="col-id">ID</span>
+						<span class="col-text">Question</span>
+						<span class="col-type">Type</span>
+						<span class="col-category">Category</span>
+						<span class="col-actions">Actions</span>
+					</div>
+					{#each filteredEntities as entity}
+						<div class="entity-row">
+							<span class="col-id">
+								<span class="code-badge question">{entity.id}</span>
+							</span>
+							<span class="col-text">{entity.text}</span>
+							<span class="col-type">{entity.type}</span>
+							<span class="col-category">{entity.category}</span>
+							<span class="col-actions">
+								<button class="action-btn" onclick={() => editEntity(entity)}>Edit</button>
+							</span>
+						</div>
+					{:else}
+						<div class="no-entities">No questions found matching your search</div>
+					{/each}
+				{:else if entityType === 'regulations'}
+					<div class="entity-table-header">
+						<span class="col-citation">Citation</span>
+						<span class="col-desc">Description</span>
+						<span class="col-framework">Framework</span>
+						<span class="col-actions">Actions</span>
+					</div>
+					{#each filteredEntities as entity}
+						<div class="entity-row">
+							<span class="col-citation">
+								<span class="code-badge regulation">{entity.citation}</span>
+							</span>
+							<span class="col-desc">{entity.description}</span>
+							<span class="col-framework">{entity.framework}</span>
+							<span class="col-actions">
+								<button class="action-btn" onclick={() => editEntity(entity)}>Edit</button>
+							</span>
+						</div>
+					{:else}
+						<div class="no-entities">No regulations found matching your search</div>
+					{/each}
+				{/if}
+			</div>
+		</div>
+	{/if}
 </div>
+
+<!-- Entity Editor Modal -->
+{#if showEntityEditor && editingEntity}
+	<div class="modal-overlay" role="dialog" aria-modal="true">
+		<div class="modal entity-editor">
+			<div class="modal-header">
+				<h3>{isNewEntity ? 'New' : 'Edit'} {entityType.slice(0, -1)}</h3>
+				<button class="close-btn" onclick={() => { showEntityEditor = false; editingEntity = null; }}>×</button>
+			</div>
+
+			<div class="modal-body">
+				{#if entityType === 'risks'}
+					<div class="form-group">
+						<label>Code (e.g., "1.4")</label>
+						<input type="text" bind:value={editingEntity.code} placeholder="1.4" />
+					</div>
+					<div class="form-group">
+						<label>Short Name</label>
+						<input type="text" bind:value={editingEntity.shortName} placeholder="Brief name" />
+					</div>
+					<div class="form-group">
+						<label>Full Name</label>
+						<input type="text" bind:value={editingEntity.name} placeholder="Full descriptive name" />
+					</div>
+					<div class="form-group">
+						<label>Domain</label>
+						<input type="text" bind:value={editingEntity.domain} placeholder="Risk domain" />
+					</div>
+				{:else if entityType === 'mitigations'}
+					<div class="form-group">
+						<label>Code (e.g., "M1")</label>
+						<input type="text" bind:value={editingEntity.code} placeholder="M1" />
+					</div>
+					<div class="form-group">
+						<label>Name</label>
+						<input type="text" bind:value={editingEntity.name} placeholder="Mitigation strategy name" />
+					</div>
+					<div class="form-group">
+						<label>Category</label>
+						<input type="text" bind:value={editingEntity.category} placeholder="Category" />
+					</div>
+				{:else if entityType === 'questions'}
+					<div class="form-group">
+						<label>ID (no spaces, lowercase)</label>
+						<input type="text" bind:value={editingEntity.id} placeholder="my-question-id" />
+					</div>
+					<div class="form-group">
+						<label>Question Text</label>
+						<textarea bind:value={editingEntity.text} placeholder="Enter the question..." rows="3"></textarea>
+					</div>
+					<div class="form-group">
+						<label>Type</label>
+						<select bind:value={editingEntity.type}>
+							<option value="yes-no">Yes/No</option>
+							<option value="single-select">Single Select</option>
+							<option value="multi-select">Multi Select</option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label>Category</label>
+						<input type="text" bind:value={editingEntity.category} placeholder="Category" />
+					</div>
+				{:else if entityType === 'regulations'}
+					<div class="form-group">
+						<label>Citation (e.g., "45 CFR 46.111(a)(1)")</label>
+						<input type="text" bind:value={editingEntity.citation} placeholder="45 CFR 46.111(a)(1)" />
+					</div>
+					<div class="form-group">
+						<label>Description</label>
+						<textarea bind:value={editingEntity.description} placeholder="Description of the regulation..." rows="3"></textarea>
+					</div>
+					<div class="form-group">
+						<label>Framework</label>
+						<input type="text" bind:value={editingEntity.framework} placeholder="e.g., Common Rule, HIPAA" />
+					</div>
+				{/if}
+			</div>
+
+			<div class="modal-footer">
+				{#if !isNewEntity}
+					<button class="btn danger" onclick={deleteEntity}>Delete</button>
+				{:else}
+					<div></div>
+				{/if}
+				<div class="footer-right">
+					<button class="btn" onclick={() => { showEntityEditor = false; editingEntity = null; }}>Cancel</button>
+					<button class="btn primary" onclick={saveEntity}>Save</button>
+				</div>
+			</div>
+		</div>
+	</div>
+{/if}
 
 <!-- Link Editor Modal -->
 {#if showLinkEditor && editingLink}
@@ -1018,14 +1498,78 @@
 
 			<div class="modal-body">
 				<div class="link-preview">
-					<span class="link-node {editingLink.from.entity}">{getEntityName(editingLink.from.entity, editingLink.from.id)}</span>
+					<button
+						class="link-node-btn {editingLink.from.entity}"
+						onclick={() => { entitySelectorOpen = 'from'; entitySelectorSearch = ''; }}
+						title="Click to change"
+					>
+						{getEntityName(editingLink.from.entity, editingLink.from.id)}
+						<span class="change-icon">↻</span>
+					</button>
 					<span class="link-arrow">→</span>
-					<span class="link-node {editingLink.to.entity}">{getEntityName(editingLink.to.entity, editingLink.to.id)}</span>
+					<button
+						class="link-node-btn {editingLink.to.entity}"
+						onclick={() => { entitySelectorOpen = 'to'; entitySelectorSearch = ''; }}
+						title="Click to change"
+					>
+						{getEntityName(editingLink.to.entity, editingLink.to.id)}
+						<span class="change-icon">↻</span>
+					</button>
 				</div>
+
+				<!-- Entity Selector Dropdown -->
+				{#if entitySelectorOpen}
+					<div class="entity-selector">
+						<div class="entity-selector-header">
+							<span class="selector-label">Select {entitySelectorOpen === 'from' ? 'source' : 'target'}:</span>
+							<button class="close-selector" onclick={() => entitySelectorOpen = null}>×</button>
+						</div>
+						<div class="entity-selector-toolbar">
+							<input
+								type="text"
+								placeholder="Search..."
+								bind:value={entitySelectorSearch}
+								class="selector-search"
+							/>
+							<select bind:value={entitySelectorSort} class="selector-sort">
+								<option value="name">Sort: Name</option>
+								<option value="code">Sort: Code</option>
+								<option value="category">Sort: Category</option>
+							</select>
+						</div>
+						<div class="entity-selector-list">
+							{#each filteredSelectorEntities as entity}
+								<button
+									class="entity-option"
+									class:selected={editingLink[entitySelectorOpen]?.id === entity.id}
+									onclick={() => selectEntity(entity)}
+								>
+									<span class="entity-code {entity.type}">{entity.code}</span>
+									<span class="entity-name">{entity.name}</span>
+									<span class="entity-category">{entity.category}</span>
+								</button>
+							{:else}
+								<div class="no-entities">No matching items found</div>
+							{/each}
+						</div>
+					</div>
+				{/if}
 
 				<div class="form-group">
 					<label>Link Type</label>
-					<select bind:value={editingLink.type}>
+					<select bind:value={editingLink.type} onchange={() => {
+						// Reset entities when type changes
+						if (editingLink.type === 'trigger') {
+							editingLink.from = { entity: 'question', id: allQuestions[0]?.id || '' };
+							editingLink.to = { entity: 'risk', id: allRisks[0]?.id || '' };
+						} else if (editingLink.type === 'mitigation') {
+							editingLink.from = { entity: 'risk', id: allRisks[0]?.id || '' };
+							editingLink.to = { entity: 'mitigation', id: allMitigations[0]?.id || '' };
+						} else if (editingLink.type === 'regulation') {
+							editingLink.from = { entity: 'risk', id: allRisks[0]?.id || '' };
+							editingLink.to = { entity: 'regulation', id: allRegulations[0]?.id || '' };
+						}
+					}}>
 						<option value="trigger">Trigger (Question triggers Risk)</option>
 						<option value="mitigation">Mitigation (Risk linked to Mitigation)</option>
 						<option value="regulation">Regulation (Risk linked to Regulation)</option>
@@ -2052,6 +2596,176 @@
 	.link-node.mitigation { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
 	.link-node.regulation { background: rgba(168, 85, 247, 0.2); color: #a855f7; }
 
+	.link-node-btn {
+		font-size: 0.75rem;
+		padding: 0.375rem 0.75rem;
+		border-radius: 0.25rem;
+		max-width: 180px;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		border: 1px solid transparent;
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		transition: all 0.15s;
+	}
+
+	.link-node-btn:hover {
+		border-color: currentColor;
+	}
+
+	.link-node-btn.question { background: rgba(96, 165, 250, 0.2); color: #60a5fa; }
+	.link-node-btn.risk { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+	.link-node-btn.mitigation { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
+	.link-node-btn.regulation { background: rgba(168, 85, 247, 0.2); color: #a855f7; }
+
+	.change-icon {
+		font-size: 0.625rem;
+		opacity: 0.5;
+	}
+
+	.link-node-btn:hover .change-icon {
+		opacity: 1;
+	}
+
+	/* Entity Selector */
+	.entity-selector {
+		background: #0f172a;
+		border: 1px solid #334155;
+		border-radius: 0.5rem;
+		margin-bottom: 1rem;
+		overflow: hidden;
+	}
+
+	.entity-selector-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 0.75rem;
+		background: #1e293b;
+		border-bottom: 1px solid #334155;
+	}
+
+	.selector-label {
+		font-size: 0.8125rem;
+		color: #e2e8f0;
+		font-weight: 500;
+	}
+
+	.close-selector {
+		background: none;
+		border: none;
+		color: #64748b;
+		font-size: 1.25rem;
+		cursor: pointer;
+	}
+
+	.close-selector:hover {
+		color: #e2e8f0;
+	}
+
+	.entity-selector-toolbar {
+		display: flex;
+		gap: 0.5rem;
+		padding: 0.5rem;
+		background: #1e293b;
+		border-bottom: 1px solid #334155;
+	}
+
+	.selector-search {
+		flex: 1;
+		padding: 0.5rem;
+		background: #0f172a;
+		border: 1px solid #334155;
+		border-radius: 0.25rem;
+		color: #e2e8f0;
+		font-size: 0.8125rem;
+	}
+
+	.selector-search:focus {
+		outline: none;
+		border-color: #60a5fa;
+	}
+
+	.selector-sort {
+		padding: 0.5rem;
+		background: #0f172a;
+		border: 1px solid #334155;
+		border-radius: 0.25rem;
+		color: #e2e8f0;
+		font-size: 0.75rem;
+	}
+
+	.entity-selector-list {
+		max-height: 250px;
+		overflow-y: auto;
+	}
+
+	.entity-option {
+		width: 100%;
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		padding: 0.625rem 0.75rem;
+		background: transparent;
+		border: none;
+		border-bottom: 1px solid #1e293b;
+		cursor: pointer;
+		text-align: left;
+		transition: background 0.1s;
+	}
+
+	.entity-option:hover {
+		background: #1e293b;
+	}
+
+	.entity-option.selected {
+		background: rgba(96, 165, 250, 0.15);
+	}
+
+	.entity-option:last-child {
+		border-bottom: none;
+	}
+
+	.entity-code {
+		font-family: monospace;
+		font-size: 0.625rem;
+		padding: 0.125rem 0.375rem;
+		border-radius: 0.25rem;
+		flex-shrink: 0;
+		min-width: 60px;
+		text-align: center;
+	}
+
+	.entity-code.question { background: rgba(96, 165, 250, 0.2); color: #60a5fa; }
+	.entity-code.risk { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+	.entity-code.mitigation { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
+	.entity-code.regulation { background: rgba(168, 85, 247, 0.2); color: #a855f7; }
+
+	.entity-name {
+		flex: 1;
+		font-size: 0.75rem;
+		color: #e2e8f0;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	.entity-category {
+		font-size: 0.625rem;
+		color: #64748b;
+		flex-shrink: 0;
+	}
+
+	.no-entities {
+		padding: 1rem;
+		text-align: center;
+		color: #64748b;
+		font-size: 0.8125rem;
+	}
+
 	.link-arrow { color: #64748b; font-size: 1.25rem; }
 
 	.form-group {
@@ -2140,5 +2854,281 @@
 			border-left: none;
 			border-top: 1px solid #334155;
 		}
+	}
+
+	/* Entities View */
+	.entities-view {
+		display: flex;
+		flex-direction: column;
+		flex: 1;
+		overflow: hidden;
+	}
+
+	.entities-toolbar {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 0.75rem 0;
+		border-bottom: 1px solid #334155;
+		gap: 1rem;
+		flex-wrap: wrap;
+	}
+
+	.entity-type-tabs {
+		display: flex;
+		gap: 0.5rem;
+	}
+
+	.entity-type-tabs button {
+		padding: 0.5rem 1rem;
+		background: #1e293b;
+		border: 1px solid #334155;
+		border-radius: 0.375rem;
+		color: #94a3b8;
+		font-size: 0.75rem;
+		cursor: pointer;
+	}
+
+	.entity-type-tabs button:hover {
+		border-color: #475569;
+		color: #e2e8f0;
+	}
+
+	.entity-type-tabs button.active {
+		background: #334155;
+		color: #e2e8f0;
+		border-color: #60a5fa;
+	}
+
+	.entities-actions {
+		display: flex;
+		gap: 0.5rem;
+		align-items: center;
+	}
+
+	.entities-list {
+		flex: 1;
+		overflow-y: auto;
+		padding: 0.5rem 0;
+	}
+
+	.entity-table-header {
+		display: flex;
+		gap: 1rem;
+		padding: 0.75rem;
+		background: #1e293b;
+		border-bottom: 1px solid #334155;
+		position: sticky;
+		top: 0;
+		z-index: 1;
+		font-size: 0.6875rem;
+		color: #94a3b8;
+		font-weight: 600;
+		text-transform: uppercase;
+	}
+
+	.entity-row {
+		display: flex;
+		gap: 1rem;
+		padding: 0.625rem 0.75rem;
+		border-bottom: 1px solid #1e293b;
+		align-items: center;
+		transition: background 0.1s;
+	}
+
+	.entity-row:hover {
+		background: #1e293b;
+	}
+
+	.entity-row.custom {
+		background: rgba(251, 191, 36, 0.05);
+	}
+
+	.entity-row.custom:hover {
+		background: rgba(251, 191, 36, 0.1);
+	}
+
+	.col-code, .col-id, .col-citation { flex: 0 0 100px; }
+	.col-name { flex: 2; }
+	.col-short { flex: 1; }
+	.col-domain, .col-category, .col-framework { flex: 0 0 120px; }
+	.col-type { flex: 0 0 80px; }
+	.col-text { flex: 3; }
+	.col-desc { flex: 2; }
+	.col-actions { flex: 0 0 80px; text-align: right; }
+
+	.code-badge {
+		font-family: monospace;
+		font-size: 0.625rem;
+		padding: 0.125rem 0.375rem;
+		border-radius: 0.25rem;
+		display: inline-block;
+	}
+
+	.code-badge.risk { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+	.code-badge.mitigation { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
+	.code-badge.question { background: rgba(96, 165, 250, 0.2); color: #60a5fa; }
+	.code-badge.regulation { background: rgba(168, 85, 247, 0.2); color: #a855f7; }
+
+	.entity-row span:not(.code-badge):not(.readonly-badge) {
+		font-size: 0.75rem;
+		color: #e2e8f0;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	.action-btn {
+		padding: 0.25rem 0.5rem;
+		background: #334155;
+		border: none;
+		border-radius: 0.25rem;
+		color: #e2e8f0;
+		font-size: 0.6875rem;
+		cursor: pointer;
+	}
+
+	.action-btn:hover {
+		background: #475569;
+	}
+
+	.readonly-badge {
+		font-size: 0.5625rem;
+		color: #64748b;
+		background: #1e293b;
+		padding: 0.125rem 0.375rem;
+		border-radius: 0.25rem;
+	}
+
+	.entity-editor .modal-body {
+		max-height: 60vh;
+	}
+
+	/* Risk Picker Modal */
+	.picker-overlay {
+		position: fixed;
+		inset: 0;
+		background: rgba(0, 0, 0, 0.6);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		z-index: 150;
+	}
+
+	.picker-modal {
+		background: #1e293b;
+		border: 1px solid #334155;
+		border-radius: 0.5rem;
+		width: 500px;
+		max-width: 90vw;
+		max-height: 70vh;
+		display: flex;
+		flex-direction: column;
+	}
+
+	.picker-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 1rem;
+		border-bottom: 1px solid #334155;
+	}
+
+	.picker-header h3 {
+		font-size: 1rem;
+		color: #f1f5f9;
+	}
+
+	.picker-search {
+		padding: 0.75rem;
+		border-bottom: 1px solid #334155;
+	}
+
+	.picker-search input {
+		width: 100%;
+		padding: 0.5rem 0.75rem;
+		background: #0f172a;
+		border: 1px solid #334155;
+		border-radius: 0.375rem;
+		color: #e2e8f0;
+		font-size: 0.875rem;
+	}
+
+	.picker-search input:focus {
+		outline: none;
+		border-color: #60a5fa;
+	}
+
+	.picker-list {
+		flex: 1;
+		overflow-y: auto;
+		max-height: 400px;
+	}
+
+	.picker-item {
+		width: 100%;
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		padding: 0.75rem 1rem;
+		background: transparent;
+		border: none;
+		border-bottom: 1px solid #1e293b;
+		cursor: pointer;
+		text-align: left;
+		transition: background 0.1s;
+	}
+
+	.picker-item:hover:not(:disabled) {
+		background: #0f172a;
+	}
+
+	.picker-item.linked {
+		opacity: 0.5;
+		cursor: not-allowed;
+	}
+
+	.picker-code {
+		font-family: monospace;
+		font-size: 0.625rem;
+		padding: 0.25rem 0.5rem;
+		border-radius: 0.25rem;
+		flex-shrink: 0;
+		min-width: 70px;
+		text-align: center;
+	}
+
+	.picker-code.question { background: rgba(96, 165, 250, 0.2); color: #60a5fa; }
+	.picker-code.mitigation { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
+	.picker-code.regulation { background: rgba(168, 85, 247, 0.2); color: #a855f7; }
+
+	.picker-name {
+		flex: 1;
+		font-size: 0.8125rem;
+		color: #e2e8f0;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	.picker-category {
+		font-size: 0.6875rem;
+		color: #64748b;
+		flex-shrink: 0;
+	}
+
+	.already-linked {
+		font-size: 0.625rem;
+		color: #64748b;
+		background: #334155;
+		padding: 0.125rem 0.375rem;
+		border-radius: 0.25rem;
+	}
+
+	.picker-empty {
+		padding: 2rem;
+		text-align: center;
+		color: #64748b;
+		font-size: 0.875rem;
 	}
 </style>
