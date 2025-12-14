@@ -5,10 +5,19 @@
 	let { data }: { data: PageData } = $props();
 
 	const STORAGE_KEY = 'ai-oversight-traceability';
+	const VERSION_KEY = 'ai-oversight-version';
+	const CURRENT_VERSION = data.traceability.version || '2.0.0';
 
-	// Load from localStorage or use default
+	// Load from localStorage or use default (with version check)
 	function loadLinks(): any[] {
 		if (browser) {
+			const savedVersion = localStorage.getItem(VERSION_KEY);
+			// If version changed, clear old data and use new defaults
+			if (savedVersion !== CURRENT_VERSION) {
+				localStorage.removeItem(STORAGE_KEY);
+				localStorage.setItem(VERSION_KEY, CURRENT_VERSION);
+				return JSON.parse(JSON.stringify(data.traceability.links));
+			}
 			const saved = localStorage.getItem(STORAGE_KEY);
 			if (saved) {
 				try {
