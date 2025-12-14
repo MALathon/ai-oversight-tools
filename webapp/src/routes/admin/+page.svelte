@@ -278,6 +278,28 @@
 	let allRegulations = $derived(editableEntities.regulations ?? defaultRegulations);
 	let allControls = $derived(editableEntities.controls ?? defaultControls);
 
+	// Filtered controls for graph view (by phase and tech type)
+	let graphFilteredControls = $derived.by(() => {
+		let filtered = allControls;
+		if (selectedPhase !== 'all') {
+			filtered = filtered.filter(c => c.phases?.includes(selectedPhase));
+		}
+		if (selectedTechType !== 'all') {
+			filtered = filtered.filter(c => c.techTypes?.includes('all') || c.techTypes?.includes(selectedTechType));
+		}
+		return filtered;
+	});
+
+	// Get control link count (via its subcategory's risk links)
+	function getControlLinkCount(controlId: string): number {
+		const ctrl = allControls.find(c => c.id === controlId);
+		if (!ctrl) return 0;
+		// Count risks linked to this control's subcategory
+		return filteredLinks.filter((l: any) =>
+			l.type === 'mitigation' && l.to.entity === 'mitigation' && l.to.id === ctrl.subcategoryId
+		).length;
+	}
+
 	// Link counts for orphan detection
 	let linkCounts = $derived.by(() => {
 		const counts = {
@@ -354,15 +376,104 @@
 		);
 	}
 
-	// Check if node is connected to selected and get the link
+	// Get all transitively connected nodes from selected node
+	// Full chain: Question → Risk → Control Category → Controls + Regulation
+	let transitiveConnections = $derived.by(() => {
+		if (!selectedNode) return new Set<string>();
+
+		const connected = new Set<string>();
+		const addNode = (type: string, id: string) => connected.add(`${type}:${id}`);
+
+		// Add the selected node itself
+		addNode(selectedNode.type, selectedNode.id);
+
+		// Get directly connected nodes (from links)
+		const directLinks = filteredLinks.filter((l: any) =>
+			(l.from.entity === selectedNode.type && l.from.id === selectedNode.id) ||
+			(l.to.entity === selectedNode.type && l.to.id === selectedNode.id)
+		);
+
+		// Track connected entities by type for transitive expansion
+		const connectedRisks: string[] = [];
+		const connectedMitigations: string[] = [];
+
+		// If selected is a control, add its subcategory (mitigation)
+		if (selectedNode.type === 'control') {
+			const ctrl = allControls.find(c => c.id === selectedNode.id);
+			if (ctrl?.subcategoryId) {
+				addNode('mitigation', ctrl.subcategoryId);
+				connectedMitigations.push(ctrl.subcategoryId);
+			}
+		}
+
+		// First pass: direct connections from links
+		for (const link of directLinks) {
+			if (link.from.entity === selectedNode.type && link.from.id === selectedNode.id) {
+				addNode(link.to.entity, link.to.id);
+				if (link.to.entity === 'risk') connectedRisks.push(link.to.id);
+				if (link.to.entity === 'mitigation') connectedMitigations.push(link.to.id);
+			} else {
+				addNode(link.from.entity, link.from.id);
+				if (link.from.entity === 'risk') connectedRisks.push(link.from.id);
+				if (link.from.entity === 'mitigation') connectedMitigations.push(link.from.id);
+			}
+		}
+
+		// Second pass: expand from risks to all their connections
+		for (const riskId of connectedRisks) {
+			const riskLinks = filteredLinks.filter((l: any) =>
+				(l.from.entity === 'risk' && l.from.id === riskId) ||
+				(l.to.entity === 'risk' && l.to.id === riskId)
+			);
+			for (const link of riskLinks) {
+				if (link.from.entity === 'risk' && link.from.id === riskId) {
+					addNode(link.to.entity, link.to.id);
+					if (link.to.entity === 'mitigation') connectedMitigations.push(link.to.id);
+				} else {
+					addNode(link.from.entity, link.from.id);
+				}
+			}
+		}
+
+		// Third pass: expand from mitigations to get questions via risks, and controls
+		for (const mitId of connectedMitigations) {
+			// Add controls belonging to this mitigation/subcategory
+			const subcatControls = allControls.filter(c => c.subcategoryId === mitId);
+			for (const ctrl of subcatControls) {
+				addNode('control', ctrl.id);
+			}
+
+			// Find risks linked to this mitigation
+			const mitLinks = filteredLinks.filter((l: any) =>
+				l.type === 'mitigation' && l.to.entity === 'mitigation' && l.to.id === mitId
+			);
+			for (const link of mitLinks) {
+				const riskId = link.from.id;
+				addNode('risk', riskId);
+				// Find questions that trigger these risks
+				const questionLinks = filteredLinks.filter((l: any) =>
+					l.type === 'trigger' && l.to.entity === 'risk' && l.to.id === riskId
+				);
+				for (const qLink of questionLinks) {
+					addNode(qLink.from.entity, qLink.from.id);
+				}
+				// Find regulations linked to these risks
+				const regLinks = filteredLinks.filter((l: any) =>
+					l.type === 'regulation' && l.from.entity === 'risk' && l.from.id === riskId
+				);
+				for (const regLink of regLinks) {
+					addNode(regLink.to.entity, regLink.to.id);
+				}
+			}
+		}
+
+		return connected;
+	});
+
+	// Check if node is connected to selected (including transitive)
 	function isConnected(type: string, id: string): boolean {
 		if (!selectedNode) return false;
-		return filteredLinks.some((l: any) =>
-			(l.from.entity === selectedNode.type && l.from.id === selectedNode.id && l.to.entity === type && l.to.id === id) ||
-			(l.to.entity === selectedNode.type && l.to.id === selectedNode.id && l.from.entity === type && l.from.id === id) ||
-			(l.from.entity === type && l.from.id === id && l.to.entity === selectedNode.type && l.to.id === selectedNode.id) ||
-			(l.to.entity === type && l.to.id === id && l.from.entity === selectedNode.type && l.from.id === selectedNode.id)
-		);
+		return transitiveConnections.has(`${type}:${id}`);
 	}
 
 	// Get the link between selected node and another node
@@ -751,11 +862,17 @@
 		URL.revokeObjectURL(url);
 	}
 
-	// Filter entities by search
-	function filterBySearch<T extends { id: string }>(items: T[], getText: (item: T) => string): T[] {
+	// Filter entities by search (but always include connected items when something is selected)
+	function filterBySearch<T extends { id: string }>(items: T[], getText: (item: T) => string, entityType?: string): T[] {
 		if (!searchQuery) return items;
 		const q = searchQuery.toLowerCase();
-		return items.filter(item => getText(item).toLowerCase().includes(q) || item.id.toLowerCase().includes(q));
+		return items.filter(item => {
+			// Always include if matches search
+			if (getText(item).toLowerCase().includes(q) || item.id.toLowerCase().includes(q)) return true;
+			// Always include if connected to selected node (for traceability)
+			if (selectedNode && entityType && transitiveConnections.has(`${entityType}:${item.id}`)) return true;
+			return false;
+		});
 	}
 
 	// Count links for a node
@@ -1478,7 +1595,7 @@
 					<span class="count">{allQuestions.length}</span>
 				</div>
 				<div class="nodes">
-					{#each filterBySearch(allQuestions, q => q.text) as q}
+					{#each filterBySearch(allQuestions, q => q.text, 'question') as q}
 						{@const linkCount = getLinkCount('question', q.id)}
 						{@const isSelected = selectedNode?.type === 'question' && selectedNode?.id === q.id}
 						{@const connected = isConnected('question', q.id)}
@@ -1522,7 +1639,7 @@
 					<span class="count">{allRisks.length}</span>
 				</div>
 				<div class="nodes">
-					{#each filterBySearch(allRisks, r => r.shortName + ' ' + r.name) as r}
+					{#each filterBySearch(allRisks, r => r.shortName + ' ' + r.name, 'risk') as r}
 						{@const linkCount = getLinkCount('risk', r.id)}
 						{@const isSelected = selectedNode?.type === 'risk' && selectedNode?.id === r.id}
 						{@const connected = isConnected('risk', r.id)}
@@ -1566,7 +1683,7 @@
 					<span class="count">{allMitigations.length}</span>
 				</div>
 				<div class="nodes">
-					{#each filterBySearch(allMitigations, m => m.name) as m}
+					{#each filterBySearch(allMitigations, m => m.name, 'mitigation') as m}
 						{@const linkCount = getLinkCount('mitigation', m.id)}
 						{@const isSelected = selectedNode?.type === 'mitigation' && selectedNode?.id === m.id}
 						{@const connected = isConnected('mitigation', m.id)}
@@ -1610,7 +1727,7 @@
 					<span class="count">{allRegulations.length}</span>
 				</div>
 				<div class="nodes">
-					{#each filterBySearch(allRegulations, r => r.citation + ' ' + r.description) as r}
+					{#each filterBySearch(allRegulations, r => r.citation + ' ' + r.description, 'regulation') as r}
 						{@const linkCount = getLinkCount('regulation', r.id)}
 						{@const isSelected = selectedNode?.type === 'regulation' && selectedNode?.id === r.id}
 						{@const connected = isConnected('regulation', r.id)}
@@ -1643,6 +1760,59 @@
 						</div>
 						{/if}
 					{/each}
+				</div>
+			</div>
+
+			<!-- Controls Column (filtered) -->
+			<div class="column controls">
+				<div class="column-header">
+					<span class="column-icon">⚙</span>
+					<h2>Controls</h2>
+					<span class="count">{graphFilteredControls.length}</span>
+				</div>
+				<div class="column-filters">
+					<select bind:value={selectedTechType} class="small-select">
+						<option value="all">All Tech</option>
+						{#each data.modelTypes as mt}
+							<option value={mt.id}>{mt.name}</option>
+						{/each}
+					</select>
+				</div>
+				<div class="nodes">
+					{#each graphFilteredControls.slice(0, 50) as ctrl}
+						{@const linkCount = getControlLinkCount(ctrl.id)}
+						{@const isSelected = selectedNode?.type === 'control' && selectedNode?.id === ctrl.id}
+						{@const connected = isConnected('control', ctrl.id)}
+						{@const shouldHide = focusMode && selectedNode && !isSelected && !connected}
+						{#if !shouldHide}
+						<div
+							class="node control"
+							class:selected={isSelected}
+							class:connected
+							class:connecting={connectingFrom?.type === 'control' && connectingFrom?.id === ctrl.id}
+							role="button"
+							tabindex="0"
+							onclick={() => handleNodeClick('control', ctrl.id)}
+							onkeydown={(e) => e.key === 'Enter' && handleNodeClick('control', ctrl.id)}
+						>
+							<div class="node-header">
+								<span class="node-code">{ctrl.id.split('_')[0]}</span>
+								{#if connected}
+									<span class="conn-badge transitive">via</span>
+								{:else if linkCount > 0}
+									<span class="link-count">{linkCount}</span>
+								{/if}
+							</div>
+							<div class="node-text">{ctrl.name}</div>
+							<div class="node-meta">
+								<span class="phases">{ctrl.phases?.map((p: string) => p.replace('phase-', 'P')).join(' ')}</span>
+							</div>
+						</div>
+						{/if}
+					{/each}
+					{#if graphFilteredControls.length > 50}
+						<div class="more-indicator">...and {graphFilteredControls.length - 50} more (use filters)</div>
+					{/if}
 				</div>
 			</div>
 		</div>
@@ -3079,6 +3249,43 @@
 		border-radius: 0.25rem;
 	}
 
+	.column-filters {
+		padding: 0.25rem 0.5rem;
+		border-bottom: 1px solid #334155;
+	}
+
+	.small-select {
+		background: #1e293b;
+		border: 1px solid #334155;
+		border-radius: 4px;
+		padding: 0.25rem 0.5rem;
+		color: #e2e8f0;
+		font-size: 0.6875rem;
+		width: 100%;
+	}
+
+	.node-meta {
+		margin-top: 0.25rem;
+		font-size: 0.625rem;
+	}
+
+	.node-meta .phases {
+		color: #60a5fa;
+	}
+
+	.more-indicator {
+		text-align: center;
+		padding: 0.5rem;
+		font-size: 0.6875rem;
+		color: #64748b;
+		font-style: italic;
+	}
+
+	.conn-badge.transitive {
+		background: rgba(249, 115, 22, 0.2);
+		color: #f97316;
+	}
+
 	.nodes {
 		flex: 1;
 		overflow-y: auto;
@@ -3104,6 +3311,8 @@
 	.node.risk.selected { border-color: #ef4444; background: rgba(239, 68, 68, 0.1); }
 	.node.mitigation.selected { border-color: #22c55e; background: rgba(34, 197, 94, 0.1); }
 	.node.regulation.selected { border-color: #a855f7; background: rgba(168, 85, 247, 0.1); }
+	.node.control.selected { border-color: #f97316; background: rgba(249, 115, 22, 0.1); }
+	.node.control.connected { border-color: #f97316; opacity: 0.8; }
 
 	.node.connected { opacity: 1; }
 	.node:not(.selected):not(.connected) {
