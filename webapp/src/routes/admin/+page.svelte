@@ -616,6 +616,16 @@
 	function getControl(id: string) { return allControls.find(c => c.id === id); }
 	function getControlSubcategory(id: string) { return data.controlSubcategories.find((s: any) => s.id === id); }
 
+	// Get question dependencies (showIf relationships)
+	function getQuestionDependencies(questionId: string): { dependsOn: string[], dependedBy: string[] } {
+		const q = getQuestion(questionId);
+		const dependsOn: string[] = q?.showIf ? Object.keys(q.showIf) : [];
+		const dependedBy: string[] = allQuestions
+			.filter(other => other.showIf && questionId in other.showIf)
+			.map(other => other.id);
+		return { dependsOn, dependedBy };
+	}
+
 	// Get available entities for selector based on link type and position
 	function getSelectableEntities(position: 'from' | 'to', linkType: string) {
 		if (linkType === 'trigger') {
@@ -1055,6 +1065,9 @@
 		} else if (type === 'regulation') {
 			const r = getRegulation(id);
 			return { type, item: r, connections };
+		} else if (type === 'control') {
+			const c = getControl(id);
+			return { type, item: c, connections };
 		}
 		return null;
 	});
@@ -1607,6 +1620,24 @@
 		{/if}
 
 		<div class="graph-toolbar">
+			<div class="filter-group">
+				<span class="filter-label">Phase:</span>
+				<div class="filter-buttons">
+					<button class:active={selectedPhase === 'all'} onclick={() => selectedPhase = 'all'}>All</button>
+					{#each phases as phase}
+						<button class:active={selectedPhase === phase.id} onclick={() => selectedPhase = phase.id}>{phase.short}</button>
+					{/each}
+				</div>
+			</div>
+			<div class="filter-group">
+				<span class="filter-label">Tech:</span>
+				<select bind:value={selectedTechType} class="toolbar-select">
+					<option value="all">All Types</option>
+					{#each data.modelTypes as mt}
+						<option value={mt.id}>{mt.name}</option>
+					{/each}
+				</select>
+			</div>
 			<button class="btn focus-toggle" class:active={focusMode} onclick={() => focusMode = !focusMode}>
 				{focusMode ? 'Focus: ON' : 'Focus'}
 			</button>
@@ -1626,6 +1657,7 @@
 				<div class="nodes">
 					{#each filterBySearch(allQuestions, q => q.text, 'question') as q}
 						{@const linkCount = getLinkCount('question', q.id)}
+						{@const deps = getQuestionDependencies(q.id)}
 						{@const isSelected = selectedNode?.type === 'question' && selectedNode?.id === q.id}
 						{@const connected = isConnected('question', q.id)}
 						{@const connectionLink = getConnectionToSelected('question', q.id)}
@@ -1635,6 +1667,7 @@
 							class="node question"
 							class:selected={isSelected}
 							class:connected
+							class:has-deps={deps.dependsOn.length > 0 || deps.dependedBy.length > 0}
 							class:connecting={connectingFrom?.type === 'question' && connectingFrom?.id === q.id}
 							role="button"
 							tabindex="0"
@@ -1643,15 +1676,21 @@
 						>
 							<div class="node-header">
 								<span class="node-id">{q.id}</span>
-								{#if connected && connectionLink}
-									<span class="conn-badge {connectionLink.type}">{connectionLink.type}</span>
-								{:else if linkCount > 0}
-									<span class="link-count">{linkCount}</span>
-								{/if}
+								<span class="link-count" title="Connections">{linkCount}</span>
 							</div>
 							<div class="node-text">{q.text}</div>
-							{#if connected}
-								<div class="edit-hint">click to edit</div>
+							{#if deps.dependsOn.length > 0 || deps.dependedBy.length > 0}
+								<div class="node-deps">
+									{#if deps.dependsOn.length > 0}
+										<span class="dep-badge depends-on" title="Depends on: {deps.dependsOn.join(', ')}">← {deps.dependsOn.length}</span>
+									{/if}
+									{#if deps.dependedBy.length > 0}
+										<span class="dep-badge depended-by" title="Required by: {deps.dependedBy.join(', ')}">{deps.dependedBy.length} →</span>
+									{/if}
+								</div>
+							{/if}
+							{#if connected && connectionLink}
+								<span class="conn-indicator">{connectionLink.type}</span>
 							{/if}
 							<button class="connect-btn" title="Connect to..." onclick={(e) => startConnect('question', q.id, e)}>+</button>
 						</div>
@@ -1687,15 +1726,11 @@
 						>
 							<div class="node-header">
 								<span class="node-code">{r.code}</span>
-								{#if connected && connectionLink}
-									<span class="conn-badge {connectionLink.type}">{connectionLink.type}</span>
-								{:else if linkCount > 0}
-									<span class="link-count">{linkCount}</span>
-								{/if}
+								<span class="link-count" title="Connections">{linkCount}</span>
 							</div>
 							<div class="node-text">{r.shortName}</div>
-							{#if connected}
-								<div class="edit-hint">click to edit</div>
+							{#if connected && connectionLink}
+								<span class="conn-indicator">{connectionLink.type}</span>
 							{/if}
 							<button class="connect-btn" title="Connect to..." onclick={(e) => startConnect('risk', r.id, e)}>+</button>
 						</div>
@@ -1714,6 +1749,7 @@
 				<div class="nodes">
 					{#each filterBySearch(allMitigations, m => m.name, 'mitigation') as m}
 						{@const linkCount = getLinkCount('mitigation', m.id)}
+						{@const controlCount = allControls.filter(c => c.subcategoryId === m.id).length}
 						{@const isSelected = selectedNode?.type === 'mitigation' && selectedNode?.id === m.id}
 						{@const connected = isConnected('mitigation', m.id)}
 						{@const connectionLink = getConnectionToSelected('mitigation', m.id)}
@@ -1731,15 +1767,14 @@
 						>
 							<div class="node-header">
 								<span class="node-code">{m.code}</span>
-								{#if connected && connectionLink}
-									<span class="conn-badge {connectionLink.type}">{connectionLink.type}</span>
-								{:else if linkCount > 0}
-									<span class="link-count">{linkCount}</span>
-								{/if}
+								<span class="link-count" title="Risk links">{linkCount}</span>
 							</div>
 							<div class="node-text">{m.name}</div>
-							{#if connected}
-								<div class="edit-hint">click to edit</div>
+							<div class="node-meta">
+								<span class="control-count" title="Controls in this category">{controlCount} controls</span>
+							</div>
+							{#if connected && connectionLink}
+								<span class="conn-indicator">{connectionLink.type}</span>
 							{/if}
 							<button class="connect-btn" title="Connect to..." onclick={(e) => startConnect('mitigation', m.id, e)}>+</button>
 						</div>
@@ -1775,15 +1810,11 @@
 						>
 							<div class="node-header">
 								<span class="node-code">{r.citation}</span>
-								{#if connected && connectionLink}
-									<span class="conn-badge {connectionLink.type}">{connectionLink.type}</span>
-								{:else if linkCount > 0}
-									<span class="link-count">{linkCount}</span>
-								{/if}
+								<span class="link-count" title="Connections">{linkCount}</span>
 							</div>
 							<div class="node-text">{r.description}</div>
-							{#if connected}
-								<div class="edit-hint">click to edit</div>
+							{#if connected && connectionLink}
+								<span class="conn-indicator">{connectionLink.type}</span>
 							{/if}
 							<button class="connect-btn" title="Connect to..." onclick={(e) => startConnect('regulation', r.id, e)}>+</button>
 						</div>
@@ -1792,24 +1823,17 @@
 				</div>
 			</div>
 
-			<!-- Controls Column (filtered) -->
+			<!-- Controls Column (filtered by global phase/tech) -->
 			<div class="column controls">
 				<div class="column-header">
 					<span class="column-icon">⚙</span>
 					<h2>Controls</h2>
 					<span class="count">{graphFilteredControls.length}</span>
 				</div>
-				<div class="column-filters">
-					<select bind:value={selectedTechType} class="small-select">
-						<option value="all">All Tech</option>
-						{#each data.modelTypes as mt}
-							<option value={mt.id}>{mt.name}</option>
-						{/each}
-					</select>
-				</div>
 				<div class="nodes">
 					{#each graphFilteredControls.slice(0, 50) as ctrl}
 						{@const linkCount = getControlLinkCount(ctrl.id)}
+						{@const subcategory = getControlSubcategory(ctrl.subcategoryId)}
 						{@const isSelected = selectedNode?.type === 'control' && selectedNode?.id === ctrl.id}
 						{@const connected = isConnected('control', ctrl.id)}
 						{@const shouldHide = focusMode && selectedNode && !isSelected && !connected}
@@ -1826,16 +1850,18 @@
 						>
 							<div class="node-header">
 								<span class="node-code">{ctrl.id.split('_')[0]}</span>
-								{#if connected}
-									<span class="conn-badge transitive">via</span>
-								{:else if linkCount > 0}
-									<span class="link-count">{linkCount}</span>
-								{/if}
+								<span class="link-count" title="Via subcategory">{linkCount}</span>
 							</div>
 							<div class="node-text">{ctrl.name}</div>
 							<div class="node-meta">
 								<span class="phases">{ctrl.phases?.map((p: string) => p.replace('phase-', 'P')).join(' ')}</span>
+								{#if subcategory}
+									<span class="subcategory" title="Subcategory">{subcategory.code}</span>
+								{/if}
 							</div>
+							{#if connected}
+								<span class="conn-indicator">via {subcategory?.code || 'category'}</span>
+							{/if}
 						</div>
 						{/if}
 					{/each}
@@ -1903,6 +1929,43 @@
 						<span class="meta-item">{selectedDetails.item.framework}</span>
 					</div>
 					<p class="detail-desc">{selectedDetails.item.description}</p>
+				{:else if selectedDetails.type === 'control' && selectedDetails.item}
+					{@const subcategory = getControlSubcategory(selectedDetails.item.subcategoryId)}
+					<h3>{selectedDetails.item.name}</h3>
+					<div class="detail-meta">
+						<span class="meta-item">ID: {selectedDetails.item.id}</span>
+						<span class="meta-item">Source: {selectedDetails.item.source}</span>
+					</div>
+					{#if selectedDetails.item.description}
+						<p class="detail-desc">{selectedDetails.item.description}</p>
+					{/if}
+					<div class="detail-section">
+						<strong>Category:</strong>
+						{#if subcategory}
+							<span class="category-badge">{subcategory.code}: {subcategory.name}</span>
+						{:else}
+							<span>{selectedDetails.item.subcategoryId}</span>
+						{/if}
+					</div>
+					<div class="detail-section">
+						<strong>Phases:</strong>
+						<div class="phase-badges">
+							{#each selectedDetails.item.phases || [] as phase}
+								<span class="phase-badge">{phase.replace('phase-', 'P')}</span>
+							{/each}
+						</div>
+					</div>
+					<div class="detail-section">
+						<strong>Tech Types:</strong>
+						<div class="tech-badges">
+							{#each selectedDetails.item.techTypes || [] as tech}
+								<span class="tech-badge">{tech}</span>
+							{/each}
+						</div>
+					</div>
+					<button class="btn edit-control" onclick={() => { entityType = 'controls'; editEntity(selectedDetails.item); currentView = 'entities'; }}>
+						Edit Control
+					</button>
 				{/if}
 
 				<div class="connections-section">
@@ -3157,6 +3220,54 @@
 		gap: 1rem;
 		padding: 0.5rem 0;
 		border-bottom: 1px solid #334155;
+		flex-wrap: wrap;
+	}
+
+	.graph-toolbar .filter-group {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+	}
+
+	.graph-toolbar .filter-label {
+		font-size: 0.75rem;
+		color: #94a3b8;
+		font-weight: 500;
+	}
+
+	.graph-toolbar .filter-buttons {
+		display: flex;
+		gap: 0.25rem;
+	}
+
+	.graph-toolbar .filter-buttons button {
+		padding: 0.375rem 0.625rem;
+		background: #1e293b;
+		border: 1px solid #334155;
+		border-radius: 0.25rem;
+		color: #94a3b8;
+		font-size: 0.75rem;
+		cursor: pointer;
+	}
+
+	.graph-toolbar .filter-buttons button:hover {
+		background: #334155;
+	}
+
+	.graph-toolbar .filter-buttons button.active {
+		background: #3b82f6;
+		border-color: #3b82f6;
+		color: white;
+	}
+
+	.toolbar-select {
+		background: #1e293b;
+		border: 1px solid #334155;
+		border-radius: 0.25rem;
+		padding: 0.375rem 0.625rem;
+		color: #e2e8f0;
+		font-size: 0.75rem;
+		min-width: 120px;
 	}
 
 	.search {
@@ -3167,6 +3278,7 @@
 		color: #e2e8f0;
 		font-size: 0.8125rem;
 		width: 200px;
+		margin-left: auto;
 	}
 
 	.search:focus { outline: none; border-color: #60a5fa; }
@@ -3300,10 +3412,59 @@
 	.node-meta {
 		margin-top: 0.375rem;
 		font-size: 0.6875rem;
+		display: flex;
+		gap: 0.5rem;
+		flex-wrap: wrap;
 	}
 
 	.node-meta .phases {
 		color: #60a5fa;
+	}
+
+	.node-meta .subcategory {
+		color: #22c55e;
+		font-weight: 500;
+	}
+
+	.node-meta .control-count {
+		color: #f97316;
+	}
+
+	/* Question dependency badges */
+	.node-deps {
+		display: flex;
+		gap: 0.375rem;
+		margin-top: 0.375rem;
+	}
+
+	.dep-badge {
+		font-size: 0.625rem;
+		padding: 0.125rem 0.375rem;
+		border-radius: 0.1875rem;
+		font-weight: 500;
+	}
+
+	.dep-badge.depends-on {
+		background: rgba(251, 191, 36, 0.2);
+		color: #fbbf24;
+	}
+
+	.dep-badge.depended-by {
+		background: rgba(96, 165, 250, 0.2);
+		color: #60a5fa;
+	}
+
+	.node.has-deps {
+		border-left: 3px solid #fbbf24;
+	}
+
+	/* Connection indicator */
+	.conn-indicator {
+		display: block;
+		font-size: 0.625rem;
+		color: #fbbf24;
+		margin-top: 0.25rem;
+		font-style: italic;
 	}
 
 	.more-indicator {
@@ -3565,6 +3726,61 @@
 	.control-item.more {
 		color: #64748b;
 		font-style: italic;
+	}
+
+	/* Control detail panel styles */
+	.detail-section {
+		margin-top: 0.75rem;
+	}
+
+	.detail-section strong {
+		font-size: 0.75rem;
+		color: #94a3b8;
+		display: block;
+		margin-bottom: 0.375rem;
+	}
+
+	.category-badge {
+		display: inline-block;
+		font-size: 0.75rem;
+		color: #22c55e;
+		background: rgba(34, 197, 94, 0.1);
+		padding: 0.25rem 0.5rem;
+		border-radius: 0.25rem;
+	}
+
+	.phase-badges, .tech-badges {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.25rem;
+	}
+
+	.phase-badge {
+		font-size: 0.6875rem;
+		background: rgba(96, 165, 250, 0.2);
+		color: #60a5fa;
+		padding: 0.1875rem 0.375rem;
+		border-radius: 0.1875rem;
+	}
+
+	.tech-badge {
+		font-size: 0.6875rem;
+		background: rgba(249, 115, 22, 0.2);
+		color: #f97316;
+		padding: 0.1875rem 0.375rem;
+		border-radius: 0.1875rem;
+	}
+
+	.edit-control {
+		width: 100%;
+		margin-top: 1rem;
+		background: rgba(249, 115, 22, 0.2);
+		border-color: #f97316;
+		color: #f97316;
+	}
+
+	.edit-control:hover {
+		background: rgba(249, 115, 22, 0.3);
 	}
 
 	.connections-section h4 {
