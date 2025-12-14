@@ -945,23 +945,21 @@
 			</div>
 		</div>
 
-		<!-- Hover info bar -->
-		{#if matrixHoverInfo}
-			<div class="matrix-hover-info">
-				{#if matrixHoverInfo.row}
-					<div class="hover-row">
-						<span class="hover-label">Row:</span>
-						<span class="hover-value">{matrixHoverInfo.row}</span>
-					</div>
-				{/if}
-				{#if matrixHoverInfo.col}
-					<div class="hover-col">
-						<span class="hover-label">Col:</span>
-						<span class="hover-value">{matrixHoverInfo.col}</span>
-					</div>
-				{/if}
-			</div>
-		{/if}
+		<!-- Hover info bar - always reserve space -->
+		<div class="matrix-hover-info" class:has-content={matrixHoverInfo}>
+			{#if matrixHoverInfo?.row}
+				<div class="hover-row">
+					<span class="hover-label">Row:</span>
+					<span class="hover-value">{matrixHoverInfo.row}</span>
+				</div>
+			{/if}
+			{#if matrixHoverInfo?.col}
+				<div class="hover-col">
+					<span class="hover-label">Col:</span>
+					<span class="hover-value">{matrixHoverInfo.col}</span>
+				</div>
+			{/if}
+		</div>
 
 		<div class="matrix-container" onmouseleave={() => { matrixHoverRow = null; matrixHoverCol = null; }}>
 			{#if matrixType === 'triggers'}
@@ -2151,6 +2149,35 @@
 {/if}
 
 <style>
+	/* Custom scrollbars */
+	::-webkit-scrollbar {
+		width: 8px;
+		height: 8px;
+	}
+
+	::-webkit-scrollbar-track {
+		background: transparent;
+	}
+
+	::-webkit-scrollbar-thumb {
+		background: #334155;
+		border-radius: 4px;
+	}
+
+	::-webkit-scrollbar-thumb:hover {
+		background: #475569;
+	}
+
+	::-webkit-scrollbar-corner {
+		background: transparent;
+	}
+
+	/* Firefox scrollbar */
+	* {
+		scrollbar-width: thin;
+		scrollbar-color: #334155 transparent;
+	}
+
 	.admin {
 		display: flex;
 		flex-direction: column;
@@ -2296,15 +2323,23 @@
 		/* No styling by default - only styled when showUnlinkedOnly is true */
 	}
 
-	/* Matrix hover info bar */
+	/* Matrix hover info bar - always reserves space */
 	.matrix-hover-info {
 		display: flex;
 		gap: 2rem;
 		padding: 0.5rem 0.75rem;
+		background: transparent;
+		font-size: 0.75rem;
+		height: 2.5rem;
+		align-items: center;
+		opacity: 0;
+		transition: opacity 0.15s ease;
+	}
+
+	.matrix-hover-info.has-content {
+		opacity: 1;
 		background: #1e293b;
 		border-bottom: 1px solid #334155;
-		font-size: 0.75rem;
-		min-height: 2rem;
 	}
 
 	.hover-row, .hover-col {
