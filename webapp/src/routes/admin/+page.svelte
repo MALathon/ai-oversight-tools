@@ -947,7 +947,8 @@
 
 		<div class="matrix-container" onmouseleave={() => { matrixHoverRow = null; matrixHoverCol = null; }}>
 			{#if matrixType === 'triggers'}
-				{@const filteredQuestions = filterBySearch(allQuestions, q => q.text).filter(q => !showUnlinkedOnly || (linkCounts.questionTriggers.get(q.id) || 0) === 0)}
+				{@const metadataQuestions = ['phase', 'model-types']}
+				{@const filteredQuestions = filterBySearch(allQuestions, q => q.text).filter(q => !metadataQuestions.includes(q.id) && (!showUnlinkedOnly || (linkCounts.questionTriggers.get(q.id) || 0) === 0))}
 				{@const filteredRisks = showUnlinkedOnly ? allRisks.filter(r => (linkCounts.riskTriggers.get(r.id) || 0) === 0) : allRisks}
 				<table class="matrix">
 					<thead>
