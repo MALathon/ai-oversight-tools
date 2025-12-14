@@ -1,10 +1,74 @@
 <script lang="ts">
+	import { browser } from '$app/environment';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
 
-	// Deep clone editable data
-	let links = $state(JSON.parse(JSON.stringify(data.traceability.links)));
+	const STORAGE_KEY = 'ai-oversight-traceability';
+
+	// Load from localStorage or use default
+	function loadLinks(): any[] {
+		if (browser) {
+			const saved = localStorage.getItem(STORAGE_KEY);
+			if (saved) {
+				try {
+					return JSON.parse(saved);
+				} catch (e) {
+					console.error('Failed to parse saved links:', e);
+				}
+			}
+		}
+		return JSON.parse(JSON.stringify(data.traceability.links));
+	}
+
+	// Deep clone editable data (from localStorage if available)
+	let links = $state(loadLinks());
+	let hasLocalChanges = $state(browser && localStorage.getItem(STORAGE_KEY) !== null);
+
+	// Auto-save to localStorage when links change
+	$effect(() => {
+		if (browser && links) {
+			localStorage.setItem(STORAGE_KEY, JSON.stringify(links));
+			hasLocalChanges = true;
+		}
+	});
+
+	// Reset to default (from JSON file)
+	function resetToDefault() {
+		if (confirm('Reset to default? This will discard all local changes.')) {
+			links = JSON.parse(JSON.stringify(data.traceability.links));
+			localStorage.removeItem(STORAGE_KEY);
+			hasLocalChanges = false;
+		}
+	}
+
+	// Import from file
+	let fileInput: HTMLInputElement;
+	function importFile() {
+		fileInput?.click();
+	}
+	function handleFileImport(e: Event) {
+		const file = (e.target as HTMLInputElement).files?.[0];
+		if (!file) return;
+		const reader = new FileReader();
+		reader.onload = (event) => {
+			try {
+				const imported = JSON.parse(event.target?.result as string);
+				if (imported.links) {
+					links = imported.links;
+					hasLocalChanges = true;
+				} else if (Array.isArray(imported)) {
+					links = imported;
+					hasLocalChanges = true;
+				} else {
+					alert('Invalid file format. Expected traceability JSON.');
+				}
+			} catch (err) {
+				alert('Failed to parse file: ' + err);
+			}
+		};
+		reader.readAsText(file);
+	}
 
 	const phases = [
 		{ id: 'phase-1', name: 'Phase 1: Discovery', short: 'P1' },
@@ -19,6 +83,7 @@
 	let showLinkEditor = $state(false);
 	let editingLink = $state<any>(null);
 	let searchQuery = $state('');
+	let focusMode = $state(false);
 
 	// Build flat lists for each entity type
 	let allQuestions = $derived.by(() => {
@@ -80,10 +145,21 @@
 		);
 	}
 
-	// Check if node is connected to selected
+	// Check if node is connected to selected and get the link
 	function isConnected(type: string, id: string): boolean {
 		if (!selectedNode) return false;
 		return filteredLinks.some((l: any) =>
+			(l.from.entity === selectedNode.type && l.from.id === selectedNode.id && l.to.entity === type && l.to.id === id) ||
+			(l.to.entity === selectedNode.type && l.to.id === selectedNode.id && l.from.entity === type && l.from.id === id) ||
+			(l.from.entity === type && l.from.id === id && l.to.entity === selectedNode.type && l.to.id === selectedNode.id) ||
+			(l.to.entity === type && l.to.id === id && l.from.entity === selectedNode.type && l.from.id === selectedNode.id)
+		);
+	}
+
+	// Get the link between selected node and another node
+	function getConnectionToSelected(type: string, id: string) {
+		if (!selectedNode) return null;
+		return filteredLinks.find((l: any) =>
 			(l.from.entity === selectedNode.type && l.from.id === selectedNode.id && l.to.entity === type && l.to.id === id) ||
 			(l.to.entity === selectedNode.type && l.to.id === selectedNode.id && l.from.entity === type && l.from.id === id) ||
 			(l.from.entity === type && l.from.id === id && l.to.entity === selectedNode.type && l.to.id === selectedNode.id) ||
@@ -110,7 +186,7 @@
 				// Create or edit link
 				const existing = getLinkBetween(connectingFrom.type, connectingFrom.id, type, id);
 				if (existing) {
-					editingLink = existing;
+					editingLink = JSON.parse(JSON.stringify(existing));
 					showLinkEditor = true;
 				} else {
 					// Determine link type based on node types
@@ -138,6 +214,14 @@
 				connectingFrom = null;
 			}
 		} else {
+			// Check if clicking a connected node - if so, edit that connection
+			const connectionLink = getConnectionToSelected(type, id);
+			if (connectionLink) {
+				editingLink = JSON.parse(JSON.stringify(connectionLink));
+				showLinkEditor = true;
+				return;
+			}
+
 			// Select or deselect
 			if (selectedNode?.type === type && selectedNode?.id === id) {
 				selectedNode = null;
@@ -262,15 +346,33 @@
 			</div>
 		</div>
 		<div class="header-right">
+			{#if hasLocalChanges}
+				<span class="status-badge local">Local changes</span>
+			{:else}
+				<span class="status-badge default">Default</span>
+			{/if}
+			<button class="btn focus-toggle" class:active={focusMode} onclick={() => focusMode = !focusMode}>
+				{focusMode ? 'Focus: ON' : 'Focus'}
+			</button>
 			<input type="text" placeholder="Search..." bind:value={searchQuery} class="search" />
+			<input type="file" accept=".json" bind:this={fileInput} onchange={handleFileImport} style="display: none" />
+			<button class="btn" onclick={importFile}>Import</button>
 			<button class="btn primary" onclick={exportConfig}>Export</button>
+			{#if hasLocalChanges}
+				<button class="btn danger-outline" onclick={resetToDefault}>Reset</button>
+			{/if}
 		</div>
 	</header>
 
 	{#if connectingFrom}
 		<div class="connection-banner">
-			Connecting from: <strong>{getEntityName(connectingFrom.type, connectingFrom.id)}</strong>
+			Connecting from: <strong>{getEntityName(connectingFrom.type, connectingFrom.id)}</strong> — Click another item to link them
 			<button onclick={() => connectingFrom = null}>Cancel</button>
+		</div>
+	{:else if !selectedNode}
+		<div class="help-banner">
+			<strong>How to link:</strong> Click an item to select it, then click <span class="plus-hint">+</span> on it (or another item) to create a connection.
+			Questions trigger Risks. Risks link to Mitigations and Regulations.
 		</div>
 	{/if}
 
@@ -289,6 +391,9 @@
 						{@const linkCount = getLinkCount('question', q.id)}
 						{@const isSelected = selectedNode?.type === 'question' && selectedNode?.id === q.id}
 						{@const connected = isConnected('question', q.id)}
+						{@const connectionLink = getConnectionToSelected('question', q.id)}
+						{@const shouldHide = focusMode && selectedNode && !isSelected && !connected}
+						{#if !shouldHide}
 						<div
 							class="node question"
 							class:selected={isSelected}
@@ -301,13 +406,19 @@
 						>
 							<div class="node-header">
 								<span class="node-id">{q.id}</span>
-								{#if linkCount > 0}
+								{#if connected && connectionLink}
+									<span class="conn-badge {connectionLink.type}">{connectionLink.type}</span>
+								{:else if linkCount > 0}
 									<span class="link-count">{linkCount}</span>
 								{/if}
 							</div>
 							<div class="node-text">{q.text}</div>
+							{#if connected}
+								<div class="edit-hint">click to edit</div>
+							{/if}
 							<button class="connect-btn" title="Connect to..." onclick={(e) => startConnect('question', q.id, e)}>+</button>
 						</div>
+						{/if}
 					{/each}
 				</div>
 			</div>
@@ -324,6 +435,9 @@
 						{@const linkCount = getLinkCount('risk', r.id)}
 						{@const isSelected = selectedNode?.type === 'risk' && selectedNode?.id === r.id}
 						{@const connected = isConnected('risk', r.id)}
+						{@const connectionLink = getConnectionToSelected('risk', r.id)}
+						{@const shouldHide = focusMode && selectedNode && !isSelected && !connected}
+						{#if !shouldHide}
 						<div
 							class="node risk"
 							class:selected={isSelected}
@@ -336,13 +450,19 @@
 						>
 							<div class="node-header">
 								<span class="node-code">{r.code}</span>
-								{#if linkCount > 0}
+								{#if connected && connectionLink}
+									<span class="conn-badge {connectionLink.type}">{connectionLink.type}</span>
+								{:else if linkCount > 0}
 									<span class="link-count">{linkCount}</span>
 								{/if}
 							</div>
 							<div class="node-text">{r.shortName}</div>
+							{#if connected}
+								<div class="edit-hint">click to edit</div>
+							{/if}
 							<button class="connect-btn" title="Connect to..." onclick={(e) => startConnect('risk', r.id, e)}>+</button>
 						</div>
+						{/if}
 					{/each}
 				</div>
 			</div>
@@ -359,6 +479,9 @@
 						{@const linkCount = getLinkCount('mitigation', m.id)}
 						{@const isSelected = selectedNode?.type === 'mitigation' && selectedNode?.id === m.id}
 						{@const connected = isConnected('mitigation', m.id)}
+						{@const connectionLink = getConnectionToSelected('mitigation', m.id)}
+						{@const shouldHide = focusMode && selectedNode && !isSelected && !connected}
+						{#if !shouldHide}
 						<div
 							class="node mitigation"
 							class:selected={isSelected}
@@ -371,13 +494,19 @@
 						>
 							<div class="node-header">
 								<span class="node-code">{m.code}</span>
-								{#if linkCount > 0}
+								{#if connected && connectionLink}
+									<span class="conn-badge {connectionLink.type}">{connectionLink.type}</span>
+								{:else if linkCount > 0}
 									<span class="link-count">{linkCount}</span>
 								{/if}
 							</div>
 							<div class="node-text">{m.name}</div>
+							{#if connected}
+								<div class="edit-hint">click to edit</div>
+							{/if}
 							<button class="connect-btn" title="Connect to..." onclick={(e) => startConnect('mitigation', m.id, e)}>+</button>
 						</div>
+						{/if}
 					{/each}
 				</div>
 			</div>
@@ -394,6 +523,9 @@
 						{@const linkCount = getLinkCount('regulation', r.id)}
 						{@const isSelected = selectedNode?.type === 'regulation' && selectedNode?.id === r.id}
 						{@const connected = isConnected('regulation', r.id)}
+						{@const connectionLink = getConnectionToSelected('regulation', r.id)}
+						{@const shouldHide = focusMode && selectedNode && !isSelected && !connected}
+						{#if !shouldHide}
 						<div
 							class="node regulation"
 							class:selected={isSelected}
@@ -406,13 +538,19 @@
 						>
 							<div class="node-header">
 								<span class="node-code">{r.citation}</span>
-								{#if linkCount > 0}
+								{#if connected && connectionLink}
+									<span class="conn-badge {connectionLink.type}">{connectionLink.type}</span>
+								{:else if linkCount > 0}
 									<span class="link-count">{linkCount}</span>
 								{/if}
 							</div>
 							<div class="node-text">{r.description}</div>
+							{#if connected}
+								<div class="edit-hint">click to edit</div>
+							{/if}
 							<button class="connect-btn" title="Connect to..." onclick={(e) => startConnect('regulation', r.id, e)}>+</button>
 						</div>
+						{/if}
 					{/each}
 				</div>
 			</div>
@@ -699,6 +837,31 @@
 		cursor: pointer;
 	}
 
+	.help-banner {
+		background: rgba(96, 165, 250, 0.1);
+		border: 1px solid rgba(96, 165, 250, 0.3);
+		padding: 0.5rem 1rem;
+		font-size: 0.8125rem;
+		color: #94a3b8;
+	}
+
+	.help-banner strong {
+		color: #60a5fa;
+	}
+
+	.plus-hint {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 1.25rem;
+		height: 1.25rem;
+		background: #334155;
+		border-radius: 50%;
+		font-size: 0.875rem;
+		color: #e2e8f0;
+		margin: 0 0.125rem;
+	}
+
 	.layout {
 		display: flex;
 		flex: 1;
@@ -826,6 +989,36 @@
 		color: #e2e8f0;
 		padding: 0.0625rem 0.25rem;
 		border-radius: 0.125rem;
+	}
+
+	.conn-badge {
+		font-size: 0.5rem;
+		font-weight: 600;
+		text-transform: uppercase;
+		padding: 0.125rem 0.25rem;
+		border-radius: 0.125rem;
+	}
+
+	.conn-badge.trigger { background: rgba(251, 191, 36, 0.3); color: #fbbf24; }
+	.conn-badge.mitigation { background: rgba(34, 197, 94, 0.3); color: #22c55e; }
+	.conn-badge.regulation { background: rgba(168, 85, 247, 0.3); color: #a855f7; }
+	.conn-badge.custom { background: rgba(148, 163, 184, 0.3); color: #94a3b8; }
+
+	.edit-hint {
+		font-size: 0.5625rem;
+		color: #fbbf24;
+		margin-top: 0.25rem;
+		font-style: italic;
+	}
+
+	.focus-toggle {
+		border: 1px solid #475569;
+	}
+
+	.focus-toggle.active {
+		background: rgba(251, 191, 36, 0.2);
+		border-color: #fbbf24;
+		color: #fbbf24;
 	}
 
 	.node-text {
@@ -1022,6 +1215,25 @@
 	.btn.primary:hover { background: #3b82f6; }
 	.btn.danger { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
 	.btn.danger:hover { background: rgba(239, 68, 68, 0.3); }
+	.btn.danger-outline { background: transparent; border: 1px solid #ef4444; color: #ef4444; }
+	.btn.danger-outline:hover { background: rgba(239, 68, 68, 0.1); }
+
+	.status-badge {
+		font-size: 0.6875rem;
+		padding: 0.25rem 0.5rem;
+		border-radius: 0.25rem;
+		font-weight: 500;
+	}
+
+	.status-badge.local {
+		background: rgba(251, 191, 36, 0.2);
+		color: #fbbf24;
+	}
+
+	.status-badge.default {
+		background: rgba(34, 197, 94, 0.2);
+		color: #22c55e;
+	}
 
 	.close-btn {
 		background: none;
