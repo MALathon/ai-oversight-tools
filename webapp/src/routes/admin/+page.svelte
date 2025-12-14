@@ -151,7 +151,7 @@
 	let entitySelectorSort = $state<'name' | 'code' | 'category'>('name');
 
 	// Entity management state
-	let entityType = $state<'questions' | 'risks' | 'mitigations' | 'regulations' | 'controls'>('risks');
+	let entityType = $state<'questions' | 'risks' | 'regulations' | 'controls'>('risks');
 	let entitySearch = $state('');
 	let showEntityEditor = $state(false);
 	let editingEntity = $state<any>(null);
@@ -181,15 +181,13 @@
 	let editableEntities = $state<{
 		questions: any[] | null;
 		risks: any[] | null;
-		mitigations: any[] | null;
 		regulations: any[] | null;
 		controls: any[] | null;
-	}>(loadEditableEntities() || { questions: null, risks: null, mitigations: null, regulations: null, controls: null });
+	}>(loadEditableEntities() || { questions: null, risks: null, regulations: null, controls: null });
 
 	let hasEntityChanges = $derived(
 		editableEntities.questions !== null ||
 		editableEntities.risks !== null ||
-		editableEntities.mitigations !== null ||
 		editableEntities.regulations !== null ||
 		editableEntities.controls !== null
 	);
@@ -204,7 +202,7 @@
 	// Reset entities to defaults
 	function resetEntities() {
 		if (confirm('Reset all entities to defaults? This will discard all entity changes.')) {
-			editableEntities = { questions: null, risks: null, mitigations: null, regulations: null, controls: null };
+			editableEntities = { questions: null, risks: null, regulations: null, controls: null };
 			localStorage.removeItem(ENTITIES_STORAGE_KEY);
 		}
 	}
@@ -235,12 +233,18 @@
 		phaseGuidance: s.phaseGuidance || { 'phase-1': '', 'phase-2': '', 'phase-3': '' }
 	})));
 
-	let defaultMitigations = $derived.by(() => {
+	// Control categories = AIHSR mitigation strategies = MIT subcategories
+	// These are derived from control subcategories, not separately editable
+	let controlCategories = $derived.by(() => {
 		const items: Array<{ id: string; code: string; name: string; category: string }> = [];
-		for (const cat of data.mitigationCategories) {
-			for (const m of cat.strategies) {
-				items.push({ id: m.id, code: m.code, name: m.name, category: cat.name });
-			}
+		for (const subcat of data.controlSubcategories) {
+			const cat = data.controlCategories.find((c: any) => c.id === subcat.categoryId);
+			items.push({
+				id: subcat.id,
+				code: subcat.code,
+				name: subcat.name,
+				category: cat?.name || subcat.categoryId
+			});
 		}
 		return items;
 	});
@@ -269,7 +273,7 @@
 	// Use editable entities if modified, otherwise defaults
 	let allQuestions = $derived(editableEntities.questions ?? defaultQuestions);
 	let allRisks = $derived(editableEntities.risks ?? defaultRisks);
-	let allMitigations = $derived(editableEntities.mitigations ?? defaultMitigations);
+	let allMitigations = $derived(controlCategories); // Alias: mitigations = control categories
 	let allRegulations = $derived(editableEntities.regulations ?? defaultRegulations);
 	let allControls = $derived(editableEntities.controls ?? defaultControls);
 
@@ -527,8 +531,6 @@
 			return allQuestions.filter(e => !q || e.text.toLowerCase().includes(q) || e.id.toLowerCase().includes(q) || e.category.toLowerCase().includes(q));
 		} else if (entityType === 'risks') {
 			return allRisks.filter(e => !q || e.name.toLowerCase().includes(q) || e.code.toLowerCase().includes(q) || e.shortName.toLowerCase().includes(q));
-		} else if (entityType === 'mitigations') {
-			return allMitigations.filter(e => !q || e.name.toLowerCase().includes(q) || e.code.toLowerCase().includes(q) || e.category.toLowerCase().includes(q));
 		} else if (entityType === 'regulations') {
 			return allRegulations.filter(e => !q || e.description.toLowerCase().includes(q) || e.citation.toLowerCase().includes(q));
 		} else if (entityType === 'controls') {
@@ -538,11 +540,10 @@
 	});
 
 	// Ensure we have a mutable copy of entities for a type
-	function ensureEditableCopy(type: 'questions' | 'risks' | 'mitigations' | 'regulations' | 'controls') {
+	function ensureEditableCopy(type: 'questions' | 'risks' | 'regulations' | 'controls') {
 		if (editableEntities[type] === null) {
 			if (type === 'questions') editableEntities.questions = JSON.parse(JSON.stringify(defaultQuestions));
 			else if (type === 'risks') editableEntities.risks = JSON.parse(JSON.stringify(defaultRisks));
-			else if (type === 'mitigations') editableEntities.mitigations = JSON.parse(JSON.stringify(defaultMitigations));
 			else if (type === 'regulations') editableEntities.regulations = JSON.parse(JSON.stringify(defaultRegulations));
 			else if (type === 'controls') editableEntities.controls = JSON.parse(JSON.stringify(defaultControls));
 		}
@@ -557,8 +558,6 @@
 			newConditionValues = [];
 		} else if (entityType === 'risks') {
 			editingEntity = { id: '', code: '', name: '', shortName: '', domain: '', phaseGuidance: { 'phase-1': '', 'phase-2': '', 'phase-3': '' } };
-		} else if (entityType === 'mitigations') {
-			editingEntity = { id: '', code: '', name: '', category: '' };
 		} else if (entityType === 'regulations') {
 			editingEntity = { id: '', citation: '', description: '', framework: '' };
 		} else if (entityType === 'controls') {
@@ -653,10 +652,6 @@
 			const questions = editableEntities.questions ? [...editableEntities.questions] : [...defaultQuestions];
 			questions.push(pickerNewEntity);
 			editableEntities = { ...editableEntities, questions };
-		} else if (showRiskPicker === 'mitigation') {
-			const mitigations = editableEntities.mitigations ? [...editableEntities.mitigations] : [...defaultMitigations];
-			mitigations.push(pickerNewEntity);
-			editableEntities = { ...editableEntities, mitigations };
 		} else if (showRiskPicker === 'regulation') {
 			const regulations = editableEntities.regulations ? [...editableEntities.regulations] : [...defaultRegulations];
 			regulations.push(pickerNewEntity);
@@ -962,7 +957,7 @@
 					Questions → Risks
 				</button>
 				<button class:active={matrixType === 'mitigations'} onclick={() => matrixType = 'mitigations'}>
-					Risks → Mitigations
+					Risks → Control Categories
 				</button>
 				<button class:active={matrixType === 'controls'} onclick={() => matrixType = 'controls'}>
 					Risks → Controls
@@ -1303,7 +1298,7 @@
 					</div>
 
 					<div class="risk-section">
-						<h3>Mitigations</h3>
+						<h3>Control Categories</h3>
 						<div class="link-list">
 							{#each getMitigationsForRisk(selectedRisk.id) as link}
 								{@const mitigation = getMitigation(link.to.id)}
@@ -1317,7 +1312,7 @@
 									</span>
 								</button>
 							{/each}
-							<button class="add-link-btn" onclick={() => { showRiskPicker = 'mitigation'; riskPickerSearch = ''; }}>+ Add Mitigation</button>
+							<button class="add-link-btn" onclick={() => { showRiskPicker = 'mitigation'; riskPickerSearch = ''; }}>+ Add Control Category</button>
 						</div>
 					</div>
 
@@ -1349,16 +1344,16 @@
 						<div class="picker-header">
 							<h3>
 								{#if showRiskPicker === 'trigger'}Add Trigger Question
-								{:else if showRiskPicker === 'mitigation'}Add Mitigation
+								{:else if showRiskPicker === 'mitigation'}Add Control Category
 								{:else}Add Regulation{/if}
 							</h3>
 							<button class="close-btn" onclick={() => { showRiskPicker = null; pickerCreateMode = false; }}>×</button>
 						</div>
 
-						{#if pickerCreateMode && pickerNewEntity}
-							<!-- Inline Create Form -->
+						{#if pickerCreateMode && pickerNewEntity && showRiskPicker !== 'mitigation'}
+							<!-- Inline Create Form (not available for control categories - they come from controls taxonomy) -->
 							<div class="picker-create-form">
-								<h4>Create New {showRiskPicker === 'trigger' ? 'Question' : showRiskPicker === 'mitigation' ? 'Mitigation' : 'Regulation'}</h4>
+								<h4>Create New {showRiskPicker === 'trigger' ? 'Question' : 'Regulation'}</h4>
 								{#if showRiskPicker === 'trigger'}
 									<div class="form-row">
 										<label>ID <input type="text" bind:value={pickerNewEntity.id} placeholder="e.g., my-question" /></label>
@@ -1374,19 +1369,6 @@
 												<option value="multi-select">Multi Select</option>
 											</select>
 										</label>
-									</div>
-								{:else if showRiskPicker === 'mitigation'}
-									<div class="form-row">
-										<label>ID <input type="text" bind:value={pickerNewEntity.id} placeholder="e.g., my-mitigation-1" /></label>
-									</div>
-									<div class="form-row">
-										<label>Code <input type="text" bind:value={pickerNewEntity.code} placeholder="e.g., 5.1" /></label>
-									</div>
-									<div class="form-row">
-										<label>Name <input type="text" bind:value={pickerNewEntity.name} placeholder="Mitigation name" /></label>
-									</div>
-									<div class="form-row">
-										<label>Description <textarea bind:value={pickerNewEntity.description} placeholder="Describe the mitigation..." rows="2"></textarea></label>
 									</div>
 								{:else}
 									<div class="form-row">
@@ -1439,7 +1421,7 @@
 										{/if}
 									</button>
 								{:else}
-									<div class="picker-empty">No items found. <button class="link-btn" onclick={initPickerNewEntity}>Create new?</button></div>
+									<div class="picker-empty">No items found.{#if showRiskPicker !== 'mitigation'} <button class="link-btn" onclick={initPickerNewEntity}>Create new?</button>{/if}</div>
 								{/each}
 							</div>
 						{/if}
@@ -1458,7 +1440,7 @@
 		{:else if !selectedNode}
 			<div class="help-banner">
 				<strong>How to link:</strong> Click an item to select it, then click <span class="plus-hint">+</span> on it (or another item) to create a connection.
-				Questions trigger Risks. Risks link to Mitigations and Regulations.
+				Questions trigger Risks. Risks link to Control Categories and Regulations.
 			</div>
 		{/if}
 
@@ -1560,11 +1542,11 @@
 				</div>
 			</div>
 
-			<!-- Mitigations Column -->
+			<!-- Control Categories Column (AIHSR Mitigation Strategies) -->
 			<div class="column mitigations">
 				<div class="column-header">
-					<span class="column-icon">M</span>
-					<h2>Mitigations</h2>
+					<span class="column-icon">C</span>
+					<h2>Control Categories</h2>
 					<span class="count">{allMitigations.length}</span>
 				</div>
 				<div class="nodes">
@@ -1733,9 +1715,6 @@
 					<button class:active={entityType === 'controls'} onclick={() => entityType = 'controls'}>
 						Controls ({allControls.length})
 					</button>
-					<button class:active={entityType === 'mitigations'} onclick={() => entityType = 'mitigations'}>
-						Mitigations ({allMitigations.length})
-					</button>
 					<button class:active={entityType === 'questions'} onclick={() => entityType = 'questions'}>
 						Questions ({allQuestions.length})
 					</button>
@@ -1775,27 +1754,6 @@
 						</div>
 					{:else}
 						<div class="no-entities">No risks found matching your search</div>
-					{/each}
-				{:else if entityType === 'mitigations'}
-					<div class="entity-table-header">
-						<span class="col-code">Code</span>
-						<span class="col-name">Name</span>
-						<span class="col-category">Category</span>
-						<span class="col-actions">Actions</span>
-					</div>
-					{#each filteredEntities as entity}
-						<div class="entity-row">
-							<span class="col-code">
-								<span class="code-badge mitigation">{entity.code}</span>
-							</span>
-							<span class="col-name">{entity.name}</span>
-							<span class="col-category">{entity.category}</span>
-							<span class="col-actions">
-								<button class="action-btn" onclick={() => editEntity(entity)}>Edit</button>
-							</span>
-						</div>
-					{:else}
-						<div class="no-entities">No mitigations found matching your search</div>
 					{/each}
 				{:else if entityType === 'questions'}
 					<div class="entity-table-header">
@@ -1930,19 +1888,6 @@
 								></textarea>
 							</div>
 						{/if}
-					</div>
-				{:else if entityType === 'mitigations'}
-					<div class="form-group">
-						<label>Code (e.g., "M1")</label>
-						<input type="text" bind:value={editingEntity.code} placeholder="M1" />
-					</div>
-					<div class="form-group">
-						<label>Name</label>
-						<input type="text" bind:value={editingEntity.name} placeholder="Mitigation strategy name" />
-					</div>
-					<div class="form-group">
-						<label>Category</label>
-						<input type="text" bind:value={editingEntity.category} placeholder="Category" />
 					</div>
 				{:else if entityType === 'questions'}
 					<div class="form-group">
@@ -2257,7 +2202,7 @@
 						}
 					}}>
 						<option value="trigger">Trigger (Question triggers Risk)</option>
-						<option value="mitigation">Mitigation (Risk linked to Mitigation)</option>
+						<option value="mitigation">Control Category (Risk linked to Control Category)</option>
 						<option value="regulation">Regulation (Risk linked to Regulation)</option>
 						<option value="custom">Custom</option>
 					</select>
