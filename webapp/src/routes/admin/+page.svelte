@@ -91,6 +91,7 @@
 	let matrixVerbose = $state(false);
 	let matrixHoverRow = $state<string | null>(null);
 	let matrixHoverCol = $state<string | null>(null);
+	let showUnlinkedOnly = $state(false);
 
 	// Get hover info for matrix
 	let matrixHoverInfo = $derived.by(() => {
@@ -243,6 +244,67 @@
 	let allRisks = $derived(editableEntities.risks ?? defaultRisks);
 	let allMitigations = $derived(editableEntities.mitigations ?? defaultMitigations);
 	let allRegulations = $derived(editableEntities.regulations ?? defaultRegulations);
+
+	// Link counts for orphan detection
+	let linkCounts = $derived.by(() => {
+		const counts = {
+			questionTriggers: new Map<string, number>(),
+			riskTriggers: new Map<string, number>(),
+			riskMitigations: new Map<string, number>(),
+			mitigationRisks: new Map<string, number>(),
+			riskRegulations: new Map<string, number>(),
+			regulationRisks: new Map<string, number>()
+		};
+
+		// Initialize all counts to 0
+		allQuestions.forEach(q => counts.questionTriggers.set(q.id, 0));
+		allRisks.forEach(r => {
+			counts.riskTriggers.set(r.id, 0);
+			counts.riskMitigations.set(r.id, 0);
+			counts.riskRegulations.set(r.id, 0);
+		});
+		allMitigations.forEach(m => counts.mitigationRisks.set(m.id, 0));
+		allRegulations.forEach(r => counts.regulationRisks.set(r.id, 0));
+
+		// Count links
+		links.forEach((link: any) => {
+			if (link.type === 'trigger') {
+				const qId = link.from?.id;
+				const rId = link.to?.id;
+				if (qId) counts.questionTriggers.set(qId, (counts.questionTriggers.get(qId) || 0) + 1);
+				if (rId) counts.riskTriggers.set(rId, (counts.riskTriggers.get(rId) || 0) + 1);
+			} else if (link.type === 'mitigation') {
+				const rId = link.from?.id;
+				const mId = link.to?.id;
+				if (rId) counts.riskMitigations.set(rId, (counts.riskMitigations.get(rId) || 0) + 1);
+				if (mId) counts.mitigationRisks.set(mId, (counts.mitigationRisks.get(mId) || 0) + 1);
+			} else if (link.type === 'regulation') {
+				const rId = link.from?.id;
+				const regId = link.to?.id;
+				if (rId) counts.riskRegulations.set(rId, (counts.riskRegulations.get(rId) || 0) + 1);
+				if (regId) counts.regulationRisks.set(regId, (counts.regulationRisks.get(regId) || 0) + 1);
+			}
+		});
+
+		return counts;
+	});
+
+	// Get orphan counts for display
+	let orphanStats = $derived.by(() => {
+		const stats = { rows: 0, cols: 0, total: 0 };
+		if (matrixType === 'triggers') {
+			allQuestions.forEach(q => { if ((linkCounts.questionTriggers.get(q.id) || 0) === 0) stats.rows++; });
+			allRisks.forEach(r => { if ((linkCounts.riskTriggers.get(r.id) || 0) === 0) stats.cols++; });
+		} else if (matrixType === 'mitigations') {
+			allRisks.forEach(r => { if ((linkCounts.riskMitigations.get(r.id) || 0) === 0) stats.rows++; });
+			allMitigations.forEach(m => { if ((linkCounts.mitigationRisks.get(m.id) || 0) === 0) stats.cols++; });
+		} else if (matrixType === 'regulations') {
+			allRisks.forEach(r => { if ((linkCounts.riskRegulations.get(r.id) || 0) === 0) stats.rows++; });
+			allRegulations.forEach(r => { if ((linkCounts.regulationRisks.get(r.id) || 0) === 0) stats.cols++; });
+		}
+		stats.total = stats.rows + stats.cols;
+		return stats;
+	});
 
 	// Filter links by phase
 	let filteredLinks = $derived(
@@ -514,6 +576,61 @@
 	// Risk editor picker state
 	let showRiskPicker = $state<'trigger' | 'mitigation' | 'regulation' | null>(null);
 	let riskPickerSearch = $state('');
+	let pickerCreateMode = $state(false);
+	let pickerNewEntity = $state<any>(null);
+
+	// Initialize new entity for picker creation
+	function initPickerNewEntity() {
+		if (showRiskPicker === 'trigger') {
+			pickerNewEntity = { id: '', text: '', type: 'yes-no', category: 'essentials', options: [] };
+		} else if (showRiskPicker === 'mitigation') {
+			pickerNewEntity = { id: '', code: '', name: '', description: '', category: '' };
+		} else if (showRiskPicker === 'regulation') {
+			pickerNewEntity = { id: '', citation: '', description: '', requirement: '', framework: '' };
+		}
+		pickerCreateMode = true;
+	}
+
+	// Create entity from picker and link it
+	function createAndLinkEntity() {
+		if (!pickerNewEntity || !showRiskPicker) return;
+
+		// Validate required fields
+		if (showRiskPicker === 'trigger' && (!pickerNewEntity.id || !pickerNewEntity.text)) {
+			alert('Please provide ID and question text');
+			return;
+		}
+		if (showRiskPicker === 'mitigation' && (!pickerNewEntity.id || !pickerNewEntity.code || !pickerNewEntity.name)) {
+			alert('Please provide ID, code, and name');
+			return;
+		}
+		if (showRiskPicker === 'regulation' && (!pickerNewEntity.id || !pickerNewEntity.citation || !pickerNewEntity.description)) {
+			alert('Please provide ID, citation, and description');
+			return;
+		}
+
+		// Create the entity
+		if (showRiskPicker === 'trigger') {
+			const questions = editableEntities.questions ? [...editableEntities.questions] : [...defaultQuestions];
+			questions.push(pickerNewEntity);
+			editableEntities = { ...editableEntities, questions };
+		} else if (showRiskPicker === 'mitigation') {
+			const mitigations = editableEntities.mitigations ? [...editableEntities.mitigations] : [...defaultMitigations];
+			mitigations.push(pickerNewEntity);
+			editableEntities = { ...editableEntities, mitigations };
+		} else if (showRiskPicker === 'regulation') {
+			const regulations = editableEntities.regulations ? [...editableEntities.regulations] : [...defaultRegulations];
+			regulations.push(pickerNewEntity);
+			editableEntities = { ...editableEntities, regulations };
+		}
+
+		// Link it
+		addLinkFromPicker(pickerNewEntity.id);
+
+		// Reset state
+		pickerCreateMode = false;
+		pickerNewEntity = null;
+	}
 
 	// Get items for risk picker based on type
 	let riskPickerItems = $derived.by(() => {
@@ -797,7 +914,14 @@
 			<div class="matrix-options">
 				<label class="verbose-toggle">
 					<input type="checkbox" bind:checked={matrixVerbose} />
-					<span>Verbose labels</span>
+					<span>Verbose</span>
+				</label>
+				<label class="verbose-toggle" class:warning={orphanStats.total > 0}>
+					<input type="checkbox" bind:checked={showUnlinkedOnly} />
+					<span>Unlinked only</span>
+					{#if orphanStats.total > 0}
+						<span class="orphan-badge">{orphanStats.total}</span>
+					{/if}
 				</label>
 				<input type="text" placeholder="Search..." bind:value={searchQuery} class="search" />
 			</div>
@@ -823,15 +947,19 @@
 
 		<div class="matrix-container" onmouseleave={() => { matrixHoverRow = null; matrixHoverCol = null; }}>
 			{#if matrixType === 'triggers'}
+				{@const filteredQuestions = filterBySearch(allQuestions, q => q.text).filter(q => !showUnlinkedOnly || (linkCounts.questionTriggers.get(q.id) || 0) === 0)}
+				{@const filteredRisks = showUnlinkedOnly ? allRisks.filter(r => (linkCounts.riskTriggers.get(r.id) || 0) === 0) : allRisks}
 				<table class="matrix">
 					<thead>
 						<tr>
 							<th class="row-header">Question</th>
-							{#each allRisks as risk}
+							{#each filteredRisks as risk}
+								{@const riskLinkCount = linkCounts.riskTriggers.get(risk.id) || 0}
 								<th
 									class="col-header"
 									class:highlighted={matrixHoverCol === risk.id}
-									title={risk.name}
+									class:orphan={riskLinkCount === 0}
+									title={`${risk.name} (${riskLinkCount} triggers)`}
 									onmouseenter={() => matrixHoverCol = risk.id}
 								>
 									{#if matrixVerbose}
@@ -839,17 +967,20 @@
 									{:else}
 										{risk.code}
 									{/if}
+									<span class="link-count" class:zero={riskLinkCount === 0}>{riskLinkCount}</span>
 								</th>
 							{/each}
 						</tr>
 					</thead>
 					<tbody>
-						{#each filterBySearch(allQuestions, q => q.text) as question}
+						{#each filteredQuestions as question}
+							{@const qLinkCount = linkCounts.questionTriggers.get(question.id) || 0}
 							<tr class:row-highlighted={matrixHoverRow === question.id}>
 								<td
 									class="row-label"
 									class:highlighted={matrixHoverRow === question.id}
-									title={question.text}
+									class:orphan={qLinkCount === 0}
+									title={`${question.text} (${qLinkCount} risks)`}
 									onmouseenter={() => matrixHoverRow = question.id}
 								>
 									{#if matrixVerbose}
@@ -857,8 +988,9 @@
 									{:else}
 										{question.id}
 									{/if}
+									<span class="link-count" class:zero={qLinkCount === 0}>{qLinkCount}</span>
 								</td>
-								{#each allRisks as risk}
+								{#each filteredRisks as risk}
 									{@const link = getTriggerLink(question.id, risk.id)}
 									<td
 										class="matrix-cell"
@@ -879,15 +1011,19 @@
 					</tbody>
 				</table>
 			{:else if matrixType === 'mitigations'}
+				{@const filteredRisks = filterBySearch(allRisks, r => r.shortName).filter(r => !showUnlinkedOnly || (linkCounts.riskMitigations.get(r.id) || 0) === 0)}
+				{@const filteredMitigations = showUnlinkedOnly ? allMitigations.filter(m => (linkCounts.mitigationRisks.get(m.id) || 0) === 0) : allMitigations}
 				<table class="matrix">
 					<thead>
 						<tr>
 							<th class="row-header">Risk</th>
-							{#each allMitigations as mit}
+							{#each filteredMitigations as mit}
+								{@const mitLinkCount = linkCounts.mitigationRisks.get(mit.id) || 0}
 								<th
 									class="col-header"
 									class:highlighted={matrixHoverCol === mit.id}
-									title={mit.name}
+									class:orphan={mitLinkCount === 0}
+									title={`${mit.name} (${mitLinkCount} risks)`}
 									onmouseenter={() => matrixHoverCol = mit.id}
 								>
 									{#if matrixVerbose}
@@ -895,17 +1031,20 @@
 									{:else}
 										{mit.code}
 									{/if}
+									<span class="link-count" class:zero={mitLinkCount === 0}>{mitLinkCount}</span>
 								</th>
 							{/each}
 						</tr>
 					</thead>
 					<tbody>
-						{#each filterBySearch(allRisks, r => r.shortName) as risk}
+						{#each filteredRisks as risk}
+							{@const riskLinkCount = linkCounts.riskMitigations.get(risk.id) || 0}
 							<tr class:row-highlighted={matrixHoverRow === risk.id}>
 								<td
 									class="row-label"
 									class:highlighted={matrixHoverRow === risk.id}
-									title={risk.name}
+									class:orphan={riskLinkCount === 0}
+									title={`${risk.name} (${riskLinkCount} mitigations)`}
 									onmouseenter={() => matrixHoverRow = risk.id}
 								>
 									{#if matrixVerbose}
@@ -913,8 +1052,9 @@
 									{:else}
 										{risk.code}
 									{/if}
+									<span class="link-count" class:zero={riskLinkCount === 0}>{riskLinkCount}</span>
 								</td>
-								{#each allMitigations as mit}
+								{#each filteredMitigations as mit}
 									{@const link = getMitigationLink(risk.id, mit.id)}
 									<td
 										class="matrix-cell"
@@ -935,15 +1075,19 @@
 					</tbody>
 				</table>
 			{:else if matrixType === 'regulations'}
+				{@const filteredRisks = filterBySearch(allRisks, r => r.shortName).filter(r => !showUnlinkedOnly || (linkCounts.riskRegulations.get(r.id) || 0) === 0)}
+				{@const filteredRegulations = showUnlinkedOnly ? allRegulations.filter(r => (linkCounts.regulationRisks.get(r.id) || 0) === 0) : allRegulations}
 				<table class="matrix">
 					<thead>
 						<tr>
 							<th class="row-header">Risk</th>
-							{#each allRegulations as reg}
+							{#each filteredRegulations as reg}
+								{@const regLinkCount = linkCounts.regulationRisks.get(reg.id) || 0}
 								<th
 									class="col-header"
 									class:highlighted={matrixHoverCol === reg.id}
-									title={reg.description}
+									class:orphan={regLinkCount === 0}
+									title={`${reg.description} (${regLinkCount} risks)`}
 									onmouseenter={() => matrixHoverCol = reg.id}
 								>
 									{#if matrixVerbose}
@@ -951,17 +1095,20 @@
 									{:else}
 										{reg.citation.split('(')[0].trim()}
 									{/if}
+									<span class="link-count" class:zero={regLinkCount === 0}>{regLinkCount}</span>
 								</th>
 							{/each}
 						</tr>
 					</thead>
 					<tbody>
-						{#each filterBySearch(allRisks, r => r.shortName) as risk}
+						{#each filteredRisks as risk}
+							{@const riskLinkCount = linkCounts.riskRegulations.get(risk.id) || 0}
 							<tr class:row-highlighted={matrixHoverRow === risk.id}>
 								<td
 									class="row-label"
 									class:highlighted={matrixHoverRow === risk.id}
-									title={risk.name}
+									class:orphan={riskLinkCount === 0}
+									title={`${risk.name} (${riskLinkCount} regulations)`}
 									onmouseenter={() => matrixHoverRow = risk.id}
 								>
 									{#if matrixVerbose}
@@ -969,8 +1116,9 @@
 									{:else}
 										{risk.code}
 									{/if}
+									<span class="link-count" class:zero={riskLinkCount === 0}>{riskLinkCount}</span>
 								</td>
-								{#each allRegulations as reg}
+								{#each filteredRegulations as reg}
 									{@const link = getRegulationLink(risk.id, reg.id)}
 									<td
 										class="matrix-cell"
@@ -1093,7 +1241,7 @@
 
 			<!-- Risk Picker Modal -->
 			{#if showRiskPicker && selectedRisk}
-				<div class="picker-overlay" onclick={() => showRiskPicker = null}>
+				<div class="picker-overlay" onclick={() => { showRiskPicker = null; pickerCreateMode = false; }}>
 					<div class="picker-modal" onclick={(e) => e.stopPropagation()}>
 						<div class="picker-header">
 							<h3>
@@ -1101,40 +1249,97 @@
 								{:else if showRiskPicker === 'mitigation'}Add Mitigation
 								{:else}Add Regulation{/if}
 							</h3>
-							<button class="close-btn" onclick={() => showRiskPicker = null}>×</button>
+							<button class="close-btn" onclick={() => { showRiskPicker = null; pickerCreateMode = false; }}>×</button>
 						</div>
-						<div class="picker-search">
-							<input type="text" placeholder="Search..." bind:value={riskPickerSearch} />
-						</div>
-						<div class="picker-list">
-							{#each riskPickerItems as item}
-								{@const alreadyLinked = isLinkedToRisk(showRiskPicker, item.id)}
-								<button
-									class="picker-item"
-									class:linked={alreadyLinked}
-									disabled={alreadyLinked}
-									onclick={() => addLinkFromPicker(item.id)}
-								>
-									{#if showRiskPicker === 'trigger'}
-										<span class="picker-code question">{item.id}</span>
-										<span class="picker-name">{item.text}</span>
-									{:else if showRiskPicker === 'mitigation'}
-										<span class="picker-code mitigation">{item.code}</span>
-										<span class="picker-name">{item.name}</span>
-										<span class="picker-category">{item.category}</span>
-									{:else}
-										<span class="picker-code regulation">{item.citation}</span>
-										<span class="picker-name">{item.description}</span>
-										<span class="picker-category">{item.framework}</span>
-									{/if}
-									{#if alreadyLinked}
-										<span class="already-linked">Already linked</span>
-									{/if}
-								</button>
-							{:else}
-								<div class="picker-empty">No items found</div>
-							{/each}
-						</div>
+
+						{#if pickerCreateMode && pickerNewEntity}
+							<!-- Inline Create Form -->
+							<div class="picker-create-form">
+								<h4>Create New {showRiskPicker === 'trigger' ? 'Question' : showRiskPicker === 'mitigation' ? 'Mitigation' : 'Regulation'}</h4>
+								{#if showRiskPicker === 'trigger'}
+									<div class="form-row">
+										<label>ID <input type="text" bind:value={pickerNewEntity.id} placeholder="e.g., my-question" /></label>
+									</div>
+									<div class="form-row">
+										<label>Question Text <textarea bind:value={pickerNewEntity.text} placeholder="Enter the question..." rows="2"></textarea></label>
+									</div>
+									<div class="form-row">
+										<label>Type
+											<select bind:value={pickerNewEntity.type}>
+												<option value="yes-no">Yes/No</option>
+												<option value="single-select">Single Select</option>
+												<option value="multi-select">Multi Select</option>
+											</select>
+										</label>
+									</div>
+								{:else if showRiskPicker === 'mitigation'}
+									<div class="form-row">
+										<label>ID <input type="text" bind:value={pickerNewEntity.id} placeholder="e.g., my-mitigation-1" /></label>
+									</div>
+									<div class="form-row">
+										<label>Code <input type="text" bind:value={pickerNewEntity.code} placeholder="e.g., 5.1" /></label>
+									</div>
+									<div class="form-row">
+										<label>Name <input type="text" bind:value={pickerNewEntity.name} placeholder="Mitigation name" /></label>
+									</div>
+									<div class="form-row">
+										<label>Description <textarea bind:value={pickerNewEntity.description} placeholder="Describe the mitigation..." rows="2"></textarea></label>
+									</div>
+								{:else}
+									<div class="form-row">
+										<label>ID <input type="text" bind:value={pickerNewEntity.id} placeholder="e.g., my-reg-1" /></label>
+									</div>
+									<div class="form-row">
+										<label>Citation <input type="text" bind:value={pickerNewEntity.citation} placeholder="e.g., 21 CFR 820.30" /></label>
+									</div>
+									<div class="form-row">
+										<label>Description <input type="text" bind:value={pickerNewEntity.description} placeholder="Brief description" /></label>
+									</div>
+									<div class="form-row">
+										<label>Requirement <textarea bind:value={pickerNewEntity.requirement} placeholder="Full requirement text..." rows="2"></textarea></label>
+									</div>
+								{/if}
+								<div class="form-actions">
+									<button class="btn" onclick={() => { pickerCreateMode = false; pickerNewEntity = null; }}>Cancel</button>
+									<button class="btn primary" onclick={createAndLinkEntity}>Create & Link</button>
+								</div>
+							</div>
+						{:else}
+							<!-- Search & List -->
+							<div class="picker-search">
+								<input type="text" placeholder="Search..." bind:value={riskPickerSearch} />
+								<button class="btn primary create-new-btn" onclick={initPickerNewEntity}>+ Create New</button>
+							</div>
+							<div class="picker-list">
+								{#each riskPickerItems as item}
+									{@const alreadyLinked = isLinkedToRisk(showRiskPicker, item.id)}
+									<button
+										class="picker-item"
+										class:linked={alreadyLinked}
+										disabled={alreadyLinked}
+										onclick={() => addLinkFromPicker(item.id)}
+									>
+										{#if showRiskPicker === 'trigger'}
+											<span class="picker-code question">{item.id}</span>
+											<span class="picker-name">{item.text}</span>
+										{:else if showRiskPicker === 'mitigation'}
+											<span class="picker-code mitigation">{item.code}</span>
+											<span class="picker-name">{item.name}</span>
+											<span class="picker-category">{item.category}</span>
+										{:else}
+											<span class="picker-code regulation">{item.citation}</span>
+											<span class="picker-name">{item.description}</span>
+											<span class="picker-category">{item.framework}</span>
+										{/if}
+										{#if alreadyLinked}
+											<span class="already-linked">Already linked</span>
+										{/if}
+									</button>
+								{:else}
+									<div class="picker-empty">No items found. <button class="link-btn" onclick={initPickerNewEntity}>Create new?</button></div>
+								{/each}
+							</div>
+						{/if}
 					</div>
 				</div>
 			{/if}
@@ -1937,6 +2142,40 @@
 
 	.verbose-toggle:hover {
 		color: #e2e8f0;
+	}
+
+	.verbose-toggle.warning {
+		color: #f59e0b;
+	}
+
+	.orphan-badge {
+		background: #f59e0b;
+		color: #1e293b;
+		font-size: 0.65rem;
+		font-weight: 700;
+		padding: 0.1rem 0.35rem;
+		border-radius: 9999px;
+		margin-left: 0.25rem;
+	}
+
+	/* Link count badges */
+	.link-count {
+		display: block;
+		font-size: 0.6rem;
+		color: #64748b;
+		margin-top: 0.15rem;
+	}
+
+	.link-count.zero {
+		color: #ef4444;
+		font-weight: 600;
+	}
+
+	/* Orphan highlighting */
+	.col-header.orphan,
+	.row-label.orphan {
+		background: rgba(239, 68, 68, 0.15);
+		border-left: 2px solid #ef4444;
 	}
 
 	/* Matrix hover info bar */
@@ -3305,10 +3544,13 @@
 	.picker-search {
 		padding: 0.75rem;
 		border-bottom: 1px solid #334155;
+		display: flex;
+		gap: 0.5rem;
+		align-items: center;
 	}
 
 	.picker-search input {
-		width: 100%;
+		flex: 1;
 		padding: 0.5rem 0.75rem;
 		background: #0f172a;
 		border: 1px solid #334155;
@@ -3320,6 +3562,68 @@
 	.picker-search input:focus {
 		outline: none;
 		border-color: #60a5fa;
+	}
+
+	.create-new-btn {
+		white-space: nowrap;
+		padding: 0.5rem 0.75rem;
+		font-size: 0.75rem;
+	}
+
+	/* Picker create form */
+	.picker-create-form {
+		padding: 1rem;
+		background: #0f172a;
+		border-bottom: 1px solid #334155;
+	}
+
+	.picker-create-form h4 {
+		margin: 0 0 0.75rem;
+		font-size: 0.875rem;
+		color: #60a5fa;
+	}
+
+	.picker-create-form .form-row {
+		margin-bottom: 0.75rem;
+	}
+
+	.picker-create-form label {
+		display: block;
+		font-size: 0.75rem;
+		color: #94a3b8;
+		margin-bottom: 0.25rem;
+	}
+
+	.picker-create-form input,
+	.picker-create-form textarea,
+	.picker-create-form select {
+		width: 100%;
+		padding: 0.5rem 0.75rem;
+		background: #1e293b;
+		border: 1px solid #334155;
+		border-radius: 0.375rem;
+		color: #e2e8f0;
+		font-size: 0.875rem;
+		margin-top: 0.25rem;
+	}
+
+	.picker-create-form textarea {
+		resize: vertical;
+		min-height: 60px;
+	}
+
+	.picker-create-form input:focus,
+	.picker-create-form textarea:focus,
+	.picker-create-form select:focus {
+		outline: none;
+		border-color: #60a5fa;
+	}
+
+	.picker-create-form .form-actions {
+		display: flex;
+		gap: 0.5rem;
+		justify-content: flex-end;
+		margin-top: 1rem;
 	}
 
 	.picker-list {
