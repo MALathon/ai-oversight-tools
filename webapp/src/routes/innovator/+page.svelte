@@ -3,26 +3,29 @@
 
 	let { data }: { data: PageData } = $props();
 
-	// State for all answers
+	// State for answers
 	let answers = $state<Record<string, string | string[]>>({});
 
-	// Check if a showIf condition is met
+	// State for mitigation decisions per subdomain
+	let mitigationDecisions = $state<Record<string, {
+		status: 'pending' | 'accepted' | 'custom' | 'not-applicable';
+		customText?: string;
+		justification?: string;
+	}>>({});
+
+	// Check showIf conditions
 	function checkShowIf(showIf: Record<string, string | string[]> | undefined): boolean {
 		if (!showIf) return true;
-
 		for (const [questionId, requiredValue] of Object.entries(showIf)) {
 			const answer = answers[questionId];
 			if (!answer) return false;
-
 			if (Array.isArray(requiredValue)) {
-				// Answer must be one of the values
 				if (Array.isArray(answer)) {
 					if (!requiredValue.some(v => answer.includes(v))) return false;
 				} else {
 					if (!requiredValue.includes(answer)) return false;
 				}
 			} else {
-				// Answer must equal the value
 				if (Array.isArray(answer)) {
 					if (!answer.includes(requiredValue)) return false;
 				} else {
@@ -33,28 +36,23 @@
 		return true;
 	}
 
-	// Filter visible categories based on showIf
 	let visibleCategories = $derived(
 		data.questionCategories.filter((cat: any) => checkShowIf(cat.showIf))
 	);
 
-	// Get selected phase
 	let selectedPhase = $derived(answers['phase'] as string || '');
 
-	// Calculate triggered subdomains based on all answers
+	// Calculate triggered subdomains
 	let triggeredSubdomains = $derived.by(() => {
 		const triggered = new Set<string>();
 
-		// Go through each question
 		for (const category of data.questionCategories) {
 			for (const question of category.questions) {
 				const answer = answers[question.id];
 				if (!answer) continue;
-
 				const triggers = question.triggers;
 				if (!triggers) continue;
 
-				// Handle multi-select (array of values)
 				if (Array.isArray(answer)) {
 					for (const val of answer) {
 						if (triggers[val]) {
@@ -64,7 +62,6 @@
 						}
 					}
 				} else {
-					// Single select or yes/no
 					if (triggers[answer]) {
 						for (const subdomain of triggers[answer]) {
 							triggered.add(subdomain);
@@ -74,7 +71,7 @@
 			}
 		}
 
-		// Add model type relevance
+		// Model type relevance
 		const modelTypes = answers['model-types'] as string[] || [];
 		for (const modelType of modelTypes) {
 			const relevantSubdomains = data.modelTypeRelevance[modelType];
@@ -85,7 +82,7 @@
 			}
 		}
 
-		// Add vulnerability multipliers
+		// Vulnerability multipliers
 		const vulnerabilities = answers['vulnerable-populations'] as string[] || [];
 		for (const vuln of vulnerabilities) {
 			if (vuln === 'none') continue;
@@ -100,55 +97,36 @@
 		return triggered;
 	});
 
-	// Generate report sections grouped by domain
-	let reportSections = $derived.by(() => {
-		if (!selectedPhase || triggeredSubdomains.size === 0) return [];
+	// Get triggered risks with their suggested mitigations
+	let triggeredRisks = $derived.by(() => {
+		if (!selectedPhase) return [];
 
-		const sections: Array<{
-			domain: { id: string; name: string; description: string };
-			items: Array<{
-				subdomain: { id: string; code: string; name: string; shortName: string };
-				mitigation: string;
-			}>;
+		const risks: Array<{
+			subdomain: any;
+			domain: any;
+			suggestedMitigation: string;
 		}> = [];
 
 		for (const domain of data.domains) {
-			const items: typeof sections[0]['items'] = [];
+			for (const subId of domain.subdomains) {
+				if (!triggeredSubdomains.has(subId)) continue;
 
-			for (const subdomainId of domain.subdomains) {
-				if (!triggeredSubdomains.has(subdomainId)) continue;
-
-				const subdomain = data.subdomains.find((s: any) => s.id === subdomainId);
+				const subdomain = data.subdomains.find((s: any) => s.id === subId);
 				if (!subdomain) continue;
 
-				const mitigation = data.phaseMitigations[subdomainId]?.[selectedPhase];
+				const mitigation = data.phaseMitigations[subId]?.[selectedPhase];
 				if (mitigation) {
-					items.push({ subdomain, mitigation });
+					risks.push({
+						subdomain,
+						domain,
+						suggestedMitigation: mitigation
+					});
 				}
-			}
-
-			if (items.length > 0) {
-				sections.push({ domain, items });
 			}
 		}
 
-		return sections;
+		return risks;
 	});
-
-	function copyAllSections() {
-		const text = reportSections.map(section => {
-			const header = `## ${section.domain.name}\n`;
-			const content = section.items.map(item =>
-				`### ${item.subdomain.name}\n${item.mitigation}`
-			).join('\n\n');
-			return header + content;
-		}).join('\n\n');
-		navigator.clipboard.writeText(text);
-	}
-
-	function copySection(text: string) {
-		navigator.clipboard.writeText(text);
-	}
 
 	function toggleMulti(questionId: string, value: string) {
 		const current = (answers[questionId] as string[]) || [];
@@ -160,7 +138,6 @@
 		}
 
 		newSet.delete('none');
-
 		if (newSet.has(value)) {
 			newSet.delete(value);
 		} else {
@@ -169,7 +146,47 @@
 		answers[questionId] = Array.from(newSet);
 	}
 
-	let hasContent = $derived(selectedPhase !== '' && triggeredSubdomains.size > 0);
+	function setDecision(subId: string, status: 'accepted' | 'custom' | 'not-applicable') {
+		if (!mitigationDecisions[subId]) {
+			mitigationDecisions[subId] = { status: 'pending' };
+		}
+		mitigationDecisions[subId] = { ...mitigationDecisions[subId], status };
+	}
+
+	function generateProtocol() {
+		let protocol = `# AI Research Protocol - Risk Mitigation Plan\n\n`;
+		protocol += `**Development Phase:** ${selectedPhase.replace('phase-', 'Phase ')}\n\n`;
+
+		for (const risk of triggeredRisks) {
+			const decision = mitigationDecisions[risk.subdomain.id];
+			protocol += `## ${risk.subdomain.code}: ${risk.subdomain.name}\n`;
+			protocol += `*${risk.domain.name}*\n\n`;
+
+			if (!decision || decision.status === 'pending') {
+				protocol += `**Status:** Pending review\n\n`;
+				protocol += `**Suggested Mitigation:**\n${risk.suggestedMitigation}\n\n`;
+			} else if (decision.status === 'accepted') {
+				protocol += `**Mitigation Plan:**\n${risk.suggestedMitigation}\n\n`;
+			} else if (decision.status === 'custom') {
+				protocol += `**Custom Mitigation Plan:**\n${decision.customText || '[No custom text provided]'}\n\n`;
+			} else if (decision.status === 'not-applicable') {
+				protocol += `**Status:** Not Applicable\n`;
+				protocol += `**Justification:** ${decision.justification || '[No justification provided]'}\n\n`;
+			}
+		}
+
+		navigator.clipboard.writeText(protocol);
+		alert('Protocol copied to clipboard!');
+	}
+
+	let completedCount = $derived(
+		triggeredRisks.filter(r => {
+			const d = mitigationDecisions[r.subdomain.id];
+			return d && d.status !== 'pending';
+		}).length
+	);
+
+	let hasAnswers = $derived(selectedPhase !== '');
 </script>
 
 <svelte:head>
@@ -178,10 +195,9 @@
 
 <div class="generator">
 	<!-- Left: Questions -->
-	<div class="questions">
-		<div class="questions-header">
+	<div class="questions-panel">
+		<div class="panel-header">
 			<h2>Assessment</h2>
-			<p>Answer questions to generate protocol sections</p>
 		</div>
 
 		{#each visibleCategories as category}
@@ -200,7 +216,6 @@
 											class="option"
 											class:selected={answers[question.id] === option.value}
 											onclick={() => answers[question.id] = option.value}
-											title={option.description || ''}
 										>
 											{option.label}
 										</button>
@@ -213,28 +228,15 @@
 											class="option"
 											class:selected={(answers[question.id] as string[] || []).includes(option.value)}
 											onclick={() => toggleMulti(question.id, option.value)}
-											title={option.description || ''}
 										>
 											{option.label}
 										</button>
 									{/each}
 								</div>
 							{:else if question.type === 'yes-no'}
-								<div class="options yes-no">
-									<button
-										class="option"
-										class:selected={answers[question.id] === 'yes'}
-										onclick={() => answers[question.id] = 'yes'}
-									>
-										Yes
-									</button>
-									<button
-										class="option"
-										class:selected={answers[question.id] === 'no'}
-										onclick={() => answers[question.id] = 'no'}
-									>
-										No
-									</button>
+								<div class="options">
+									<button class="option" class:selected={answers[question.id] === 'yes'} onclick={() => answers[question.id] = 'yes'}>Yes</button>
+									<button class="option" class:selected={answers[question.id] === 'no'} onclick={() => answers[question.id] = 'no'}>No</button>
 								</div>
 							{/if}
 						</div>
@@ -244,47 +246,82 @@
 		{/each}
 	</div>
 
-	<!-- Right: Report Generator -->
-	<div class="report">
-		<div class="report-header">
+	<!-- Right: Identified Risks & Mitigations -->
+	<div class="risks-panel">
+		<div class="panel-header">
 			<div>
-				<h2>IRB Protocol Sections</h2>
-				<p>Generated based on your answers</p>
+				<h2>Identified Risks</h2>
+				{#if triggeredRisks.length > 0}
+					<p class="progress">{completedCount} of {triggeredRisks.length} addressed</p>
+				{/if}
 			</div>
-			{#if hasContent}
-				<button class="copy-all-btn" onclick={copyAllSections}>Copy All</button>
+			{#if triggeredRisks.length > 0}
+				<button class="generate-btn" onclick={generateProtocol}>Copy Protocol</button>
 			{/if}
 		</div>
 
-		{#if !selectedPhase}
-			<div class="empty-report">
-				<p>Select a development phase to get started.</p>
-			</div>
-		{:else if triggeredSubdomains.size === 0}
-			<div class="empty-report">
-				<p>Answer more questions to identify relevant risks and generate protocol language.</p>
-			</div>
+		{#if !hasAnswers}
+			<div class="empty">Select a development phase to identify risks.</div>
+		{:else if triggeredRisks.length === 0}
+			<div class="empty">Answer more questions to identify applicable risks.</div>
 		{:else}
-			<div class="triggered-summary">
-				<span class="count">{triggeredSubdomains.size}</span> risk areas identified for <span class="phase">{selectedPhase.replace('-', ' ').toUpperCase()}</span>
-			</div>
-
-			{#each reportSections as section}
-				<div class="report-section">
-					<div class="section-header">
-						<h4>{section.domain.name}</h4>
+			{#each triggeredRisks as risk}
+				{@const decision = mitigationDecisions[risk.subdomain.id] || { status: 'pending' }}
+				<div class="risk-card" class:addressed={decision.status !== 'pending'}>
+					<div class="risk-header">
+						<span class="code">{risk.subdomain.code}</span>
+						<span class="risk-name">{risk.subdomain.shortName}</span>
+						<span class="domain-tag">{risk.domain.name}</span>
 					</div>
 
-					{#each section.items as item}
-						<div class="mitigation-item">
-							<div class="item-header">
-								<span class="code">{item.subdomain.code}</span>
-								<span class="name">{item.subdomain.shortName}</span>
-								<button class="copy-btn" onclick={() => copySection(item.mitigation)}>Copy</button>
-							</div>
-							<div class="item-content">{item.mitigation}</div>
+					<div class="suggested-mitigation">
+						<h4>Suggested Mitigation</h4>
+						<p>{risk.suggestedMitigation}</p>
+					</div>
+
+					<div class="decision-buttons">
+						<button
+							class="decision-btn accept"
+							class:active={decision.status === 'accepted'}
+							onclick={() => setDecision(risk.subdomain.id, 'accepted')}
+						>
+							Accept
+						</button>
+						<button
+							class="decision-btn custom"
+							class:active={decision.status === 'custom'}
+							onclick={() => setDecision(risk.subdomain.id, 'custom')}
+						>
+							Custom
+						</button>
+						<button
+							class="decision-btn na"
+							class:active={decision.status === 'not-applicable'}
+							onclick={() => setDecision(risk.subdomain.id, 'not-applicable')}
+						>
+							N/A
+						</button>
+					</div>
+
+					{#if decision.status === 'custom'}
+						<div class="custom-input">
+							<textarea
+								placeholder="Enter your custom mitigation plan..."
+								bind:value={mitigationDecisions[risk.subdomain.id].customText}
+								rows="3"
+							></textarea>
 						</div>
-					{/each}
+					{/if}
+
+					{#if decision.status === 'not-applicable'}
+						<div class="custom-input">
+							<textarea
+								placeholder="Justify why this risk is not applicable..."
+								bind:value={mitigationDecisions[risk.subdomain.id].justification}
+								rows="2"
+							></textarea>
+						</div>
+					{/if}
 				</div>
 			{/each}
 		{/if}
@@ -294,53 +331,80 @@
 <style>
 	.generator {
 		display: grid;
-		grid-template-columns: 380px 1fr;
-		gap: 1.5rem;
-		min-height: calc(100vh - 160px);
+		grid-template-columns: 340px 1fr;
+		gap: 1rem;
+		height: calc(100vh - 140px);
 	}
 
-	.questions {
-		display: flex;
-		flex-direction: column;
-		gap: 0.75rem;
-		overflow-y: auto;
-		max-height: calc(100vh - 160px);
-		padding-right: 0.5rem;
-	}
-
-	.questions-header {
-		margin-bottom: 0.25rem;
-	}
-
-	.questions-header h2 {
-		font-size: 1.125rem;
-		color: #f1f5f9;
-		margin-bottom: 0.125rem;
-	}
-
-	.questions-header p {
-		font-size: 0.75rem;
-		color: #64748b;
-	}
-
-	.category {
+	.questions-panel, .risks-panel {
 		background: #1e293b;
 		border: 1px solid #334155;
 		border-radius: 0.5rem;
-		padding: 0.875rem;
+		overflow-y: auto;
+		display: flex;
+		flex-direction: column;
+	}
+
+	.panel-header {
+		padding: 0.75rem 1rem;
+		border-bottom: 1px solid #334155;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		position: sticky;
+		top: 0;
+		background: #1e293b;
+		z-index: 10;
+	}
+
+	.panel-header h2 {
+		font-size: 0.875rem;
+		color: #f1f5f9;
+	}
+
+	.panel-header .progress {
+		font-size: 0.625rem;
+		color: #64748b;
+	}
+
+	.generate-btn {
+		padding: 0.375rem 0.75rem;
+		background: #22c55e;
+		border: none;
+		border-radius: 0.25rem;
+		color: #0f172a;
+		font-size: 0.6875rem;
+		font-weight: 600;
+		cursor: pointer;
+	}
+
+	.generate-btn:hover {
+		background: #16a34a;
+	}
+
+	.questions-panel {
+		padding: 0 0.75rem 0.75rem;
+	}
+
+	.category {
+		padding: 0.75rem 0;
+		border-bottom: 1px solid #334155;
+	}
+
+	.category:last-child {
+		border-bottom: none;
 	}
 
 	.category h3 {
-		font-size: 0.6875rem;
+		font-size: 0.625rem;
 		font-weight: 600;
 		color: #60a5fa;
 		text-transform: uppercase;
-		letter-spacing: 0.05em;
-		margin-bottom: 0.625rem;
+		margin-bottom: 0.5rem;
 	}
 
 	.question {
-		margin-bottom: 0.75rem;
+		margin-bottom: 0.625rem;
 	}
 
 	.question:last-child {
@@ -349,10 +413,9 @@
 
 	.question label {
 		display: block;
-		font-size: 0.8125rem;
+		font-size: 0.75rem;
 		color: #e2e8f0;
 		margin-bottom: 0.375rem;
-		line-height: 1.3;
 	}
 
 	.options {
@@ -361,19 +424,14 @@
 		gap: 0.25rem;
 	}
 
-	.options.yes-no {
-		gap: 0.5rem;
-	}
-
 	.option {
-		padding: 0.3125rem 0.5rem;
+		padding: 0.25rem 0.5rem;
 		background: #0f172a;
 		border: 1px solid #334155;
 		border-radius: 0.25rem;
 		color: #94a3b8;
-		font-size: 0.6875rem;
+		font-size: 0.625rem;
 		cursor: pointer;
-		transition: all 0.1s ease;
 	}
 
 	.option:hover {
@@ -387,159 +445,146 @@
 		color: #0f172a;
 	}
 
-	.report {
-		background: #1e293b;
-		border: 1px solid #334155;
-		border-radius: 0.75rem;
-		padding: 1.25rem;
-		overflow-y: auto;
-		max-height: calc(100vh - 160px);
+	.risks-panel {
+		padding: 0;
 	}
 
-	.report-header {
-		display: flex;
-		justify-content: space-between;
-		align-items: flex-start;
-		margin-bottom: 1rem;
-		padding-bottom: 0.75rem;
-		border-bottom: 1px solid #334155;
-	}
-
-	.report-header h2 {
-		font-size: 1rem;
-		color: #f1f5f9;
-		margin-bottom: 0.125rem;
-	}
-
-	.report-header p {
-		font-size: 0.75rem;
-		color: #64748b;
-	}
-
-	.copy-all-btn {
-		padding: 0.375rem 0.75rem;
-		background: #60a5fa;
-		border: none;
-		border-radius: 0.25rem;
-		color: #0f172a;
-		font-size: 0.75rem;
-		font-weight: 600;
-		cursor: pointer;
-	}
-
-	.copy-all-btn:hover {
-		background: #3b82f6;
-	}
-
-	.empty-report {
-		text-align: center;
+	.empty {
 		padding: 2rem;
+		text-align: center;
 		color: #64748b;
-		font-size: 0.875rem;
-	}
-
-	.triggered-summary {
-		background: rgba(96, 165, 250, 0.1);
-		border: 1px solid rgba(96, 165, 250, 0.3);
-		border-radius: 0.25rem;
-		padding: 0.5rem 0.75rem;
-		margin-bottom: 0.75rem;
 		font-size: 0.75rem;
-		color: #94a3b8;
 	}
 
-	.triggered-summary .count {
-		font-weight: 700;
-		color: #60a5fa;
-	}
-
-	.triggered-summary .phase {
-		font-weight: 600;
-		color: #e2e8f0;
-	}
-
-	.report-section {
-		background: #0f172a;
-		border: 1px solid #334155;
-		border-radius: 0.375rem;
-		margin-bottom: 0.75rem;
-		overflow: hidden;
-	}
-
-	.section-header {
-		padding: 0.5rem 0.75rem;
-		background: rgba(96, 165, 250, 0.1);
+	.risk-card {
+		padding: 0.75rem 1rem;
 		border-bottom: 1px solid #334155;
 	}
 
-	.section-header h4 {
-		font-size: 0.75rem;
-		font-weight: 600;
-		color: #60a5fa;
-		margin: 0;
+	.risk-card.addressed {
+		background: rgba(34, 197, 94, 0.05);
 	}
 
-	.mitigation-item {
-		border-bottom: 1px solid #334155;
-	}
-
-	.mitigation-item:last-child {
-		border-bottom: none;
-	}
-
-	.item-header {
+	.risk-header {
 		display: flex;
 		align-items: center;
 		gap: 0.375rem;
-		padding: 0.5rem 0.75rem;
-		background: rgba(51, 65, 85, 0.3);
+		margin-bottom: 0.5rem;
 	}
 
-	.item-header .code {
+	.risk-header .code {
 		font-family: monospace;
-		font-size: 0.625rem;
+		font-size: 0.5625rem;
 		color: #60a5fa;
 		background: rgba(96, 165, 250, 0.2);
 		padding: 0.0625rem 0.25rem;
 		border-radius: 0.125rem;
 	}
 
-	.item-header .name {
+	.risk-header .risk-name {
 		flex: 1;
-		font-size: 0.6875rem;
+		font-size: 0.75rem;
 		font-weight: 500;
-		color: #e2e8f0;
+		color: #f1f5f9;
 	}
 
-	.copy-btn {
-		padding: 0.125rem 0.375rem;
-		background: #334155;
-		border: none;
+	.risk-header .domain-tag {
+		font-size: 0.5rem;
+		color: #64748b;
+		background: #0f172a;
+		padding: 0.0625rem 0.375rem;
 		border-radius: 0.125rem;
-		color: #94a3b8;
+	}
+
+	.suggested-mitigation {
+		background: #0f172a;
+		border-radius: 0.25rem;
+		padding: 0.5rem;
+		margin-bottom: 0.5rem;
+	}
+
+	.suggested-mitigation h4 {
 		font-size: 0.5625rem;
+		font-weight: 600;
+		color: #64748b;
+		text-transform: uppercase;
+		margin-bottom: 0.25rem;
+	}
+
+	.suggested-mitigation p {
+		font-size: 0.6875rem;
+		color: #94a3b8;
+		line-height: 1.5;
+	}
+
+	.decision-buttons {
+		display: flex;
+		gap: 0.375rem;
+	}
+
+	.decision-btn {
+		flex: 1;
+		padding: 0.375rem;
+		background: #0f172a;
+		border: 1px solid #334155;
+		border-radius: 0.25rem;
+		color: #94a3b8;
+		font-size: 0.625rem;
+		font-weight: 500;
 		cursor: pointer;
 	}
 
-	.copy-btn:hover {
-		background: #60a5fa;
+	.decision-btn:hover {
+		border-color: #60a5fa;
+	}
+
+	.decision-btn.accept.active {
+		background: #22c55e;
+		border-color: #22c55e;
 		color: #0f172a;
 	}
 
-	.item-content {
-		padding: 0.75rem;
-		font-size: 0.75rem;
-		color: #e2e8f0;
-		line-height: 1.6;
+	.decision-btn.custom.active {
+		background: #60a5fa;
+		border-color: #60a5fa;
+		color: #0f172a;
 	}
 
-	@media (max-width: 900px) {
+	.decision-btn.na.active {
+		background: #f59e0b;
+		border-color: #f59e0b;
+		color: #0f172a;
+	}
+
+	.custom-input {
+		margin-top: 0.5rem;
+	}
+
+	.custom-input textarea {
+		width: 100%;
+		padding: 0.5rem;
+		background: #0f172a;
+		border: 1px solid #334155;
+		border-radius: 0.25rem;
+		color: #e2e8f0;
+		font-size: 0.6875rem;
+		line-height: 1.4;
+		resize: vertical;
+	}
+
+	.custom-input textarea:focus {
+		outline: none;
+		border-color: #60a5fa;
+	}
+
+	@media (max-width: 800px) {
 		.generator {
 			grid-template-columns: 1fr;
+			height: auto;
 		}
 
-		.questions, .report {
-			max-height: none;
+		.questions-panel, .risks-panel {
+			max-height: 50vh;
 		}
 	}
 </style>
