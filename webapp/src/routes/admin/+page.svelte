@@ -3242,20 +3242,20 @@
 	.column-header {
 		display: flex;
 		align-items: center;
-		gap: 0.375rem;
-		padding: 0.5rem;
+		gap: 0.5rem;
+		padding: 0.625rem 0.75rem;
 		background: #1e293b;
 		border-bottom: 1px solid #334155;
 	}
 
 	.column-icon {
-		width: 1.5rem;
-		height: 1.5rem;
+		width: 1.75rem;
+		height: 1.75rem;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		border-radius: 0.25rem;
-		font-size: 0.75rem;
+		font-size: 0.875rem;
 		font-weight: bold;
 	}
 
@@ -3266,7 +3266,7 @@
 	.controls .column-icon { background: rgba(249, 115, 22, 0.2); color: #f97316; }
 
 	.column-header h2 {
-		font-size: 0.75rem;
+		font-size: 0.875rem;
 		color: #e2e8f0;
 		flex: 1;
 		white-space: nowrap;
@@ -3275,15 +3275,15 @@
 	}
 
 	.count {
-		font-size: 0.6875rem;
+		font-size: 0.75rem;
 		color: #64748b;
 		background: #334155;
-		padding: 0.125rem 0.375rem;
+		padding: 0.1875rem 0.5rem;
 		border-radius: 0.25rem;
 	}
 
 	.column-filters {
-		padding: 0.25rem 0.5rem;
+		padding: 0.375rem 0.75rem;
 		border-bottom: 1px solid #334155;
 	}
 
@@ -3291,15 +3291,15 @@
 		background: #1e293b;
 		border: 1px solid #334155;
 		border-radius: 4px;
-		padding: 0.25rem 0.5rem;
+		padding: 0.375rem 0.625rem;
 		color: #e2e8f0;
-		font-size: 0.6875rem;
+		font-size: 0.75rem;
 		width: 100%;
 	}
 
 	.node-meta {
-		margin-top: 0.25rem;
-		font-size: 0.625rem;
+		margin-top: 0.375rem;
+		font-size: 0.6875rem;
 	}
 
 	.node-meta .phases {
@@ -3308,8 +3308,8 @@
 
 	.more-indicator {
 		text-align: center;
-		padding: 0.5rem;
-		font-size: 0.6875rem;
+		padding: 0.625rem;
+		font-size: 0.75rem;
 		color: #64748b;
 		font-style: italic;
 	}
@@ -3322,17 +3322,17 @@
 	.nodes {
 		flex: 1;
 		overflow-y: auto;
-		padding: 0.5rem;
+		padding: 0.625rem;
 	}
 
 	.node {
 		width: 100%;
 		text-align: left;
-		padding: 0.625rem;
+		padding: 0.75rem;
 		background: #0f172a;
 		border: 1px solid #334155;
 		border-radius: 0.375rem;
-		margin-bottom: 0.375rem;
+		margin-bottom: 0.5rem;
 		cursor: pointer;
 		position: relative;
 		transition: all 0.15s;
@@ -3371,30 +3371,30 @@
 
 	.node-id, .node-code {
 		font-family: monospace;
-		font-size: 0.625rem;
-		padding: 0.125rem 0.25rem;
-		border-radius: 0.125rem;
+		font-size: 0.75rem;
+		padding: 0.1875rem 0.375rem;
+		border-radius: 0.1875rem;
 	}
 
 	.question .node-id { background: rgba(96, 165, 250, 0.2); color: #60a5fa; }
 	.risk .node-code { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
 	.mitigation .node-code { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
-	.regulation .node-code { background: rgba(168, 85, 247, 0.2); color: #a855f7; font-size: 0.5625rem; }
+	.regulation .node-code { background: rgba(168, 85, 247, 0.2); color: #a855f7; font-size: 0.6875rem; }
 
 	.link-count {
-		font-size: 0.5625rem;
+		font-size: 0.6875rem;
 		background: #475569;
 		color: #e2e8f0;
-		padding: 0.0625rem 0.25rem;
-		border-radius: 0.125rem;
+		padding: 0.125rem 0.375rem;
+		border-radius: 0.1875rem;
 	}
 
 	.conn-badge {
-		font-size: 0.5rem;
+		font-size: 0.625rem;
 		font-weight: 600;
 		text-transform: uppercase;
-		padding: 0.125rem 0.25rem;
-		border-radius: 0.125rem;
+		padding: 0.1875rem 0.375rem;
+		border-radius: 0.1875rem;
 	}
 
 	.conn-badge.trigger { background: rgba(251, 191, 36, 0.3); color: #fbbf24; }
@@ -3403,9 +3403,9 @@
 	.conn-badge.custom { background: rgba(148, 163, 184, 0.3); color: #94a3b8; }
 
 	.edit-hint {
-		font-size: 0.5625rem;
+		font-size: 0.6875rem;
 		color: #fbbf24;
-		margin-top: 0.25rem;
+		margin-top: 0.375rem;
 		font-style: italic;
 	}
 
@@ -3420,7 +3420,7 @@
 	}
 
 	.node-text {
-		font-size: 0.75rem;
+		font-size: 0.8125rem;
 		color: #e2e8f0;
 		line-height: 1.4;
 		display: -webkit-box;
@@ -4032,14 +4032,14 @@
 
 	@media (max-width: 1600px) {
 		.columns {
-			grid-template-columns: repeat(5, minmax(160px, 1fr));
+			grid-template-columns: repeat(5, minmax(200px, 1fr));
 			overflow-x: auto;
 		}
 		.node {
-			padding: 0.5rem;
+			padding: 0.625rem;
 		}
 		.node-text {
-			font-size: 0.6875rem;
+			font-size: 0.75rem;
 		}
 	}
 
