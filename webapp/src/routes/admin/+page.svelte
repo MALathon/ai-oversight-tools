@@ -2,6 +2,8 @@
 	import { browser } from '$app/environment';
 	import type { PageData } from './$types';
 	import { GlobalFilters } from '$lib/admin';
+	import Graph from 'graphology';
+	import { bfsFromNode } from 'graphology-traversal';
 
 	let { data }: { data: PageData } = $props();
 
@@ -142,6 +144,33 @@
 			: links.filter((l: any) => !l.phases || l.phases.includes(selectedPhase))
 	);
 
+	// Build directed graph from filtered links using Graphology
+	// Nodes are "type:id" strings, edges follow the link direction
+	let traceGraph = $derived.by(() => {
+		const graph = new Graph({ type: 'directed', multi: false, allowSelfLoops: false });
+
+		for (const link of filteredLinks) {
+			const fromKey = `${link.from.entity}:${link.from.id}`;
+			const toKey = `${link.to.entity}:${link.to.id}`;
+
+			// Add nodes if they don't exist
+			if (!graph.hasNode(fromKey)) {
+				graph.addNode(fromKey, { type: link.from.entity, id: link.from.id });
+			}
+			if (!graph.hasNode(toKey)) {
+				graph.addNode(toKey, { type: link.to.entity, id: link.to.id });
+			}
+
+			// Add directed edge (from → to)
+			const edgeKey = `${fromKey}->${toKey}`;
+			if (!graph.hasEdge(edgeKey)) {
+				graph.addEdgeWithKey(edgeKey, fromKey, toKey, { link });
+			}
+		}
+
+		return graph;
+	});
+
 	// Get direct link between two entities (if exists)
 	function getDirectLink(type1: EntityType, id1: string, type2: EntityType, id2: string): any {
 		return filteredLinks.find((l: any) =>
@@ -150,48 +179,34 @@
 		);
 	}
 
-	// Get all entities reachable DOWNSTREAM from a source entity (directed traversal)
-	// Follows: Question→Risk→Mitigation→Control, Risk→Regulation, etc.
-	function getDownstreamReachable(sourceType: EntityType, sourceId: string): Set<string> {
-		const reachable = new Set<string>();
-		const visited = new Set<string>();
-		const queue: { type: string; id: string }[] = [{ type: sourceType, id: sourceId }];
+	// Check if target is reachable from source following directed edges (using Graphology BFS)
+	function isReachable(sourceType: EntityType, sourceId: string, targetType: EntityType, targetId: string): boolean {
+		const sourceKey = `${sourceType}:${sourceId}`;
+		const targetKey = `${targetType}:${targetId}`;
 
-		while (queue.length > 0) {
-			const current = queue.shift()!;
-			const key = `${current.type}:${current.id}`;
+		if (!traceGraph.hasNode(sourceKey)) return false;
+		if (sourceKey === targetKey) return true;
 
-			if (visited.has(key)) continue;
-			visited.add(key);
-			reachable.add(key);
-
-			// Follow ONLY outgoing edges (from.entity === current.type)
-			for (const link of filteredLinks) {
-				if (link.from.entity === current.type && link.from.id === current.id) {
-					const nextKey = `${link.to.entity}:${link.to.id}`;
-					if (!visited.has(nextKey)) {
-						queue.push({ type: link.to.entity, id: link.to.id });
-					}
-				}
+		let found = false;
+		bfsFromNode(traceGraph, sourceKey, (node) => {
+			if (node === targetKey) {
+				found = true;
+				return true; // Stop traversal
 			}
-		}
+			return false;
+		}, { mode: 'outbound' }); // Only follow outgoing edges
 
-		return reachable;
+		return found;
 	}
 
 	// Get matrix connection - returns direct link, transitive info, or null
-	// Uses cached downstream reachability for performance
 	function getMatrixLink(rowType: EntityType, rowId: string, colType: EntityType, colId: string): any {
 		// First check for direct link (fast)
 		const direct = getDirectLink(rowType, rowId, colType, colId);
 		if (direct) return { ...direct, isDirect: true };
 
-		// For transitive: use pre-computed reachability map from matrixReachability
-		const reachableKey = `${colType}:${colId}`;
-		const rowKey = `${rowType}:${rowId}`;
-
-		// Check if col is reachable from row (downstream)
-		if (matrixReachability.get(rowKey)?.has(reachableKey)) {
+		// Check transitive reachability using graph
+		if (isReachable(rowType, rowId, colType, colId)) {
 			return { isDirect: false, isTransitive: true };
 		}
 
@@ -731,23 +746,7 @@
 	// Check if there's a defined direct link type for this pair
 	let matrixHasDirectLinkType = $derived(getLinkTypeForPair(matrixRowType, matrixColType) !== null);
 
-	// Pre-compute downstream reachability for all row items (for matrix performance)
-	let matrixReachability = $derived.by(() => {
-		const reachMap = new Map<string, Set<string>>();
-		const rowConfig = entityConfig[matrixRowType];
-		const items = rowConfig.getAll();
-
-		// Only compute if we need transitive (no direct link type between row/col)
-		if (getLinkTypeForPair(matrixRowType, matrixColType)) {
-			return reachMap; // Direct links exist, no need for transitive
-		}
-
-		for (const item of items) {
-			const key = `${matrixRowType}:${item.id}`;
-			reachMap.set(key, getDownstreamReachable(matrixRowType, item.id));
-		}
-		return reachMap;
-	});
+	// Note: No pre-computed reachability needed - Graphology handles traversal efficiently
 
 	// Get hover info for matrix (generic for any row/col type)
 	let matrixHoverInfo = $derived.by(() => {
