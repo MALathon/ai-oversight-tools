@@ -142,63 +142,126 @@
 			: links.filter((l: any) => !l.phases || l.phases.includes(selectedPhase))
 	);
 
-	// Get matrix link for any entity pair
-	function getMatrixLink(rowType: EntityType, rowId: string, colType: EntityType, colId: string): any {
-		const linkType = getLinkTypeForPair(rowType, colType);
-		if (!linkType) return null;
-
-		const reversed = isPairReversed(rowType, colType);
-		const fromEntity = reversed ? colType : rowType;
-		const fromId = reversed ? colId : rowId;
-		const toEntity = reversed ? rowType : colType;
-		const toId = reversed ? rowId : colId;
-
+	// Get direct link between two entities (if exists)
+	function getDirectLink(type1: EntityType, id1: string, type2: EntityType, id2: string): any {
 		return filteredLinks.find((l: any) =>
-			l.type === linkType &&
-			l.from.entity === fromEntity && l.from.id === fromId &&
-			l.to.entity === toEntity && l.to.id === toId
+			(l.from.entity === type1 && l.from.id === id1 && l.to.entity === type2 && l.to.id === id2) ||
+			(l.from.entity === type2 && l.from.id === id2 && l.to.entity === type1 && l.to.id === id1)
 		);
+	}
+
+	// Check if two entities are transitively connected (via any path in the link graph)
+	function areTransitivelyConnected(type1: EntityType, id1: string, type2: EntityType, id2: string): { connected: boolean; path: string[] } {
+		if (type1 === type2 && id1 === id2) return { connected: true, path: [] };
+
+		// BFS to find path
+		const visited = new Set<string>();
+		const queue: { type: string; id: string; path: string[] }[] = [{ type: type1, id: id1, path: [`${type1}:${id1}`] }];
+
+		while (queue.length > 0) {
+			const current = queue.shift()!;
+			const key = `${current.type}:${current.id}`;
+
+			if (visited.has(key)) continue;
+			visited.add(key);
+
+			// Find all connected nodes
+			for (const link of filteredLinks) {
+				let nextType: string | null = null;
+				let nextId: string | null = null;
+
+				if (link.from.entity === current.type && link.from.id === current.id) {
+					nextType = link.to.entity;
+					nextId = link.to.id;
+				} else if (link.to.entity === current.type && link.to.id === current.id) {
+					nextType = link.from.entity;
+					nextId = link.from.id;
+				}
+
+				if (nextType && nextId) {
+					const nextKey = `${nextType}:${nextId}`;
+					if (!visited.has(nextKey)) {
+						const newPath = [...current.path, nextKey];
+						if (nextType === type2 && nextId === id2) {
+							return { connected: true, path: newPath };
+						}
+						queue.push({ type: nextType, id: nextId, path: newPath });
+					}
+				}
+			}
+		}
+
+		return { connected: false, path: [] };
+	}
+
+	// Get matrix connection - returns direct link, transitive path info, or null
+	function getMatrixLink(rowType: EntityType, rowId: string, colType: EntityType, colId: string): any {
+		// First check for direct link
+		const direct = getDirectLink(rowType, rowId, colType, colId);
+		if (direct) return { ...direct, isDirect: true };
+
+		// Check for transitive connection
+		const transitive = areTransitivelyConnected(rowType, rowId, colType, colId);
+		if (transitive.connected) {
+			return { isDirect: false, isTransitive: true, path: transitive.path };
+		}
+
+		return null;
 	}
 
 	// Toggle matrix link for any entity pair
 	function toggleGenericMatrixLink(rowType: EntityType, rowId: string, colType: EntityType, colId: string) {
-		const linkType = getLinkTypeForPair(rowType, colType);
-		if (!linkType) {
-			alert(`No link type defined for ${rowType} → ${colType}`);
-			return;
-		}
-
-		const reversed = isPairReversed(rowType, colType);
-		const fromEntity = reversed ? colType : rowType;
-		const fromId = reversed ? colId : rowId;
-		const toEntity = reversed ? rowType : colType;
-		const toId = reversed ? rowId : colId;
-
 		const existing = getMatrixLink(rowType, rowId, colType, colId);
 
-		if (existing) {
-			editingLink = JSON.parse(JSON.stringify(existing));
+		if (existing?.isDirect) {
+			// Edit the direct link
+			const { isDirect, ...linkData } = existing;
+			editingLink = JSON.parse(JSON.stringify(linkData));
 			showLinkEditor = true;
-		} else {
-			const newLink: any = {
-				id: `link-${Date.now()}`,
-				type: linkType,
-				from: { entity: fromEntity, id: fromId },
-				to: { entity: toEntity, id: toId },
-				phases: ['phase-1', 'phase-2', 'phase-3']
-			};
+		} else if (existing?.isTransitive) {
+			// Show transitive path info - could navigate to trace view or create direct link
+			const pathStr = existing.path.map((p: string) => {
+				const [type, id] = p.split(':');
+				return `${type}(${id})`;
+			}).join(' → ');
 
-			// Add type-specific defaults
-			if (linkType === 'trigger') {
-				newLink.answerValues = [];
-				newLink.logic = 'OR';
-			} else if (linkType === 'mitigation') {
-				newLink.guidance = {};
+			if (confirm(`These are transitively connected via:\n${pathStr}\n\nCreate a direct link between them?`)) {
+				createNewLink(rowType, rowId, colType, colId);
 			}
-
-			editingLink = newLink;
-			showLinkEditor = true;
+		} else {
+			// No connection - create new link
+			createNewLink(rowType, rowId, colType, colId);
 		}
+	}
+
+	// Create a new link between two entities
+	function createNewLink(type1: EntityType, id1: string, type2: EntityType, id2: string) {
+		const linkType = getLinkTypeForPair(type1, type2) || 'custom';
+		const reversed = isPairReversed(type1, type2);
+
+		const fromEntity = reversed ? type2 : type1;
+		const fromId = reversed ? id2 : id1;
+		const toEntity = reversed ? type1 : type2;
+		const toId = reversed ? id1 : id2;
+
+		const newLink: any = {
+			id: `link-${Date.now()}`,
+			type: linkType,
+			from: { entity: fromEntity, id: fromId },
+			to: { entity: toEntity, id: toId },
+			phases: ['phase-1', 'phase-2', 'phase-3']
+		};
+
+		// Add type-specific defaults
+		if (linkType === 'trigger') {
+			newLink.answerValues = [];
+			newLink.logic = 'OR';
+		} else if (linkType === 'mitigation') {
+			newLink.guidance = {};
+		}
+
+		editingLink = newLink;
+		showLinkEditor = true;
 	}
 
 	// Trace view state
@@ -679,8 +742,10 @@
 		return items;
 	});
 
-	// Check if selected pair has valid link type
-	let matrixPairValid = $derived(getLinkTypeForPair(matrixRowType, matrixColType) !== null);
+	// Any entity pair is valid - we can show direct links OR transitive connections
+	let matrixPairValid = $derived(true);
+	// Check if there's a defined direct link type for this pair
+	let matrixHasDirectLinkType = $derived(getLinkTypeForPair(matrixRowType, matrixColType) !== null);
 
 	// Get hover info for matrix (generic for any row/col type)
 	let matrixHoverInfo = $derived.by(() => {
@@ -1380,12 +1445,7 @@
 		</div>
 
 		<div class="matrix-container" onmouseleave={() => { matrixHoverRow = null; matrixHoverCol = null; }}>
-			{#if !matrixPairValid}
-				<div class="matrix-no-pair">
-					<p>No link type defined for <strong>{entityConfig[matrixRowType].label}</strong> → <strong>{entityConfig[matrixColType].label}</strong></p>
-					<p class="hint">Valid combinations: Question→Risk, Risk→Mitigation, Risk→Regulation, Risk→Control, Question→Question</p>
-				</div>
-			{:else if matrixRowItems.length === 0 || matrixColItems.length === 0}
+			{#if matrixRowItems.length === 0 || matrixColItems.length === 0}
 				<div class="matrix-no-pair">
 					<p>No items to display. {matrixRowItems.length} rows, {matrixColItems.length} columns.</p>
 				</div>
@@ -1431,15 +1491,18 @@
 									{@const link = getMatrixLink(matrixRowType, rowItem.id, matrixColType, colItem.id)}
 									<td
 										class="matrix-cell"
-										class:linked={link}
+										class:linked={link?.isDirect}
+										class:transitive={link?.isTransitive}
 										class:col-highlighted={matrixHoverCol === colItem.id}
 										class:row-highlighted={matrixHoverRow === rowItem.id}
 										onclick={() => toggleGenericMatrixLink(matrixRowType, rowItem.id, matrixColType, colItem.id)}
 										onmouseenter={() => { matrixHoverRow = rowItem.id; matrixHoverCol = colItem.id; }}
-										title={link ? `Click to edit link` : `Click to link`}
+										title={link?.isDirect ? `Direct link (click to edit)` : link?.isTransitive ? `Transitive via ${link.path.length - 1} hops` : `No connection (click to create)`}
 									>
-										{#if link}
-											<span class="cell-marker">✓</span>
+										{#if link?.isDirect}
+											<span class="cell-marker direct">✓</span>
+										{:else if link?.isTransitive}
+											<span class="cell-marker transitive">~</span>
 										{/if}
 									</td>
 								{/each}
@@ -2883,9 +2946,35 @@
 		background: rgba(34, 197, 94, 0.35);
 	}
 
+	.matrix-cell.transitive {
+		background: rgba(59, 130, 246, 0.15);
+	}
+
+	.matrix-cell.transitive.col-highlighted,
+	.matrix-cell.transitive.row-highlighted {
+		background: rgba(59, 130, 246, 0.25);
+	}
+
+	.matrix-cell.transitive.col-highlighted.row-highlighted {
+		background: rgba(59, 130, 246, 0.35);
+		outline: 1px solid #3b82f6;
+	}
+
+	.matrix-cell.transitive:hover {
+		background: rgba(59, 130, 246, 0.3);
+	}
+
 	.cell-marker {
-		color: #22c55e;
 		font-size: 0.75rem;
+	}
+
+	.cell-marker.direct {
+		color: #22c55e;
+	}
+
+	.cell-marker.transitive {
+		color: #3b82f6;
+		font-weight: 300;
 	}
 
 	/* Trace View */
