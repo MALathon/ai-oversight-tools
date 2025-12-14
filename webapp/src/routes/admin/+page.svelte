@@ -1,204 +1,303 @@
 <script lang="ts">
-	import { base } from '$app/paths';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
 
-	// Editable data - deep clone to avoid mutating original
-	let questions = $state(JSON.parse(JSON.stringify(data.questions)));
-	let mitigations = $state(JSON.parse(JSON.stringify(data.phaseMitigations)));
+	// Deep clone editable data
+	let questions = $state(JSON.parse(JSON.stringify(data.questionCategories)));
+	let riskConfigs = $state(JSON.parse(JSON.stringify(data.riskConfigurations)));
 
-	// Library status tracking (which risks are "published")
-	let libraryStatus = $state<Record<string, 'draft' | 'published'>>({});
+	// Phases
+	const phases = [
+		{ id: 'phase-1', name: 'Phase 1: Discovery', short: 'P1' },
+		{ id: 'phase-2', name: 'Phase 2: Validation', short: 'P2' },
+		{ id: 'phase-3', name: 'Phase 3: Deployment', short: 'P3' }
+	];
 
 	// UI State
-	let selectedRiskId = $state<string | null>(null);
-	let showAddTriggerModal = $state(false);
-	let pendingDelete = $state<{questionId: string, answerValue: string, subdomainId: string} | null>(null);
-	let searchQuery = $state('');
-	let filterDomain = $state<string | null>(null);
+	let activeTab = $state<'wiring' | 'questions' | 'risks'>('wiring');
+	let selectedPhase = $state<string>('phase-1');
+	let selectedRisk = $state<string | null>(null);
+	let selectedQuestion = $state<string | null>(null);
+	let showAddQuestionModal = $state(false);
+	let showAddConnectionModal = $state(false);
+	let pendingConnection = $state<{ riskId: string; phase: string } | null>(null);
 
-	// Build risk list from domains/subdomains
-	let risks = $derived(
-		data.domains.flatMap((d: any) =>
-			d.subdomains.map((subId: string) => {
-				const sub = data.subdomains.find((s: any) => s.id === subId);
-				return sub ? { ...sub, domainId: d.id, domainName: d.name, domainCode: d.code } : null;
-			}).filter(Boolean)
-		)
-	);
-
-	// Get unique domains for filtering
-	let domains = $derived(data.domains.map((d: any) => ({ id: d.id, name: d.name, code: d.code })));
-
-	// Filter risks based on search and domain
-	let filteredRisks = $derived.by(() => {
-		return risks.filter((risk: any) => {
-			const matchesSearch = searchQuery === '' ||
-				risk.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-				risk.shortName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-				risk.code.toLowerCase().includes(searchQuery.toLowerCase());
-			const matchesDomain = filterDomain === null || risk.domainId === filterDomain;
-			return matchesSearch && matchesDomain;
-		});
+	// New question form
+	let newQuestion = $state({
+		id: '',
+		question: '',
+		type: 'yes-no' as 'yes-no' | 'single-select' | 'multi-select',
+		category: '',
+		options: [] as Array<{ value: string; label: string; description?: string }>
 	});
 
-	// Get selected risk data
-	let selectedRisk = $derived(risks.find((r: any) => r.id === selectedRiskId));
-
-	// Get triggers for a specific subdomain
-	function getTriggersForRisk(riskId: string) {
-		const triggers: Array<{
-			questionId: string;
-			questionText: string;
-			answerValue: string;
-			answerLabel: string;
-			categoryName: string;
-		}> = [];
-
-		for (const cat of questions.questionCategories) {
-			for (const q of cat.questions) {
-				if (!q.triggers) continue;
-				for (const [answerValue, subIds] of Object.entries(q.triggers)) {
-					if (answerValue === '_note') continue;
-					if ((subIds as string[]).includes(riskId)) {
-						let answerLabel = answerValue;
-						if (q.type === 'yes-no') {
-							answerLabel = answerValue === 'yes' ? 'Yes' : 'No';
-						} else if (q.options) {
-							const opt = q.options.find((o: any) => o.value === answerValue);
-							if (opt) answerLabel = opt.label;
-						}
-						triggers.push({
-							questionId: q.id,
-							questionText: q.question,
-							answerValue,
-							answerLabel,
-							categoryName: cat.name
-						});
-					}
-				}
-			}
-		}
-		return triggers;
-	}
-
-	// Get trigger count for display in list
-	function getTriggerCount(riskId: string) {
-		return getTriggersForRisk(riskId).length;
-	}
-
-	// Build list of available questions/answers for adding triggers
-	let availableQuestionAnswers = $derived.by(() => {
+	// Build flat list of all questions
+	let allQuestions = $derived.by(() => {
 		const items: Array<{
-			questionId: string;
-			questionText: string;
-			answerValue: string;
-			answerLabel: string;
+			id: string;
+			question: string;
+			type: string;
+			categoryId: string;
 			categoryName: string;
+			options: Array<{ value: string; label: string }>;
 		}> = [];
 
-		for (const cat of questions.questionCategories) {
+		for (const cat of questions) {
 			for (const q of cat.questions) {
+				let options: Array<{ value: string; label: string }> = [];
 				if (q.type === 'yes-no') {
-					items.push({
-						questionId: q.id,
-						questionText: q.question,
-						answerValue: 'yes',
-						answerLabel: 'Yes',
-						categoryName: cat.name
-					});
+					options = [{ value: 'yes', label: 'Yes' }, { value: 'no', label: 'No' }];
 				} else if (q.options) {
-					for (const opt of q.options) {
-						if (opt.value === 'none') continue;
-						items.push({
-							questionId: q.id,
-							questionText: q.question,
-							answerValue: opt.value,
-							answerLabel: opt.label,
-							categoryName: cat.name
-						});
-					}
+					options = q.options.map((o: any) => ({ value: o.value, label: o.label }));
 				}
+				items.push({
+					id: q.id,
+					question: q.question,
+					type: q.type,
+					categoryId: cat.id,
+					categoryName: cat.name,
+					options
+				});
 			}
 		}
 		return items;
 	});
 
-	// Check if a question/answer is already a trigger for selected risk
-	function isAlreadyTrigger(questionId: string, answerValue: string) {
-		if (!selectedRiskId) return false;
-		const triggers = getTriggersForRisk(selectedRiskId);
-		return triggers.some(t => t.questionId === questionId && t.answerValue === answerValue);
+	// Build risk list with subdomain info
+	let risks = $derived(
+		data.domains.flatMap((d: any) =>
+			d.subdomains.map((subId: string) => {
+				const sub = data.subdomains.find((s: any) => s.id === subId);
+				const config = riskConfigs[subId] || {
+					applicablePhases: [],
+					phaseTriggers: {},
+					phaseMitigations: {}
+				};
+				return sub ? { ...sub, domainName: d.name, domainCode: d.code, config } : null;
+			}).filter(Boolean)
+		)
+	);
+
+	// Get connections for current phase (for wiring view)
+	let phaseConnections = $derived.by(() => {
+		const connections: Array<{
+			riskId: string;
+			riskCode: string;
+			riskName: string;
+			questionId: string;
+			questionText: string;
+			answerValues: string[];
+			logic: string;
+		}> = [];
+
+		for (const risk of risks) {
+			const config = riskConfigs[risk.id];
+			if (!config?.phaseTriggers?.[selectedPhase]) continue;
+
+			const trigger = config.phaseTriggers[selectedPhase];
+			for (const condition of trigger.conditions || []) {
+				const q = allQuestions.find(q => q.id === condition.questionId);
+				if (q) {
+					connections.push({
+						riskId: risk.id,
+						riskCode: risk.code,
+						riskName: risk.shortName,
+						questionId: condition.questionId,
+						questionText: q.question,
+						answerValues: condition.answerValues || [],
+						logic: trigger.logic || 'AND'
+					});
+				}
+			}
+		}
+		return connections;
+	});
+
+	// Check if risk applies to phase
+	function riskAppliesTo(riskId: string, phase: string): boolean {
+		return riskConfigs[riskId]?.applicablePhases?.includes(phase) || false;
 	}
 
-	// Add a trigger
-	function addTrigger(questionId: string, answerValue: string) {
-		if (!selectedRiskId) return;
+	// Toggle risk phase applicability
+	function toggleRiskPhase(riskId: string, phase: string) {
+		if (!riskConfigs[riskId]) {
+			riskConfigs[riskId] = {
+				riskId,
+				applicablePhases: [],
+				phaseTriggers: {},
+				phaseMitigations: {}
+			};
+		}
+		const phases = riskConfigs[riskId].applicablePhases;
+		const idx = phases.indexOf(phase);
+		if (idx >= 0) {
+			riskConfigs[riskId].applicablePhases = phases.filter((p: string) => p !== phase);
+			// Also remove triggers for this phase
+			delete riskConfigs[riskId].phaseTriggers[phase];
+		} else {
+			riskConfigs[riskId].applicablePhases = [...phases, phase];
+			// Initialize triggers for this phase
+			if (!riskConfigs[riskId].phaseTriggers[phase]) {
+				riskConfigs[riskId].phaseTriggers[phase] = { logic: 'OR', conditions: [] };
+			}
+		}
+	}
 
-		for (const cat of questions.questionCategories) {
-			for (const q of cat.questions) {
-				if (q.id === questionId) {
-					if (!q.triggers) q.triggers = {};
-					if (!q.triggers[answerValue]) q.triggers[answerValue] = [];
-					if (!q.triggers[answerValue].includes(selectedRiskId)) {
-						q.triggers[answerValue] = [...q.triggers[answerValue], selectedRiskId];
-					}
-					showAddTriggerModal = false;
-					return;
+	// Add a connection/trigger
+	function addConnection(riskId: string, phase: string, questionId: string, answerValues: string[]) {
+		if (!riskConfigs[riskId]) {
+			riskConfigs[riskId] = {
+				riskId,
+				applicablePhases: [phase],
+				phaseTriggers: {},
+				phaseMitigations: {}
+			};
+		}
+		if (!riskConfigs[riskId].phaseTriggers[phase]) {
+			riskConfigs[riskId].phaseTriggers[phase] = { logic: 'OR', conditions: [] };
+		}
+		// Check if already exists
+		const existing = riskConfigs[riskId].phaseTriggers[phase].conditions.find(
+			(c: any) => c.questionId === questionId
+		);
+		if (existing) {
+			existing.answerValues = answerValues;
+		} else {
+			riskConfigs[riskId].phaseTriggers[phase].conditions.push({
+				questionId,
+				answerValues
+			});
+		}
+		showAddConnectionModal = false;
+		pendingConnection = null;
+	}
+
+	// Remove a connection
+	function removeConnection(riskId: string, phase: string, questionId: string) {
+		if (!riskConfigs[riskId]?.phaseTriggers?.[phase]) return;
+		riskConfigs[riskId].phaseTriggers[phase].conditions =
+			riskConfigs[riskId].phaseTriggers[phase].conditions.filter(
+				(c: any) => c.questionId !== questionId
+			);
+	}
+
+	// Toggle trigger logic
+	function toggleTriggerLogic(riskId: string, phase: string) {
+		if (!riskConfigs[riskId]?.phaseTriggers?.[phase]) return;
+		const current = riskConfigs[riskId].phaseTriggers[phase].logic;
+		riskConfigs[riskId].phaseTriggers[phase].logic = current === 'AND' ? 'OR' : 'AND';
+	}
+
+	// Update mitigation text
+	function updateMitigation(riskId: string, phase: string, text: string) {
+		if (!riskConfigs[riskId]) {
+			riskConfigs[riskId] = {
+				riskId,
+				applicablePhases: [],
+				phaseTriggers: {},
+				phaseMitigations: {}
+			};
+		}
+		if (!riskConfigs[riskId].phaseMitigations) {
+			riskConfigs[riskId].phaseMitigations = {};
+		}
+		riskConfigs[riskId].phaseMitigations[phase] = text;
+	}
+
+	// Add new question
+	function addQuestion() {
+		if (!newQuestion.id || !newQuestion.question || !newQuestion.category) return;
+
+		const category = questions.find((c: any) => c.id === newQuestion.category);
+		if (!category) return;
+
+		const questionObj: any = {
+			id: newQuestion.id,
+			question: newQuestion.question,
+			type: newQuestion.type,
+			required: true,
+			triggers: {}
+		};
+
+		if (newQuestion.type !== 'yes-no' && newQuestion.options.length > 0) {
+			questionObj.options = newQuestion.options;
+		}
+
+		category.questions.push(questionObj);
+
+		// Reset form
+		newQuestion = {
+			id: '',
+			question: '',
+			type: 'yes-no',
+			category: '',
+			options: []
+		};
+		showAddQuestionModal = false;
+	}
+
+	// Delete question
+	function deleteQuestion(questionId: string) {
+		if (!confirm('Delete this question? This will remove all its trigger connections.')) return;
+
+		for (const cat of questions) {
+			cat.questions = cat.questions.filter((q: any) => q.id !== questionId);
+		}
+
+		// Remove from all risk configs
+		for (const riskId of Object.keys(riskConfigs)) {
+			for (const phase of Object.keys(riskConfigs[riskId].phaseTriggers || {})) {
+				if (riskConfigs[riskId].phaseTriggers[phase]?.conditions) {
+					riskConfigs[riskId].phaseTriggers[phase].conditions =
+						riskConfigs[riskId].phaseTriggers[phase].conditions.filter(
+							(c: any) => c.questionId !== questionId
+						);
 				}
 			}
 		}
 	}
 
-	// Remove a trigger (called after confirmation)
-	function confirmRemoveTrigger() {
-		if (!pendingDelete) return;
-		const { questionId, answerValue, subdomainId } = pendingDelete;
-
-		for (const cat of questions.questionCategories) {
-			for (const q of cat.questions) {
-				if (q.id === questionId && q.triggers && q.triggers[answerValue]) {
-					q.triggers[answerValue] = q.triggers[answerValue].filter((id: string) => id !== subdomainId);
-					break;
-				}
-			}
-		}
-		pendingDelete = null;
+	// Add option to new question
+	function addOption() {
+		newQuestion.options = [...newQuestion.options, { value: '', label: '' }];
 	}
 
-	// Toggle library status
-	function toggleLibraryStatus(riskId: string) {
-		const current = libraryStatus[riskId] || 'draft';
-		libraryStatus[riskId] = current === 'draft' ? 'published' : 'draft';
+	// Remove option from new question
+	function removeOption(index: number) {
+		newQuestion.options = newQuestion.options.filter((_, i) => i !== index);
 	}
 
 	// Export configuration
 	function exportConfig() {
-		const phaseMitigationsOutput = {
-			"$schema": "../schemas/phase-mitigations.schema.json",
+		// Export risk configurations
+		const riskConfigOutput = {
+			"$schema": "./schemas/risk-configurations.schema.json",
 			"version": "1.0.0",
-			"source": "AIHSR Risk Reference Tool v1.5 (Tamiko Eto)",
 			"lastUpdated": new Date().toISOString().split('T')[0],
-			"description": "Phase-based mitigation strategy templates for each risk subdomain",
-			"phaseMitigations": mitigations
+			"description": "Phase-aware risk configurations with triggers and mitigations",
+			"configurations": riskConfigs
 		};
 
-		const blob1 = new Blob([JSON.stringify(phaseMitigationsOutput, null, 2)], { type: 'application/json' });
+		const blob1 = new Blob([JSON.stringify(riskConfigOutput, null, 2)], { type: 'application/json' });
 		const url1 = URL.createObjectURL(blob1);
 		const a1 = document.createElement('a');
 		a1.href = url1;
-		a1.download = 'phase-mitigations.json';
+		a1.download = 'risk-configurations.json';
 		a1.click();
 		URL.revokeObjectURL(url1);
 
+		// Export questions
 		setTimeout(() => {
 			const questionsOutput = {
-				...questions,
 				"$schema": "./schemas/assessment-questions.schema.json",
 				"version": "1.1.0",
-				"lastUpdated": new Date().toISOString().split('T')[0]
+				"lastUpdated": new Date().toISOString().split('T')[0],
+				"source": "Derived from AIHSR Risk Reference Tool v1.5",
+				"description": "Assessment questions with conditional visibility based on previous answers",
+				"questionCategories": questions
 			};
+
 			const blob2 = new Blob([JSON.stringify(questionsOutput, null, 2)], { type: 'application/json' });
 			const url2 = URL.createObjectURL(blob2);
 			const a2 = document.createElement('a');
@@ -209,620 +308,471 @@
 		}, 500);
 	}
 
-	// Get status badge color
-	function getStatusInfo(riskId: string) {
-		const triggerCount = getTriggerCount(riskId);
-		const status = libraryStatus[riskId] || 'draft';
-		const hasMitigations = mitigations[riskId] &&
-			(mitigations[riskId]['phase-1'] || mitigations[riskId]['phase-2'] || mitigations[riskId]['phase-3']);
-
-		if (status === 'published') return { label: 'Published', color: 'green' };
-		if (triggerCount > 0 && hasMitigations) return { label: 'Ready', color: 'blue' };
-		if (triggerCount > 0) return { label: 'Partial', color: 'yellow' };
-		return { label: 'Draft', color: 'gray' };
-	}
+	// Selected risk details
+	let selectedRiskData = $derived(risks.find((r: any) => r.id === selectedRisk));
 </script>
 
 <svelte:head>
-	<title>Risk Library Admin - AI Oversight Tools</title>
+	<title>Risk Configuration Admin - AI Oversight Tools</title>
 </svelte:head>
 
-<div class="admin-layout">
-	<!-- Left Panel: Risk List -->
-	<div class="risk-list-panel">
-		<div class="panel-header">
-			<h1>Risk Library</h1>
-			<button class="btn primary" onclick={exportConfig}>Export Config</button>
+<div class="admin">
+	<header class="admin-header">
+		<h1>Risk Configuration</h1>
+		<div class="header-actions">
+			<button class="btn primary" onclick={exportConfig}>Export All Config</button>
 		</div>
+	</header>
 
-		<div class="filters">
-			<input
-				type="text"
-				placeholder="Search risks..."
-				bind:value={searchQuery}
-				class="search-input"
-			/>
-			<select bind:value={filterDomain} class="domain-filter">
-				<option value={null}>All Domains</option>
-				{#each domains as domain}
-					<option value={domain.id}>{domain.code} - {domain.name}</option>
+	<!-- Tab Navigation -->
+	<nav class="tabs">
+		<button class="tab" class:active={activeTab === 'wiring'} onclick={() => activeTab = 'wiring'}>
+			Wiring Diagram
+		</button>
+		<button class="tab" class:active={activeTab === 'questions'} onclick={() => activeTab = 'questions'}>
+			Questions
+		</button>
+		<button class="tab" class:active={activeTab === 'risks'} onclick={() => activeTab = 'risks'}>
+			Risks & Mitigations
+		</button>
+	</nav>
+
+	<!-- WIRING TAB -->
+	{#if activeTab === 'wiring'}
+		<div class="wiring-view">
+			<!-- Phase Selector -->
+			<div class="phase-selector">
+				{#each phases as phase}
+					<button
+						class="phase-btn"
+						class:active={selectedPhase === phase.id}
+						onclick={() => selectedPhase = phase.id}
+					>
+						{phase.name}
+					</button>
 				{/each}
-			</select>
-		</div>
-
-		<div class="risk-list">
-			{#each filteredRisks as risk}
-				{@const status = getStatusInfo(risk.id)}
-				{@const triggerCount = getTriggerCount(risk.id)}
-				<button
-					class="risk-card"
-					class:selected={selectedRiskId === risk.id}
-					onclick={() => selectedRiskId = risk.id}
-				>
-					<div class="risk-header">
-						<span class="risk-code">{risk.code}</span>
-						<span class="status-badge {status.color}">{status.label}</span>
-					</div>
-					<div class="risk-name">{risk.shortName}</div>
-					<div class="risk-meta">
-						<span class="domain-tag">{risk.domainCode}</span>
-						<span class="trigger-count">{triggerCount} trigger{triggerCount !== 1 ? 's' : ''}</span>
-					</div>
-				</button>
-			{/each}
-
-			{#if filteredRisks.length === 0}
-				<div class="empty-state">No risks match your filters</div>
-			{/if}
-		</div>
-	</div>
-
-	<!-- Right Panel: Risk Detail -->
-	<div class="detail-panel">
-		{#if selectedRisk}
-			{@const currentTriggers = getTriggersForRisk(selectedRisk.id)}
-			{@const status = getStatusInfo(selectedRisk.id)}
-
-			<div class="detail-header">
-				<div class="detail-title">
-					<span class="detail-code">{selectedRisk.code}</span>
-					<h2>{selectedRisk.name}</h2>
-				</div>
-				<button class="close-btn" onclick={() => selectedRiskId = null}>×</button>
 			</div>
 
-			<p class="detail-description">{selectedRisk.description}</p>
-
-			<div class="detail-meta">
-				<span class="domain-label">Domain: {selectedRisk.domainName}</span>
-				<button
-					class="library-toggle {status.color}"
-					onclick={() => toggleLibraryStatus(selectedRisk.id)}
-				>
-					{libraryStatus[selectedRisk.id] === 'published' ? 'Unpublish from Library' : 'Publish to Library'}
-				</button>
-			</div>
-
-			<!-- Triggers Section -->
-			<div class="section">
-				<div class="section-header">
-					<h3>Triggers</h3>
-					<button class="btn small" onclick={() => showAddTriggerModal = true}>+ Add Trigger</button>
-				</div>
-				<p class="section-hint">Question/answer combinations that activate this risk</p>
-
-				{#if currentTriggers.length > 0}
-					<div class="trigger-list">
-						{#each currentTriggers as trigger}
-							<div class="trigger-item">
-								<div class="trigger-content">
-									<span class="trigger-answer">{trigger.answerLabel}</span>
-									<span class="trigger-question">{trigger.questionText}</span>
-									<span class="trigger-category">{trigger.categoryName}</span>
+			<div class="wiring-grid">
+				<!-- Left: Questions -->
+				<div class="wiring-column questions-column">
+					<h3>Questions & Answers</h3>
+					<div class="node-list">
+						{#each allQuestions as q}
+							{@const hasConnection = phaseConnections.some(c => c.questionId === q.id)}
+							<div class="question-node" class:connected={hasConnection}>
+								<div class="question-text">{q.question}</div>
+								<div class="answers">
+									{#each q.options as opt}
+										{@const isTriggered = phaseConnections.some(
+											c => c.questionId === q.id && c.answerValues.includes(opt.value)
+										)}
+										<span class="answer-chip" class:triggered={isTriggered}>
+											{opt.label}
+										</span>
+									{/each}
 								</div>
-								<button
-									class="remove-btn"
-									onclick={() => pendingDelete = {
-										questionId: trigger.questionId,
-										answerValue: trigger.answerValue,
-										subdomainId: selectedRisk.id
-									}}
-									title="Remove trigger"
-								>
-									×
-								</button>
 							</div>
 						{/each}
 					</div>
-				{:else}
-					<div class="empty-triggers">
-						No triggers configured. Add one to activate this risk based on user responses.
+				</div>
+
+				<!-- Center: Connections -->
+				<div class="wiring-column connections-column">
+					<h3>Connections for {phases.find(p => p.id === selectedPhase)?.name}</h3>
+					<div class="connection-list">
+						{#each phaseConnections as conn}
+							<div class="connection-card">
+								<div class="conn-source">
+									<span class="answers-label">
+										{conn.answerValues.join(', ')}
+									</span>
+									<span class="q-text">{conn.questionText.slice(0, 40)}...</span>
+								</div>
+								<div class="conn-logic">{conn.logic}</div>
+								<div class="conn-target">
+									<span class="risk-code">{conn.riskCode}</span>
+								</div>
+								<button
+									class="remove-conn-btn"
+									onclick={() => removeConnection(conn.riskId, selectedPhase, conn.questionId)}
+									title="Remove connection"
+								>×</button>
+							</div>
+						{/each}
+
+						{#if phaseConnections.length === 0}
+							<div class="empty-connections">
+								No connections for this phase yet.
+								Select a risk and click "+ Add Trigger" to create one.
+							</div>
+						{/if}
 					</div>
-				{/if}
+				</div>
+
+				<!-- Right: Risks -->
+				<div class="wiring-column risks-column">
+					<h3>Risks</h3>
+					<div class="node-list">
+						{#each risks as risk}
+							{@const appliesThisPhase = riskAppliesTo(risk.id, selectedPhase)}
+							{@const triggerCount = phaseConnections.filter(c => c.riskId === risk.id).length}
+							<div
+								class="risk-node"
+								class:active={appliesThisPhase}
+								class:selected={selectedRisk === risk.id}
+							>
+								<div class="risk-header">
+									<button
+										class="phase-toggle"
+										class:enabled={appliesThisPhase}
+										onclick={() => toggleRiskPhase(risk.id, selectedPhase)}
+										title={appliesThisPhase ? 'Disable for this phase' : 'Enable for this phase'}
+									>
+										{appliesThisPhase ? '✓' : '○'}
+									</button>
+									<span class="risk-code">{risk.code}</span>
+									<span class="risk-name">{risk.shortName}</span>
+								</div>
+								{#if appliesThisPhase}
+									<div class="risk-triggers">
+										<span class="trigger-count">{triggerCount} trigger{triggerCount !== 1 ? 's' : ''}</span>
+										<button
+											class="add-trigger-btn"
+											onclick={() => {
+												pendingConnection = { riskId: risk.id, phase: selectedPhase };
+												showAddConnectionModal = true;
+											}}
+										>+ Add</button>
+									</div>
+								{/if}
+							</div>
+						{/each}
+					</div>
+				</div>
+			</div>
+		</div>
+	{/if}
+
+	<!-- QUESTIONS TAB -->
+	{#if activeTab === 'questions'}
+		<div class="questions-view">
+			<div class="questions-header">
+				<h2>Manage Questions</h2>
+				<button class="btn primary" onclick={() => showAddQuestionModal = true}>+ Add Question</button>
 			</div>
 
-			<!-- Mitigations Section -->
-			<div class="section">
-				<h3>Phase Mitigations</h3>
-				<p class="section-hint">Suggested mitigation strategies for each development phase</p>
-
-				{#if mitigations[selectedRisk.id]}
-					<div class="mitigation-editors">
-						<div class="mitigation-phase">
-							<label for="phase1-{selectedRisk.id}">Phase 1: Discovery</label>
-							<textarea
-								id="phase1-{selectedRisk.id}"
-								bind:value={mitigations[selectedRisk.id]['phase-1']}
-								rows="4"
-								placeholder="Enter mitigation guidance for Discovery phase..."
-							></textarea>
-						</div>
-						<div class="mitigation-phase">
-							<label for="phase2-{selectedRisk.id}">Phase 2: Validation</label>
-							<textarea
-								id="phase2-{selectedRisk.id}"
-								bind:value={mitigations[selectedRisk.id]['phase-2']}
-								rows="4"
-								placeholder="Enter mitigation guidance for Validation phase..."
-							></textarea>
-						</div>
-						<div class="mitigation-phase">
-							<label for="phase3-{selectedRisk.id}">Phase 3: Deployment</label>
-							<textarea
-								id="phase3-{selectedRisk.id}"
-								bind:value={mitigations[selectedRisk.id]['phase-3']}
-								rows="4"
-								placeholder="Enter mitigation guidance for Deployment phase..."
-							></textarea>
-						</div>
+			{#each questions as category}
+				<div class="question-category">
+					<h3>{category.name}</h3>
+					<div class="question-list">
+						{#each category.questions as q}
+							<div class="question-item">
+								<div class="q-main">
+									<span class="q-id">{q.id}</span>
+									<span class="q-type">{q.type}</span>
+									<span class="q-text">{q.question}</span>
+								</div>
+								{#if q.options}
+									<div class="q-options">
+										{#each q.options as opt}
+											<span class="opt-chip">{opt.label}</span>
+										{/each}
+									</div>
+								{:else if q.type === 'yes-no'}
+									<div class="q-options">
+										<span class="opt-chip">Yes</span>
+										<span class="opt-chip">No</span>
+									</div>
+								{/if}
+								<button class="delete-q-btn" onclick={() => deleteQuestion(q.id)}>Delete</button>
+							</div>
+						{/each}
 					</div>
-				{:else}
-					<div class="empty-mitigations">
-						No mitigation data found for this risk.
-					</div>
-				{/if}
-			</div>
+				</div>
+			{/each}
+		</div>
+	{/if}
 
-		{:else}
-			<div class="no-selection">
-				<div class="no-selection-icon">📋</div>
-				<h3>Select a Risk</h3>
-				<p>Choose a risk from the list to view and edit its traceability configuration.</p>
+	<!-- RISKS TAB -->
+	{#if activeTab === 'risks'}
+		<div class="risks-view">
+			<div class="risks-layout">
+				<!-- Risk List -->
+				<div class="risks-list">
+					<h2>Risks</h2>
+					{#each risks as risk}
+						<button
+							class="risk-list-item"
+							class:selected={selectedRisk === risk.id}
+							onclick={() => selectedRisk = risk.id}
+						>
+							<span class="risk-code">{risk.code}</span>
+							<span class="risk-name">{risk.shortName}</span>
+							<div class="phase-indicators">
+								{#each phases as phase}
+									<span
+										class="phase-dot"
+										class:active={riskAppliesTo(risk.id, phase.id)}
+										title={phase.name}
+									>{phase.short}</span>
+								{/each}
+							</div>
+						</button>
+					{/each}
+				</div>
+
+				<!-- Risk Detail -->
+				<div class="risk-detail">
+					{#if selectedRiskData}
+						<h2>{selectedRiskData.code}: {selectedRiskData.name}</h2>
+						<p class="risk-desc">{selectedRiskData.description}</p>
+
+						<div class="phase-config">
+							<h3>Phase Applicability</h3>
+							<div class="phase-toggles">
+								{#each phases as phase}
+									<label class="phase-checkbox">
+										<input
+											type="checkbox"
+											checked={riskAppliesTo(selectedRiskData.id, phase.id)}
+											onchange={() => toggleRiskPhase(selectedRiskData.id, phase.id)}
+										/>
+										{phase.name}
+									</label>
+								{/each}
+							</div>
+						</div>
+
+						<div class="mitigations-config">
+							<h3>Mitigations by Phase</h3>
+							{#each phases as phase}
+								{#if riskAppliesTo(selectedRiskData.id, phase.id)}
+									<div class="mitigation-editor">
+										<label for="mit-{selectedRiskData.id}-{phase.id}">{phase.name}</label>
+										<textarea
+											id="mit-{selectedRiskData.id}-{phase.id}"
+											value={riskConfigs[selectedRiskData.id]?.phaseMitigations?.[phase.id] || ''}
+											oninput={(e) => updateMitigation(selectedRiskData.id, phase.id, e.currentTarget.value)}
+											rows="3"
+											placeholder="Enter mitigation guidance for this phase..."
+										></textarea>
+									</div>
+								{/if}
+							{/each}
+						</div>
+
+						<div class="triggers-config">
+							<h3>Triggers by Phase</h3>
+							{#each phases as phase}
+								{#if riskAppliesTo(selectedRiskData.id, phase.id)}
+									{@const triggers = riskConfigs[selectedRiskData.id]?.phaseTriggers?.[phase.id]}
+									<div class="trigger-section">
+										<div class="trigger-header">
+											<span>{phase.name}</span>
+											{#if triggers?.conditions?.length > 1}
+												<button
+													class="logic-toggle"
+													onclick={() => toggleTriggerLogic(selectedRiskData.id, phase.id)}
+												>
+													Logic: {triggers?.logic || 'OR'}
+												</button>
+											{/if}
+										</div>
+										<div class="trigger-list">
+											{#if triggers?.conditions?.length > 0}
+												{#each triggers.conditions as cond}
+													{@const q = allQuestions.find(q => q.id === cond.questionId)}
+													{#if q}
+														<div class="trigger-item">
+															<span class="trigger-q">{q.question}</span>
+															<span class="trigger-answers">= {cond.answerValues.join(' or ')}</span>
+															<button
+																class="remove-trigger"
+																onclick={() => removeConnection(selectedRiskData.id, phase.id, cond.questionId)}
+															>×</button>
+														</div>
+													{/if}
+												{/each}
+											{:else}
+												<div class="no-triggers">No triggers configured</div>
+											{/if}
+										</div>
+									</div>
+								{/if}
+							{/each}
+						</div>
+					{:else}
+						<div class="no-selection">
+							<p>Select a risk from the list to configure it.</p>
+						</div>
+					{/if}
+				</div>
 			</div>
-		{/if}
-	</div>
+		</div>
+	{/if}
 </div>
 
-<!-- Add Trigger Modal -->
-{#if showAddTriggerModal && selectedRisk}
-	<div class="modal-overlay" onclick={() => showAddTriggerModal = false}>
-		<div class="modal" onclick={(e) => e.stopPropagation()}>
+<!-- Add Question Modal -->
+{#if showAddQuestionModal}
+	<div class="modal-overlay" role="dialog" aria-modal="true">
+		<div class="modal">
 			<div class="modal-header">
-				<h3>Add Trigger for {selectedRisk.code}</h3>
-				<button class="close-btn" onclick={() => showAddTriggerModal = false}>×</button>
+				<h3>Add New Question</h3>
+				<button class="close-btn" onclick={() => showAddQuestionModal = false}>×</button>
 			</div>
-			<p class="modal-hint">Select a question/answer that should trigger this risk:</p>
 
-			<div class="trigger-options">
-				{#each availableQuestionAnswers as qa}
-					{@const alreadyAdded = isAlreadyTrigger(qa.questionId, qa.answerValue)}
-					<button
-						class="trigger-option"
-						class:disabled={alreadyAdded}
-						disabled={alreadyAdded}
-						onclick={() => addTrigger(qa.questionId, qa.answerValue)}
-					>
-						<span class="option-answer">{qa.answerLabel}</span>
-						<span class="option-question">{qa.questionText}</span>
-						<span class="option-category">{qa.categoryName}</span>
-						{#if alreadyAdded}
-							<span class="already-added">Already added</span>
-						{/if}
-					</button>
-				{/each}
+			<div class="modal-body">
+				<div class="form-group">
+					<label for="q-id">Question ID</label>
+					<input id="q-id" type="text" bind:value={newQuestion.id} placeholder="e.g., data-retention" />
+				</div>
+
+				<div class="form-group">
+					<label for="q-text">Question Text</label>
+					<input id="q-text" type="text" bind:value={newQuestion.question} placeholder="e.g., How long is data retained?" />
+				</div>
+
+				<div class="form-group">
+					<label for="q-type">Question Type</label>
+					<select id="q-type" bind:value={newQuestion.type}>
+						<option value="yes-no">Yes/No</option>
+						<option value="single-select">Single Select</option>
+						<option value="multi-select">Multi Select</option>
+					</select>
+				</div>
+
+				<div class="form-group">
+					<label for="q-cat">Category</label>
+					<select id="q-cat" bind:value={newQuestion.category}>
+						<option value="">Select category...</option>
+						{#each questions as cat}
+							<option value={cat.id}>{cat.name}</option>
+						{/each}
+					</select>
+				</div>
+
+				{#if newQuestion.type !== 'yes-no'}
+					<div class="form-group">
+						<label>Answer Options</label>
+						{#each newQuestion.options as opt, i}
+							<div class="option-row">
+								<input type="text" bind:value={opt.value} placeholder="Value" />
+								<input type="text" bind:value={opt.label} placeholder="Label" />
+								<button class="remove-opt" onclick={() => removeOption(i)}>×</button>
+							</div>
+						{/each}
+						<button class="btn small" onclick={addOption}>+ Add Option</button>
+					</div>
+				{/if}
+			</div>
+
+			<div class="modal-footer">
+				<button class="btn" onclick={() => showAddQuestionModal = false}>Cancel</button>
+				<button class="btn primary" onclick={addQuestion}>Add Question</button>
 			</div>
 		</div>
 	</div>
 {/if}
 
-<!-- Delete Confirmation Modal -->
-{#if pendingDelete}
-	<div class="modal-overlay" onclick={() => pendingDelete = null}>
-		<div class="modal confirm-modal" onclick={(e) => e.stopPropagation()}>
-			<h3>Remove Trigger?</h3>
-			<p>Are you sure you want to remove this trigger? This will affect when this risk is shown to innovators.</p>
-			<div class="modal-actions">
-				<button class="btn" onclick={() => pendingDelete = null}>Cancel</button>
-				<button class="btn danger" onclick={confirmRemoveTrigger}>Remove</button>
+<!-- Add Connection Modal -->
+{#if showAddConnectionModal && pendingConnection}
+	{@const targetRisk = risks.find((r: any) => r.id === pendingConnection.riskId)}
+	<div class="modal-overlay" role="dialog" aria-modal="true">
+		<div class="modal wide">
+			<div class="modal-header">
+				<h3>Add Trigger for {targetRisk?.code}</h3>
+				<button class="close-btn" onclick={() => { showAddConnectionModal = false; pendingConnection = null; }}>×</button>
+			</div>
+
+			<p class="modal-subtitle">Select a question and answer(s) that should trigger this risk in {phases.find(p => p.id === pendingConnection.phase)?.name}</p>
+
+			<div class="modal-body">
+				{#each allQuestions as q}
+					{@const existingTrigger = riskConfigs[pendingConnection.riskId]?.phaseTriggers?.[pendingConnection.phase]?.conditions?.find((c: any) => c.questionId === q.id)}
+					<div class="question-option" class:has-trigger={existingTrigger}>
+						<div class="q-text">{q.question}</div>
+						<div class="answer-options">
+							{#each q.options as opt}
+								<button
+									class="answer-select"
+									class:selected={existingTrigger?.answerValues?.includes(opt.value)}
+									onclick={() => {
+										const current = existingTrigger?.answerValues || [];
+										const newValues = current.includes(opt.value)
+											? current.filter((v: string) => v !== opt.value)
+											: [...current, opt.value];
+										if (newValues.length > 0) {
+											addConnection(pendingConnection.riskId, pendingConnection.phase, q.id, newValues);
+										} else if (existingTrigger) {
+											removeConnection(pendingConnection.riskId, pendingConnection.phase, q.id);
+										}
+									}}
+								>
+									{opt.label}
+								</button>
+							{/each}
+						</div>
+					</div>
+				{/each}
+			</div>
+
+			<div class="modal-footer">
+				<button class="btn primary" onclick={() => { showAddConnectionModal = false; pendingConnection = null; }}>Done</button>
 			</div>
 		</div>
 	</div>
 {/if}
 
 <style>
-	.admin-layout {
-		display: grid;
-		grid-template-columns: 350px 1fr;
-		gap: 1.5rem;
-		height: calc(100vh - 120px);
-	}
-
-	/* Left Panel - Risk List */
-	.risk-list-panel {
+	.admin {
 		display: flex;
 		flex-direction: column;
-		background: #1e293b;
-		border-radius: 0.5rem;
+		height: calc(100vh - 80px);
 		overflow: hidden;
 	}
 
-	.panel-header {
+	.admin-header {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		padding: 1rem;
+		padding: 0.75rem 0;
 		border-bottom: 1px solid #334155;
+		flex-shrink: 0;
 	}
 
-	.panel-header h1 {
-		font-size: 1rem;
+	.admin-header h1 {
+		font-size: 1.125rem;
 		color: #f1f5f9;
 	}
 
-	.filters {
+	/* Tabs */
+	.tabs {
 		display: flex;
-		flex-direction: column;
-		gap: 0.5rem;
-		padding: 0.75rem 1rem;
+		gap: 0.25rem;
+		padding: 0.75rem 0;
 		border-bottom: 1px solid #334155;
+		flex-shrink: 0;
 	}
 
-	.search-input, .domain-filter {
-		width: 100%;
-		padding: 0.5rem 0.75rem;
-		background: #0f172a;
-		border: 1px solid #334155;
+	.tab {
+		padding: 0.5rem 1rem;
+		background: transparent;
+		border: none;
 		border-radius: 0.375rem;
-		color: #e2e8f0;
-		font-size: 0.8125rem;
-	}
-
-	.search-input:focus, .domain-filter:focus {
-		outline: none;
-		border-color: #60a5fa;
-	}
-
-	.risk-list {
-		flex: 1;
-		overflow-y: auto;
-		padding: 0.5rem;
-	}
-
-	.risk-card {
-		width: 100%;
-		text-align: left;
-		padding: 0.75rem;
-		background: #0f172a;
-		border: 1px solid #334155;
-		border-radius: 0.375rem;
-		margin-bottom: 0.5rem;
-		cursor: pointer;
-		transition: all 0.15s ease;
-	}
-
-	.risk-card:hover {
-		border-color: #475569;
-	}
-
-	.risk-card.selected {
-		border-color: #60a5fa;
-		background: rgba(96, 165, 250, 0.1);
-	}
-
-	.risk-header {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		margin-bottom: 0.25rem;
-	}
-
-	.risk-code {
-		font-family: monospace;
-		font-size: 0.75rem;
-		color: #60a5fa;
-		background: rgba(96, 165, 250, 0.2);
-		padding: 0.125rem 0.375rem;
-		border-radius: 0.25rem;
-	}
-
-	.status-badge {
-		font-size: 0.625rem;
-		font-weight: 600;
-		padding: 0.125rem 0.375rem;
-		border-radius: 0.25rem;
-		text-transform: uppercase;
-	}
-
-	.status-badge.green { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
-	.status-badge.blue { background: rgba(96, 165, 250, 0.2); color: #60a5fa; }
-	.status-badge.yellow { background: rgba(251, 191, 36, 0.2); color: #fbbf24; }
-	.status-badge.gray { background: rgba(100, 116, 139, 0.2); color: #64748b; }
-
-	.risk-name {
+		color: #94a3b8;
 		font-size: 0.875rem;
-		color: #e2e8f0;
-		margin-bottom: 0.375rem;
+		cursor: pointer;
 	}
 
-	.risk-meta {
-		display: flex;
-		gap: 0.5rem;
-		align-items: center;
-	}
-
-	.domain-tag {
-		font-size: 0.625rem;
-		color: #64748b;
-		background: #334155;
-		padding: 0.125rem 0.375rem;
-		border-radius: 0.25rem;
-	}
-
-	.trigger-count {
-		font-size: 0.6875rem;
-		color: #64748b;
-	}
-
-	.empty-state {
-		text-align: center;
-		padding: 2rem;
-		color: #64748b;
-	}
-
-	/* Right Panel - Detail */
-	.detail-panel {
+	.tab:hover {
 		background: #1e293b;
-		border-radius: 0.5rem;
-		padding: 1.5rem;
-		overflow-y: auto;
-	}
-
-	.detail-header {
-		display: flex;
-		justify-content: space-between;
-		align-items: flex-start;
-		margin-bottom: 0.75rem;
-	}
-
-	.detail-title {
-		display: flex;
-		align-items: center;
-		gap: 0.75rem;
-	}
-
-	.detail-code {
-		font-family: monospace;
-		font-size: 0.875rem;
-		color: #60a5fa;
-		background: rgba(96, 165, 250, 0.2);
-		padding: 0.25rem 0.5rem;
-		border-radius: 0.25rem;
-	}
-
-	.detail-header h2 {
-		font-size: 1.125rem;
-		color: #f1f5f9;
-	}
-
-	.close-btn {
-		background: none;
-		border: none;
-		color: #64748b;
-		font-size: 1.5rem;
-		cursor: pointer;
-		padding: 0;
-		line-height: 1;
-	}
-
-	.close-btn:hover {
 		color: #e2e8f0;
 	}
 
-	.detail-description {
-		font-size: 0.875rem;
-		color: #94a3b8;
-		line-height: 1.5;
-		margin-bottom: 1rem;
-	}
-
-	.detail-meta {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		padding: 0.75rem;
-		background: #0f172a;
-		border-radius: 0.375rem;
-		margin-bottom: 1.5rem;
-	}
-
-	.domain-label {
-		font-size: 0.8125rem;
-		color: #94a3b8;
-	}
-
-	.library-toggle {
-		font-size: 0.75rem;
-		padding: 0.375rem 0.75rem;
-		border: none;
-		border-radius: 0.25rem;
-		cursor: pointer;
-		transition: all 0.15s ease;
-	}
-
-	.library-toggle.green {
-		background: rgba(34, 197, 94, 0.2);
-		color: #22c55e;
-	}
-
-	.library-toggle.blue, .library-toggle.yellow, .library-toggle.gray {
+	.tab.active {
 		background: #334155;
-		color: #e2e8f0;
-	}
-
-	.library-toggle:hover {
-		opacity: 0.8;
-	}
-
-	/* Sections */
-	.section {
-		margin-bottom: 1.5rem;
-	}
-
-	.section-header {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		margin-bottom: 0.25rem;
-	}
-
-	.section h3 {
-		font-size: 0.875rem;
-		color: #60a5fa;
-		font-weight: 600;
-	}
-
-	.section-hint {
-		font-size: 0.75rem;
-		color: #64748b;
-		margin-bottom: 0.75rem;
-	}
-
-	/* Triggers */
-	.trigger-list {
-		display: flex;
-		flex-direction: column;
-		gap: 0.5rem;
-	}
-
-	.trigger-item {
-		display: flex;
-		align-items: center;
-		gap: 0.75rem;
-		padding: 0.75rem;
-		background: #0f172a;
-		border: 1px solid #334155;
-		border-radius: 0.375rem;
-	}
-
-	.trigger-content {
-		flex: 1;
-		display: flex;
-		flex-wrap: wrap;
-		align-items: center;
-		gap: 0.5rem;
-	}
-
-	.trigger-answer {
-		font-size: 0.75rem;
-		font-weight: 600;
-		color: #22c55e;
-		background: rgba(34, 197, 94, 0.2);
-		padding: 0.125rem 0.375rem;
-		border-radius: 0.25rem;
-	}
-
-	.trigger-question {
-		font-size: 0.8125rem;
-		color: #e2e8f0;
-	}
-
-	.trigger-category {
-		font-size: 0.6875rem;
-		color: #64748b;
-	}
-
-	.remove-btn {
-		background: none;
-		border: none;
-		color: #64748b;
-		font-size: 1.25rem;
-		cursor: pointer;
-		padding: 0.25rem 0.5rem;
-		border-radius: 0.25rem;
-	}
-
-	.remove-btn:hover {
-		background: rgba(239, 68, 68, 0.2);
-		color: #ef4444;
-	}
-
-	.empty-triggers, .empty-mitigations {
-		padding: 1rem;
-		background: #0f172a;
-		border: 1px dashed #334155;
-		border-radius: 0.375rem;
-		text-align: center;
-		color: #64748b;
-		font-size: 0.8125rem;
-	}
-
-	/* Mitigations */
-	.mitigation-editors {
-		display: flex;
-		flex-direction: column;
-		gap: 1rem;
-	}
-
-	.mitigation-phase label {
-		display: block;
-		font-size: 0.75rem;
-		font-weight: 600;
-		color: #94a3b8;
-		margin-bottom: 0.375rem;
-	}
-
-	.mitigation-phase textarea {
-		width: 100%;
-		padding: 0.75rem;
-		background: #0f172a;
-		border: 1px solid #334155;
-		border-radius: 0.375rem;
-		color: #e2e8f0;
-		font-size: 0.8125rem;
-		line-height: 1.5;
-		resize: vertical;
-	}
-
-	.mitigation-phase textarea:focus {
-		outline: none;
-		border-color: #60a5fa;
-	}
-
-	/* No Selection State */
-	.no-selection {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-		height: 100%;
-		text-align: center;
-		color: #64748b;
-	}
-
-	.no-selection-icon {
-		font-size: 3rem;
-		margin-bottom: 1rem;
-		opacity: 0.5;
-	}
-
-	.no-selection h3 {
-		font-size: 1.125rem;
-		color: #94a3b8;
-		margin-bottom: 0.5rem;
-	}
-
-	.no-selection p {
-		font-size: 0.875rem;
+		color: #f1f5f9;
 	}
 
 	/* Buttons */
@@ -834,34 +784,581 @@
 		color: #e2e8f0;
 		font-size: 0.8125rem;
 		cursor: pointer;
-		transition: all 0.15s ease;
 	}
 
-	.btn:hover {
-		background: #475569;
+	.btn:hover { background: #475569; }
+	.btn.primary { background: #60a5fa; color: #0f172a; }
+	.btn.primary:hover { background: #3b82f6; }
+	.btn.small { padding: 0.375rem 0.75rem; font-size: 0.75rem; }
+
+	/* Wiring View */
+	.wiring-view {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		overflow: hidden;
 	}
 
-	.btn.primary {
-		background: #60a5fa;
-		color: #0f172a;
+	.phase-selector {
+		display: flex;
+		gap: 0.5rem;
+		padding: 0.75rem 0;
+		flex-shrink: 0;
 	}
 
-	.btn.primary:hover {
-		background: #3b82f6;
+	.phase-btn {
+		padding: 0.5rem 1rem;
+		background: #1e293b;
+		border: 1px solid #334155;
+		border-radius: 0.375rem;
+		color: #94a3b8;
+		font-size: 0.8125rem;
+		cursor: pointer;
 	}
 
-	.btn.small {
-		padding: 0.375rem 0.75rem;
+	.phase-btn:hover { border-color: #475569; }
+	.phase-btn.active { background: #334155; border-color: #60a5fa; color: #f1f5f9; }
+
+	.wiring-grid {
+		display: grid;
+		grid-template-columns: 1fr 1fr 1fr;
+		gap: 1rem;
+		flex: 1;
+		overflow: hidden;
+	}
+
+	.wiring-column {
+		background: #1e293b;
+		border-radius: 0.5rem;
+		display: flex;
+		flex-direction: column;
+		overflow: hidden;
+	}
+
+	.wiring-column h3 {
+		font-size: 0.75rem;
+		font-weight: 600;
+		color: #60a5fa;
+		padding: 0.75rem;
+		border-bottom: 1px solid #334155;
+		flex-shrink: 0;
+	}
+
+	.node-list, .connection-list {
+		flex: 1;
+		overflow-y: auto;
+		padding: 0.5rem;
+	}
+
+	/* Question Nodes */
+	.question-node {
+		padding: 0.75rem;
+		background: #0f172a;
+		border: 1px solid #334155;
+		border-radius: 0.375rem;
+		margin-bottom: 0.5rem;
+	}
+
+	.question-node.connected { border-color: #22c55e; }
+
+	.question-node .question-text {
+		font-size: 0.75rem;
+		color: #e2e8f0;
+		margin-bottom: 0.375rem;
+	}
+
+	.answers {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.25rem;
+	}
+
+	.answer-chip {
+		font-size: 0.625rem;
+		padding: 0.125rem 0.375rem;
+		background: #334155;
+		border-radius: 0.25rem;
+		color: #94a3b8;
+	}
+
+	.answer-chip.triggered {
+		background: rgba(34, 197, 94, 0.2);
+		color: #22c55e;
+	}
+
+	/* Risk Nodes */
+	.risk-node {
+		padding: 0.5rem;
+		background: #0f172a;
+		border: 1px solid #334155;
+		border-radius: 0.375rem;
+		margin-bottom: 0.375rem;
+		opacity: 0.5;
+	}
+
+	.risk-node.active {
+		opacity: 1;
+		border-color: #60a5fa;
+	}
+
+	.risk-node.selected {
+		border-color: #fbbf24;
+	}
+
+	.risk-node .risk-header {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+	}
+
+	.phase-toggle {
+		width: 1.25rem;
+		height: 1.25rem;
+		padding: 0;
+		background: #334155;
+		border: none;
+		border-radius: 0.25rem;
+		color: #64748b;
+		cursor: pointer;
 		font-size: 0.75rem;
 	}
 
-	.btn.danger {
-		background: #ef4444;
-		color: white;
+	.phase-toggle.enabled {
+		background: rgba(34, 197, 94, 0.2);
+		color: #22c55e;
 	}
 
-	.btn.danger:hover {
-		background: #dc2626;
+	.risk-node .risk-code {
+		font-family: monospace;
+		font-size: 0.625rem;
+		color: #60a5fa;
+	}
+
+	.risk-node .risk-name {
+		font-size: 0.75rem;
+		color: #e2e8f0;
+	}
+
+	.risk-triggers {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-top: 0.375rem;
+		padding-top: 0.375rem;
+		border-top: 1px solid #334155;
+	}
+
+	.trigger-count {
+		font-size: 0.625rem;
+		color: #64748b;
+	}
+
+	.add-trigger-btn {
+		font-size: 0.625rem;
+		padding: 0.125rem 0.375rem;
+		background: #334155;
+		border: none;
+		border-radius: 0.25rem;
+		color: #94a3b8;
+		cursor: pointer;
+	}
+
+	.add-trigger-btn:hover {
+		background: #475569;
+		color: #e2e8f0;
+	}
+
+	/* Connections */
+	.connection-card {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		padding: 0.5rem;
+		background: #0f172a;
+		border: 1px solid #334155;
+		border-radius: 0.375rem;
+		margin-bottom: 0.375rem;
+	}
+
+	.conn-source {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		gap: 0.125rem;
+	}
+
+	.conn-source .answers-label {
+		font-size: 0.625rem;
+		color: #22c55e;
+		font-weight: 600;
+	}
+
+	.conn-source .q-text {
+		font-size: 0.625rem;
+		color: #64748b;
+	}
+
+	.conn-logic {
+		font-size: 0.625rem;
+		color: #fbbf24;
+		padding: 0.125rem 0.25rem;
+		background: rgba(251, 191, 36, 0.2);
+		border-radius: 0.125rem;
+	}
+
+	.conn-target .risk-code {
+		font-family: monospace;
+		font-size: 0.75rem;
+		color: #60a5fa;
+	}
+
+	.remove-conn-btn {
+		background: none;
+		border: none;
+		color: #64748b;
+		font-size: 1rem;
+		cursor: pointer;
+		padding: 0.25rem;
+	}
+
+	.remove-conn-btn:hover {
+		color: #ef4444;
+	}
+
+	.empty-connections {
+		text-align: center;
+		padding: 2rem;
+		color: #64748b;
+		font-size: 0.75rem;
+	}
+
+	/* Questions Tab */
+	.questions-view {
+		flex: 1;
+		overflow-y: auto;
+		padding: 1rem 0;
+	}
+
+	.questions-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 1rem;
+	}
+
+	.questions-header h2 {
+		font-size: 1rem;
+		color: #f1f5f9;
+	}
+
+	.question-category {
+		margin-bottom: 1.5rem;
+	}
+
+	.question-category h3 {
+		font-size: 0.875rem;
+		color: #60a5fa;
+		margin-bottom: 0.5rem;
+	}
+
+	.question-list {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+
+	.question-item {
+		padding: 0.75rem;
+		background: #1e293b;
+		border-radius: 0.375rem;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+		align-items: center;
+	}
+
+	.question-item .q-main {
+		flex: 1;
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		min-width: 300px;
+	}
+
+	.question-item .q-id {
+		font-family: monospace;
+		font-size: 0.625rem;
+		color: #60a5fa;
+		background: rgba(96, 165, 250, 0.2);
+		padding: 0.125rem 0.375rem;
+		border-radius: 0.25rem;
+	}
+
+	.question-item .q-type {
+		font-size: 0.625rem;
+		color: #64748b;
+		background: #334155;
+		padding: 0.125rem 0.375rem;
+		border-radius: 0.25rem;
+	}
+
+	.question-item .q-text {
+		font-size: 0.8125rem;
+		color: #e2e8f0;
+	}
+
+	.question-item .q-options {
+		display: flex;
+		gap: 0.25rem;
+	}
+
+	.opt-chip {
+		font-size: 0.625rem;
+		padding: 0.125rem 0.375rem;
+		background: #334155;
+		border-radius: 0.25rem;
+		color: #94a3b8;
+	}
+
+	.delete-q-btn {
+		font-size: 0.75rem;
+		padding: 0.25rem 0.5rem;
+		background: transparent;
+		border: 1px solid #334155;
+		border-radius: 0.25rem;
+		color: #ef4444;
+		cursor: pointer;
+	}
+
+	.delete-q-btn:hover {
+		background: rgba(239, 68, 68, 0.1);
+		border-color: #ef4444;
+	}
+
+	/* Risks Tab */
+	.risks-view {
+		flex: 1;
+		overflow: hidden;
+	}
+
+	.risks-layout {
+		display: grid;
+		grid-template-columns: 300px 1fr;
+		gap: 1rem;
+		height: 100%;
+		padding: 1rem 0;
+	}
+
+	.risks-list {
+		background: #1e293b;
+		border-radius: 0.5rem;
+		padding: 0.75rem;
+		overflow-y: auto;
+	}
+
+	.risks-list h2 {
+		font-size: 0.875rem;
+		color: #f1f5f9;
+		margin-bottom: 0.75rem;
+	}
+
+	.risk-list-item {
+		width: 100%;
+		text-align: left;
+		padding: 0.5rem;
+		background: #0f172a;
+		border: 1px solid #334155;
+		border-radius: 0.375rem;
+		margin-bottom: 0.375rem;
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+	}
+
+	.risk-list-item:hover { border-color: #475569; }
+	.risk-list-item.selected { border-color: #60a5fa; background: rgba(96, 165, 250, 0.1); }
+
+	.risk-list-item .risk-code {
+		font-family: monospace;
+		font-size: 0.625rem;
+		color: #60a5fa;
+	}
+
+	.risk-list-item .risk-name {
+		flex: 1;
+		font-size: 0.75rem;
+		color: #e2e8f0;
+	}
+
+	.phase-indicators {
+		display: flex;
+		gap: 0.125rem;
+	}
+
+	.phase-dot {
+		font-size: 0.5rem;
+		padding: 0.125rem 0.25rem;
+		background: #334155;
+		border-radius: 0.125rem;
+		color: #64748b;
+	}
+
+	.phase-dot.active {
+		background: rgba(34, 197, 94, 0.2);
+		color: #22c55e;
+	}
+
+	/* Risk Detail */
+	.risk-detail {
+		background: #1e293b;
+		border-radius: 0.5rem;
+		padding: 1rem;
+		overflow-y: auto;
+	}
+
+	.risk-detail h2 {
+		font-size: 1rem;
+		color: #f1f5f9;
+		margin-bottom: 0.5rem;
+	}
+
+	.risk-desc {
+		font-size: 0.8125rem;
+		color: #94a3b8;
+		margin-bottom: 1rem;
+	}
+
+	.phase-config, .mitigations-config, .triggers-config {
+		margin-bottom: 1.5rem;
+	}
+
+	.phase-config h3, .mitigations-config h3, .triggers-config h3 {
+		font-size: 0.875rem;
+		color: #60a5fa;
+		margin-bottom: 0.5rem;
+	}
+
+	.phase-toggles {
+		display: flex;
+		gap: 1rem;
+	}
+
+	.phase-checkbox {
+		display: flex;
+		align-items: center;
+		gap: 0.375rem;
+		font-size: 0.8125rem;
+		color: #e2e8f0;
+		cursor: pointer;
+	}
+
+	.phase-checkbox input {
+		accent-color: #60a5fa;
+	}
+
+	.mitigation-editor {
+		margin-bottom: 0.75rem;
+	}
+
+	.mitigation-editor label {
+		display: block;
+		font-size: 0.75rem;
+		color: #94a3b8;
+		margin-bottom: 0.25rem;
+	}
+
+	.mitigation-editor textarea {
+		width: 100%;
+		padding: 0.5rem;
+		background: #0f172a;
+		border: 1px solid #334155;
+		border-radius: 0.375rem;
+		color: #e2e8f0;
+		font-size: 0.8125rem;
+		resize: vertical;
+	}
+
+	.mitigation-editor textarea:focus {
+		outline: none;
+		border-color: #60a5fa;
+	}
+
+	.trigger-section {
+		margin-bottom: 0.75rem;
+		padding: 0.5rem;
+		background: #0f172a;
+		border-radius: 0.375rem;
+	}
+
+	.trigger-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 0.5rem;
+		font-size: 0.75rem;
+		color: #94a3b8;
+	}
+
+	.logic-toggle {
+		font-size: 0.625rem;
+		padding: 0.125rem 0.375rem;
+		background: #334155;
+		border: none;
+		border-radius: 0.25rem;
+		color: #fbbf24;
+		cursor: pointer;
+	}
+
+	.trigger-list {
+		display: flex;
+		flex-direction: column;
+		gap: 0.25rem;
+	}
+
+	.trigger-item {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		padding: 0.375rem;
+		background: #1e293b;
+		border-radius: 0.25rem;
+	}
+
+	.trigger-item .trigger-q {
+		flex: 1;
+		font-size: 0.75rem;
+		color: #e2e8f0;
+	}
+
+	.trigger-item .trigger-answers {
+		font-size: 0.625rem;
+		color: #22c55e;
+	}
+
+	.remove-trigger {
+		background: none;
+		border: none;
+		color: #64748b;
+		cursor: pointer;
+		padding: 0.125rem 0.375rem;
+	}
+
+	.remove-trigger:hover { color: #ef4444; }
+
+	.no-triggers {
+		font-size: 0.75rem;
+		color: #64748b;
+		text-align: center;
+		padding: 0.5rem;
+	}
+
+	.no-selection {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		height: 100%;
+		color: #64748b;
 	}
 
 	/* Modals */
@@ -879,11 +1376,15 @@
 		background: #1e293b;
 		border: 1px solid #334155;
 		border-radius: 0.5rem;
-		max-width: 600px;
+		max-width: 500px;
+		width: 90%;
 		max-height: 80vh;
-		overflow: hidden;
 		display: flex;
 		flex-direction: column;
+	}
+
+	.modal.wide {
+		max-width: 700px;
 	}
 
 	.modal-header {
@@ -899,101 +1400,124 @@
 		color: #f1f5f9;
 	}
 
-	.modal-hint {
+	.close-btn {
+		background: none;
+		border: none;
+		color: #64748b;
+		font-size: 1.5rem;
+		cursor: pointer;
+	}
+
+	.close-btn:hover { color: #e2e8f0; }
+
+	.modal-subtitle {
 		padding: 0.75rem 1rem;
 		font-size: 0.8125rem;
 		color: #94a3b8;
 		background: #0f172a;
 	}
 
-	.trigger-options {
+	.modal-body {
 		flex: 1;
+		padding: 1rem;
 		overflow-y: auto;
-		padding: 0.5rem;
-		max-height: 400px;
 	}
 
-	.trigger-option {
+	.form-group {
+		margin-bottom: 1rem;
+	}
+
+	.form-group label {
+		display: block;
+		font-size: 0.75rem;
+		color: #94a3b8;
+		margin-bottom: 0.25rem;
+	}
+
+	.form-group input, .form-group select {
 		width: 100%;
-		text-align: left;
+		padding: 0.5rem;
+		background: #0f172a;
+		border: 1px solid #334155;
+		border-radius: 0.375rem;
+		color: #e2e8f0;
+		font-size: 0.8125rem;
+	}
+
+	.form-group input:focus, .form-group select:focus {
+		outline: none;
+		border-color: #60a5fa;
+	}
+
+	.option-row {
+		display: flex;
+		gap: 0.5rem;
+		margin-bottom: 0.5rem;
+	}
+
+	.option-row input {
+		flex: 1;
+	}
+
+	.remove-opt {
+		background: none;
+		border: none;
+		color: #ef4444;
+		cursor: pointer;
+		font-size: 1.25rem;
+	}
+
+	.modal-footer {
+		display: flex;
+		justify-content: flex-end;
+		gap: 0.75rem;
+		padding: 1rem;
+		border-top: 1px solid #334155;
+	}
+
+	/* Question options in connection modal */
+	.question-option {
 		padding: 0.75rem;
 		background: #0f172a;
 		border: 1px solid #334155;
 		border-radius: 0.375rem;
 		margin-bottom: 0.5rem;
-		cursor: pointer;
+	}
+
+	.question-option.has-trigger {
+		border-color: #22c55e;
+	}
+
+	.question-option .q-text {
+		font-size: 0.8125rem;
+		color: #e2e8f0;
+		margin-bottom: 0.5rem;
+	}
+
+	.answer-options {
 		display: flex;
 		flex-wrap: wrap;
-		align-items: center;
-		gap: 0.5rem;
+		gap: 0.375rem;
 	}
 
-	.trigger-option:hover:not(.disabled) {
-		border-color: #60a5fa;
-	}
-
-	.trigger-option.disabled {
-		opacity: 0.5;
-		cursor: not-allowed;
-	}
-
-	.option-answer {
-		font-size: 0.75rem;
-		font-weight: 600;
-		color: #22c55e;
-		background: rgba(34, 197, 94, 0.2);
-		padding: 0.125rem 0.375rem;
+	.answer-select {
+		padding: 0.375rem 0.75rem;
+		background: #334155;
+		border: 1px solid #475569;
 		border-radius: 0.25rem;
+		color: #94a3b8;
+		font-size: 0.75rem;
+		cursor: pointer;
 	}
 
-	.option-question {
-		flex: 1;
-		font-size: 0.8125rem;
+	.answer-select:hover {
+		border-color: #60a5fa;
 		color: #e2e8f0;
 	}
 
-	.option-category {
-		font-size: 0.6875rem;
-		color: #64748b;
-	}
-
-	.already-added {
-		font-size: 0.6875rem;
-		color: #60a5fa;
-		margin-left: auto;
-	}
-
-	.confirm-modal {
-		padding: 1.5rem;
-		max-width: 400px;
-	}
-
-	.confirm-modal h3 {
-		font-size: 1.125rem;
-		color: #f1f5f9;
-		margin-bottom: 0.75rem;
-	}
-
-	.confirm-modal p {
-		font-size: 0.875rem;
-		color: #94a3b8;
-		margin-bottom: 1.5rem;
-	}
-
-	.modal-actions {
-		display: flex;
-		justify-content: flex-end;
-		gap: 0.75rem;
-	}
-
-	/* Responsive */
-	@media (max-width: 900px) {
-		.admin-layout {
-			grid-template-columns: 1fr;
-		}
-
-		.risk-list-panel {
-			max-height: 300px;
-		}
+	.answer-select.selected {
+		background: rgba(34, 197, 94, 0.2);
+		border-color: #22c55e;
+		color: #22c55e;
 	}
 </style>

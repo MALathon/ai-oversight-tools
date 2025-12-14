@@ -1,0 +1,357 @@
+{
+  "$schema": "./schemas/risk-configurations.schema.json",
+  "version": "1.0.0",
+  "lastUpdated": "2025-12-13",
+  "description": "Phase-aware risk configurations with triggers and mitigations",
+
+  "configurations": {
+    "unfair-discrimination-1.1": {
+      "riskId": "unfair-discrimination-1.1",
+      "applicablePhases": ["phase-1", "phase-2", "phase-3"],
+      "phaseTriggers": {
+        "phase-1": {
+          "logic": "OR",
+          "conditions": [
+            { "questionId": "training-data-diversity", "answerValues": ["limited", "unknown"] }
+          ]
+        },
+        "phase-2": {
+          "logic": "OR",
+          "conditions": [
+            { "questionId": "training-data-diversity", "answerValues": ["limited", "unknown"] }
+          ]
+        },
+        "phase-3": {
+          "logic": "OR",
+          "conditions": [
+            { "questionId": "training-data-diversity", "answerValues": ["limited", "unknown"] },
+            { "questionId": "multi-site", "answerValues": ["yes"] }
+          ]
+        }
+      },
+      "phaseMitigations": {
+        "phase-1": "Document training data sources, demographics, and collection methods. Identify potential sources of bias. Plan for diverse data collection or augmentation strategies.",
+        "phase-2": "Conduct bias testing across demographic subgroups. Measure performance disparities. Document findings and remediation plans.",
+        "phase-3": "Implement continuous monitoring for disparate outcomes. Establish feedback mechanisms. Create escalation procedures for detected bias."
+      }
+    },
+    "toxic-content-1.2": {
+      "riskId": "toxic-content-1.2",
+      "applicablePhases": ["phase-2", "phase-3"],
+      "phaseTriggers": {
+        "phase-2": {
+          "logic": "AND",
+          "conditions": [
+            { "questionId": "generates-content", "answerValues": ["yes"] }
+          ]
+        },
+        "phase-3": {
+          "logic": "AND",
+          "conditions": [
+            { "questionId": "generates-content", "answerValues": ["yes"] }
+          ]
+        }
+      },
+      "phaseMitigations": {
+        "phase-2": "Test for toxic, harmful, or inappropriate content generation. Implement content filters and safety guardrails.",
+        "phase-3": "Deploy content moderation systems. Monitor for emerging harmful patterns. Maintain human review processes for flagged content."
+      }
+    },
+    "unequal-performance-1.3": {
+      "riskId": "unequal-performance-1.3",
+      "applicablePhases": ["phase-1", "phase-2", "phase-3"],
+      "phaseTriggers": {
+        "phase-1": {
+          "logic": "OR",
+          "conditions": [
+            { "questionId": "training-data-diversity", "answerValues": ["limited", "unknown"] }
+          ]
+        },
+        "phase-2": {
+          "logic": "OR",
+          "conditions": [
+            { "questionId": "training-data-diversity", "answerValues": ["limited", "unknown"] }
+          ]
+        },
+        "phase-3": {
+          "logic": "OR",
+          "conditions": [
+            { "questionId": "training-data-diversity", "answerValues": ["limited", "unknown"] },
+            { "questionId": "multi-site", "answerValues": ["yes"] }
+          ]
+        }
+      },
+      "phaseMitigations": {
+        "phase-1": "Plan stratified evaluation across demographic groups. Define acceptable performance thresholds.",
+        "phase-2": "Conduct subgroup analysis. Document performance variations. Address significant disparities before deployment.",
+        "phase-3": "Monitor real-world performance across populations. Implement site-specific calibration if needed."
+      }
+    },
+    "privacy-breach-2.1": {
+      "riskId": "privacy-breach-2.1",
+      "applicablePhases": ["phase-1", "phase-2", "phase-3"],
+      "phaseTriggers": {
+        "phase-1": {
+          "logic": "AND",
+          "conditions": [
+            { "questionId": "patient-data", "answerValues": ["yes"] }
+          ]
+        },
+        "phase-2": {
+          "logic": "OR",
+          "conditions": [
+            { "questionId": "patient-data", "answerValues": ["yes"] },
+            { "questionId": "external-api", "answerValues": ["yes"] }
+          ]
+        },
+        "phase-3": {
+          "logic": "OR",
+          "conditions": [
+            { "questionId": "patient-data", "answerValues": ["yes"] },
+            { "questionId": "external-api", "answerValues": ["yes"] }
+          ]
+        }
+      },
+      "phaseMitigations": {
+        "phase-1": "Establish data governance framework. Implement de-identification procedures. Obtain appropriate IRB/ethics approval.",
+        "phase-2": "Validate de-identification. Test for re-identification risks. Ensure secure data handling in test environments.",
+        "phase-3": "Implement access controls and audit logging. Conduct regular privacy assessments. Establish breach response procedures."
+      }
+    },
+    "security-vulnerabilities-2.2": {
+      "riskId": "security-vulnerabilities-2.2",
+      "applicablePhases": ["phase-2", "phase-3"],
+      "phaseTriggers": {
+        "phase-2": {
+          "logic": "OR",
+          "conditions": [
+            { "questionId": "patient-data", "answerValues": ["yes"] },
+            { "questionId": "external-api", "answerValues": ["yes"] }
+          ]
+        },
+        "phase-3": {
+          "logic": "OR",
+          "conditions": [
+            { "questionId": "patient-data", "answerValues": ["yes"] },
+            { "questionId": "external-api", "answerValues": ["yes"] }
+          ]
+        }
+      },
+      "phaseMitigations": {
+        "phase-2": "Conduct security assessment. Test API security. Validate encryption and access controls.",
+        "phase-3": "Implement security monitoring. Conduct penetration testing. Maintain security patches and updates."
+      }
+    },
+    "false-information-3.1": {
+      "riskId": "false-information-3.1",
+      "applicablePhases": ["phase-1", "phase-2", "phase-3"],
+      "phaseTriggers": {
+        "phase-1": {
+          "logic": "OR",
+          "conditions": [
+            { "questionId": "generates-content", "answerValues": ["yes"] },
+            { "questionId": "clinical-decisions", "answerValues": ["yes"] }
+          ]
+        },
+        "phase-2": {
+          "logic": "OR",
+          "conditions": [
+            { "questionId": "generates-content", "answerValues": ["yes"] },
+            { "questionId": "clinical-decisions", "answerValues": ["yes"] }
+          ]
+        },
+        "phase-3": {
+          "logic": "OR",
+          "conditions": [
+            { "questionId": "generates-content", "answerValues": ["yes"] },
+            { "questionId": "clinical-decisions", "answerValues": ["yes"] }
+          ]
+        }
+      },
+      "phaseMitigations": {
+        "phase-1": "Plan validation against authoritative sources. Define accuracy requirements.",
+        "phase-2": "Test for hallucinations and factual errors. Validate against clinical guidelines and evidence.",
+        "phase-3": "Implement fact-checking mechanisms. Display confidence levels. Enable clinician verification workflows."
+      }
+    },
+    "information-pollution-3.2": {
+      "riskId": "information-pollution-3.2",
+      "applicablePhases": ["phase-3"],
+      "phaseTriggers": {
+        "phase-3": {
+          "logic": "AND",
+          "conditions": [
+            { "questionId": "generates-content", "answerValues": ["yes"] }
+          ]
+        }
+      },
+      "phaseMitigations": {
+        "phase-3": "Implement content provenance tracking. Label AI-generated content. Monitor for content quality degradation over time."
+      }
+    },
+    "overreliance-5.1": {
+      "riskId": "overreliance-5.1",
+      "applicablePhases": ["phase-2", "phase-3"],
+      "phaseTriggers": {
+        "phase-2": {
+          "logic": "OR",
+          "conditions": [
+            { "questionId": "clinical-decisions", "answerValues": ["yes"] },
+            { "questionId": "autonomous-operation", "answerValues": ["yes"] },
+            { "questionId": "explainability", "answerValues": ["no"] }
+          ]
+        },
+        "phase-3": {
+          "logic": "OR",
+          "conditions": [
+            { "questionId": "clinical-decisions", "answerValues": ["yes"] },
+            { "questionId": "human-oversight", "answerValues": ["sometimes", "never"] },
+            { "questionId": "real-time", "answerValues": ["yes"] }
+          ]
+        }
+      },
+      "phaseMitigations": {
+        "phase-2": "Train users on appropriate AI reliance. Test with realistic scenarios. Measure human-AI team performance.",
+        "phase-3": "Implement friction for high-stakes decisions. Require periodic manual verification. Monitor for automation complacency."
+      }
+    },
+    "loss-of-agency-5.2": {
+      "riskId": "loss-of-agency-5.2",
+      "applicablePhases": ["phase-2", "phase-3"],
+      "phaseTriggers": {
+        "phase-2": {
+          "logic": "OR",
+          "conditions": [
+            { "questionId": "clinical-decisions", "answerValues": ["yes"] },
+            { "questionId": "autonomous-operation", "answerValues": ["yes"] }
+          ]
+        },
+        "phase-3": {
+          "logic": "OR",
+          "conditions": [
+            { "questionId": "clinical-decisions", "answerValues": ["yes"] },
+            { "questionId": "autonomous-operation", "answerValues": ["yes"] },
+            { "questionId": "human-oversight", "answerValues": ["never"] }
+          ]
+        }
+      },
+      "phaseMitigations": {
+        "phase-2": "Design for human control. Ensure ability to override AI. Test override mechanisms.",
+        "phase-3": "Maintain meaningful human oversight. Preserve clinician decision authority. Enable easy opt-out."
+      }
+    },
+    "governance-failure-6.5": {
+      "riskId": "governance-failure-6.5",
+      "applicablePhases": ["phase-1", "phase-2", "phase-3"],
+      "phaseTriggers": {
+        "phase-1": {
+          "logic": "OR",
+          "conditions": [
+            { "questionId": "training-data-diversity", "answerValues": ["unknown"] }
+          ]
+        },
+        "phase-2": {
+          "logic": "OR",
+          "conditions": [
+            { "questionId": "external-api", "answerValues": ["yes"] },
+            { "questionId": "autonomous-operation", "answerValues": ["yes"] }
+          ]
+        },
+        "phase-3": {
+          "logic": "OR",
+          "conditions": [
+            { "questionId": "external-api", "answerValues": ["yes"] },
+            { "questionId": "human-oversight", "answerValues": ["never"] },
+            { "questionId": "multi-site", "answerValues": ["yes"] }
+          ]
+        }
+      },
+      "phaseMitigations": {
+        "phase-1": "Establish AI governance committee. Define roles and responsibilities. Create documentation standards.",
+        "phase-2": "Implement change management processes. Conduct governance reviews. Establish vendor management for external APIs.",
+        "phase-3": "Maintain governance oversight. Conduct regular audits. Ensure accountability structures across deployment sites."
+      }
+    },
+    "misaligned-goals-7.1": {
+      "riskId": "misaligned-goals-7.1",
+      "applicablePhases": ["phase-1", "phase-2", "phase-3"],
+      "phaseTriggers": {
+        "phase-1": {
+          "logic": "AND",
+          "conditions": [
+            { "questionId": "autonomous-operation", "answerValues": ["yes"] }
+          ]
+        },
+        "phase-2": {
+          "logic": "AND",
+          "conditions": [
+            { "questionId": "autonomous-operation", "answerValues": ["yes"] }
+          ]
+        },
+        "phase-3": {
+          "logic": "AND",
+          "conditions": [
+            { "questionId": "autonomous-operation", "answerValues": ["yes"] }
+          ]
+        }
+      },
+      "phaseMitigations": {
+        "phase-1": "Clearly define intended objectives. Align optimization targets with clinical goals. Consider unintended incentives.",
+        "phase-2": "Test for goal misalignment. Validate behavior matches intent. Check for gaming or shortcuts.",
+        "phase-3": "Monitor for drift from intended objectives. Implement safeguards against harmful optimization."
+      }
+    },
+    "lack-robustness-7.3": {
+      "riskId": "lack-robustness-7.3",
+      "applicablePhases": ["phase-2", "phase-3"],
+      "phaseTriggers": {
+        "phase-2": {
+          "logic": "AND",
+          "conditions": [
+            { "questionId": "clinical-decisions", "answerValues": ["yes"] }
+          ]
+        },
+        "phase-3": {
+          "logic": "OR",
+          "conditions": [
+            { "questionId": "clinical-decisions", "answerValues": ["yes"] },
+            { "questionId": "real-time", "answerValues": ["yes"] }
+          ]
+        }
+      },
+      "phaseMitigations": {
+        "phase-2": "Test under varied conditions. Evaluate edge cases. Stress test with adversarial inputs.",
+        "phase-3": "Monitor for distribution shift. Implement degradation detection. Establish fallback procedures."
+      }
+    },
+    "lack-transparency-7.4": {
+      "riskId": "lack-transparency-7.4",
+      "applicablePhases": ["phase-1", "phase-2", "phase-3"],
+      "phaseTriggers": {
+        "phase-1": {
+          "logic": "AND",
+          "conditions": [
+            { "questionId": "explainability", "answerValues": ["partial", "no"] }
+          ]
+        },
+        "phase-2": {
+          "logic": "AND",
+          "conditions": [
+            { "questionId": "explainability", "answerValues": ["partial", "no"] }
+          ]
+        },
+        "phase-3": {
+          "logic": "AND",
+          "conditions": [
+            { "questionId": "explainability", "answerValues": ["partial", "no"] }
+          ]
+        }
+      },
+      "phaseMitigations": {
+        "phase-1": "Plan for explainability. Consider interpretable model alternatives. Design explanation interfaces.",
+        "phase-2": "Implement explanation methods. Test explanation quality with users. Document model limitations.",
+        "phase-3": "Provide clear explanations to clinicians. Enable drilling into AI reasoning. Maintain transparency about AI role."
+      }
+    }
+  }
+}
