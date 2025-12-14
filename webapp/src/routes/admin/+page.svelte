@@ -1676,11 +1676,28 @@
 					</div>
 					<p class="detail-desc">{selectedDetails.item.shortName}</p>
 				{:else if selectedDetails.type === 'mitigation' && selectedDetails.item}
+					{@const subcategoryControls = allControls.filter(c => c.subcategoryId === selectedDetails.item?.id)}
 					<h3>{selectedDetails.item.name}</h3>
 					<div class="detail-meta">
 						<span class="meta-item">Code: {selectedDetails.item.code}</span>
 						<span class="meta-item">Category: {selectedDetails.item.category}</span>
 					</div>
+					{#if subcategoryControls.length > 0}
+						<div class="detail-controls">
+							<strong>Controls ({subcategoryControls.length}):</strong>
+							<div class="controls-list">
+								{#each subcategoryControls.slice(0, 10) as ctrl}
+									<div class="control-item">
+										<span class="control-name">{ctrl.name}</span>
+										<span class="control-phases">{ctrl.phases?.map((p: string) => p.replace('phase-', 'P')).join(', ')}</span>
+									</div>
+								{/each}
+								{#if subcategoryControls.length > 10}
+									<div class="control-item more">...and {subcategoryControls.length - 10} more</div>
+								{/if}
+							</div>
+						</div>
+					{/if}
 				{:else if selectedDetails.type === 'regulation' && selectedDetails.item}
 					<h3>{selectedDetails.item.citation}</h3>
 					<div class="detail-meta">
@@ -3258,6 +3275,54 @@
 		font-size: 0.8125rem;
 		color: #94a3b8;
 		line-height: 1.5;
+	}
+
+	.detail-controls {
+		margin-top: 1rem;
+		padding-top: 1rem;
+		border-top: 1px solid #334155;
+	}
+
+	.detail-controls strong {
+		font-size: 0.75rem;
+		color: #94a3b8;
+		text-transform: uppercase;
+	}
+
+	.controls-list {
+		margin-top: 0.5rem;
+		max-height: 200px;
+		overflow-y: auto;
+	}
+
+	.control-item {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 0.375rem 0.5rem;
+		margin-bottom: 0.25rem;
+		background: #0f172a;
+		border-radius: 0.25rem;
+		font-size: 0.75rem;
+	}
+
+	.control-item .control-name {
+		color: #e2e8f0;
+		flex: 1;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	.control-item .control-phases {
+		color: #60a5fa;
+		font-size: 0.625rem;
+		margin-left: 0.5rem;
+	}
+
+	.control-item.more {
+		color: #64748b;
+		font-style: italic;
 	}
 
 	.connections-section h4 {
