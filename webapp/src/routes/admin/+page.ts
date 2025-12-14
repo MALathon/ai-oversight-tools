@@ -1,11 +1,12 @@
+import { base } from '$app/paths';
 import type { PageLoad } from './$types';
 
 export const load: PageLoad = async ({ fetch }) => {
 	const [questionsRes, phaseMitigationsRes, subdomainsRes, domainsRes] = await Promise.all([
-		fetch('/data/assessment-questions.json'),
-		fetch('/data/phase-mitigations.json'),
-		fetch('/data/risk-subdomains.json'),
-		fetch('/data/risk-domains.json')
+		fetch(`${base}/data/assessment-questions.json`),
+		fetch(`${base}/data/phase-mitigations.json`),
+		fetch(`${base}/data/risk-subdomains.json`),
+		fetch(`${base}/data/risk-domains.json`)
 	]);
 
 	const questions = await questionsRes.json();
