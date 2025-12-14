@@ -96,7 +96,7 @@
 	let focusMode = $state(false);
 
 	// Matrix view state
-	let matrixType = $state<'triggers' | 'mitigations' | 'regulations'>('triggers');
+	let matrixType = $state<'triggers' | 'mitigations' | 'regulations' | 'controls'>('triggers');
 	let matrixVerbose = $state(false);
 	let matrixHoverRow = $state<string | null>(null);
 	let matrixHoverCol = $state<string | null>(null);
@@ -151,7 +151,7 @@
 	let entitySelectorSort = $state<'name' | 'code' | 'category'>('name');
 
 	// Entity management state
-	let entityType = $state<'questions' | 'risks' | 'mitigations' | 'regulations'>('risks');
+	let entityType = $state<'questions' | 'risks' | 'mitigations' | 'regulations' | 'controls'>('risks');
 	let entitySearch = $state('');
 	let showEntityEditor = $state(false);
 	let editingEntity = $state<any>(null);
@@ -183,13 +183,15 @@
 		risks: any[] | null;
 		mitigations: any[] | null;
 		regulations: any[] | null;
-	}>(loadEditableEntities() || { questions: null, risks: null, mitigations: null, regulations: null });
+		controls: any[] | null;
+	}>(loadEditableEntities() || { questions: null, risks: null, mitigations: null, regulations: null, controls: null });
 
 	let hasEntityChanges = $derived(
 		editableEntities.questions !== null ||
 		editableEntities.risks !== null ||
 		editableEntities.mitigations !== null ||
-		editableEntities.regulations !== null
+		editableEntities.regulations !== null ||
+		editableEntities.controls !== null
 	);
 
 	// Save editable entities
@@ -202,7 +204,7 @@
 	// Reset entities to defaults
 	function resetEntities() {
 		if (confirm('Reset all entities to defaults? This will discard all entity changes.')) {
-			editableEntities = { questions: null, risks: null, mitigations: null, regulations: null };
+			editableEntities = { questions: null, risks: null, mitigations: null, regulations: null, controls: null };
 			localStorage.removeItem(ENTITIES_STORAGE_KEY);
 		}
 	}
@@ -253,11 +255,23 @@
 		return items;
 	});
 
+	// Build controls from data
+	let defaultControls = $derived(data.controls.map((c: any) => ({
+		id: c.id,
+		name: c.name,
+		description: c.description,
+		source: c.source,
+		subcategoryId: c.subcategoryId,
+		phases: c.phases || ['phase-1', 'phase-2', 'phase-3'],
+		techTypes: c.techTypes || ['all']
+	})));
+
 	// Use editable entities if modified, otherwise defaults
 	let allQuestions = $derived(editableEntities.questions ?? defaultQuestions);
 	let allRisks = $derived(editableEntities.risks ?? defaultRisks);
 	let allMitigations = $derived(editableEntities.mitigations ?? defaultMitigations);
 	let allRegulations = $derived(editableEntities.regulations ?? defaultRegulations);
+	let allControls = $derived(editableEntities.controls ?? defaultControls);
 
 	// Link counts for orphan detection
 	let linkCounts = $derived.by(() => {
@@ -454,6 +468,8 @@
 	function getRisk(id: string) { return allRisks.find((r: any) => r.id === id); }
 	function getMitigation(id: string) { return allMitigations.find(m => m.id === id); }
 	function getRegulation(id: string) { return allRegulations.find(r => r.id === id); }
+	function getControl(id: string) { return allControls.find(c => c.id === id); }
+	function getControlSubcategory(id: string) { return data.controlSubcategories.find((s: any) => s.id === id); }
 
 	// Get available entities for selector based on link type and position
 	function getSelectableEntities(position: 'from' | 'to', linkType: string) {
@@ -515,17 +531,20 @@
 			return allMitigations.filter(e => !q || e.name.toLowerCase().includes(q) || e.code.toLowerCase().includes(q) || e.category.toLowerCase().includes(q));
 		} else if (entityType === 'regulations') {
 			return allRegulations.filter(e => !q || e.description.toLowerCase().includes(q) || e.citation.toLowerCase().includes(q));
+		} else if (entityType === 'controls') {
+			return allControls.filter(e => !q || e.name.toLowerCase().includes(q) || e.id.toLowerCase().includes(q) || e.source?.toLowerCase().includes(q));
 		}
 		return [];
 	});
 
 	// Ensure we have a mutable copy of entities for a type
-	function ensureEditableCopy(type: 'questions' | 'risks' | 'mitigations' | 'regulations') {
+	function ensureEditableCopy(type: 'questions' | 'risks' | 'mitigations' | 'regulations' | 'controls') {
 		if (editableEntities[type] === null) {
 			if (type === 'questions') editableEntities.questions = JSON.parse(JSON.stringify(defaultQuestions));
 			else if (type === 'risks') editableEntities.risks = JSON.parse(JSON.stringify(defaultRisks));
 			else if (type === 'mitigations') editableEntities.mitigations = JSON.parse(JSON.stringify(defaultMitigations));
 			else if (type === 'regulations') editableEntities.regulations = JSON.parse(JSON.stringify(defaultRegulations));
+			else if (type === 'controls') editableEntities.controls = JSON.parse(JSON.stringify(defaultControls));
 		}
 	}
 
@@ -542,6 +561,8 @@
 			editingEntity = { id: '', code: '', name: '', category: '' };
 		} else if (entityType === 'regulations') {
 			editingEntity = { id: '', citation: '', description: '', framework: '' };
+		} else if (entityType === 'controls') {
+			editingEntity = { id: '', name: '', description: '', source: '', subcategoryId: '', phases: ['phase-1', 'phase-2', 'phase-3'], techTypes: ['all'] };
 		}
 		showEntityEditor = true;
 	}
@@ -774,6 +795,14 @@
 		);
 	}
 
+	function getControlLink(riskId: string, controlId: string) {
+		return filteredLinks.find((l: any) =>
+			l.type === 'control' &&
+			l.from.entity === 'risk' && l.from.id === riskId &&
+			l.to.entity === 'control' && l.to.id === controlId
+		);
+	}
+
 	// Risk editor helpers
 	function getTriggersForRisk(riskId: string) {
 		return filteredLinks.filter((l: any) =>
@@ -794,7 +823,7 @@
 	}
 
 	// Toggle link in matrix
-	function toggleMatrixLink(type: 'trigger' | 'mitigation' | 'regulation', fromId: string, toId: string) {
+	function toggleMatrixLink(type: 'trigger' | 'mitigation' | 'regulation' | 'control', fromId: string, toId: string) {
 		let existing: any;
 		let newLink: any;
 
@@ -819,13 +848,22 @@
 				phases: ['phase-1', 'phase-2', 'phase-3'],
 				guidance: {}
 			};
-		} else {
+		} else if (type === 'regulation') {
 			existing = getRegulationLink(fromId, toId);
 			newLink = {
 				id: `link-${Date.now()}`,
 				type: 'regulation',
 				from: { entity: 'risk', id: fromId },
 				to: { entity: 'regulation', id: toId },
+				phases: ['phase-1', 'phase-2', 'phase-3']
+			};
+		} else {
+			existing = getControlLink(fromId, toId);
+			newLink = {
+				id: `link-${Date.now()}`,
+				type: 'control',
+				from: { entity: 'risk', id: fromId },
+				to: { entity: 'control', id: toId },
 				phases: ['phase-1', 'phase-2', 'phase-3']
 			};
 		}
@@ -842,12 +880,13 @@
 	}
 
 	// Quick toggle (create/delete without editor)
-	function quickToggleLink(type: 'trigger' | 'mitigation' | 'regulation', fromId: string, toId: string) {
+	function quickToggleLink(type: 'trigger' | 'mitigation' | 'regulation' | 'control', fromId: string, toId: string) {
 		let existing: any;
 
 		if (type === 'trigger') existing = getTriggerLink(fromId, toId);
 		else if (type === 'mitigation') existing = getMitigationLink(fromId, toId);
-		else existing = getRegulationLink(fromId, toId);
+		else if (type === 'regulation') existing = getRegulationLink(fromId, toId);
+		else existing = getControlLink(fromId, toId);
 
 		if (existing) {
 			links = links.filter((l: any) => l.id !== existing.id);
@@ -924,6 +963,9 @@
 				</button>
 				<button class:active={matrixType === 'mitigations'} onclick={() => matrixType = 'mitigations'}>
 					Risks → Mitigations
+				</button>
+				<button class:active={matrixType === 'controls'} onclick={() => matrixType = 'controls'}>
+					Risks → Controls
 				</button>
 				<button class:active={matrixType === 'regulations'} onclick={() => matrixType = 'regulations'}>
 					Risks → Regulations
@@ -1126,6 +1168,68 @@
 										class:row-highlighted={matrixHoverRow === risk.id}
 										onclick={() => toggleMatrixLink('regulation', risk.id, reg.id)}
 										onmouseenter={() => { matrixHoverRow = risk.id; matrixHoverCol = reg.id; }}
+										title={link ? `Click to edit link` : `Click to link`}
+									>
+										{#if link}
+											<span class="cell-marker">✓</span>
+										{/if}
+									</td>
+								{/each}
+							</tr>
+						{/each}
+					</tbody>
+				</table>
+			{:else if matrixType === 'controls'}
+				{@const filteredRisks = filterBySearch(allRisks, r => r.shortName)}
+				{@const filteredControls = filterBySearch(allControls, c => c.name + ' ' + c.id).slice(0, 50)}
+				<div class="controls-matrix-note">
+					<span class="note-text">Showing first 50 of {allControls.length} controls. Use search to filter.</span>
+				</div>
+				<table class="matrix">
+					<thead>
+						<tr>
+							<th class="row-header">Risk</th>
+							{#each filteredControls as ctrl}
+								{@const subcategory = getControlSubcategory(ctrl.subcategoryId)}
+								<th
+									class="col-header"
+									class:highlighted={matrixHoverCol === ctrl.id}
+									title={ctrl.name + ' (' + (subcategory?.name || ctrl.subcategoryId) + ')'}
+									onmouseenter={() => matrixHoverCol = ctrl.id}
+								>
+									{#if matrixVerbose}
+										<span class="verbose-label">{ctrl.name}</span>
+									{:else}
+										{ctrl.id.split('_')[0]}
+									{/if}
+								</th>
+							{/each}
+						</tr>
+					</thead>
+					<tbody>
+						{#each filteredRisks as risk}
+							<tr class:row-highlighted={matrixHoverRow === risk.id}>
+								<td
+									class="row-label"
+									class:highlighted={matrixHoverRow === risk.id}
+									title={risk.name}
+									onmouseenter={() => matrixHoverRow = risk.id}
+								>
+									{#if matrixVerbose}
+										<span class="verbose-label">{risk.shortName}</span>
+									{:else}
+										{risk.code}
+									{/if}
+								</td>
+								{#each filteredControls as ctrl}
+									{@const link = getControlLink(risk.id, ctrl.id)}
+									<td
+										class="matrix-cell"
+										class:linked={link}
+										class:col-highlighted={matrixHoverCol === ctrl.id}
+										class:row-highlighted={matrixHoverRow === risk.id}
+										onclick={() => toggleMatrixLink('control', risk.id, ctrl.id)}
+										onmouseenter={() => { matrixHoverRow = risk.id; matrixHoverCol = ctrl.id; }}
 										title={link ? `Click to edit link` : `Click to link`}
 									>
 										{#if link}
@@ -1626,6 +1730,9 @@
 					<button class:active={entityType === 'risks'} onclick={() => entityType = 'risks'}>
 						Risks ({allRisks.length})
 					</button>
+					<button class:active={entityType === 'controls'} onclick={() => entityType = 'controls'}>
+						Controls ({allControls.length})
+					</button>
 					<button class:active={entityType === 'mitigations'} onclick={() => entityType = 'mitigations'}>
 						Mitigations ({allMitigations.length})
 					</button>
@@ -1733,6 +1840,30 @@
 						</div>
 					{:else}
 						<div class="no-entities">No regulations found matching your search</div>
+					{/each}
+				{:else if entityType === 'controls'}
+					<div class="entity-table-header">
+						<span class="col-id">ID</span>
+						<span class="col-name">Name</span>
+						<span class="col-subcategory">Subcategory</span>
+						<span class="col-source">Source</span>
+						<span class="col-actions">Actions</span>
+					</div>
+					{#each filteredEntities as entity}
+						{@const subcategory = getControlSubcategory(entity.subcategoryId)}
+						<div class="entity-row">
+							<span class="col-id">
+								<span class="code-badge control">{entity.id.split('_')[0]}</span>
+							</span>
+							<span class="col-name">{entity.name}</span>
+							<span class="col-subcategory">{subcategory?.name || entity.subcategoryId}</span>
+							<span class="col-source">{entity.source}</span>
+							<span class="col-actions">
+								<button class="action-btn" onclick={() => editEntity(entity)}>Edit</button>
+							</span>
+						</div>
+					{:else}
+						<div class="no-entities">No controls found matching your search</div>
 					{/each}
 				{/if}
 			</div>
@@ -1939,6 +2070,90 @@
 					<div class="form-group">
 						<label>Framework</label>
 						<input type="text" bind:value={editingEntity.framework} placeholder="e.g., Common Rule, HIPAA" />
+					</div>
+				{:else if entityType === 'controls'}
+					<div class="form-group">
+						<label>ID</label>
+						<input type="text" bind:value={editingEntity.id} placeholder="e.g., A0001_Source2024" />
+					</div>
+					<div class="form-group">
+						<label>Name</label>
+						<input type="text" bind:value={editingEntity.name} placeholder="Control name" />
+					</div>
+					<div class="form-group">
+						<label>Description</label>
+						<textarea bind:value={editingEntity.description} placeholder="Description of the control..." rows="4"></textarea>
+					</div>
+					<div class="form-group">
+						<label>Source</label>
+						<input type="text" bind:value={editingEntity.source} placeholder="e.g., NIST2024, Bengio2025" />
+					</div>
+					<div class="form-group">
+						<label>Subcategory</label>
+						<select bind:value={editingEntity.subcategoryId}>
+							<option value="">Select subcategory...</option>
+							{#each data.controlSubcategories as subcat}
+								<option value={subcat.id}>{subcat.code} {subcat.name}</option>
+							{/each}
+						</select>
+					</div>
+					<div class="form-group">
+						<label>Applicable Phases</label>
+						<div class="checkbox-group">
+							{#each phases as phase}
+								<label class="checkbox-label">
+									<input
+										type="checkbox"
+										checked={editingEntity.phases?.includes(phase.id)}
+										onchange={(e) => {
+											if (e.currentTarget.checked) {
+												editingEntity.phases = [...(editingEntity.phases || []), phase.id];
+											} else {
+												editingEntity.phases = (editingEntity.phases || []).filter((p: string) => p !== phase.id);
+											}
+										}}
+									/>
+									{phase.name}
+								</label>
+							{/each}
+						</div>
+					</div>
+					<div class="form-group">
+						<label>Applicable Technology Types</label>
+						<div class="checkbox-group tech-types">
+							<label class="checkbox-label all-types">
+								<input
+									type="checkbox"
+									checked={editingEntity.techTypes?.includes('all')}
+									onchange={(e) => {
+										if (e.currentTarget.checked) {
+											editingEntity.techTypes = ['all'];
+										} else {
+											editingEntity.techTypes = [];
+										}
+									}}
+								/>
+								All Types
+							</label>
+							{#if !editingEntity.techTypes?.includes('all')}
+								{#each data.modelTypes as modelType}
+									<label class="checkbox-label">
+										<input
+											type="checkbox"
+											checked={editingEntity.techTypes?.includes(modelType.id)}
+											onchange={(e) => {
+												if (e.currentTarget.checked) {
+													editingEntity.techTypes = [...(editingEntity.techTypes || []).filter((t: string) => t !== 'all'), modelType.id];
+												} else {
+													editingEntity.techTypes = (editingEntity.techTypes || []).filter((t: string) => t !== modelType.id);
+												}
+											}}
+										/>
+										{modelType.name}
+									</label>
+								{/each}
+							{/if}
+						</div>
 					</div>
 				{/if}
 			</div>
@@ -2375,6 +2590,15 @@
 		flex: 1;
 		overflow: auto;
 		padding: 1rem 0;
+	}
+
+	.controls-matrix-note {
+		padding: 0.5rem 1rem;
+		background: rgba(6, 182, 212, 0.1);
+		border-left: 3px solid #06b6d4;
+		margin-bottom: 0.5rem;
+		font-size: 0.75rem;
+		color: #94a3b8;
 	}
 
 	.matrix {
@@ -3456,6 +3680,28 @@
 		gap: 0.375rem;
 	}
 
+	.checkbox-group {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+	}
+
+	.checkbox-group.tech-types {
+		max-height: 200px;
+		overflow-y: auto;
+		padding: 0.5rem;
+		background: #0f172a;
+		border: 1px solid #334155;
+		border-radius: 0.375rem;
+	}
+
+	.checkbox-group .checkbox-label.all-types {
+		width: 100%;
+		padding-bottom: 0.5rem;
+		margin-bottom: 0.5rem;
+		border-bottom: 1px solid #334155;
+	}
+
 	.checkbox-label {
 		display: flex;
 		align-items: center;
@@ -3625,6 +3871,7 @@
 	.code-badge.mitigation { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
 	.code-badge.question { background: rgba(96, 165, 250, 0.2); color: #60a5fa; }
 	.code-badge.regulation { background: rgba(168, 85, 247, 0.2); color: #a855f7; }
+	.code-badge.control { background: rgba(6, 182, 212, 0.2); color: #06b6d4; }
 
 	.entity-row span:not(.code-badge):not(.readonly-badge) {
 		font-size: 0.75rem;

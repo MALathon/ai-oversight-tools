@@ -1,14 +1,15 @@
 {
   "$schema": "./schemas/traceability.schema.json",
-  "version": "4.0.0",
-  "lastUpdated": "2025-12-13",
+  "version": "5.0.0",
+  "lastUpdated": "2025-12-14",
   "description": "Comprehensive traceability linking questions, risks, mitigations, and regulations based on AIHSR Risk Reference Tool",
   "source": "AIHSR Risk Reference Tool v1.5 (Tamiko Eto) - Map Risk-Mitigation-Prompt sheet",
   "nodes": {
     "questions": "assessment-questions.json",
     "risks": "risk-subdomains.json",
     "mitigations": "mitigation-strategies.json",
-    "regulations": "cfr-regulations.json"
+    "regulations": "cfr-regulations.json",
+    "controls": "technical-controls.json"
   },
   "links": [
     {
@@ -10724,6 +10725,3066 @@
         "entity": "regulation",
         "id": "46.116.a"
       }
+    },
+    {
+      "id": "control-1",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "unfair-discrimination-1.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0707_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-2",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "unfair-discrimination-1.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0709_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-3",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "unfair-discrimination-1.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0788_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-4",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "unfair-discrimination-1.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0989_Gipi\u0161kis2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-5",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "unfair-discrimination-1.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0944_Gipi\u0161kis2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-6",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "unfair-discrimination-1.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0055_Eisenberg2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-7",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "unfair-discrimination-1.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0137_Future of Life Institute2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-8",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "unfair-discrimination-1.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0485_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-9",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "unfair-discrimination-1.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0718_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-10",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "unfair-discrimination-1.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0796_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-11",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "toxic-content-1.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0059_Eisenberg2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-12",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "toxic-content-1.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0060_Eisenberg2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-13",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "toxic-content-1.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0920_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-14",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "toxic-content-1.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0899_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-15",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "toxic-content-1.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0058_Eisenberg2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-16",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "toxic-content-1.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0709_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-17",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "toxic-content-1.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0728_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-18",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "toxic-content-1.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0731_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-19",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "toxic-content-1.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0732_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-20",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "toxic-content-1.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0735_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-21",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "unequal-performance-1.3"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0707_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-22",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "unequal-performance-1.3"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0055_Eisenberg2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-23",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "unequal-performance-1.3"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0056_Eisenberg2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-24",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "unequal-performance-1.3"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0002_Bengio2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-25",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "unequal-performance-1.3"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0010_Bengio2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-26",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "unequal-performance-1.3"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0485_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-27",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "unequal-performance-1.3"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0499_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-28",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "unequal-performance-1.3"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0709_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-29",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "unequal-performance-1.3"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0796_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-30",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "unequal-performance-1.3"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0837_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-31",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "privacy-breach-2.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0067_Eisenberg2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-32",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "privacy-breach-2.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0496_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-33",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "privacy-breach-2.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0068_Eisenberg2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-34",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "privacy-breach-2.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0439_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-35",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "privacy-breach-2.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0465_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-36",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "privacy-breach-2.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0498_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-37",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "privacy-breach-2.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0762_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-38",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "privacy-breach-2.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0811_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-39",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "privacy-breach-2.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0884_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-40",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "privacy-breach-2.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0042_Eisenberg2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-41",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "security-vulnerabilities-2.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0516_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-42",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "security-vulnerabilities-2.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0984_Gipi\u0161kis2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-43",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "security-vulnerabilities-2.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0044_Eisenberg2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-44",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "security-vulnerabilities-2.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0821_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-45",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "security-vulnerabilities-2.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0045_Eisenberg2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-46",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "security-vulnerabilities-2.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0046_Eisenberg2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-47",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "security-vulnerabilities-2.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0147_Future of Life Institute2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-48",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "security-vulnerabilities-2.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0148_Future of Life Institute2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-49",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "security-vulnerabilities-2.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0209_Schuett2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-50",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "security-vulnerabilities-2.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0252_Wiener2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-51",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "false-information-3.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0061_Eisenberg2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-52",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "false-information-3.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0973_Gipi\u0161kis2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-53",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "false-information-3.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0391_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-54",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "false-information-3.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0456_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-55",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "false-information-3.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A1011_Gipi\u0161kis2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-56",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "false-information-3.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0053_Eisenberg2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-57",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "false-information-3.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0402_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-58",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "false-information-3.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0487_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-59",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "false-information-3.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0707_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-60",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "false-information-3.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0953_Gipi\u0161kis2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-61",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "information-pollution-3.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0811_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-62",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "information-pollution-3.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0051_Eisenberg2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-63",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "information-pollution-3.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0056_Eisenberg2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-64",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "information-pollution-3.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0505_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-65",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "information-pollution-3.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0916_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-66",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "information-pollution-3.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0078_Eisenberg2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-67",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "information-pollution-3.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0435_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-68",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "information-pollution-3.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0513_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-69",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "information-pollution-3.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0729_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-70",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "information-pollution-3.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0769_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-71",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "disinformation-surveillance-4.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0111_Future of Life Institute2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-72",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "disinformation-surveillance-4.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0458_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-73",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "disinformation-surveillance-4.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0626_Barrett2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-74",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "disinformation-surveillance-4.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0786_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-75",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "disinformation-surveillance-4.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0065_Eisenberg2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-76",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "disinformation-surveillance-4.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0476_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-77",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "disinformation-surveillance-4.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0484_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-78",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "disinformation-surveillance-4.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0811_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-79",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "disinformation-surveillance-4.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0812_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-80",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "disinformation-surveillance-4.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0890_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-81",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "overreliance-5.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0071_Eisenberg2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-82",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "overreliance-5.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0724_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-83",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "overreliance-5.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0793_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-84",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "overreliance-5.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0986_Gipi\u0161kis2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-85",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "overreliance-5.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0069_Eisenberg2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-86",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "overreliance-5.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0719_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-87",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "overreliance-5.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0725_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-88",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "overreliance-5.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0938_Gipi\u0161kis2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-89",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "overreliance-5.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0159_Future of Life Institute2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-90",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "overreliance-5.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0179_Schuett2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-91",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "loss-of-agency-5.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0071_Eisenberg2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-92",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "loss-of-agency-5.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0632_Barrett2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-93",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "loss-of-agency-5.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0497_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-94",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "loss-of-agency-5.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0722_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-95",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "loss-of-agency-5.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0727_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-96",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "loss-of-agency-5.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0787_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-97",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "loss-of-agency-5.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0861_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-98",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "loss-of-agency-5.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0873_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-99",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "loss-of-agency-5.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0890_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-100",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "loss-of-agency-5.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0950_Gipi\u0161kis2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-101",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "misaligned-goals-7.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0078_Eisenberg2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-102",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "misaligned-goals-7.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0873_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-103",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "misaligned-goals-7.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0980_Gipi\u0161kis2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-104",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "misaligned-goals-7.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0952_Gipi\u0161kis2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-105",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "misaligned-goals-7.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0954_Gipi\u0161kis2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-106",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "misaligned-goals-7.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0035_Casper2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-107",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "misaligned-goals-7.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0629_Barrett2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-108",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "misaligned-goals-7.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0063_Eisenberg2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-109",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "misaligned-goals-7.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0171_Schuett2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-110",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "misaligned-goals-7.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0178_Schuett2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-111",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "dangerous-capabilities-7.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0964_Gipi\u0161kis2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-112",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "dangerous-capabilities-7.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0062_Eisenberg2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-113",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "dangerous-capabilities-7.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0117_Future of Life Institute2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-114",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "dangerous-capabilities-7.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0783_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-115",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "dangerous-capabilities-7.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0058_Eisenberg2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-116",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "dangerous-capabilities-7.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0790_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-117",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "dangerous-capabilities-7.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0892_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-118",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "dangerous-capabilities-7.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0968_Gipi\u0161kis2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-119",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "dangerous-capabilities-7.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A1027_Uuk2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-120",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "dangerous-capabilities-7.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0063_Eisenberg2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-121",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "lack-robustness-7.3"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0054_Eisenberg2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-122",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "lack-robustness-7.3"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A1009_Gipi\u0161kis2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-123",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "lack-robustness-7.3"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0053_Eisenberg2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-124",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "lack-robustness-7.3"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0678_Barrett2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-125",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "lack-robustness-7.3"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0727_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-126",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "lack-robustness-7.3"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0391_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-127",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "lack-robustness-7.3"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0513_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-128",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "lack-robustness-7.3"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0627_Barrett2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-129",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "lack-robustness-7.3"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0957_Gipi\u0161kis2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-130",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "lack-robustness-7.3"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0002_Bengio2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-131",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "lack-transparency-7.4"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0811_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-132",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "lack-transparency-7.4"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0418_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-133",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "lack-transparency-7.4"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0870_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-134",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "lack-transparency-7.4"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0269_EU AI Office2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-135",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "lack-transparency-7.4"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0402_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-136",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "lack-transparency-7.4"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0813_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-137",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "lack-transparency-7.4"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0933_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-138",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "lack-transparency-7.4"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0074_Eisenberg2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-139",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "lack-transparency-7.4"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0389_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-140",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "lack-transparency-7.4"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0527_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-141",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "cyberattacks-mass-harm-4.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0117_Future of Life Institute2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-142",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "cyberattacks-mass-harm-4.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0209_Schuett2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-143",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "cyberattacks-mass-harm-4.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0984_Gipi\u0161kis2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-144",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "cyberattacks-mass-harm-4.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0009_Bengio2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-145",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "cyberattacks-mass-harm-4.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0111_Future of Life Institute2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-146",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "cyberattacks-mass-harm-4.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0514_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-147",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "cyberattacks-mass-harm-4.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0786_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-148",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "cyberattacks-mass-harm-4.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0980_Gipi\u0161kis2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-149",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "cyberattacks-mass-harm-4.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A1036_Uuk2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-150",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "cyberattacks-mass-harm-4.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A1037_Uuk2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-151",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "fraud-manipulation-4.3"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0786_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-152",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "fraud-manipulation-4.3"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0111_Future of Life Institute2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-153",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "fraud-manipulation-4.3"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0458_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-154",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "fraud-manipulation-4.3"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0484_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-155",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "fraud-manipulation-4.3"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0899_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-156",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "fraud-manipulation-4.3"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0902_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-157",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "fraud-manipulation-4.3"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0975_Gipi\u0161kis2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-158",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "fraud-manipulation-4.3"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0986_Gipi\u0161kis2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-159",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "fraud-manipulation-4.3"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A1029_Uuk2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-160",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "fraud-manipulation-4.3"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0063_Eisenberg2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-161",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "power-centralization-6.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0906_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-162",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "power-centralization-6.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0405_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-163",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "power-centralization-6.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0728_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-164",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "power-centralization-6.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0729_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-165",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "power-centralization-6.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0730_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-166",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "power-centralization-6.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0731_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-167",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "power-centralization-6.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0732_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-168",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "power-centralization-6.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0733_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-169",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "power-centralization-6.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0734_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-170",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "power-centralization-6.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0735_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-171",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "inequality-employment-6.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0076_Eisenberg2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-172",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "inequality-employment-6.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0716_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-173",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "inequality-employment-6.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0886_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-174",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "inequality-employment-6.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0006_Bengio2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-175",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "inequality-employment-6.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0008_Bengio2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-176",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "inequality-employment-6.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0072_Eisenberg2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-177",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "inequality-employment-6.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0115_Future of Life Institute2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-178",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "inequality-employment-6.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0445_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-179",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "inequality-employment-6.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0509_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-180",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "inequality-employment-6.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0626_Barrett2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
     }
   ]
 }
