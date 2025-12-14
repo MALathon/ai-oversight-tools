@@ -2217,7 +2217,8 @@
 		padding: 0.5rem;
 		position: sticky;
 		left: 0;
-		z-index: 2;
+		top: 0;
+		z-index: 3;
 	}
 
 	.matrix .col-header {
@@ -2233,7 +2234,7 @@
 		max-width: 2rem;
 		position: sticky;
 		top: 0;
-		z-index: 1;
+		z-index: 2;
 		transition: background 0.1s, color 0.1s;
 	}
 
