@@ -106,66 +106,6 @@
 	let matrixHoverCol = $state<string | null>(null);
 	let showUnlinkedOnly = $state(false);
 
-	// Entity type configuration for Matrix
-	const entityConfig: Record<EntityType, {
-		label: string;
-		shortLabel: string;
-		getAll: () => any[];
-		getLabel: (item: any) => string;
-		getShortLabel: (item: any) => string;
-		searchText: (item: any) => string;
-	}> = {
-		question: {
-			label: 'Questions',
-			shortLabel: 'Q',
-			getAll: () => allQuestions.filter(q => !['phase', 'model-types'].includes(q.id)),
-			getLabel: (q) => q.text,
-			getShortLabel: (q) => q.id,
-			searchText: (q) => q.text + ' ' + q.id
-		},
-		risk: {
-			label: 'Risks',
-			shortLabel: 'Risk',
-			getAll: () => allRisks,
-			getLabel: (r) => r.shortName,
-			getShortLabel: (r) => r.code,
-			searchText: (r) => r.shortName + ' ' + r.name + ' ' + r.code
-		},
-		mitigation: {
-			label: 'Control Categories',
-			shortLabel: 'Mit',
-			getAll: () => allMitigations,
-			getLabel: (m) => m.name,
-			getShortLabel: (m) => m.code,
-			searchText: (m) => m.name + ' ' + m.code
-		},
-		regulation: {
-			label: 'Regulations',
-			shortLabel: 'Reg',
-			getAll: () => allRegulations,
-			getLabel: (r) => r.citation,
-			getShortLabel: (r) => r.citation.split('(')[0].trim(),
-			searchText: (r) => r.citation + ' ' + r.description
-		},
-		control: {
-			label: 'Controls',
-			shortLabel: 'Ctrl',
-			getAll: () => {
-				let filtered = allControls;
-				if (selectedPhase !== 'all') {
-					filtered = filtered.filter(c => c.phases?.includes(selectedPhase));
-				}
-				if (selectedTechType !== 'all') {
-					filtered = filtered.filter(c => c.techTypes?.includes('all') || c.techTypes?.includes(selectedTechType));
-				}
-				return filtered.slice(0, 100); // Limit for performance
-			},
-			getLabel: (c) => c.name,
-			getShortLabel: (c) => c.id.split('_')[0],
-			searchText: (c) => c.name + ' ' + c.id
-		}
-	};
-
 	// Determine link type for entity pair
 	function getLinkTypeForPair(fromType: EntityType, toType: EntityType): string | null {
 		const pairs: Record<string, string> = {
@@ -192,6 +132,13 @@
 		const [canonFrom, canonTo] = canonical[linkType];
 		return fromType === canonTo && toType === canonFrom;
 	}
+
+	// Filter links by phase (must be before getMatrixLink)
+	let filteredLinks = $derived(
+		selectedPhase === 'all'
+			? links
+			: links.filter((l: any) => !l.phases || l.phases.includes(selectedPhase))
+	);
 
 	// Get matrix link for any entity pair
 	function getMatrixLink(rowType: EntityType, rowId: string, colType: EntityType, colId: string): any {
@@ -251,59 +198,6 @@
 			showLinkEditor = true;
 		}
 	}
-
-	// Get matrix items for row/column with filtering
-	let matrixRowItems = $derived.by(() => {
-		const config = entityConfig[matrixRowType];
-		let items = config.getAll();
-		if (searchQuery) {
-			const q = searchQuery.toLowerCase();
-			items = items.filter(item => config.searchText(item).toLowerCase().includes(q));
-		}
-		if (showUnlinkedOnly) {
-			items = items.filter(item => {
-				const link = matrixColItems.some(col => getMatrixLink(matrixRowType, item.id, matrixColType, col.id));
-				return !link;
-			});
-		}
-		return items;
-	});
-
-	let matrixColItems = $derived.by(() => {
-		const config = entityConfig[matrixColType];
-		let items = config.getAll();
-		if (showUnlinkedOnly) {
-			items = items.filter(item => {
-				const link = entityConfig[matrixRowType].getAll().some(row => getMatrixLink(matrixRowType, row.id, matrixColType, item.id));
-				return !link;
-			});
-		}
-		return items;
-	});
-
-	// Check if selected pair has valid link type
-	let matrixPairValid = $derived(getLinkTypeForPair(matrixRowType, matrixColType) !== null);
-
-	// Get hover info for matrix (generic for any row/col type)
-	let matrixHoverInfo = $derived.by(() => {
-		if (!matrixHoverRow && !matrixHoverCol) return null;
-
-		let rowInfo = '';
-		let colInfo = '';
-
-		if (matrixHoverRow) {
-			const rowConfig = entityConfig[matrixRowType];
-			const item = rowConfig.getAll().find((i: any) => i.id === matrixHoverRow);
-			rowInfo = item ? `${rowConfig.getShortLabel(item)}: ${rowConfig.getLabel(item)}` : matrixHoverRow;
-		}
-		if (matrixHoverCol) {
-			const colConfig = entityConfig[matrixColType];
-			const item = colConfig.getAll().find((i: any) => i.id === matrixHoverCol);
-			colInfo = item ? `${colConfig.getShortLabel(item)}: ${colConfig.getLabel(item)}` : matrixHoverCol;
-		}
-
-		return { row: rowInfo, col: colInfo };
-	});
 
 	// Trace view state
 	let traceStartType = $state<'question' | 'risk' | 'control'>('question');
@@ -694,6 +588,119 @@
 	let allRegulations = $derived(editableEntities.regulations ?? defaultRegulations);
 	let allControls = $derived(editableEntities.controls ?? defaultControls);
 
+	// Entity type configuration for Matrix (must be after allQuestions, allRisks, etc. are defined)
+	const entityConfig: Record<EntityType, {
+		label: string;
+		shortLabel: string;
+		getAll: () => any[];
+		getLabel: (item: any) => string;
+		getShortLabel: (item: any) => string;
+		searchText: (item: any) => string;
+	}> = {
+		question: {
+			label: 'Questions',
+			shortLabel: 'Q',
+			getAll: () => allQuestions.filter(q => !['phase', 'model-types'].includes(q.id)),
+			getLabel: (q) => q.text,
+			getShortLabel: (q) => q.id,
+			searchText: (q) => q.text + ' ' + q.id
+		},
+		risk: {
+			label: 'Risks',
+			shortLabel: 'Risk',
+			getAll: () => allRisks,
+			getLabel: (r) => r.shortName,
+			getShortLabel: (r) => r.code,
+			searchText: (r) => r.shortName + ' ' + r.name + ' ' + r.code
+		},
+		mitigation: {
+			label: 'Control Categories',
+			shortLabel: 'Mit',
+			getAll: () => allMitigations,
+			getLabel: (m) => m.name,
+			getShortLabel: (m) => m.code,
+			searchText: (m) => m.name + ' ' + m.code
+		},
+		regulation: {
+			label: 'Regulations',
+			shortLabel: 'Reg',
+			getAll: () => allRegulations,
+			getLabel: (r) => r.citation,
+			getShortLabel: (r) => r.citation.split('(')[0].trim(),
+			searchText: (r) => r.citation + ' ' + r.description
+		},
+		control: {
+			label: 'Controls',
+			shortLabel: 'Ctrl',
+			getAll: () => {
+				let filtered = allControls;
+				if (selectedPhase !== 'all') {
+					filtered = filtered.filter(c => c.phases?.includes(selectedPhase));
+				}
+				if (selectedTechType !== 'all') {
+					filtered = filtered.filter(c => c.techTypes?.includes('all') || c.techTypes?.includes(selectedTechType));
+				}
+				return filtered.slice(0, 100); // Limit for performance
+			},
+			getLabel: (c) => c.name,
+			getShortLabel: (c) => c.id.split('_')[0],
+			searchText: (c) => c.name + ' ' + c.id
+		}
+	};
+
+	// Get matrix items for row/column with filtering
+	let matrixRowItems = $derived.by(() => {
+		const config = entityConfig[matrixRowType];
+		let items = config.getAll();
+		if (searchQuery) {
+			const q = searchQuery.toLowerCase();
+			items = items.filter(item => config.searchText(item).toLowerCase().includes(q));
+		}
+		if (showUnlinkedOnly) {
+			items = items.filter(item => {
+				const link = matrixColItems.some(col => getMatrixLink(matrixRowType, item.id, matrixColType, col.id));
+				return !link;
+			});
+		}
+		return items;
+	});
+
+	let matrixColItems = $derived.by(() => {
+		const config = entityConfig[matrixColType];
+		let items = config.getAll();
+		if (showUnlinkedOnly) {
+			items = items.filter(item => {
+				const link = entityConfig[matrixRowType].getAll().some(row => getMatrixLink(matrixRowType, row.id, matrixColType, item.id));
+				return !link;
+			});
+		}
+		return items;
+	});
+
+	// Check if selected pair has valid link type
+	let matrixPairValid = $derived(getLinkTypeForPair(matrixRowType, matrixColType) !== null);
+
+	// Get hover info for matrix (generic for any row/col type)
+	let matrixHoverInfo = $derived.by(() => {
+		if (!matrixHoverRow && !matrixHoverCol) return null;
+
+		let rowInfo = '';
+		let colInfo = '';
+
+		if (matrixHoverRow) {
+			const rowConfig = entityConfig[matrixRowType];
+			const item = rowConfig.getAll().find((i: any) => i.id === matrixHoverRow);
+			rowInfo = item ? `${rowConfig.getShortLabel(item)}: ${rowConfig.getLabel(item)}` : matrixHoverRow;
+		}
+		if (matrixHoverCol) {
+			const colConfig = entityConfig[matrixColType];
+			const item = colConfig.getAll().find((i: any) => i.id === matrixHoverCol);
+			colInfo = item ? `${colConfig.getShortLabel(item)}: ${colConfig.getLabel(item)}` : matrixHoverCol;
+		}
+
+		return { row: rowInfo, col: colInfo };
+	});
+
 	// Filtered controls for graph view (by phase and tech type)
 	let graphFilteredControls = $derived.by(() => {
 		let filtered = allControls;
@@ -790,13 +797,6 @@
 		stats.total = stats.rows + stats.cols;
 		return stats;
 	});
-
-	// Filter links by phase
-	let filteredLinks = $derived(
-		selectedPhase === 'all'
-			? links
-			: links.filter((l: any) => !l.phases || l.phases.includes(selectedPhase))
-	);
 
 	// Get connections for a node
 	function getConnections(type: string, id: string) {
