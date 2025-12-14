@@ -1,0 +1,432 @@
+{
+  "$schema": "./schemas/traceability.schema.json",
+  "version": "1.0.0",
+  "lastUpdated": "2025-12-13",
+  "description": "Graph-based traceability linking questions, risks, mitigations, and regulations",
+
+  "nodes": {
+    "questions": "assessment-questions.json",
+    "risks": "risk-subdomains.json",
+    "mitigations": "mitigation-strategies.json",
+    "regulations": "cfr-regulations.json"
+  },
+
+  "links": [
+    {
+      "id": "trigger-unfair-discrimination-training-data",
+      "type": "trigger",
+      "from": { "entity": "question", "id": "training-data-diversity" },
+      "to": { "entity": "risk", "id": "unfair-discrimination-1.1" },
+      "answerValues": ["limited", "unknown"],
+      "phases": ["phase-1", "phase-2", "phase-3"],
+      "logic": "OR"
+    },
+    {
+      "id": "trigger-unfair-discrimination-multi-site",
+      "type": "trigger",
+      "from": { "entity": "question", "id": "multi-site" },
+      "to": { "entity": "risk", "id": "unfair-discrimination-1.1" },
+      "answerValues": ["yes"],
+      "phases": ["phase-3"],
+      "logic": "OR"
+    },
+    {
+      "id": "trigger-toxic-content-generates",
+      "type": "trigger",
+      "from": { "entity": "question", "id": "generates-content" },
+      "to": { "entity": "risk", "id": "toxic-content-1.2" },
+      "answerValues": ["yes"],
+      "phases": ["phase-2", "phase-3"],
+      "logic": "AND"
+    },
+    {
+      "id": "trigger-unequal-performance-training-data",
+      "type": "trigger",
+      "from": { "entity": "question", "id": "training-data-diversity" },
+      "to": { "entity": "risk", "id": "unequal-performance-1.3" },
+      "answerValues": ["limited", "unknown"],
+      "phases": ["phase-1", "phase-2", "phase-3"],
+      "logic": "OR"
+    },
+    {
+      "id": "trigger-unequal-performance-multi-site",
+      "type": "trigger",
+      "from": { "entity": "question", "id": "multi-site" },
+      "to": { "entity": "risk", "id": "unequal-performance-1.3" },
+      "answerValues": ["yes"],
+      "phases": ["phase-3"],
+      "logic": "OR"
+    },
+    {
+      "id": "trigger-privacy-breach-patient-data",
+      "type": "trigger",
+      "from": { "entity": "question", "id": "patient-data" },
+      "to": { "entity": "risk", "id": "privacy-breach-2.1" },
+      "answerValues": ["yes"],
+      "phases": ["phase-1", "phase-2", "phase-3"],
+      "logic": "OR"
+    },
+    {
+      "id": "trigger-privacy-breach-external-api",
+      "type": "trigger",
+      "from": { "entity": "question", "id": "external-api" },
+      "to": { "entity": "risk", "id": "privacy-breach-2.1" },
+      "answerValues": ["yes"],
+      "phases": ["phase-2", "phase-3"],
+      "logic": "OR"
+    },
+    {
+      "id": "trigger-security-patient-data",
+      "type": "trigger",
+      "from": { "entity": "question", "id": "patient-data" },
+      "to": { "entity": "risk", "id": "security-vulnerabilities-2.2" },
+      "answerValues": ["yes"],
+      "phases": ["phase-2", "phase-3"],
+      "logic": "OR"
+    },
+    {
+      "id": "trigger-security-external-api",
+      "type": "trigger",
+      "from": { "entity": "question", "id": "external-api" },
+      "to": { "entity": "risk", "id": "security-vulnerabilities-2.2" },
+      "answerValues": ["yes"],
+      "phases": ["phase-2", "phase-3"],
+      "logic": "OR"
+    },
+    {
+      "id": "trigger-false-info-generates",
+      "type": "trigger",
+      "from": { "entity": "question", "id": "generates-content" },
+      "to": { "entity": "risk", "id": "false-information-3.1" },
+      "answerValues": ["yes"],
+      "phases": ["phase-1", "phase-2", "phase-3"],
+      "logic": "OR"
+    },
+    {
+      "id": "trigger-false-info-clinical",
+      "type": "trigger",
+      "from": { "entity": "question", "id": "clinical-decisions" },
+      "to": { "entity": "risk", "id": "false-information-3.1" },
+      "answerValues": ["yes"],
+      "phases": ["phase-1", "phase-2", "phase-3"],
+      "logic": "OR"
+    },
+    {
+      "id": "trigger-info-pollution-generates",
+      "type": "trigger",
+      "from": { "entity": "question", "id": "generates-content" },
+      "to": { "entity": "risk", "id": "information-pollution-3.2" },
+      "answerValues": ["yes"],
+      "phases": ["phase-3"],
+      "logic": "AND"
+    },
+    {
+      "id": "trigger-overreliance-clinical",
+      "type": "trigger",
+      "from": { "entity": "question", "id": "clinical-decisions" },
+      "to": { "entity": "risk", "id": "overreliance-5.1" },
+      "answerValues": ["yes"],
+      "phases": ["phase-2", "phase-3"],
+      "logic": "OR"
+    },
+    {
+      "id": "trigger-overreliance-autonomous",
+      "type": "trigger",
+      "from": { "entity": "question", "id": "autonomous-operation" },
+      "to": { "entity": "risk", "id": "overreliance-5.1" },
+      "answerValues": ["yes"],
+      "phases": ["phase-2"],
+      "logic": "OR"
+    },
+    {
+      "id": "trigger-overreliance-explainability",
+      "type": "trigger",
+      "from": { "entity": "question", "id": "explainability" },
+      "to": { "entity": "risk", "id": "overreliance-5.1" },
+      "answerValues": ["no"],
+      "phases": ["phase-2"],
+      "logic": "OR"
+    },
+    {
+      "id": "trigger-overreliance-oversight",
+      "type": "trigger",
+      "from": { "entity": "question", "id": "human-oversight" },
+      "to": { "entity": "risk", "id": "overreliance-5.1" },
+      "answerValues": ["sometimes", "never"],
+      "phases": ["phase-3"],
+      "logic": "OR"
+    },
+    {
+      "id": "trigger-overreliance-realtime",
+      "type": "trigger",
+      "from": { "entity": "question", "id": "real-time" },
+      "to": { "entity": "risk", "id": "overreliance-5.1" },
+      "answerValues": ["yes"],
+      "phases": ["phase-3"],
+      "logic": "OR"
+    },
+    {
+      "id": "trigger-loss-agency-clinical",
+      "type": "trigger",
+      "from": { "entity": "question", "id": "clinical-decisions" },
+      "to": { "entity": "risk", "id": "loss-of-agency-5.2" },
+      "answerValues": ["yes"],
+      "phases": ["phase-2", "phase-3"],
+      "logic": "OR"
+    },
+    {
+      "id": "trigger-loss-agency-autonomous",
+      "type": "trigger",
+      "from": { "entity": "question", "id": "autonomous-operation" },
+      "to": { "entity": "risk", "id": "loss-of-agency-5.2" },
+      "answerValues": ["yes"],
+      "phases": ["phase-2", "phase-3"],
+      "logic": "OR"
+    },
+    {
+      "id": "trigger-loss-agency-oversight",
+      "type": "trigger",
+      "from": { "entity": "question", "id": "human-oversight" },
+      "to": { "entity": "risk", "id": "loss-of-agency-5.2" },
+      "answerValues": ["never"],
+      "phases": ["phase-3"],
+      "logic": "OR"
+    },
+    {
+      "id": "trigger-governance-training-unknown",
+      "type": "trigger",
+      "from": { "entity": "question", "id": "training-data-diversity" },
+      "to": { "entity": "risk", "id": "governance-failure-6.5" },
+      "answerValues": ["unknown"],
+      "phases": ["phase-1"],
+      "logic": "OR"
+    },
+    {
+      "id": "trigger-governance-external-api",
+      "type": "trigger",
+      "from": { "entity": "question", "id": "external-api" },
+      "to": { "entity": "risk", "id": "governance-failure-6.5" },
+      "answerValues": ["yes"],
+      "phases": ["phase-2", "phase-3"],
+      "logic": "OR"
+    },
+    {
+      "id": "trigger-governance-autonomous",
+      "type": "trigger",
+      "from": { "entity": "question", "id": "autonomous-operation" },
+      "to": { "entity": "risk", "id": "governance-failure-6.5" },
+      "answerValues": ["yes"],
+      "phases": ["phase-2"],
+      "logic": "OR"
+    },
+    {
+      "id": "trigger-governance-oversight",
+      "type": "trigger",
+      "from": { "entity": "question", "id": "human-oversight" },
+      "to": { "entity": "risk", "id": "governance-failure-6.5" },
+      "answerValues": ["never"],
+      "phases": ["phase-3"],
+      "logic": "OR"
+    },
+    {
+      "id": "trigger-governance-multi-site",
+      "type": "trigger",
+      "from": { "entity": "question", "id": "multi-site" },
+      "to": { "entity": "risk", "id": "governance-failure-6.5" },
+      "answerValues": ["yes"],
+      "phases": ["phase-3"],
+      "logic": "OR"
+    },
+    {
+      "id": "trigger-misaligned-autonomous",
+      "type": "trigger",
+      "from": { "entity": "question", "id": "autonomous-operation" },
+      "to": { "entity": "risk", "id": "misaligned-goals-7.1" },
+      "answerValues": ["yes"],
+      "phases": ["phase-1", "phase-2", "phase-3"],
+      "logic": "AND"
+    },
+    {
+      "id": "trigger-robustness-clinical",
+      "type": "trigger",
+      "from": { "entity": "question", "id": "clinical-decisions" },
+      "to": { "entity": "risk", "id": "lack-robustness-7.3" },
+      "answerValues": ["yes"],
+      "phases": ["phase-2", "phase-3"],
+      "logic": "OR"
+    },
+    {
+      "id": "trigger-robustness-realtime",
+      "type": "trigger",
+      "from": { "entity": "question", "id": "real-time" },
+      "to": { "entity": "risk", "id": "lack-robustness-7.3" },
+      "answerValues": ["yes"],
+      "phases": ["phase-3"],
+      "logic": "OR"
+    },
+    {
+      "id": "trigger-transparency-explainability",
+      "type": "trigger",
+      "from": { "entity": "question", "id": "explainability" },
+      "to": { "entity": "risk", "id": "lack-transparency-7.4" },
+      "answerValues": ["partial", "no"],
+      "phases": ["phase-1", "phase-2", "phase-3"],
+      "logic": "AND"
+    },
+
+    {
+      "id": "mitigation-unfair-discrimination-testing",
+      "type": "mitigation",
+      "from": { "entity": "risk", "id": "unfair-discrimination-1.1" },
+      "to": { "entity": "mitigation", "id": "testing-auditing-3.1" },
+      "phases": ["phase-2", "phase-3"],
+      "guidance": {
+        "phase-1": "Document training data sources, demographics, and collection methods. Identify potential sources of bias.",
+        "phase-2": "Conduct bias testing across demographic subgroups. Measure performance disparities.",
+        "phase-3": "Implement continuous monitoring for disparate outcomes. Establish feedback mechanisms."
+      }
+    },
+    {
+      "id": "mitigation-unfair-discrimination-data-gov",
+      "type": "mitigation",
+      "from": { "entity": "risk", "id": "unfair-discrimination-1.1" },
+      "to": { "entity": "mitigation", "id": "data-governance-3.2" },
+      "phases": ["phase-1"],
+      "guidance": {
+        "phase-1": "Plan for diverse data collection or augmentation strategies."
+      }
+    },
+    {
+      "id": "mitigation-privacy-data-gov",
+      "type": "mitigation",
+      "from": { "entity": "risk", "id": "privacy-breach-2.1" },
+      "to": { "entity": "mitigation", "id": "data-governance-3.2" },
+      "phases": ["phase-1", "phase-2", "phase-3"],
+      "guidance": {
+        "phase-1": "Establish data governance framework. Implement de-identification procedures. Obtain appropriate IRB/ethics approval.",
+        "phase-2": "Validate de-identification. Test for re-identification risks. Ensure secure data handling in test environments.",
+        "phase-3": "Implement access controls and audit logging. Conduct regular privacy assessments."
+      }
+    },
+    {
+      "id": "mitigation-privacy-incident",
+      "type": "mitigation",
+      "from": { "entity": "risk", "id": "privacy-breach-2.1" },
+      "to": { "entity": "mitigation", "id": "incident-response-3.6" },
+      "phases": ["phase-3"],
+      "guidance": {
+        "phase-3": "Establish breach response procedures."
+      }
+    },
+    {
+      "id": "mitigation-security-infrastructure",
+      "type": "mitigation",
+      "from": { "entity": "risk", "id": "security-vulnerabilities-2.2" },
+      "to": { "entity": "mitigation", "id": "infrastructure-security-2.1" },
+      "phases": ["phase-2", "phase-3"],
+      "guidance": {
+        "phase-2": "Conduct security assessment. Test API security. Validate encryption and access controls.",
+        "phase-3": "Implement security monitoring. Conduct penetration testing. Maintain security patches and updates."
+      }
+    },
+    {
+      "id": "mitigation-false-info-testing",
+      "type": "mitigation",
+      "from": { "entity": "risk", "id": "false-information-3.1" },
+      "to": { "entity": "mitigation", "id": "testing-auditing-3.1" },
+      "phases": ["phase-1", "phase-2", "phase-3"],
+      "guidance": {
+        "phase-1": "Plan validation against authoritative sources. Define accuracy requirements.",
+        "phase-2": "Test for hallucinations and factual errors. Validate against clinical guidelines and evidence.",
+        "phase-3": "Implement fact-checking mechanisms. Display confidence levels. Enable clinician verification workflows."
+      }
+    },
+    {
+      "id": "mitigation-overreliance-documentation",
+      "type": "mitigation",
+      "from": { "entity": "risk", "id": "overreliance-5.1" },
+      "to": { "entity": "mitigation", "id": "documentation-4.1" },
+      "phases": ["phase-2", "phase-3"],
+      "guidance": {
+        "phase-2": "Train users on appropriate AI reliance. Test with realistic scenarios.",
+        "phase-3": "Implement friction for high-stakes decisions. Require periodic manual verification."
+      }
+    },
+    {
+      "id": "mitigation-governance-board",
+      "type": "mitigation",
+      "from": { "entity": "risk", "id": "governance-failure-6.5" },
+      "to": { "entity": "mitigation", "id": "board-oversight-1.1" },
+      "phases": ["phase-1", "phase-2", "phase-3"],
+      "guidance": {
+        "phase-1": "Establish AI governance committee. Define roles and responsibilities. Create documentation standards.",
+        "phase-2": "Implement change management processes. Conduct governance reviews.",
+        "phase-3": "Maintain governance oversight. Conduct regular audits. Ensure accountability structures across deployment sites."
+      }
+    },
+
+    {
+      "id": "reg-unfair-discrimination-equitable",
+      "type": "regulation",
+      "from": { "entity": "risk", "id": "unfair-discrimination-1.1" },
+      "to": { "entity": "regulation", "id": "46.111.a.3" },
+      "note": "Equitable subject selection requirement"
+    },
+    {
+      "id": "reg-unfair-discrimination-fda",
+      "type": "regulation",
+      "from": { "entity": "risk", "id": "unfair-discrimination-1.1" },
+      "to": { "entity": "regulation", "id": "56.111.a.3" },
+      "note": "FDA equitable selection"
+    },
+    {
+      "id": "reg-privacy-confidentiality",
+      "type": "regulation",
+      "from": { "entity": "risk", "id": "privacy-breach-2.1" },
+      "to": { "entity": "regulation", "id": "46.111.a.7" },
+      "note": "Privacy and confidentiality protections"
+    },
+    {
+      "id": "reg-privacy-hipaa",
+      "type": "regulation",
+      "from": { "entity": "risk", "id": "privacy-breach-2.1" },
+      "to": { "entity": "regulation", "id": "164.512.b" },
+      "note": "HIPAA research use of PHI"
+    },
+    {
+      "id": "reg-security-capa",
+      "type": "regulation",
+      "from": { "entity": "risk", "id": "security-vulnerabilities-2.2" },
+      "to": { "entity": "regulation", "id": "820.100" },
+      "note": "Corrective and Preventive Actions"
+    },
+    {
+      "id": "reg-false-info-consent",
+      "type": "regulation",
+      "from": { "entity": "risk", "id": "false-information-3.1" },
+      "to": { "entity": "regulation", "id": "46.116.a" },
+      "note": "Informed consent accuracy"
+    },
+    {
+      "id": "reg-overreliance-risk-benefit",
+      "type": "regulation",
+      "from": { "entity": "risk", "id": "overreliance-5.1" },
+      "to": { "entity": "regulation", "id": "812.30.b.4" },
+      "note": "Risk/benefit analysis in IDE"
+    },
+    {
+      "id": "reg-loss-agency-withdraw",
+      "type": "regulation",
+      "from": { "entity": "risk", "id": "loss-of-agency-5.2" },
+      "to": { "entity": "regulation", "id": "46.116.a.8" },
+      "note": "Consent can be withdrawn"
+    },
+    {
+      "id": "reg-transparency-consent",
+      "type": "regulation",
+      "from": { "entity": "risk", "id": "lack-transparency-7.4" },
+      "to": { "entity": "regulation", "id": "46.116.a" },
+      "note": "Adequate explanation in consent"
+    }
+  ]
+}

@@ -4,8 +4,7 @@
 	let { data }: { data: PageData } = $props();
 
 	// Deep clone editable data
-	let questions = $state(JSON.parse(JSON.stringify(data.questionCategories)));
-	let riskConfigs = $state(JSON.parse(JSON.stringify(data.riskConfigurations)));
+	let links = $state(JSON.parse(JSON.stringify(data.traceability.links)));
 
 	const phases = [
 		{ id: 'phase-1', name: 'Phase 1: Discovery', short: 'P1' },
@@ -14,34 +13,17 @@
 	];
 
 	// UI State
-	let selectedRiskId = $state<string | null>(null);
-	let showQuestionManager = $state(false);
-	let showAddTriggerModal = $state(false);
-	let pendingTrigger = $state<{ riskId: string; phase: string } | null>(null);
+	let selectedPhase = $state<string>('all');
+	let selectedNode = $state<{ type: string; id: string } | null>(null);
+	let connectingFrom = $state<{ type: string; id: string } | null>(null);
+	let showLinkEditor = $state(false);
+	let editingLink = $state<any>(null);
 	let searchQuery = $state('');
 
-	// New question form
-	let showAddQuestionModal = $state(false);
-	let newQuestion = $state({
-		id: '',
-		question: '',
-		type: 'yes-no' as 'yes-no' | 'single-select' | 'multi-select',
-		category: '',
-		options: [] as Array<{ value: string; label: string }>
-	});
-
-	// Build flat list of all questions with their options
+	// Build flat lists for each entity type
 	let allQuestions = $derived.by(() => {
-		const items: Array<{
-			id: string;
-			question: string;
-			type: string;
-			categoryId: string;
-			categoryName: string;
-			options: Array<{ value: string; label: string }>;
-		}> = [];
-
-		for (const cat of questions) {
+		const items: Array<{ id: string; text: string; type: string; category: string; options: Array<{ value: string; label: string }> }> = [];
+		for (const cat of data.questionCategories) {
 			for (const q of cat.questions) {
 				let options: Array<{ value: string; label: string }> = [];
 				if (q.type === 'yes-no') {
@@ -49,518 +31,587 @@
 				} else if (q.options) {
 					options = q.options.map((o: any) => ({ value: o.value, label: o.label }));
 				}
-				items.push({
-					id: q.id,
-					question: q.question,
-					type: q.type,
-					categoryId: cat.id,
-					categoryName: cat.name,
-					options
-				});
+				items.push({ id: q.id, text: q.question, type: q.type, category: cat.name, options });
 			}
 		}
 		return items;
 	});
 
-	// Build risk list
-	let risks = $derived(
-		data.domains.flatMap((d: any) =>
-			d.subdomains.map((subId: string) => {
-				const sub = data.subdomains.find((s: any) => s.id === subId);
-				return sub ? { ...sub, domainName: d.name, domainCode: d.code } : null;
-			}).filter(Boolean)
-		)
+	let allRisks = $derived(data.subdomains.map((s: any) => ({
+		id: s.id,
+		code: s.code,
+		name: s.name,
+		shortName: s.shortName,
+		domain: s.domain
+	})));
+
+	let allMitigations = $derived.by(() => {
+		const items: Array<{ id: string; code: string; name: string; category: string }> = [];
+		for (const cat of data.mitigationCategories) {
+			for (const m of cat.strategies) {
+				items.push({ id: m.id, code: m.code, name: m.name, category: cat.name });
+			}
+		}
+		return items;
+	});
+
+	let allRegulations = $derived.by(() => {
+		const items: Array<{ id: string; citation: string; description: string; framework: string }> = [];
+		for (const [key, reg] of Object.entries(data.regulations) as [string, any][]) {
+			for (const sec of reg.sections) {
+				items.push({ id: sec.id, citation: sec.citation, description: sec.description, framework: reg.title });
+			}
+		}
+		return items;
+	});
+
+	// Filter links by phase
+	let filteredLinks = $derived(
+		selectedPhase === 'all'
+			? links
+			: links.filter((l: any) => !l.phases || l.phases.includes(selectedPhase))
 	);
 
-	// Filter risks
-	let filteredRisks = $derived(
-		risks.filter((r: any) =>
-			searchQuery === '' ||
-			r.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-			r.shortName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-			r.code.toLowerCase().includes(searchQuery.toLowerCase())
-		)
-	);
-
-	// Selected risk
-	let selectedRisk = $derived(risks.find((r: any) => r.id === selectedRiskId));
-
-	// Ensure risk config exists
-	function ensureRiskConfig(riskId: string) {
-		if (!riskConfigs[riskId]) {
-			riskConfigs[riskId] = {
-				riskId,
-				applicablePhases: [],
-				phaseTriggers: {},
-				phaseMitigations: {}
-			};
-		}
-	}
-
-	// Check if phase is enabled
-	function isPhaseEnabled(riskId: string, phase: string): boolean {
-		return riskConfigs[riskId]?.applicablePhases?.includes(phase) || false;
-	}
-
-	// Toggle phase
-	function togglePhase(riskId: string, phase: string) {
-		ensureRiskConfig(riskId);
-		const phases = riskConfigs[riskId].applicablePhases;
-		if (phases.includes(phase)) {
-			riskConfigs[riskId].applicablePhases = phases.filter((p: string) => p !== phase);
-			delete riskConfigs[riskId].phaseTriggers[phase];
-			delete riskConfigs[riskId].phaseMitigations[phase];
-		} else {
-			riskConfigs[riskId].applicablePhases = [...phases, phase];
-			riskConfigs[riskId].phaseTriggers[phase] = { logic: 'OR', conditions: [] };
-			riskConfigs[riskId].phaseMitigations[phase] = '';
-		}
-	}
-
-	// Get triggers for phase
-	function getTriggers(riskId: string, phase: string) {
-		return riskConfigs[riskId]?.phaseTriggers?.[phase]?.conditions || [];
-	}
-
-	// Get trigger logic
-	function getTriggerLogic(riskId: string, phase: string): string {
-		return riskConfigs[riskId]?.phaseTriggers?.[phase]?.logic || 'OR';
-	}
-
-	// Toggle trigger logic
-	function toggleLogic(riskId: string, phase: string) {
-		if (!riskConfigs[riskId]?.phaseTriggers?.[phase]) return;
-		const current = riskConfigs[riskId].phaseTriggers[phase].logic;
-		riskConfigs[riskId].phaseTriggers[phase].logic = current === 'AND' ? 'OR' : 'AND';
-	}
-
-	// Add trigger
-	function addTrigger(riskId: string, phase: string, questionId: string, answerValues: string[]) {
-		ensureRiskConfig(riskId);
-		if (!riskConfigs[riskId].phaseTriggers[phase]) {
-			riskConfigs[riskId].phaseTriggers[phase] = { logic: 'OR', conditions: [] };
-		}
-		const existing = riskConfigs[riskId].phaseTriggers[phase].conditions.find(
-			(c: any) => c.questionId === questionId
+	// Get connections for a node
+	function getConnections(type: string, id: string) {
+		return filteredLinks.filter((l: any) =>
+			(l.from.entity === type && l.from.id === id) ||
+			(l.to.entity === type && l.to.id === id)
 		);
-		if (existing) {
-			existing.answerValues = answerValues;
-		} else {
-			riskConfigs[riskId].phaseTriggers[phase].conditions.push({ questionId, answerValues });
-		}
 	}
 
-	// Remove trigger
-	function removeTrigger(riskId: string, phase: string, questionId: string) {
-		if (!riskConfigs[riskId]?.phaseTriggers?.[phase]) return;
-		riskConfigs[riskId].phaseTriggers[phase].conditions =
-			riskConfigs[riskId].phaseTriggers[phase].conditions.filter(
-				(c: any) => c.questionId !== questionId
-			);
+	// Check if node is connected to selected
+	function isConnected(type: string, id: string): boolean {
+		if (!selectedNode) return false;
+		return filteredLinks.some((l: any) =>
+			(l.from.entity === selectedNode.type && l.from.id === selectedNode.id && l.to.entity === type && l.to.id === id) ||
+			(l.to.entity === selectedNode.type && l.to.id === selectedNode.id && l.from.entity === type && l.from.id === id) ||
+			(l.from.entity === type && l.from.id === id && l.to.entity === selectedNode.type && l.to.id === selectedNode.id) ||
+			(l.to.entity === type && l.to.id === id && l.from.entity === selectedNode.type && l.from.id === selectedNode.id)
+		);
 	}
 
-	// Get mitigation
-	function getMitigation(riskId: string, phase: string): string {
-		return riskConfigs[riskId]?.phaseMitigations?.[phase] || '';
+	// Get link between two nodes
+	function getLinkBetween(type1: string, id1: string, type2: string, id2: string) {
+		return links.find((l: any) =>
+			(l.from.entity === type1 && l.from.id === id1 && l.to.entity === type2 && l.to.id === id2) ||
+			(l.from.entity === type2 && l.from.id === id2 && l.to.entity === type1 && l.to.id === id1)
+		);
 	}
 
-	// Update mitigation
-	function updateMitigation(riskId: string, phase: string, text: string) {
-		ensureRiskConfig(riskId);
-		if (!riskConfigs[riskId].phaseMitigations) {
-			riskConfigs[riskId].phaseMitigations = {};
-		}
-		riskConfigs[riskId].phaseMitigations[phase] = text;
-	}
+	// Handle node click
+	function handleNodeClick(type: string, id: string) {
+		if (connectingFrom) {
+			// We're in connection mode
+			if (connectingFrom.type === type && connectingFrom.id === id) {
+				// Clicked same node, cancel
+				connectingFrom = null;
+			} else {
+				// Create or edit link
+				const existing = getLinkBetween(connectingFrom.type, connectingFrom.id, type, id);
+				if (existing) {
+					editingLink = existing;
+					showLinkEditor = true;
+				} else {
+					// Determine link type based on node types
+					let linkType = 'custom';
+					if (connectingFrom.type === 'question' && type === 'risk') linkType = 'trigger';
+					else if (connectingFrom.type === 'risk' && type === 'question') linkType = 'trigger';
+					else if ((connectingFrom.type === 'risk' && type === 'mitigation') || (connectingFrom.type === 'mitigation' && type === 'risk')) linkType = 'mitigation';
+					else if ((connectingFrom.type === 'risk' && type === 'regulation') || (connectingFrom.type === 'regulation' && type === 'risk')) linkType = 'regulation';
 
-	// Get question by ID
-	function getQuestion(questionId: string) {
-		return allQuestions.find(q => q.id === questionId);
-	}
+					const fromNode = connectingFrom.type === 'question' || connectingFrom.type === 'risk' ? connectingFrom : { type, id };
+					const toNode = connectingFrom.type === 'question' || connectingFrom.type === 'risk' ? { type, id } : connectingFrom;
 
-	// Check if trigger already exists
-	function hasTrigger(riskId: string, phase: string, questionId: string): boolean {
-		return getTriggers(riskId, phase).some((c: any) => c.questionId === questionId);
-	}
-
-	// Question CRUD
-	function addQuestion() {
-		if (!newQuestion.id || !newQuestion.question || !newQuestion.category) return;
-		const category = questions.find((c: any) => c.id === newQuestion.category);
-		if (!category) return;
-
-		const questionObj: any = {
-			id: newQuestion.id,
-			question: newQuestion.question,
-			type: newQuestion.type,
-			required: true,
-			triggers: {}
-		};
-		if (newQuestion.type !== 'yes-no' && newQuestion.options.length > 0) {
-			questionObj.options = newQuestion.options;
-		}
-		category.questions.push(questionObj);
-		newQuestion = { id: '', question: '', type: 'yes-no', category: '', options: [] };
-		showAddQuestionModal = false;
-	}
-
-	function deleteQuestion(questionId: string) {
-		if (!confirm('Delete this question? All its triggers will be removed.')) return;
-		for (const cat of questions) {
-			cat.questions = cat.questions.filter((q: any) => q.id !== questionId);
-		}
-		// Remove from all risk configs
-		for (const riskId of Object.keys(riskConfigs)) {
-			for (const phase of Object.keys(riskConfigs[riskId].phaseTriggers || {})) {
-				if (riskConfigs[riskId].phaseTriggers[phase]?.conditions) {
-					riskConfigs[riskId].phaseTriggers[phase].conditions =
-						riskConfigs[riskId].phaseTriggers[phase].conditions.filter(
-							(c: any) => c.questionId !== questionId
-						);
+					editingLink = {
+						id: `link-${Date.now()}`,
+						type: linkType,
+						from: { entity: fromNode.type, id: fromNode.id },
+						to: { entity: toNode.type, id: toNode.id },
+						phases: ['phase-1', 'phase-2', 'phase-3'],
+						answerValues: [],
+						logic: 'OR',
+						guidance: {}
+					};
+					showLinkEditor = true;
 				}
+				connectingFrom = null;
+			}
+		} else {
+			// Select or deselect
+			if (selectedNode?.type === type && selectedNode?.id === id) {
+				selectedNode = null;
+			} else {
+				selectedNode = { type, id };
 			}
 		}
 	}
 
-	function addOption() {
-		newQuestion.options = [...newQuestion.options, { value: '', label: '' }];
+	// Start connection
+	function startConnect(type: string, id: string, e: Event) {
+		e.stopPropagation();
+		connectingFrom = { type, id };
+		selectedNode = null;
 	}
 
-	function removeOption(index: number) {
-		newQuestion.options = newQuestion.options.filter((_, i) => i !== index);
+	// Save link
+	function saveLink() {
+		if (!editingLink) return;
+		const idx = links.findIndex((l: any) => l.id === editingLink.id);
+		if (idx >= 0) {
+			links[idx] = editingLink;
+		} else {
+			links = [...links, editingLink];
+		}
+		showLinkEditor = false;
+		editingLink = null;
+	}
+
+	// Delete link
+	function deleteLink() {
+		if (!editingLink) return;
+		links = links.filter((l: any) => l.id !== editingLink.id);
+		showLinkEditor = false;
+		editingLink = null;
+	}
+
+	// Get entity display info
+	function getQuestion(id: string) { return allQuestions.find(q => q.id === id); }
+	function getRisk(id: string) { return allRisks.find((r: any) => r.id === id); }
+	function getMitigation(id: string) { return allMitigations.find(m => m.id === id); }
+	function getRegulation(id: string) { return allRegulations.find(r => r.id === id); }
+
+	function getEntityName(entity: string, id: string): string {
+		if (entity === 'question') return getQuestion(id)?.text || id;
+		if (entity === 'risk') return getRisk(id)?.shortName || id;
+		if (entity === 'mitigation') return getMitigation(id)?.name || id;
+		if (entity === 'regulation') return getRegulation(id)?.citation || id;
+		return id;
 	}
 
 	// Export
 	function exportConfig() {
-		const riskConfigOutput = {
-			"$schema": "./schemas/risk-configurations.schema.json",
+		const output = {
+			"$schema": "./schemas/traceability.schema.json",
 			"version": "1.0.0",
 			"lastUpdated": new Date().toISOString().split('T')[0],
-			"description": "Phase-aware risk configurations with triggers and mitigations",
-			"configurations": riskConfigs
+			"description": "Graph-based traceability",
+			"nodes": data.traceability.nodes,
+			"links": links
 		};
-		const blob1 = new Blob([JSON.stringify(riskConfigOutput, null, 2)], { type: 'application/json' });
-		const url1 = URL.createObjectURL(blob1);
-		const a1 = document.createElement('a');
-		a1.href = url1;
-		a1.download = 'risk-configurations.json';
-		a1.click();
-		URL.revokeObjectURL(url1);
-
-		setTimeout(() => {
-			const questionsOutput = {
-				"$schema": "./schemas/assessment-questions.schema.json",
-				"version": "1.1.0",
-				"lastUpdated": new Date().toISOString().split('T')[0],
-				"source": "Derived from AIHSR Risk Reference Tool v1.5",
-				"description": "Assessment questions",
-				"questionCategories": questions
-			};
-			const blob2 = new Blob([JSON.stringify(questionsOutput, null, 2)], { type: 'application/json' });
-			const url2 = URL.createObjectURL(blob2);
-			const a2 = document.createElement('a');
-			a2.href = url2;
-			a2.download = 'assessment-questions.json';
-			a2.click();
-			URL.revokeObjectURL(url2);
-		}, 500);
+		const blob = new Blob([JSON.stringify(output, null, 2)], { type: 'application/json' });
+		const url = URL.createObjectURL(blob);
+		const a = document.createElement('a');
+		a.href = url;
+		a.download = 'traceability.json';
+		a.click();
+		URL.revokeObjectURL(url);
 	}
 
-	// Count configured phases for a risk
-	function getConfiguredPhaseCount(riskId: string): number {
-		return riskConfigs[riskId]?.applicablePhases?.length || 0;
+	// Filter entities by search
+	function filterBySearch<T extends { id: string }>(items: T[], getText: (item: T) => string): T[] {
+		if (!searchQuery) return items;
+		const q = searchQuery.toLowerCase();
+		return items.filter(item => getText(item).toLowerCase().includes(q) || item.id.toLowerCase().includes(q));
 	}
+
+	// Count links for a node
+	function getLinkCount(type: string, id: string): number {
+		return filteredLinks.filter((l: any) =>
+			(l.from.entity === type && l.from.id === id) ||
+			(l.to.entity === type && l.to.id === id)
+		).length;
+	}
+
+	// Get selected node details
+	let selectedDetails = $derived.by(() => {
+		if (!selectedNode) return null;
+		const { type, id } = selectedNode;
+		const connections = getConnections(type, id);
+
+		if (type === 'question') {
+			const q = getQuestion(id);
+			return { type, item: q, connections };
+		} else if (type === 'risk') {
+			const r = getRisk(id);
+			return { type, item: r, connections };
+		} else if (type === 'mitigation') {
+			const m = getMitigation(id);
+			return { type, item: m, connections };
+		} else if (type === 'regulation') {
+			const r = getRegulation(id);
+			return { type, item: r, connections };
+		}
+		return null;
+	});
 </script>
 
 <svelte:head>
-	<title>Risk Configuration - AI Oversight Tools</title>
+	<title>Traceability Admin - AI Oversight Tools</title>
 </svelte:head>
 
 <div class="admin">
 	<header class="header">
-		<h1>Risk Configuration</h1>
-		<div class="header-actions">
-			<button class="btn" onclick={() => showQuestionManager = !showQuestionManager}>
-				{showQuestionManager ? 'Hide' : 'Manage'} Questions
-			</button>
-			<button class="btn primary" onclick={exportConfig}>Export Config</button>
+		<div class="header-left">
+			<h1>Traceability</h1>
+			<div class="phase-filter">
+				<button class:active={selectedPhase === 'all'} onclick={() => selectedPhase = 'all'}>All</button>
+				{#each phases as phase}
+					<button class:active={selectedPhase === phase.id} onclick={() => selectedPhase = phase.id}>{phase.short}</button>
+				{/each}
+			</div>
+		</div>
+		<div class="header-right">
+			<input type="text" placeholder="Search..." bind:value={searchQuery} class="search" />
+			<button class="btn primary" onclick={exportConfig}>Export</button>
 		</div>
 	</header>
 
+	{#if connectingFrom}
+		<div class="connection-banner">
+			Connecting from: <strong>{getEntityName(connectingFrom.type, connectingFrom.id)}</strong>
+			<button onclick={() => connectingFrom = null}>Cancel</button>
+		</div>
+	{/if}
+
 	<div class="layout">
-		<!-- Left: Risk List -->
-		<aside class="sidebar">
-			<input
-				type="text"
-				placeholder="Search risks..."
-				bind:value={searchQuery}
-				class="search"
-			/>
-
-			<div class="risk-list">
-				{#each filteredRisks as risk}
-					{@const phaseCount = getConfiguredPhaseCount(risk.id)}
-					<button
-						class="risk-item"
-						class:selected={selectedRiskId === risk.id}
-						onclick={() => selectedRiskId = risk.id}
-					>
-						<div class="risk-item-header">
-							<span class="risk-code">{risk.code}</span>
-							{#if phaseCount > 0}
-								<span class="phase-count">{phaseCount} phase{phaseCount !== 1 ? 's' : ''}</span>
-							{/if}
-						</div>
-						<div class="risk-name">{risk.shortName}</div>
-						<div class="risk-domain">{risk.domainCode}</div>
-					</button>
-				{/each}
-			</div>
-		</aside>
-
-		<!-- Right: Risk Configuration -->
-		<main class="main">
-			{#if selectedRisk}
-				<div class="risk-config">
-					<div class="risk-header">
-						<span class="risk-code-large">{selectedRisk.code}</span>
-						<h2>{selectedRisk.name}</h2>
-					</div>
-					<p class="risk-description">{selectedRisk.description}</p>
-
-					<!-- Phase Configurations -->
-					<div class="phases">
-						{#each phases as phase}
-							{@const enabled = isPhaseEnabled(selectedRisk.id, phase.id)}
-							{@const triggers = getTriggers(selectedRisk.id, phase.id)}
-							{@const logic = getTriggerLogic(selectedRisk.id, phase.id)}
-
-							<div class="phase-card" class:enabled>
-								<div class="phase-header">
-									<button
-										class="phase-toggle"
-										class:on={enabled}
-										onclick={() => togglePhase(selectedRisk.id, phase.id)}
-									>
-										{enabled ? '✓' : '○'}
-									</button>
-									<h3>{phase.name}</h3>
-								</div>
-
-								{#if enabled}
-									<div class="phase-content">
-										<!-- Triggers -->
-										<div class="triggers-section">
-											<div class="triggers-header">
-												<span class="triggers-label">Triggers</span>
-												{#if triggers.length > 1}
-													<button
-														class="logic-btn"
-														onclick={() => toggleLogic(selectedRisk.id, phase.id)}
-													>
-														{logic}
-													</button>
-												{/if}
-											</div>
-
-											{#if triggers.length > 0}
-												<div class="trigger-list">
-													{#each triggers as trigger}
-														{@const q = getQuestion(trigger.questionId)}
-														{#if q}
-															<div class="trigger-item">
-																<div class="trigger-content">
-																	<span class="trigger-question">{q.question}</span>
-																	<span class="trigger-values">= {trigger.answerValues.join(' or ')}</span>
-																</div>
-																<button
-																	class="remove-btn"
-																	onclick={() => removeTrigger(selectedRisk.id, phase.id, trigger.questionId)}
-																>×</button>
-															</div>
-														{/if}
-													{/each}
-												</div>
-											{:else}
-												<div class="no-triggers">No triggers configured</div>
-											{/if}
-
-											<button
-												class="add-trigger-btn"
-												onclick={() => {
-													pendingTrigger = { riskId: selectedRisk.id, phase: phase.id };
-													showAddTriggerModal = true;
-												}}
-											>+ Add Trigger</button>
-										</div>
-
-										<!-- Mitigation -->
-										<div class="mitigation-section">
-											<label for="mit-{selectedRisk.id}-{phase.id}">Mitigation Guidance</label>
-											<textarea
-												id="mit-{selectedRisk.id}-{phase.id}"
-												value={getMitigation(selectedRisk.id, phase.id)}
-												oninput={(e) => updateMitigation(selectedRisk.id, phase.id, e.currentTarget.value)}
-												rows="3"
-												placeholder="Enter mitigation guidance for this phase..."
-											></textarea>
-										</div>
-									</div>
+		<!-- Four Columns -->
+		<div class="columns">
+			<!-- Questions Column -->
+			<div class="column questions">
+				<div class="column-header">
+					<span class="column-icon">?</span>
+					<h2>Questions</h2>
+					<span class="count">{allQuestions.length}</span>
+				</div>
+				<div class="nodes">
+					{#each filterBySearch(allQuestions, q => q.text) as q}
+						{@const linkCount = getLinkCount('question', q.id)}
+						{@const isSelected = selectedNode?.type === 'question' && selectedNode?.id === q.id}
+						{@const connected = isConnected('question', q.id)}
+						<div
+							class="node question"
+							class:selected={isSelected}
+							class:connected
+							class:connecting={connectingFrom?.type === 'question' && connectingFrom?.id === q.id}
+							role="button"
+							tabindex="0"
+							onclick={() => handleNodeClick('question', q.id)}
+							onkeydown={(e) => e.key === 'Enter' && handleNodeClick('question', q.id)}
+						>
+							<div class="node-header">
+								<span class="node-id">{q.id}</span>
+								{#if linkCount > 0}
+									<span class="link-count">{linkCount}</span>
 								{/if}
 							</div>
-						{/each}
-					</div>
-				</div>
-			{:else}
-				<div class="no-selection">
-					<div class="no-selection-icon">📋</div>
-					<h3>Select a Risk</h3>
-					<p>Choose a risk from the list to configure its phases, triggers, and mitigations.</p>
-				</div>
-			{/if}
-		</main>
-	</div>
-</div>
-
-<!-- Question Manager Drawer -->
-{#if showQuestionManager}
-	<div class="drawer-overlay" role="button" tabindex="0" onclick={() => showQuestionManager = false} onkeydown={(e) => e.key === 'Escape' && (showQuestionManager = false)}></div>
-	<aside class="drawer">
-		<div class="drawer-header">
-			<h2>Question Manager</h2>
-			<button class="close-btn" onclick={() => showQuestionManager = false}>×</button>
-		</div>
-
-		<button class="btn primary full-width" onclick={() => showAddQuestionModal = true}>
-			+ Add New Question
-		</button>
-
-		<div class="question-list">
-			{#each questions as category}
-				<div class="question-category">
-					<h4>{category.name}</h4>
-					{#each category.questions as q}
-						<div class="question-item">
-							<div class="q-info">
-								<span class="q-id">{q.id}</span>
-								<span class="q-type">{q.type}</span>
-								<span class="q-text">{q.question}</span>
-							</div>
-							<button class="delete-btn" onclick={() => deleteQuestion(q.id)}>Delete</button>
+							<div class="node-text">{q.text}</div>
+							<button class="connect-btn" title="Connect to..." onclick={(e) => startConnect('question', q.id, e)}>+</button>
 						</div>
 					{/each}
 				</div>
-			{/each}
-		</div>
-	</aside>
-{/if}
-
-<!-- Add Trigger Modal -->
-{#if showAddTriggerModal && pendingTrigger}
-	{@const currentTriggers = getTriggers(pendingTrigger.riskId, pendingTrigger.phase)}
-	<div class="modal-overlay" role="dialog" aria-modal="true">
-		<div class="modal">
-			<div class="modal-header">
-				<h3>Add Trigger</h3>
-				<button class="close-btn" onclick={() => { showAddTriggerModal = false; pendingTrigger = null; }}>×</button>
 			</div>
 
-			<p class="modal-hint">Select question and answer(s) that should trigger this risk:</p>
+			<!-- Risks Column -->
+			<div class="column risks">
+				<div class="column-header">
+					<span class="column-icon">!</span>
+					<h2>Risks</h2>
+					<span class="count">{allRisks.length}</span>
+				</div>
+				<div class="nodes">
+					{#each filterBySearch(allRisks, r => r.shortName + ' ' + r.name) as r}
+						{@const linkCount = getLinkCount('risk', r.id)}
+						{@const isSelected = selectedNode?.type === 'risk' && selectedNode?.id === r.id}
+						{@const connected = isConnected('risk', r.id)}
+						<div
+							class="node risk"
+							class:selected={isSelected}
+							class:connected
+							class:connecting={connectingFrom?.type === 'risk' && connectingFrom?.id === r.id}
+							role="button"
+							tabindex="0"
+							onclick={() => handleNodeClick('risk', r.id)}
+							onkeydown={(e) => e.key === 'Enter' && handleNodeClick('risk', r.id)}
+						>
+							<div class="node-header">
+								<span class="node-code">{r.code}</span>
+								{#if linkCount > 0}
+									<span class="link-count">{linkCount}</span>
+								{/if}
+							</div>
+							<div class="node-text">{r.shortName}</div>
+							<button class="connect-btn" title="Connect to..." onclick={(e) => startConnect('risk', r.id, e)}>+</button>
+						</div>
+					{/each}
+				</div>
+			</div>
 
-			<div class="modal-body">
-				{#each allQuestions as q}
-					{@const existingTrigger = currentTriggers.find((c: any) => c.questionId === q.id)}
-					<div class="question-option" class:has-trigger={existingTrigger}>
-						<div class="q-text">{q.question}</div>
-						<div class="answer-options">
-							{#each q.options as opt}
-								<button
-									class="answer-btn"
-									class:selected={existingTrigger?.answerValues?.includes(opt.value)}
-									onclick={() => {
-										const current = existingTrigger?.answerValues || [];
-										const newValues = current.includes(opt.value)
-											? current.filter((v: string) => v !== opt.value)
-											: [...current, opt.value];
-										if (newValues.length > 0) {
-											addTrigger(pendingTrigger.riskId, pendingTrigger.phase, q.id, newValues);
-										} else if (existingTrigger) {
-											removeTrigger(pendingTrigger.riskId, pendingTrigger.phase, q.id);
-										}
-									}}
-								>
-									{opt.label}
+			<!-- Mitigations Column -->
+			<div class="column mitigations">
+				<div class="column-header">
+					<span class="column-icon">M</span>
+					<h2>Mitigations</h2>
+					<span class="count">{allMitigations.length}</span>
+				</div>
+				<div class="nodes">
+					{#each filterBySearch(allMitigations, m => m.name) as m}
+						{@const linkCount = getLinkCount('mitigation', m.id)}
+						{@const isSelected = selectedNode?.type === 'mitigation' && selectedNode?.id === m.id}
+						{@const connected = isConnected('mitigation', m.id)}
+						<div
+							class="node mitigation"
+							class:selected={isSelected}
+							class:connected
+							class:connecting={connectingFrom?.type === 'mitigation' && connectingFrom?.id === m.id}
+							role="button"
+							tabindex="0"
+							onclick={() => handleNodeClick('mitigation', m.id)}
+							onkeydown={(e) => e.key === 'Enter' && handleNodeClick('mitigation', m.id)}
+						>
+							<div class="node-header">
+								<span class="node-code">{m.code}</span>
+								{#if linkCount > 0}
+									<span class="link-count">{linkCount}</span>
+								{/if}
+							</div>
+							<div class="node-text">{m.name}</div>
+							<button class="connect-btn" title="Connect to..." onclick={(e) => startConnect('mitigation', m.id, e)}>+</button>
+						</div>
+					{/each}
+				</div>
+			</div>
+
+			<!-- Regulations Column -->
+			<div class="column regulations">
+				<div class="column-header">
+					<span class="column-icon">R</span>
+					<h2>Regulations</h2>
+					<span class="count">{allRegulations.length}</span>
+				</div>
+				<div class="nodes">
+					{#each filterBySearch(allRegulations, r => r.citation + ' ' + r.description) as r}
+						{@const linkCount = getLinkCount('regulation', r.id)}
+						{@const isSelected = selectedNode?.type === 'regulation' && selectedNode?.id === r.id}
+						{@const connected = isConnected('regulation', r.id)}
+						<div
+							class="node regulation"
+							class:selected={isSelected}
+							class:connected
+							class:connecting={connectingFrom?.type === 'regulation' && connectingFrom?.id === r.id}
+							role="button"
+							tabindex="0"
+							onclick={() => handleNodeClick('regulation', r.id)}
+							onkeydown={(e) => e.key === 'Enter' && handleNodeClick('regulation', r.id)}
+						>
+							<div class="node-header">
+								<span class="node-code">{r.citation}</span>
+								{#if linkCount > 0}
+									<span class="link-count">{linkCount}</span>
+								{/if}
+							</div>
+							<div class="node-text">{r.description}</div>
+							<button class="connect-btn" title="Connect to..." onclick={(e) => startConnect('regulation', r.id, e)}>+</button>
+						</div>
+					{/each}
+				</div>
+			</div>
+		</div>
+
+		<!-- Detail Panel -->
+		{#if selectedDetails}
+			<aside class="detail-panel">
+				<div class="detail-header">
+					<span class="detail-type {selectedDetails.type}">{selectedDetails.type}</span>
+					<button class="close-btn" onclick={() => selectedNode = null}>×</button>
+				</div>
+
+				{#if selectedDetails.type === 'question' && selectedDetails.item}
+					<h3>{selectedDetails.item.text}</h3>
+					<div class="detail-meta">
+						<span class="meta-item">ID: {selectedDetails.item.id}</span>
+						<span class="meta-item">Type: {selectedDetails.item.type}</span>
+						<span class="meta-item">Category: {selectedDetails.item.category}</span>
+					</div>
+					<div class="detail-options">
+						<strong>Options:</strong>
+						{#each selectedDetails.item.options as opt}
+							<span class="option-tag">{opt.label}</span>
+						{/each}
+					</div>
+				{:else if selectedDetails.type === 'risk' && selectedDetails.item}
+					<h3>{selectedDetails.item.name}</h3>
+					<div class="detail-meta">
+						<span class="meta-item">Code: {selectedDetails.item.code}</span>
+						<span class="meta-item">Domain: {selectedDetails.item.domain}</span>
+					</div>
+					<p class="detail-desc">{selectedDetails.item.shortName}</p>
+				{:else if selectedDetails.type === 'mitigation' && selectedDetails.item}
+					<h3>{selectedDetails.item.name}</h3>
+					<div class="detail-meta">
+						<span class="meta-item">Code: {selectedDetails.item.code}</span>
+						<span class="meta-item">Category: {selectedDetails.item.category}</span>
+					</div>
+				{:else if selectedDetails.type === 'regulation' && selectedDetails.item}
+					<h3>{selectedDetails.item.citation}</h3>
+					<div class="detail-meta">
+						<span class="meta-item">{selectedDetails.item.framework}</span>
+					</div>
+					<p class="detail-desc">{selectedDetails.item.description}</p>
+				{/if}
+
+				<div class="connections-section">
+					<h4>Connections ({selectedDetails.connections.length})</h4>
+					{#if selectedDetails.connections.length === 0}
+						<p class="no-connections">No connections yet. Click + on another node to create one.</p>
+					{:else}
+						<div class="connection-list">
+							{#each selectedDetails.connections as link}
+								{@const isFrom = link.from.entity === selectedDetails.type && link.from.id === selectedDetails.item?.id}
+								{@const otherEntity = isFrom ? link.to.entity : link.from.entity}
+								{@const otherId = isFrom ? link.to.id : link.from.id}
+								<button class="connection-item" onclick={() => { editingLink = link; showLinkEditor = true; }}>
+									<span class="conn-type {link.type}">{link.type}</span>
+									<span class="conn-direction">{isFrom ? '→' : '←'}</span>
+									<span class="conn-target {otherEntity}">{getEntityName(otherEntity, otherId)}</span>
+									{#if link.phases}
+										<span class="conn-phases">{link.phases.map((p: string) => p.replace('phase-', 'P')).join(', ')}</span>
+									{/if}
 								</button>
 							{/each}
 						</div>
-					</div>
-				{/each}
-			</div>
+					{/if}
+				</div>
 
-			<div class="modal-footer">
-				<button class="btn primary" onclick={() => { showAddTriggerModal = false; pendingTrigger = null; }}>Done</button>
-			</div>
-		</div>
+				<button class="btn connect-action" onclick={() => startConnect(selectedDetails.type, selectedDetails.item?.id || '', new Event('click'))}>
+					+ Create Connection
+				</button>
+			</aside>
+		{/if}
 	</div>
-{/if}
+</div>
 
-<!-- Add Question Modal -->
-{#if showAddQuestionModal}
+<!-- Link Editor Modal -->
+{#if showLinkEditor && editingLink}
 	<div class="modal-overlay" role="dialog" aria-modal="true">
-		<div class="modal">
+		<div class="modal link-editor">
 			<div class="modal-header">
-				<h3>Add New Question</h3>
-				<button class="close-btn" onclick={() => showAddQuestionModal = false}>×</button>
+				<h3>{links.some((l: any) => l.id === editingLink.id) ? 'Edit' : 'New'} Link</h3>
+				<button class="close-btn" onclick={() => { showLinkEditor = false; editingLink = null; }}>×</button>
 			</div>
 
 			<div class="modal-body">
-				<div class="form-group">
-					<label for="new-q-id">Question ID</label>
-					<input id="new-q-id" type="text" bind:value={newQuestion.id} placeholder="e.g., data-retention" />
+				<div class="link-preview">
+					<span class="link-node {editingLink.from.entity}">{getEntityName(editingLink.from.entity, editingLink.from.id)}</span>
+					<span class="link-arrow">→</span>
+					<span class="link-node {editingLink.to.entity}">{getEntityName(editingLink.to.entity, editingLink.to.id)}</span>
 				</div>
 
 				<div class="form-group">
-					<label for="new-q-text">Question Text</label>
-					<input id="new-q-text" type="text" bind:value={newQuestion.question} placeholder="e.g., How long is data retained?" />
-				</div>
-
-				<div class="form-group">
-					<label for="new-q-type">Type</label>
-					<select id="new-q-type" bind:value={newQuestion.type}>
-						<option value="yes-no">Yes/No</option>
-						<option value="single-select">Single Select</option>
-						<option value="multi-select">Multi Select</option>
+					<label>Link Type</label>
+					<select bind:value={editingLink.type}>
+						<option value="trigger">Trigger (Question triggers Risk)</option>
+						<option value="mitigation">Mitigation (Risk linked to Mitigation)</option>
+						<option value="regulation">Regulation (Risk linked to Regulation)</option>
+						<option value="custom">Custom</option>
 					</select>
 				</div>
 
 				<div class="form-group">
-					<label for="new-q-cat">Category</label>
-					<select id="new-q-cat" bind:value={newQuestion.category}>
-						<option value="">Select category...</option>
-						{#each questions as cat}
-							<option value={cat.id}>{cat.name}</option>
+					<label>Applicable Phases</label>
+					<div class="phase-checkboxes">
+						{#each phases as phase}
+							<label class="checkbox-label">
+								<input
+									type="checkbox"
+									checked={editingLink.phases?.includes(phase.id) || false}
+									onchange={(e) => {
+										if (e.currentTarget.checked) {
+											editingLink.phases = [...(editingLink.phases || []), phase.id];
+										} else {
+											editingLink.phases = (editingLink.phases || []).filter((p: string) => p !== phase.id);
+										}
+									}}
+								/>
+								{phase.name}
+							</label>
 						{/each}
-					</select>
+					</div>
 				</div>
 
-				{#if newQuestion.type !== 'yes-no'}
-					<div class="form-group">
-						<label>Answer Options</label>
-						{#each newQuestion.options as opt, i}
-							<div class="option-row">
-								<input type="text" bind:value={opt.value} placeholder="Value" />
-								<input type="text" bind:value={opt.label} placeholder="Label" />
-								<button class="remove-opt" onclick={() => removeOption(i)}>×</button>
+				{#if editingLink.type === 'trigger' && editingLink.from.entity === 'question'}
+					{@const q = getQuestion(editingLink.from.id)}
+					{#if q}
+						<div class="form-group">
+							<label>Trigger when answer is:</label>
+							<div class="answer-checkboxes">
+								{#each q.options as opt}
+									<label class="checkbox-label">
+										<input
+											type="checkbox"
+											checked={editingLink.answerValues?.includes(opt.value) || false}
+											onchange={(e) => {
+												if (e.currentTarget.checked) {
+													editingLink.answerValues = [...(editingLink.answerValues || []), opt.value];
+												} else {
+													editingLink.answerValues = (editingLink.answerValues || []).filter((v: string) => v !== opt.value);
+												}
+											}}
+										/>
+										{opt.label}
+									</label>
+								{/each}
 							</div>
+						</div>
+
+						<div class="form-group">
+							<label>Logic (when multiple triggers for same risk)</label>
+							<select bind:value={editingLink.logic}>
+								<option value="OR">OR - Any trigger activates</option>
+								<option value="AND">AND - All triggers required</option>
+							</select>
+						</div>
+					{/if}
+				{/if}
+
+				{#if editingLink.type === 'mitigation'}
+					<div class="form-group">
+						<label>Phase-specific Guidance</label>
+						{#each phases as phase}
+							{#if editingLink.phases?.includes(phase.id)}
+								<div class="guidance-input">
+									<span class="guidance-phase">{phase.short}</span>
+									<textarea
+										placeholder="Guidance for {phase.name}..."
+										value={editingLink.guidance?.[phase.id] || ''}
+										oninput={(e) => {
+											if (!editingLink.guidance) editingLink.guidance = {};
+											editingLink.guidance[phase.id] = e.currentTarget.value;
+										}}
+										rows="2"
+									></textarea>
+								</div>
+							{/if}
 						{/each}
-						<button class="btn small" onclick={addOption}>+ Add Option</button>
+					</div>
+				{/if}
+
+				{#if editingLink.type === 'regulation'}
+					<div class="form-group">
+						<label>Note</label>
+						<input type="text" bind:value={editingLink.note} placeholder="Brief note about this regulatory link..." />
 					</div>
 				{/if}
 			</div>
 
 			<div class="modal-footer">
-				<button class="btn" onclick={() => showAddQuestionModal = false}>Cancel</button>
-				<button class="btn primary" onclick={addQuestion}>Add Question</button>
+				{#if links.some((l: any) => l.id === editingLink.id)}
+					<button class="btn danger" onclick={deleteLink}>Delete Link</button>
+				{/if}
+				<div class="footer-right">
+					<button class="btn" onclick={() => { showLinkEditor = false; editingLink = null; }}>Cancel</button>
+					<button class="btn primary" onclick={saveLink}>Save</button>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -583,54 +634,139 @@
 		flex-shrink: 0;
 	}
 
+	.header-left, .header-right {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+	}
+
 	.header h1 {
 		font-size: 1.125rem;
 		color: #f1f5f9;
 	}
 
-	.header-actions {
+	.phase-filter {
 		display: flex;
-		gap: 0.5rem;
-	}
-
-	.layout {
-		display: grid;
-		grid-template-columns: 280px 1fr;
-		flex: 1;
-		overflow: hidden;
-	}
-
-	/* Sidebar */
-	.sidebar {
+		gap: 0.25rem;
 		background: #1e293b;
-		border-right: 1px solid #334155;
-		display: flex;
-		flex-direction: column;
-		overflow: hidden;
+		padding: 0.25rem;
+		border-radius: 0.375rem;
 	}
+
+	.phase-filter button {
+		padding: 0.375rem 0.75rem;
+		background: transparent;
+		border: none;
+		border-radius: 0.25rem;
+		color: #94a3b8;
+		font-size: 0.75rem;
+		cursor: pointer;
+	}
+
+	.phase-filter button:hover { color: #e2e8f0; }
+	.phase-filter button.active { background: #60a5fa; color: #0f172a; }
 
 	.search {
-		margin: 0.75rem;
 		padding: 0.5rem 0.75rem;
-		background: #0f172a;
+		background: #1e293b;
 		border: 1px solid #334155;
 		border-radius: 0.375rem;
 		color: #e2e8f0;
 		font-size: 0.8125rem;
+		width: 200px;
 	}
 
-	.search:focus {
-		outline: none;
-		border-color: #60a5fa;
+	.search:focus { outline: none; border-color: #60a5fa; }
+
+	.connection-banner {
+		background: rgba(251, 191, 36, 0.2);
+		border: 1px solid #fbbf24;
+		padding: 0.5rem 1rem;
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		font-size: 0.875rem;
+		color: #fbbf24;
 	}
 
-	.risk-list {
+	.connection-banner button {
+		margin-left: auto;
+		padding: 0.25rem 0.75rem;
+		background: transparent;
+		border: 1px solid #fbbf24;
+		border-radius: 0.25rem;
+		color: #fbbf24;
+		cursor: pointer;
+	}
+
+	.layout {
+		display: flex;
+		flex: 1;
+		overflow: hidden;
+	}
+
+	.columns {
+		display: grid;
+		grid-template-columns: repeat(4, 1fr);
+		flex: 1;
+		overflow: hidden;
+	}
+
+	.column {
+		display: flex;
+		flex-direction: column;
+		border-right: 1px solid #334155;
+		overflow: hidden;
+	}
+
+	.column:last-child { border-right: none; }
+
+	.column-header {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		padding: 0.75rem;
+		background: #1e293b;
+		border-bottom: 1px solid #334155;
+	}
+
+	.column-icon {
+		width: 1.5rem;
+		height: 1.5rem;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: 0.25rem;
+		font-size: 0.75rem;
+		font-weight: bold;
+	}
+
+	.questions .column-icon { background: rgba(96, 165, 250, 0.2); color: #60a5fa; }
+	.risks .column-icon { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+	.mitigations .column-icon { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
+	.regulations .column-icon { background: rgba(168, 85, 247, 0.2); color: #a855f7; }
+
+	.column-header h2 {
+		font-size: 0.875rem;
+		color: #e2e8f0;
+		flex: 1;
+	}
+
+	.count {
+		font-size: 0.6875rem;
+		color: #64748b;
+		background: #334155;
+		padding: 0.125rem 0.375rem;
+		border-radius: 0.25rem;
+	}
+
+	.nodes {
 		flex: 1;
 		overflow-y: auto;
-		padding: 0 0.5rem 0.5rem;
+		padding: 0.5rem;
 	}
 
-	.risk-item {
+	.node {
 		width: 100%;
 		text-align: left;
 		padding: 0.625rem;
@@ -639,291 +775,235 @@
 		border-radius: 0.375rem;
 		margin-bottom: 0.375rem;
 		cursor: pointer;
+		position: relative;
+		transition: all 0.15s;
 	}
 
-	.risk-item:hover { border-color: #475569; }
-	.risk-item.selected { border-color: #60a5fa; background: rgba(96, 165, 250, 0.1); }
+	.node:hover { border-color: #475569; }
 
-	.risk-item-header {
+	.node.question.selected { border-color: #60a5fa; background: rgba(96, 165, 250, 0.1); }
+	.node.risk.selected { border-color: #ef4444; background: rgba(239, 68, 68, 0.1); }
+	.node.mitigation.selected { border-color: #22c55e; background: rgba(34, 197, 94, 0.1); }
+	.node.regulation.selected { border-color: #a855f7; background: rgba(168, 85, 247, 0.1); }
+
+	.node.connected { opacity: 1; }
+	.node:not(.selected):not(.connected) {
+		opacity: 0.5;
+	}
+	.node:not(.selected):not(.connected):hover { opacity: 0.8; }
+
+	/* When nothing selected, show all */
+	.columns:not(:has(.node.selected)) .node { opacity: 1; }
+
+	.node.connecting {
+		border-color: #fbbf24 !important;
+		background: rgba(251, 191, 36, 0.1) !important;
+		opacity: 1 !important;
+	}
+
+	.node-header {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
 		margin-bottom: 0.25rem;
 	}
 
-	.risk-code {
+	.node-id, .node-code {
 		font-family: monospace;
-		font-size: 0.6875rem;
-		color: #60a5fa;
-		background: rgba(96, 165, 250, 0.2);
-		padding: 0.125rem 0.375rem;
-		border-radius: 0.25rem;
-	}
-
-	.phase-count {
 		font-size: 0.625rem;
-		color: #22c55e;
-		background: rgba(34, 197, 94, 0.2);
-		padding: 0.125rem 0.375rem;
-		border-radius: 0.25rem;
+		padding: 0.125rem 0.25rem;
+		border-radius: 0.125rem;
 	}
 
-	.risk-name {
-		font-size: 0.8125rem;
+	.question .node-id { background: rgba(96, 165, 250, 0.2); color: #60a5fa; }
+	.risk .node-code { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+	.mitigation .node-code { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
+	.regulation .node-code { background: rgba(168, 85, 247, 0.2); color: #a855f7; font-size: 0.5625rem; }
+
+	.link-count {
+		font-size: 0.5625rem;
+		background: #475569;
 		color: #e2e8f0;
-		margin-bottom: 0.25rem;
+		padding: 0.0625rem 0.25rem;
+		border-radius: 0.125rem;
 	}
 
-	.risk-domain {
-		font-size: 0.625rem;
-		color: #64748b;
+	.node-text {
+		font-size: 0.75rem;
+		color: #e2e8f0;
+		line-height: 1.4;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
 	}
 
-	/* Main Content */
-	.main {
-		overflow-y: auto;
+	.connect-btn {
+		position: absolute;
+		top: 0.375rem;
+		right: 0.375rem;
+		width: 1.25rem;
+		height: 1.25rem;
+		background: #334155;
+		border: none;
+		border-radius: 50%;
+		color: #94a3b8;
+		font-size: 0.875rem;
+		cursor: pointer;
+		opacity: 0;
+		transition: opacity 0.15s;
+	}
+
+	.node:hover .connect-btn { opacity: 1; }
+	.connect-btn:hover { background: #475569; color: #e2e8f0; }
+
+	/* Detail Panel */
+	.detail-panel {
+		width: 320px;
+		background: #1e293b;
+		border-left: 1px solid #334155;
 		padding: 1rem;
-	}
-
-	.risk-config {
-		max-width: 900px;
-	}
-
-	.risk-header {
+		overflow-y: auto;
 		display: flex;
-		align-items: center;
-		gap: 0.75rem;
-		margin-bottom: 0.5rem;
+		flex-direction: column;
+		gap: 1rem;
 	}
 
-	.risk-code-large {
-		font-family: monospace;
-		font-size: 1rem;
-		color: #60a5fa;
-		background: rgba(96, 165, 250, 0.2);
+	.detail-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+
+	.detail-type {
+		font-size: 0.6875rem;
+		font-weight: 600;
+		text-transform: uppercase;
 		padding: 0.25rem 0.5rem;
 		border-radius: 0.25rem;
 	}
 
-	.risk-header h2 {
-		font-size: 1.25rem;
+	.detail-type.question { background: rgba(96, 165, 250, 0.2); color: #60a5fa; }
+	.detail-type.risk { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+	.detail-type.mitigation { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
+	.detail-type.regulation { background: rgba(168, 85, 247, 0.2); color: #a855f7; }
+
+	.detail-panel h3 {
+		font-size: 1rem;
 		color: #f1f5f9;
+		line-height: 1.4;
 	}
 
-	.risk-description {
-		font-size: 0.875rem;
-		color: #94a3b8;
-		line-height: 1.5;
-		margin-bottom: 1.5rem;
-	}
-
-	/* Phase Cards */
-	.phases {
+	.detail-meta {
 		display: flex;
-		flex-direction: column;
-		gap: 1rem;
-	}
-
-	.phase-card {
-		background: #1e293b;
-		border: 1px solid #334155;
-		border-radius: 0.5rem;
-		overflow: hidden;
-	}
-
-	.phase-card.enabled {
-		border-color: #475569;
-	}
-
-	.phase-header {
-		display: flex;
-		align-items: center;
-		gap: 0.75rem;
-		padding: 0.75rem 1rem;
-		background: #0f172a;
-	}
-
-	.phase-toggle {
-		width: 1.5rem;
-		height: 1.5rem;
-		background: #334155;
-		border: none;
-		border-radius: 0.25rem;
-		color: #64748b;
-		font-size: 0.875rem;
-		cursor: pointer;
-	}
-
-	.phase-toggle.on {
-		background: rgba(34, 197, 94, 0.2);
-		color: #22c55e;
-	}
-
-	.phase-header h3 {
-		font-size: 0.9375rem;
-		color: #e2e8f0;
-	}
-
-	.phase-content {
-		padding: 1rem;
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-		gap: 1rem;
-	}
-
-	/* Triggers Section */
-	.triggers-section {
-		display: flex;
-		flex-direction: column;
+		flex-wrap: wrap;
 		gap: 0.5rem;
 	}
 
-	.triggers-header {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
+	.meta-item {
+		font-size: 0.6875rem;
+		color: #94a3b8;
+		background: #0f172a;
+		padding: 0.25rem 0.5rem;
+		border-radius: 0.25rem;
 	}
 
-	.triggers-label {
+	.detail-options {
 		font-size: 0.75rem;
-		font-weight: 600;
+		color: #94a3b8;
+	}
+
+	.option-tag {
+		display: inline-block;
+		margin: 0.25rem 0.25rem 0 0;
+		padding: 0.125rem 0.375rem;
+		background: #334155;
+		border-radius: 0.25rem;
+		color: #e2e8f0;
+	}
+
+	.detail-desc {
+		font-size: 0.8125rem;
+		color: #94a3b8;
+		line-height: 1.5;
+	}
+
+	.connections-section h4 {
+		font-size: 0.75rem;
 		color: #94a3b8;
 		text-transform: uppercase;
+		margin-bottom: 0.5rem;
 	}
 
-	.logic-btn {
-		font-size: 0.625rem;
-		padding: 0.125rem 0.5rem;
-		background: rgba(251, 191, 36, 0.2);
-		border: none;
-		border-radius: 0.25rem;
-		color: #fbbf24;
-		cursor: pointer;
+	.no-connections {
+		font-size: 0.75rem;
+		color: #64748b;
+		text-align: center;
+		padding: 1rem;
+		background: #0f172a;
+		border-radius: 0.375rem;
 	}
 
-	.trigger-list {
+	.connection-list {
 		display: flex;
 		flex-direction: column;
 		gap: 0.375rem;
 	}
 
-	.trigger-item {
+	.connection-item {
 		display: flex;
 		align-items: center;
 		gap: 0.5rem;
 		padding: 0.5rem;
 		background: #0f172a;
+		border: 1px solid #334155;
 		border-radius: 0.375rem;
+		cursor: pointer;
+		text-align: left;
 	}
 
-	.trigger-content {
-		flex: 1;
-		min-width: 0;
+	.connection-item:hover { border-color: #475569; }
+
+	.conn-type {
+		font-size: 0.5625rem;
+		font-weight: 600;
+		text-transform: uppercase;
+		padding: 0.125rem 0.25rem;
+		border-radius: 0.125rem;
 	}
 
-	.trigger-question {
-		display: block;
+	.conn-type.trigger { background: rgba(251, 191, 36, 0.2); color: #fbbf24; }
+	.conn-type.mitigation { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
+	.conn-type.regulation { background: rgba(168, 85, 247, 0.2); color: #a855f7; }
+	.conn-type.custom { background: rgba(148, 163, 184, 0.2); color: #94a3b8; }
+
+	.conn-direction {
+		color: #64748b;
 		font-size: 0.75rem;
+	}
+
+	.conn-target {
+		flex: 1;
+		font-size: 0.6875rem;
 		color: #e2e8f0;
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
 	}
 
-	.trigger-values {
-		font-size: 0.6875rem;
-		color: #22c55e;
-	}
+	.conn-target.question { color: #60a5fa; }
+	.conn-target.risk { color: #ef4444; }
+	.conn-target.mitigation { color: #22c55e; }
+	.conn-target.regulation { color: #a855f7; }
 
-	.remove-btn {
-		background: none;
-		border: none;
+	.conn-phases {
+		font-size: 0.5625rem;
 		color: #64748b;
-		font-size: 1rem;
-		cursor: pointer;
-		padding: 0.125rem 0.375rem;
 	}
 
-	.remove-btn:hover { color: #ef4444; }
-
-	.no-triggers {
-		font-size: 0.75rem;
-		color: #64748b;
-		padding: 0.5rem;
-		text-align: center;
-		background: #0f172a;
-		border-radius: 0.375rem;
-	}
-
-	.add-trigger-btn {
-		font-size: 0.75rem;
-		padding: 0.375rem 0.75rem;
-		background: #334155;
-		border: none;
-		border-radius: 0.25rem;
-		color: #94a3b8;
-		cursor: pointer;
-		align-self: flex-start;
-	}
-
-	.add-trigger-btn:hover {
-		background: #475569;
-		color: #e2e8f0;
-	}
-
-	/* Mitigation Section */
-	.mitigation-section {
-		display: flex;
-		flex-direction: column;
-		gap: 0.375rem;
-	}
-
-	.mitigation-section label {
-		font-size: 0.75rem;
-		font-weight: 600;
-		color: #94a3b8;
-		text-transform: uppercase;
-	}
-
-	.mitigation-section textarea {
+	.connect-action {
 		width: 100%;
-		padding: 0.625rem;
-		background: #0f172a;
-		border: 1px solid #334155;
-		border-radius: 0.375rem;
-		color: #e2e8f0;
-		font-size: 0.8125rem;
-		line-height: 1.5;
-		resize: vertical;
-		min-height: 80px;
-	}
-
-	.mitigation-section textarea:focus {
-		outline: none;
-		border-color: #60a5fa;
-	}
-
-	/* No Selection */
-	.no-selection {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-		height: 100%;
-		text-align: center;
-		color: #64748b;
-	}
-
-	.no-selection-icon {
-		font-size: 3rem;
-		margin-bottom: 1rem;
-		opacity: 0.5;
-	}
-
-	.no-selection h3 {
-		font-size: 1.125rem;
-		color: #94a3b8;
-		margin-bottom: 0.5rem;
+		margin-top: auto;
 	}
 
 	/* Buttons */
@@ -940,114 +1020,18 @@
 	.btn:hover { background: #475569; }
 	.btn.primary { background: #60a5fa; color: #0f172a; }
 	.btn.primary:hover { background: #3b82f6; }
-	.btn.small { padding: 0.375rem 0.75rem; font-size: 0.75rem; }
-	.btn.full-width { width: 100%; margin-bottom: 1rem; }
+	.btn.danger { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+	.btn.danger:hover { background: rgba(239, 68, 68, 0.3); }
 
-	/* Drawer */
-	.drawer-overlay {
-		position: fixed;
-		inset: 0;
-		background: rgba(0, 0, 0, 0.5);
-		z-index: 90;
-	}
-
-	.drawer {
-		position: fixed;
-		right: 0;
-		top: 0;
-		bottom: 0;
-		width: 400px;
-		background: #1e293b;
-		border-left: 1px solid #334155;
-		z-index: 100;
-		display: flex;
-		flex-direction: column;
-		padding: 1rem;
-		overflow: hidden;
-	}
-
-	.drawer-header {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		margin-bottom: 1rem;
-	}
-
-	.drawer-header h2 {
-		font-size: 1rem;
-		color: #f1f5f9;
-	}
-
-	.question-list {
-		flex: 1;
-		overflow-y: auto;
-	}
-
-	.question-category {
-		margin-bottom: 1rem;
-	}
-
-	.question-category h4 {
-		font-size: 0.75rem;
-		color: #60a5fa;
-		margin-bottom: 0.5rem;
-	}
-
-	.question-item {
-		display: flex;
-		align-items: center;
-		gap: 0.5rem;
-		padding: 0.5rem;
-		background: #0f172a;
-		border-radius: 0.375rem;
-		margin-bottom: 0.375rem;
-	}
-
-	.q-info {
-		flex: 1;
-		display: flex;
-		flex-wrap: wrap;
-		align-items: center;
-		gap: 0.375rem;
-	}
-
-	.q-id {
-		font-family: monospace;
-		font-size: 0.625rem;
-		color: #60a5fa;
-		background: rgba(96, 165, 250, 0.2);
-		padding: 0.0625rem 0.25rem;
-		border-radius: 0.125rem;
-	}
-
-	.q-type {
-		font-size: 0.625rem;
+	.close-btn {
+		background: none;
+		border: none;
 		color: #64748b;
-		background: #334155;
-		padding: 0.0625rem 0.25rem;
-		border-radius: 0.125rem;
-	}
-
-	.q-text {
-		font-size: 0.75rem;
-		color: #e2e8f0;
-		flex-basis: 100%;
-	}
-
-	.delete-btn {
-		font-size: 0.6875rem;
-		padding: 0.25rem 0.5rem;
-		background: transparent;
-		border: 1px solid #334155;
-		border-radius: 0.25rem;
-		color: #ef4444;
+		font-size: 1.5rem;
 		cursor: pointer;
 	}
 
-	.delete-btn:hover {
-		background: rgba(239, 68, 68, 0.1);
-		border-color: #ef4444;
-	}
+	.close-btn:hover { color: #e2e8f0; }
 
 	/* Modal */
 	.modal-overlay {
@@ -1064,7 +1048,7 @@
 		background: #1e293b;
 		border: 1px solid #334155;
 		border-radius: 0.5rem;
-		max-width: 600px;
+		max-width: 500px;
 		width: 90%;
 		max-height: 80vh;
 		display: flex;
@@ -1084,23 +1068,6 @@
 		color: #f1f5f9;
 	}
 
-	.close-btn {
-		background: none;
-		border: none;
-		color: #64748b;
-		font-size: 1.5rem;
-		cursor: pointer;
-	}
-
-	.close-btn:hover { color: #e2e8f0; }
-
-	.modal-hint {
-		padding: 0.75rem 1rem;
-		font-size: 0.8125rem;
-		color: #94a3b8;
-		background: #0f172a;
-	}
-
 	.modal-body {
 		flex: 1;
 		padding: 1rem;
@@ -1109,59 +1076,45 @@
 
 	.modal-footer {
 		display: flex;
-		justify-content: flex-end;
-		gap: 0.75rem;
+		justify-content: space-between;
+		align-items: center;
 		padding: 1rem;
 		border-top: 1px solid #334155;
 	}
 
-	/* Question Options in Modal */
-	.question-option {
-		padding: 0.75rem;
-		background: #0f172a;
-		border: 1px solid #334155;
-		border-radius: 0.375rem;
-		margin-bottom: 0.5rem;
-	}
-
-	.question-option.has-trigger {
-		border-color: #22c55e;
-	}
-
-	.question-option .q-text {
-		font-size: 0.8125rem;
-		color: #e2e8f0;
-		margin-bottom: 0.5rem;
-	}
-
-	.answer-options {
+	.footer-right {
 		display: flex;
-		flex-wrap: wrap;
-		gap: 0.375rem;
+		gap: 0.75rem;
 	}
 
-	.answer-btn {
-		padding: 0.375rem 0.75rem;
-		background: #334155;
-		border: 1px solid #475569;
-		border-radius: 0.25rem;
-		color: #94a3b8;
+	.link-preview {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		padding: 1rem;
+		background: #0f172a;
+		border-radius: 0.375rem;
+		margin-bottom: 1rem;
+		justify-content: center;
+	}
+
+	.link-node {
 		font-size: 0.75rem;
-		cursor: pointer;
+		padding: 0.375rem 0.75rem;
+		border-radius: 0.25rem;
+		max-width: 150px;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 
-	.answer-btn:hover {
-		border-color: #60a5fa;
-		color: #e2e8f0;
-	}
+	.link-node.question { background: rgba(96, 165, 250, 0.2); color: #60a5fa; }
+	.link-node.risk { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+	.link-node.mitigation { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
+	.link-node.regulation { background: rgba(168, 85, 247, 0.2); color: #a855f7; }
 
-	.answer-btn.selected {
-		background: rgba(34, 197, 94, 0.2);
-		border-color: #22c55e;
-		color: #22c55e;
-	}
+	.link-arrow { color: #64748b; font-size: 1.25rem; }
 
-	/* Form Groups */
 	.form-group {
 		margin-bottom: 1rem;
 	}
@@ -1170,10 +1123,10 @@
 		display: block;
 		font-size: 0.75rem;
 		color: #94a3b8;
-		margin-bottom: 0.25rem;
+		margin-bottom: 0.375rem;
 	}
 
-	.form-group input, .form-group select {
+	.form-group input, .form-group select, .form-group textarea {
 		width: 100%;
 		padding: 0.5rem;
 		background: #0f172a;
@@ -1183,42 +1136,70 @@
 		font-size: 0.8125rem;
 	}
 
-	.form-group input:focus, .form-group select:focus {
+	.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
 		outline: none;
 		border-color: #60a5fa;
 	}
 
-	.option-row {
+	.phase-checkboxes, .answer-checkboxes {
+		display: flex;
+		flex-direction: column;
+		gap: 0.375rem;
+	}
+
+	.checkbox-label {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		font-size: 0.8125rem;
+		color: #e2e8f0;
+		cursor: pointer;
+	}
+
+	.checkbox-label input {
+		width: auto;
+	}
+
+	.guidance-input {
 		display: flex;
 		gap: 0.5rem;
 		margin-bottom: 0.5rem;
 	}
 
-	.option-row input { flex: 1; }
+	.guidance-phase {
+		font-size: 0.6875rem;
+		font-weight: 600;
+		color: #60a5fa;
+		background: rgba(96, 165, 250, 0.2);
+		padding: 0.25rem 0.5rem;
+		border-radius: 0.25rem;
+		height: fit-content;
+	}
 
-	.remove-opt {
-		background: none;
-		border: none;
-		color: #ef4444;
-		cursor: pointer;
-		font-size: 1.25rem;
+	.guidance-input textarea {
+		flex: 1;
+	}
+
+	@media (max-width: 1200px) {
+		.columns {
+			grid-template-columns: repeat(2, 1fr);
+		}
 	}
 
 	@media (max-width: 800px) {
-		.layout {
+		.columns {
 			grid-template-columns: 1fr;
 		}
 
-		.sidebar {
-			max-height: 200px;
-		}
-
-		.phase-content {
-			grid-template-columns: 1fr;
-		}
-
-		.drawer {
+		.detail-panel {
+			position: fixed;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			height: 50%;
 			width: 100%;
+			border-left: none;
+			border-top: 1px solid #334155;
 		}
 	}
 </style>
