@@ -113,6 +113,7 @@
 			'risk-mitigation': 'mitigation',
 			'risk-regulation': 'regulation',
 			'risk-control': 'control',
+			'mitigation-control': 'implementation',
 			'question-question': 'dependency' // For showIf
 		};
 		return pairs[`${fromType}-${toType}`] || pairs[`${toType}-${fromType}`] || null;
@@ -125,6 +126,7 @@
 			'mitigation': ['risk', 'mitigation'],
 			'regulation': ['risk', 'regulation'],
 			'control': ['risk', 'control'],
+			'implementation': ['mitigation', 'control'],
 			'dependency': ['question', 'question']
 		};
 		const linkType = getLinkTypeForPair(fromType, toType);
@@ -972,11 +974,24 @@
 					let linkType = 'custom';
 					if (connectingFrom.type === 'question' && type === 'risk') linkType = 'trigger';
 					else if (connectingFrom.type === 'risk' && type === 'question') linkType = 'trigger';
+					else if (connectingFrom.type === 'question' && type === 'question') linkType = 'dependency';
 					else if ((connectingFrom.type === 'risk' && type === 'mitigation') || (connectingFrom.type === 'mitigation' && type === 'risk')) linkType = 'mitigation';
 					else if ((connectingFrom.type === 'risk' && type === 'regulation') || (connectingFrom.type === 'regulation' && type === 'risk')) linkType = 'regulation';
+					else if ((connectingFrom.type === 'risk' && type === 'control') || (connectingFrom.type === 'control' && type === 'risk')) linkType = 'control';
+					else if ((connectingFrom.type === 'mitigation' && type === 'control') || (connectingFrom.type === 'control' && type === 'mitigation')) linkType = 'implementation';
 
-					const fromNode = connectingFrom.type === 'question' || connectingFrom.type === 'risk' ? connectingFrom : { type, id };
-					const toNode = connectingFrom.type === 'question' || connectingFrom.type === 'risk' ? { type, id } : connectingFrom;
+					// Determine from/to order based on link type conventions
+					let fromNode, toNode;
+					if (linkType === 'dependency') {
+						fromNode = connectingFrom;
+						toNode = { type, id };
+					} else if (connectingFrom.type === 'question' || connectingFrom.type === 'risk') {
+						fromNode = connectingFrom;
+						toNode = { type, id };
+					} else {
+						fromNode = { type, id };
+						toNode = connectingFrom;
+					}
 
 					editingLink = {
 						id: `link-${Date.now()}`,
@@ -1795,10 +1810,13 @@
 				</div>
 				<div class="nodes">
 					{#each graphFilteredControls.slice(0, 50) as ctrl}
-						{@const linkCount = getControlLinkCount(ctrl.id)}
+						{@const directLinkCount = getLinkCount('control', ctrl.id)}
+						{@const subcategoryLinkCount = getControlLinkCount(ctrl.id)}
+						{@const totalLinks = directLinkCount + subcategoryLinkCount}
 						{@const subcategory = getControlSubcategory(ctrl.subcategoryId)}
 						{@const isSelected = selectedNode?.type === 'control' && selectedNode?.id === ctrl.id}
 						{@const connected = isConnected('control', ctrl.id)}
+						{@const connectionLink = getConnectionToSelected('control', ctrl.id)}
 						{@const shouldHide = focusMode && selectedNode && !isSelected && !connected}
 						{#if !shouldHide}
 						<div
@@ -1813,7 +1831,7 @@
 						>
 							<div class="node-header">
 								<span class="node-code">{ctrl.id.split('_')[0]}</span>
-								<span class="link-count" title="Via subcategory">{linkCount}</span>
+								<span class="link-count" title="Direct: {directLinkCount}, Via category: {subcategoryLinkCount}">{totalLinks}</span>
 							</div>
 							<div class="node-text">{ctrl.name}</div>
 							<div class="node-meta">
@@ -1822,9 +1840,12 @@
 									<span class="subcategory" title="Subcategory">{subcategory.code}</span>
 								{/if}
 							</div>
-							{#if connected}
+							{#if connected && connectionLink}
+								<span class="conn-indicator">{connectionLink.type}</span>
+							{:else if connected}
 								<span class="conn-indicator">via {subcategory?.code || 'category'}</span>
 							{/if}
+							<button class="connect-btn" title="Connect to..." onclick={(e) => startConnect('control', ctrl.id, e)}>+</button>
 						</div>
 						{/if}
 					{/each}
@@ -2337,17 +2358,29 @@
 						if (editingLink.type === 'trigger') {
 							editingLink.from = { entity: 'question', id: allQuestions[0]?.id || '' };
 							editingLink.to = { entity: 'risk', id: allRisks[0]?.id || '' };
+						} else if (editingLink.type === 'dependency') {
+							editingLink.from = { entity: 'question', id: allQuestions[0]?.id || '' };
+							editingLink.to = { entity: 'question', id: allQuestions[1]?.id || allQuestions[0]?.id || '' };
 						} else if (editingLink.type === 'mitigation') {
 							editingLink.from = { entity: 'risk', id: allRisks[0]?.id || '' };
 							editingLink.to = { entity: 'mitigation', id: allMitigations[0]?.id || '' };
 						} else if (editingLink.type === 'regulation') {
 							editingLink.from = { entity: 'risk', id: allRisks[0]?.id || '' };
 							editingLink.to = { entity: 'regulation', id: allRegulations[0]?.id || '' };
+						} else if (editingLink.type === 'control') {
+							editingLink.from = { entity: 'risk', id: allRisks[0]?.id || '' };
+							editingLink.to = { entity: 'control', id: allControls[0]?.id || '' };
+						} else if (editingLink.type === 'implementation') {
+							editingLink.from = { entity: 'mitigation', id: allMitigations[0]?.id || '' };
+							editingLink.to = { entity: 'control', id: allControls[0]?.id || '' };
 						}
 					}}>
 						<option value="trigger">Trigger (Question triggers Risk)</option>
-						<option value="mitigation">Control Category (Risk linked to Control Category)</option>
+						<option value="dependency">Dependency (Question depends on Question)</option>
+						<option value="mitigation">Control Category (Risk linked to Category)</option>
 						<option value="regulation">Regulation (Risk linked to Regulation)</option>
+						<option value="control">Control (Risk linked to Control)</option>
+						<option value="implementation">Implementation (Category implements Control)</option>
 						<option value="custom">Custom</option>
 					</select>
 				</div>
@@ -3408,8 +3441,11 @@
 	}
 
 	.conn-badge.trigger { background: rgba(251, 191, 36, 0.3); color: #fbbf24; }
+	.conn-badge.dependency { background: rgba(59, 130, 246, 0.3); color: #3b82f6; }
 	.conn-badge.mitigation { background: rgba(34, 197, 94, 0.3); color: #22c55e; }
 	.conn-badge.regulation { background: rgba(168, 85, 247, 0.3); color: #a855f7; }
+	.conn-badge.control { background: rgba(249, 115, 22, 0.3); color: #f97316; }
+	.conn-badge.implementation { background: rgba(236, 72, 153, 0.3); color: #ec4899; }
 	.conn-badge.custom { background: rgba(148, 163, 184, 0.3); color: #94a3b8; }
 
 	.edit-hint {
@@ -3677,8 +3713,11 @@
 	}
 
 	.conn-type.trigger { background: rgba(251, 191, 36, 0.2); color: #fbbf24; }
+	.conn-type.dependency { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
 	.conn-type.mitigation { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
 	.conn-type.regulation { background: rgba(168, 85, 247, 0.2); color: #a855f7; }
+	.conn-type.control { background: rgba(249, 115, 22, 0.2); color: #f97316; }
+	.conn-type.implementation { background: rgba(236, 72, 153, 0.2); color: #ec4899; }
 	.conn-type.custom { background: rgba(148, 163, 184, 0.2); color: #94a3b8; }
 
 	.conn-direction {
