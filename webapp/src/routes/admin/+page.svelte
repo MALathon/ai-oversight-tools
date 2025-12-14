@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
 	import type { PageData } from './$types';
+	import { GlobalFilters } from '$lib/admin';
 
 	let { data }: { data: PageData } = $props();
 
@@ -86,7 +87,7 @@
 	];
 
 	// UI State
-	let currentView = $state<'matrix' | 'risk-editor' | 'graph' | 'entities'>('matrix');
+	let currentView = $state<'matrix' | 'trace' | 'graph'>('matrix');
 	let selectedPhase = $state<string>('all');
 	let selectedTechType = $state<string>('all');
 	let selectedNode = $state<{ type: string; id: string } | null>(null);
@@ -96,55 +97,470 @@
 	let searchQuery = $state('');
 	let focusMode = $state(false);
 
-	// Matrix view state
-	let matrixType = $state<'triggers' | 'mitigations' | 'regulations' | 'controls'>('triggers');
+	// Matrix view state - configurable row and column types
+	type EntityType = 'question' | 'risk' | 'mitigation' | 'regulation' | 'control';
+	let matrixRowType = $state<EntityType>('question');
+	let matrixColType = $state<EntityType>('risk');
 	let matrixVerbose = $state(false);
 	let matrixHoverRow = $state<string | null>(null);
 	let matrixHoverCol = $state<string | null>(null);
 	let showUnlinkedOnly = $state(false);
 
-	// Get hover info for matrix
+	// Entity type configuration for Matrix
+	const entityConfig: Record<EntityType, {
+		label: string;
+		shortLabel: string;
+		getAll: () => any[];
+		getLabel: (item: any) => string;
+		getShortLabel: (item: any) => string;
+		searchText: (item: any) => string;
+	}> = {
+		question: {
+			label: 'Questions',
+			shortLabel: 'Q',
+			getAll: () => allQuestions.filter(q => !['phase', 'model-types'].includes(q.id)),
+			getLabel: (q) => q.text,
+			getShortLabel: (q) => q.id,
+			searchText: (q) => q.text + ' ' + q.id
+		},
+		risk: {
+			label: 'Risks',
+			shortLabel: 'Risk',
+			getAll: () => allRisks,
+			getLabel: (r) => r.shortName,
+			getShortLabel: (r) => r.code,
+			searchText: (r) => r.shortName + ' ' + r.name + ' ' + r.code
+		},
+		mitigation: {
+			label: 'Control Categories',
+			shortLabel: 'Mit',
+			getAll: () => allMitigations,
+			getLabel: (m) => m.name,
+			getShortLabel: (m) => m.code,
+			searchText: (m) => m.name + ' ' + m.code
+		},
+		regulation: {
+			label: 'Regulations',
+			shortLabel: 'Reg',
+			getAll: () => allRegulations,
+			getLabel: (r) => r.citation,
+			getShortLabel: (r) => r.citation.split('(')[0].trim(),
+			searchText: (r) => r.citation + ' ' + r.description
+		},
+		control: {
+			label: 'Controls',
+			shortLabel: 'Ctrl',
+			getAll: () => {
+				let filtered = allControls;
+				if (selectedPhase !== 'all') {
+					filtered = filtered.filter(c => c.phases?.includes(selectedPhase));
+				}
+				if (selectedTechType !== 'all') {
+					filtered = filtered.filter(c => c.techTypes?.includes('all') || c.techTypes?.includes(selectedTechType));
+				}
+				return filtered.slice(0, 100); // Limit for performance
+			},
+			getLabel: (c) => c.name,
+			getShortLabel: (c) => c.id.split('_')[0],
+			searchText: (c) => c.name + ' ' + c.id
+		}
+	};
+
+	// Determine link type for entity pair
+	function getLinkTypeForPair(fromType: EntityType, toType: EntityType): string | null {
+		const pairs: Record<string, string> = {
+			'question-risk': 'trigger',
+			'risk-mitigation': 'mitigation',
+			'risk-regulation': 'regulation',
+			'risk-control': 'control',
+			'question-question': 'dependency' // For showIf
+		};
+		return pairs[`${fromType}-${toType}`] || pairs[`${toType}-${fromType}`] || null;
+	}
+
+	// Check if pair order is reversed from canonical
+	function isPairReversed(fromType: EntityType, toType: EntityType): boolean {
+		const canonical: Record<string, [EntityType, EntityType]> = {
+			'trigger': ['question', 'risk'],
+			'mitigation': ['risk', 'mitigation'],
+			'regulation': ['risk', 'regulation'],
+			'control': ['risk', 'control'],
+			'dependency': ['question', 'question']
+		};
+		const linkType = getLinkTypeForPair(fromType, toType);
+		if (!linkType || !canonical[linkType]) return false;
+		const [canonFrom, canonTo] = canonical[linkType];
+		return fromType === canonTo && toType === canonFrom;
+	}
+
+	// Get matrix link for any entity pair
+	function getMatrixLink(rowType: EntityType, rowId: string, colType: EntityType, colId: string): any {
+		const linkType = getLinkTypeForPair(rowType, colType);
+		if (!linkType) return null;
+
+		const reversed = isPairReversed(rowType, colType);
+		const fromEntity = reversed ? colType : rowType;
+		const fromId = reversed ? colId : rowId;
+		const toEntity = reversed ? rowType : colType;
+		const toId = reversed ? rowId : colId;
+
+		return filteredLinks.find((l: any) =>
+			l.type === linkType &&
+			l.from.entity === fromEntity && l.from.id === fromId &&
+			l.to.entity === toEntity && l.to.id === toId
+		);
+	}
+
+	// Toggle matrix link for any entity pair
+	function toggleGenericMatrixLink(rowType: EntityType, rowId: string, colType: EntityType, colId: string) {
+		const linkType = getLinkTypeForPair(rowType, colType);
+		if (!linkType) {
+			alert(`No link type defined for ${rowType} → ${colType}`);
+			return;
+		}
+
+		const reversed = isPairReversed(rowType, colType);
+		const fromEntity = reversed ? colType : rowType;
+		const fromId = reversed ? colId : rowId;
+		const toEntity = reversed ? rowType : colType;
+		const toId = reversed ? rowId : colId;
+
+		const existing = getMatrixLink(rowType, rowId, colType, colId);
+
+		if (existing) {
+			editingLink = JSON.parse(JSON.stringify(existing));
+			showLinkEditor = true;
+		} else {
+			const newLink: any = {
+				id: `link-${Date.now()}`,
+				type: linkType,
+				from: { entity: fromEntity, id: fromId },
+				to: { entity: toEntity, id: toId },
+				phases: ['phase-1', 'phase-2', 'phase-3']
+			};
+
+			// Add type-specific defaults
+			if (linkType === 'trigger') {
+				newLink.answerValues = [];
+				newLink.logic = 'OR';
+			} else if (linkType === 'mitigation') {
+				newLink.guidance = {};
+			}
+
+			editingLink = newLink;
+			showLinkEditor = true;
+		}
+	}
+
+	// Get matrix items for row/column with filtering
+	let matrixRowItems = $derived.by(() => {
+		const config = entityConfig[matrixRowType];
+		let items = config.getAll();
+		if (searchQuery) {
+			const q = searchQuery.toLowerCase();
+			items = items.filter(item => config.searchText(item).toLowerCase().includes(q));
+		}
+		if (showUnlinkedOnly) {
+			items = items.filter(item => {
+				const link = matrixColItems.some(col => getMatrixLink(matrixRowType, item.id, matrixColType, col.id));
+				return !link;
+			});
+		}
+		return items;
+	});
+
+	let matrixColItems = $derived.by(() => {
+		const config = entityConfig[matrixColType];
+		let items = config.getAll();
+		if (showUnlinkedOnly) {
+			items = items.filter(item => {
+				const link = entityConfig[matrixRowType].getAll().some(row => getMatrixLink(matrixRowType, row.id, matrixColType, item.id));
+				return !link;
+			});
+		}
+		return items;
+	});
+
+	// Check if selected pair has valid link type
+	let matrixPairValid = $derived(getLinkTypeForPair(matrixRowType, matrixColType) !== null);
+
+	// Get hover info for matrix (generic for any row/col type)
 	let matrixHoverInfo = $derived.by(() => {
 		if (!matrixHoverRow && !matrixHoverCol) return null;
 
 		let rowInfo = '';
 		let colInfo = '';
 
-		if (matrixType === 'triggers') {
-			if (matrixHoverRow) {
-				const q = allQuestions.find(q => q.id === matrixHoverRow);
-				rowInfo = q ? `${q.id}: ${q.text}` : matrixHoverRow;
-			}
-			if (matrixHoverCol) {
-				const r = allRisks.find(r => r.id === matrixHoverCol);
-				colInfo = r ? `${r.code}: ${r.shortName}` : matrixHoverCol;
-			}
-		} else if (matrixType === 'mitigations') {
-			if (matrixHoverRow) {
-				const r = allRisks.find(r => r.id === matrixHoverRow);
-				rowInfo = r ? `${r.code}: ${r.shortName}` : matrixHoverRow;
-			}
-			if (matrixHoverCol) {
-				const m = allMitigations.find(m => m.id === matrixHoverCol);
-				colInfo = m ? `${m.code}: ${m.name}` : matrixHoverCol;
-			}
-		} else if (matrixType === 'regulations') {
-			if (matrixHoverRow) {
-				const r = allRisks.find(r => r.id === matrixHoverRow);
-				rowInfo = r ? `${r.code}: ${r.shortName}` : matrixHoverRow;
-			}
-			if (matrixHoverCol) {
-				const reg = allRegulations.find(r => r.id === matrixHoverCol);
-				colInfo = reg ? `${reg.citation}: ${reg.description}` : matrixHoverCol;
-			}
+		if (matrixHoverRow) {
+			const rowConfig = entityConfig[matrixRowType];
+			const item = rowConfig.getAll().find((i: any) => i.id === matrixHoverRow);
+			rowInfo = item ? `${rowConfig.getShortLabel(item)}: ${rowConfig.getLabel(item)}` : matrixHoverRow;
+		}
+		if (matrixHoverCol) {
+			const colConfig = entityConfig[matrixColType];
+			const item = colConfig.getAll().find((i: any) => i.id === matrixHoverCol);
+			colInfo = item ? `${colConfig.getShortLabel(item)}: ${colConfig.getLabel(item)}` : matrixHoverCol;
 		}
 
 		return { row: rowInfo, col: colInfo };
 	});
 
-	// Risk editor state
-	let selectedRiskId = $state<string | null>(null);
-	let selectedRisk = $derived(selectedRiskId ? getRisk(selectedRiskId) : null);
+	// Trace view state
+	let traceStartType = $state<'question' | 'risk' | 'control'>('question');
+	let traceStartId = $state<string>('');
+	let traceSelectedNode = $state<{ type: string; id: string } | null>(null);
+
+	// Trace node type for tree structure
+	interface TraceNode {
+		type: 'question' | 'risk' | 'mitigation' | 'control' | 'regulation';
+		id: string;
+		label: string;
+		shortLabel: string;
+		children: TraceNode[];
+		link?: any; // The link that connects to parent
+		depth: number;
+	}
+
+	// Build trace tree from starting point
+	let traceTree = $derived.by((): TraceNode | null => {
+		if (!traceStartId) return null;
+
+		// Helper to get question dependencies (showIf)
+		function getQuestionDependents(qId: string): string[] {
+			return allQuestions
+				.filter(q => q.showIf && Object.keys(q.showIf).includes(qId))
+				.map(q => q.id);
+		}
+
+		// Helper to get risks triggered by a question
+		function getRisksForQuestion(qId: string): Array<{ risk: any; link: any }> {
+			return filteredLinks
+				.filter((l: any) => l.type === 'trigger' && l.from.entity === 'question' && l.from.id === qId)
+				.map((l: any) => ({ risk: allRisks.find(r => r.id === l.to.id), link: l }))
+				.filter(r => r.risk);
+		}
+
+		// Helper to get mitigations for a risk
+		function getMitigationsForRisk(rId: string): Array<{ mitigation: any; link: any }> {
+			return filteredLinks
+				.filter((l: any) => l.type === 'mitigation' && l.from.entity === 'risk' && l.from.id === rId)
+				.map((l: any) => ({ mitigation: allMitigations.find(m => m.id === l.to.id), link: l }))
+				.filter(m => m.mitigation);
+		}
+
+		// Helper to get regulations for a risk
+		function getRegulationsForRisk(rId: string): Array<{ regulation: any; link: any }> {
+			return filteredLinks
+				.filter((l: any) => l.type === 'regulation' && l.from.entity === 'risk' && l.from.id === rId)
+				.map((l: any) => ({ regulation: allRegulations.find(r => r.id === l.to.id), link: l }))
+				.filter(r => r.regulation);
+		}
+
+		// Helper to get controls for a mitigation (subcategory)
+		function getControlsForMitigation(mId: string): any[] {
+			return allControls.filter(c => c.subcategoryId === mId).slice(0, 5); // Limit for display
+		}
+
+		// Build question subtree (recursive for showIf dependencies)
+		function buildQuestionNode(qId: string, depth: number, visited: Set<string>): TraceNode | null {
+			if (visited.has(qId)) return null;
+			visited.add(qId);
+
+			const q = allQuestions.find(q => q.id === qId);
+			if (!q) return null;
+
+			const node: TraceNode = {
+				type: 'question',
+				id: q.id,
+				label: q.text,
+				shortLabel: q.id,
+				children: [],
+				depth
+			};
+
+			// Add dependent questions (via showIf)
+			const dependents = getQuestionDependents(qId);
+			for (const depId of dependents) {
+				const depNode = buildQuestionNode(depId, depth + 1, visited);
+				if (depNode) node.children.push(depNode);
+			}
+
+			// Add triggered risks
+			const risks = getRisksForQuestion(qId);
+			for (const { risk, link } of risks) {
+				node.children.push(buildRiskNode(risk, link, depth + 1));
+			}
+
+			return node;
+		}
+
+		// Build risk subtree
+		function buildRiskNode(risk: any, link: any, depth: number): TraceNode {
+			const node: TraceNode = {
+				type: 'risk',
+				id: risk.id,
+				label: risk.shortName,
+				shortLabel: risk.code,
+				children: [],
+				link,
+				depth
+			};
+
+			// Add mitigations
+			const mitigations = getMitigationsForRisk(risk.id);
+			for (const { mitigation, link: mLink } of mitigations) {
+				node.children.push(buildMitigationNode(mitigation, mLink, depth + 1));
+			}
+
+			// Add regulations
+			const regulations = getRegulationsForRisk(risk.id);
+			for (const { regulation, link: rLink } of regulations) {
+				node.children.push({
+					type: 'regulation',
+					id: regulation.id,
+					label: regulation.description,
+					shortLabel: regulation.citation.split('(')[0].trim(),
+					children: [],
+					link: rLink,
+					depth: depth + 1
+				});
+			}
+
+			return node;
+		}
+
+		// Build mitigation subtree
+		function buildMitigationNode(mit: any, link: any, depth: number): TraceNode {
+			const node: TraceNode = {
+				type: 'mitigation',
+				id: mit.id,
+				label: mit.name,
+				shortLabel: mit.code,
+				children: [],
+				link,
+				depth
+			};
+
+			// Add controls (limited)
+			const controls = getControlsForMitigation(mit.id);
+			for (const ctrl of controls) {
+				node.children.push({
+					type: 'control',
+					id: ctrl.id,
+					label: ctrl.name,
+					shortLabel: ctrl.id.split('_')[0],
+					children: [],
+					depth: depth + 1
+				});
+			}
+
+			// Show more indicator if there are more controls
+			const totalControls = allControls.filter(c => c.subcategoryId === mit.id).length;
+			if (totalControls > 5) {
+				node.children.push({
+					type: 'control',
+					id: `more-${mit.id}`,
+					label: `+${totalControls - 5} more controls`,
+					shortLabel: '...',
+					children: [],
+					depth: depth + 1
+				});
+			}
+
+			return node;
+		}
+
+		// Start building tree based on start type
+		if (traceStartType === 'question') {
+			return buildQuestionNode(traceStartId, 0, new Set());
+		} else if (traceStartType === 'risk') {
+			const risk = allRisks.find(r => r.id === traceStartId);
+			if (!risk) return null;
+
+			// For risk start, also show triggering questions
+			const node: TraceNode = {
+				type: 'risk',
+				id: risk.id,
+				label: risk.shortName,
+				shortLabel: risk.code,
+				children: [],
+				depth: 0
+			};
+
+			// Add mitigations and regulations
+			const mitigations = getMitigationsForRisk(risk.id);
+			for (const { mitigation, link: mLink } of mitigations) {
+				node.children.push(buildMitigationNode(mitigation, mLink, 1));
+			}
+
+			const regulations = getRegulationsForRisk(risk.id);
+			for (const { regulation, link: rLink } of regulations) {
+				node.children.push({
+					type: 'regulation',
+					id: regulation.id,
+					label: regulation.description,
+					shortLabel: regulation.citation.split('(')[0].trim(),
+					children: [],
+					link: rLink,
+					depth: 1
+				});
+			}
+
+			return node;
+		} else {
+			// Control start - show its subcategory and linked risks
+			const ctrl = allControls.find(c => c.id === traceStartId);
+			if (!ctrl) return null;
+
+			const mit = allMitigations.find(m => m.id === ctrl.subcategoryId);
+
+			const node: TraceNode = {
+				type: 'control',
+				id: ctrl.id,
+				label: ctrl.name,
+				shortLabel: ctrl.id.split('_')[0],
+				children: [],
+				depth: 0
+			};
+
+			if (mit) {
+				// Find risks linked to this mitigation
+				const risksLinked = filteredLinks
+					.filter((l: any) => l.type === 'mitigation' && l.to.id === mit.id)
+					.map((l: any) => ({ risk: allRisks.find(r => r.id === l.from.id), link: l }))
+					.filter(r => r.risk);
+
+				for (const { risk } of risksLinked.slice(0, 5)) {
+					node.children.push({
+						type: 'risk',
+						id: risk.id,
+						label: risk.shortName,
+						shortLabel: risk.code,
+						children: [],
+						depth: 1
+					});
+				}
+			}
+
+			return node;
+		}
+	});
+
+	// Flatten trace tree into columns for rendering
+	let traceColumns = $derived.by((): Map<string, TraceNode[]> => {
+		const columns = new Map<string, TraceNode[]>();
+		if (!traceTree) return columns;
+
+		function collectByType(node: TraceNode) {
+			const col = columns.get(node.type) || [];
+			col.push(node);
+			columns.set(node.type, col);
+			node.children.forEach(collectByType);
+		}
+
+		collectByType(traceTree);
+		return columns;
+	});
 
 	// Entity selector state (for link editor)
 	let entitySelectorOpen = $state<'from' | 'to' | null>(null);
@@ -290,6 +706,57 @@
 		return filtered;
 	});
 
+	// Visible counts for graph columns (accounting for search, focus mode, and transitive connections)
+	let visibleQuestionCount = $derived.by(() => {
+		const filtered = filterBySearch(allQuestions, (q: any) => q.text, 'question');
+		if (!focusMode || !selectedNode) return filtered.length;
+		return filtered.filter((q: any) => {
+			const isSelected = selectedNode?.type === 'question' && selectedNode?.id === q.id;
+			const connected = transitiveConnections.has(`question:${q.id}`);
+			return isSelected || connected;
+		}).length;
+	});
+
+	let visibleRiskCount = $derived.by(() => {
+		const filtered = filterBySearch(allRisks, (r: any) => r.shortName + ' ' + r.name, 'risk');
+		if (!focusMode || !selectedNode) return filtered.length;
+		return filtered.filter((r: any) => {
+			const isSelected = selectedNode?.type === 'risk' && selectedNode?.id === r.id;
+			const connected = transitiveConnections.has(`risk:${r.id}`);
+			return isSelected || connected;
+		}).length;
+	});
+
+	let visibleMitigationCount = $derived.by(() => {
+		const filtered = filterBySearch(allMitigations, (m: any) => m.name, 'mitigation');
+		if (!focusMode || !selectedNode) return filtered.length;
+		return filtered.filter((m: any) => {
+			const isSelected = selectedNode?.type === 'mitigation' && selectedNode?.id === m.id;
+			const connected = transitiveConnections.has(`mitigation:${m.id}`);
+			return isSelected || connected;
+		}).length;
+	});
+
+	let visibleRegulationCount = $derived.by(() => {
+		const filtered = filterBySearch(allRegulations, (r: any) => r.citation + ' ' + r.description, 'regulation');
+		if (!focusMode || !selectedNode) return filtered.length;
+		return filtered.filter((r: any) => {
+			const isSelected = selectedNode?.type === 'regulation' && selectedNode?.id === r.id;
+			const connected = transitiveConnections.has(`regulation:${r.id}`);
+			return isSelected || connected;
+		}).length;
+	});
+
+	let visibleControlCount = $derived.by(() => {
+		const filtered = graphFilteredControls.slice(0, 50); // Same limit as rendering
+		if (!focusMode || !selectedNode) return Math.min(graphFilteredControls.length, 50);
+		return filtered.filter((c: any) => {
+			const isSelected = selectedNode?.type === 'control' && selectedNode?.id === c.id;
+			const connected = transitiveConnections.has(`control:${c.id}`);
+			return isSelected || connected;
+		}).length;
+	});
+
 	// Get control link count (via its subcategory's risk links)
 	function getControlLinkCount(controlId: string): number {
 		const ctrl = allControls.find(c => c.id === controlId);
@@ -344,19 +811,26 @@
 		return counts;
 	});
 
-	// Get orphan counts for display
+	// Get orphan counts for display (generic for any row/col type)
 	let orphanStats = $derived.by(() => {
 		const stats = { rows: 0, cols: 0, total: 0 };
-		if (matrixType === 'triggers') {
-			allQuestions.forEach(q => { if ((linkCounts.questionTriggers.get(q.id) || 0) === 0) stats.rows++; });
-			allRisks.forEach(r => { if ((linkCounts.riskTriggers.get(r.id) || 0) === 0) stats.cols++; });
-		} else if (matrixType === 'mitigations') {
-			allRisks.forEach(r => { if ((linkCounts.riskMitigations.get(r.id) || 0) === 0) stats.rows++; });
-			allMitigations.forEach(m => { if ((linkCounts.mitigationRisks.get(m.id) || 0) === 0) stats.cols++; });
-		} else if (matrixType === 'regulations') {
-			allRisks.forEach(r => { if ((linkCounts.riskRegulations.get(r.id) || 0) === 0) stats.rows++; });
-			allRegulations.forEach(r => { if ((linkCounts.regulationRisks.get(r.id) || 0) === 0) stats.cols++; });
-		}
+		if (!matrixPairValid) return stats;
+
+		const rowItems = entityConfig[matrixRowType].getAll();
+		const colItems = entityConfig[matrixColType].getAll();
+
+		// Count rows with no links to any column
+		rowItems.forEach((row: any) => {
+			const hasLink = colItems.some((col: any) => getMatrixLink(matrixRowType, row.id, matrixColType, col.id));
+			if (!hasLink) stats.rows++;
+		});
+
+		// Count cols with no links to any row
+		colItems.forEach((col: any) => {
+			const hasLink = rowItems.some((row: any) => getMatrixLink(matrixRowType, row.id, matrixColType, col.id));
+			if (!hasLink) stats.cols++;
+		});
+
 		stats.total = stats.rows + stats.cols;
 		return stats;
 	});
@@ -762,118 +1236,6 @@
 		editingEntity = null;
 	}
 
-	// Risk editor picker state
-	let showRiskPicker = $state<'trigger' | 'mitigation' | 'regulation' | null>(null);
-	let riskPickerSearch = $state('');
-	let pickerCreateMode = $state(false);
-	let pickerNewEntity = $state<any>(null);
-
-	// Initialize new entity for picker creation
-	function initPickerNewEntity() {
-		if (showRiskPicker === 'trigger') {
-			pickerNewEntity = { id: '', text: '', type: 'yes-no', category: 'essentials', options: [] };
-		} else if (showRiskPicker === 'mitigation') {
-			pickerNewEntity = { id: '', code: '', name: '', description: '', category: '' };
-		} else if (showRiskPicker === 'regulation') {
-			pickerNewEntity = { id: '', citation: '', description: '', requirement: '', framework: '' };
-		}
-		pickerCreateMode = true;
-	}
-
-	// Create entity from picker and link it
-	function createAndLinkEntity() {
-		if (!pickerNewEntity || !showRiskPicker) return;
-
-		// Validate required fields
-		if (showRiskPicker === 'trigger' && (!pickerNewEntity.id || !pickerNewEntity.text)) {
-			alert('Please provide ID and question text');
-			return;
-		}
-		if (showRiskPicker === 'mitigation' && (!pickerNewEntity.id || !pickerNewEntity.code || !pickerNewEntity.name)) {
-			alert('Please provide ID, code, and name');
-			return;
-		}
-		if (showRiskPicker === 'regulation' && (!pickerNewEntity.id || !pickerNewEntity.citation || !pickerNewEntity.description)) {
-			alert('Please provide ID, citation, and description');
-			return;
-		}
-
-		// Create the entity
-		if (showRiskPicker === 'trigger') {
-			const questions = editableEntities.questions ? [...editableEntities.questions] : [...defaultQuestions];
-			questions.push(pickerNewEntity);
-			editableEntities = { ...editableEntities, questions };
-		} else if (showRiskPicker === 'regulation') {
-			const regulations = editableEntities.regulations ? [...editableEntities.regulations] : [...defaultRegulations];
-			regulations.push(pickerNewEntity);
-			editableEntities = { ...editableEntities, regulations };
-		}
-
-		// Link it
-		addLinkFromPicker(pickerNewEntity.id);
-
-		// Reset state
-		pickerCreateMode = false;
-		pickerNewEntity = null;
-	}
-
-	// Get items for risk picker based on type
-	let riskPickerItems = $derived.by(() => {
-		const q = riskPickerSearch.toLowerCase();
-		if (showRiskPicker === 'trigger') {
-			return allQuestions.filter(e => !q || e.text.toLowerCase().includes(q) || e.id.toLowerCase().includes(q));
-		} else if (showRiskPicker === 'mitigation') {
-			return allMitigations.filter(e => !q || e.name.toLowerCase().includes(q) || e.code.toLowerCase().includes(q));
-		} else if (showRiskPicker === 'regulation') {
-			return allRegulations.filter(e => !q || e.description.toLowerCase().includes(q) || e.citation.toLowerCase().includes(q));
-		}
-		return [];
-	});
-
-	// Add link from risk picker
-	function addLinkFromPicker(itemId: string) {
-		if (!selectedRiskId || !showRiskPicker) return;
-
-		const newLink: any = {
-			id: `link-${Date.now()}`,
-			phases: ['phase-1', 'phase-2', 'phase-3']
-		};
-
-		if (showRiskPicker === 'trigger') {
-			newLink.type = 'trigger';
-			newLink.from = { entity: 'question', id: itemId };
-			newLink.to = { entity: 'risk', id: selectedRiskId };
-			newLink.answerValues = [];
-			newLink.logic = 'OR';
-		} else if (showRiskPicker === 'mitigation') {
-			newLink.type = 'mitigation';
-			newLink.from = { entity: 'risk', id: selectedRiskId };
-			newLink.to = { entity: 'mitigation', id: itemId };
-			newLink.guidance = {};
-		} else if (showRiskPicker === 'regulation') {
-			newLink.type = 'regulation';
-			newLink.from = { entity: 'risk', id: selectedRiskId };
-			newLink.to = { entity: 'regulation', id: itemId };
-		}
-
-		links = [...links, newLink];
-		showRiskPicker = null;
-		riskPickerSearch = '';
-	}
-
-	// Check if item is already linked to selected risk
-	function isLinkedToRisk(type: 'trigger' | 'mitigation' | 'regulation', itemId: string): boolean {
-		if (!selectedRiskId) return false;
-		if (type === 'trigger') {
-			return links.some((l: any) => l.type === 'trigger' && l.from.id === itemId && l.to.id === selectedRiskId);
-		} else if (type === 'mitigation') {
-			return links.some((l: any) => l.type === 'mitigation' && l.from.id === selectedRiskId && l.to.id === itemId);
-		} else if (type === 'regulation') {
-			return links.some((l: any) => l.type === 'regulation' && l.from.id === selectedRiskId && l.to.id === itemId);
-		}
-		return false;
-	}
-
 	function getEntityName(entity: string, id: string): string {
 		if (entity === 'question') return getQuestion(id)?.text || id;
 		if (entity === 'risk') return getRisk(id)?.shortName || id;
@@ -1083,9 +1445,8 @@
 			<h1>Traceability</h1>
 			<div class="view-tabs">
 				<button class:active={currentView === 'matrix'} onclick={() => currentView = 'matrix'}>Matrix</button>
-				<button class:active={currentView === 'risk-editor'} onclick={() => currentView = 'risk-editor'}>Risk Editor</button>
+				<button class:active={currentView === 'trace'} onclick={() => currentView = 'trace'}>Trace</button>
 				<button class:active={currentView === 'graph'} onclick={() => currentView = 'graph'}>Graph</button>
-				<button class:active={currentView === 'entities'} onclick={() => currentView = 'entities'}>Entities</button>
 			</div>
 		</div>
 		<div class="header-right">
@@ -1094,12 +1455,14 @@
 			{:else}
 				<span class="status-badge default">Default</span>
 			{/if}
-			<div class="phase-filter">
-				<button class:active={selectedPhase === 'all'} onclick={() => selectedPhase = 'all'}>All</button>
-				{#each phases as phase}
-					<button class:active={selectedPhase === phase.id} onclick={() => selectedPhase = phase.id}>{phase.short}</button>
-				{/each}
-			</div>
+			<GlobalFilters
+				{phases}
+				modelTypes={data.modelTypes}
+				{selectedPhase}
+				{selectedTechType}
+				onPhaseChange={(p) => selectedPhase = p}
+				onTechTypeChange={(t) => selectedTechType = t}
+			/>
 			<input type="file" accept=".json" bind:this={fileInput} onchange={handleFileImport} style="display: none" />
 			<button class="btn" onclick={importFile}>Import</button>
 			<button class="btn primary" onclick={exportConfig}>Export</button>
@@ -1112,19 +1475,31 @@
 	<!-- MATRIX VIEW -->
 	{#if currentView === 'matrix'}
 		<div class="matrix-toolbar">
-			<div class="matrix-tabs">
-				<button class:active={matrixType === 'triggers'} onclick={() => matrixType = 'triggers'}>
-					Questions → Risks
-				</button>
-				<button class:active={matrixType === 'mitigations'} onclick={() => matrixType = 'mitigations'}>
-					Risks → Control Categories
-				</button>
-				<button class:active={matrixType === 'controls'} onclick={() => matrixType = 'controls'}>
-					Risks → Controls
-				</button>
-				<button class:active={matrixType === 'regulations'} onclick={() => matrixType = 'regulations'}>
-					Risks → Regulations
-				</button>
+			<div class="matrix-selectors">
+				<div class="selector-group">
+					<label>Rows:</label>
+					<select bind:value={matrixRowType}>
+						<option value="question">Questions</option>
+						<option value="risk">Risks</option>
+						<option value="mitigation">Control Categories</option>
+						<option value="regulation">Regulations</option>
+						<option value="control">Controls</option>
+					</select>
+				</div>
+				<span class="selector-arrow">→</span>
+				<div class="selector-group">
+					<label>Columns:</label>
+					<select bind:value={matrixColType}>
+						<option value="question">Questions</option>
+						<option value="risk">Risks</option>
+						<option value="mitigation">Control Categories</option>
+						<option value="regulation">Regulations</option>
+						<option value="control">Controls</option>
+					</select>
+				</div>
+				{#if !matrixPairValid}
+					<span class="no-link-warning">No link type for this pair</span>
+				{/if}
 			</div>
 			<div class="matrix-options">
 				<label class="verbose-toggle">
@@ -1138,7 +1513,7 @@
 						<span class="orphan-badge">{orphanStats.total}</span>
 					{/if}
 				</label>
-				<input type="text" placeholder="Search..." bind:value={searchQuery} class="search" />
+				<input type="text" placeholder="Search rows..." bind:value={searchQuery} class="search" />
 			</div>
 		</div>
 
@@ -1159,247 +1534,62 @@
 		</div>
 
 		<div class="matrix-container" onmouseleave={() => { matrixHoverRow = null; matrixHoverCol = null; }}>
-			{#if matrixType === 'triggers'}
-				{@const metadataQuestions = ['phase', 'model-types']}
-				{@const filteredQuestions = filterBySearch(allQuestions, q => q.text).filter(q => !metadataQuestions.includes(q.id) && (!showUnlinkedOnly || (linkCounts.questionTriggers.get(q.id) || 0) === 0))}
-				{@const filteredRisks = showUnlinkedOnly ? allRisks.filter(r => (linkCounts.riskTriggers.get(r.id) || 0) === 0) : allRisks}
-				<table class="matrix">
-					<thead>
-						<tr>
-							<th class="row-header">Question</th>
-							{#each filteredRisks as risk}
-								<th
-									class="col-header"
-									class:highlighted={matrixHoverCol === risk.id}
-									title={risk.name}
-									onmouseenter={() => matrixHoverCol = risk.id}
-								>
-									{#if matrixVerbose}
-										<span class="verbose-label">{risk.shortName}</span>
-									{:else}
-										{risk.code}
-									{/if}
-								</th>
-							{/each}
-						</tr>
-					</thead>
-					<tbody>
-						{#each filteredQuestions as question}
-							<tr class:row-highlighted={matrixHoverRow === question.id}>
-								<td
-									class="row-label"
-									class:highlighted={matrixHoverRow === question.id}
-									title={question.text}
-									onmouseenter={() => matrixHoverRow = question.id}
-								>
-									{#if matrixVerbose}
-										<span class="verbose-label">{question.text}</span>
-									{:else}
-										{question.id}
-									{/if}
-								</td>
-								{#each filteredRisks as risk}
-									{@const link = getTriggerLink(question.id, risk.id)}
-									<td
-										class="matrix-cell"
-										class:linked={link}
-										class:col-highlighted={matrixHoverCol === risk.id}
-										class:row-highlighted={matrixHoverRow === question.id}
-										onclick={() => toggleMatrixLink('trigger', question.id, risk.id)}
-										onmouseenter={() => { matrixHoverRow = question.id; matrixHoverCol = risk.id; }}
-										title={link ? `Click to edit link` : `Click to link`}
-									>
-										{#if link}
-											<span class="cell-marker">✓</span>
-										{/if}
-									</td>
-								{/each}
-							</tr>
-						{/each}
-					</tbody>
-				</table>
-			{:else if matrixType === 'mitigations'}
-				{@const filteredRisks = filterBySearch(allRisks, r => r.shortName).filter(r => !showUnlinkedOnly || (linkCounts.riskMitigations.get(r.id) || 0) === 0)}
-				{@const filteredMitigations = showUnlinkedOnly ? allMitigations.filter(m => (linkCounts.mitigationRisks.get(m.id) || 0) === 0) : allMitigations}
-				<table class="matrix">
-					<thead>
-						<tr>
-							<th class="row-header">Risk</th>
-							{#each filteredMitigations as mit}
-								<th
-									class="col-header"
-									class:highlighted={matrixHoverCol === mit.id}
-									title={mit.name}
-									onmouseenter={() => matrixHoverCol = mit.id}
-								>
-									{#if matrixVerbose}
-										<span class="verbose-label">{mit.name}</span>
-									{:else}
-										{mit.code}
-									{/if}
-								</th>
-							{/each}
-						</tr>
-					</thead>
-					<tbody>
-						{#each filteredRisks as risk}
-							<tr class:row-highlighted={matrixHoverRow === risk.id}>
-								<td
-									class="row-label"
-									class:highlighted={matrixHoverRow === risk.id}
-									title={risk.name}
-									onmouseenter={() => matrixHoverRow = risk.id}
-								>
-									{#if matrixVerbose}
-										<span class="verbose-label">{risk.shortName}</span>
-									{:else}
-										{risk.code}
-									{/if}
-								</td>
-								{#each filteredMitigations as mit}
-									{@const link = getMitigationLink(risk.id, mit.id)}
-									<td
-										class="matrix-cell"
-										class:linked={link}
-										class:col-highlighted={matrixHoverCol === mit.id}
-										class:row-highlighted={matrixHoverRow === risk.id}
-										onclick={() => toggleMatrixLink('mitigation', risk.id, mit.id)}
-										onmouseenter={() => { matrixHoverRow = risk.id; matrixHoverCol = mit.id; }}
-										title={link ? `Click to edit link` : `Click to link`}
-									>
-										{#if link}
-											<span class="cell-marker">✓</span>
-										{/if}
-									</td>
-								{/each}
-							</tr>
-						{/each}
-					</tbody>
-				</table>
-			{:else if matrixType === 'regulations'}
-				{@const filteredRisks = filterBySearch(allRisks, r => r.shortName).filter(r => !showUnlinkedOnly || (linkCounts.riskRegulations.get(r.id) || 0) === 0)}
-				{@const filteredRegulations = showUnlinkedOnly ? allRegulations.filter(r => (linkCounts.regulationRisks.get(r.id) || 0) === 0) : allRegulations}
-				<table class="matrix">
-					<thead>
-						<tr>
-							<th class="row-header">Risk</th>
-							{#each filteredRegulations as reg}
-								<th
-									class="col-header"
-									class:highlighted={matrixHoverCol === reg.id}
-									title={reg.description}
-									onmouseenter={() => matrixHoverCol = reg.id}
-								>
-									{#if matrixVerbose}
-										<span class="verbose-label">{reg.citation}</span>
-									{:else}
-										{reg.citation.split('(')[0].trim()}
-									{/if}
-								</th>
-							{/each}
-						</tr>
-					</thead>
-					<tbody>
-						{#each filteredRisks as risk}
-							<tr class:row-highlighted={matrixHoverRow === risk.id}>
-								<td
-									class="row-label"
-									class:highlighted={matrixHoverRow === risk.id}
-									title={risk.name}
-									onmouseenter={() => matrixHoverRow = risk.id}
-								>
-									{#if matrixVerbose}
-										<span class="verbose-label">{risk.shortName}</span>
-									{:else}
-										{risk.code}
-									{/if}
-								</td>
-								{#each filteredRegulations as reg}
-									{@const link = getRegulationLink(risk.id, reg.id)}
-									<td
-										class="matrix-cell"
-										class:linked={link}
-										class:col-highlighted={matrixHoverCol === reg.id}
-										class:row-highlighted={matrixHoverRow === risk.id}
-										onclick={() => toggleMatrixLink('regulation', risk.id, reg.id)}
-										onmouseenter={() => { matrixHoverRow = risk.id; matrixHoverCol = reg.id; }}
-										title={link ? `Click to edit link` : `Click to link`}
-									>
-										{#if link}
-											<span class="cell-marker">✓</span>
-										{/if}
-									</td>
-								{/each}
-							</tr>
-						{/each}
-					</tbody>
-				</table>
-			{:else if matrixType === 'controls'}
-				{@const filteredRisks = filterBySearch(allRisks, r => r.shortName)}
-				{@const phaseFilteredControls = selectedPhase === 'all'
-					? allControls
-					: allControls.filter(c => c.phases?.includes(selectedPhase))}
-				{@const techFilteredControls = selectedTechType === 'all'
-					? phaseFilteredControls
-					: phaseFilteredControls.filter(c => c.techTypes?.includes('all') || c.techTypes?.includes(selectedTechType))}
-				{@const filteredControls = filterBySearch(techFilteredControls, c => c.name + ' ' + c.id).slice(0, 50)}
-				<div class="controls-matrix-filters">
-					<div class="filter-group">
-						<label>Tech Type:</label>
-						<select bind:value={selectedTechType}>
-							<option value="all">All Types</option>
-							{#each data.modelTypes as modelType}
-								<option value={modelType.id}>{modelType.name}</option>
-							{/each}
-						</select>
-					</div>
-					<span class="note-text">Showing {filteredControls.length} of {techFilteredControls.length} controls (filtered from {allControls.length} total)</span>
+			{#if !matrixPairValid}
+				<div class="matrix-no-pair">
+					<p>No link type defined for <strong>{entityConfig[matrixRowType].label}</strong> → <strong>{entityConfig[matrixColType].label}</strong></p>
+					<p class="hint">Valid combinations: Question→Risk, Risk→Mitigation, Risk→Regulation, Risk→Control, Question→Question</p>
 				</div>
+			{:else if matrixRowItems.length === 0 || matrixColItems.length === 0}
+				<div class="matrix-no-pair">
+					<p>No items to display. {matrixRowItems.length} rows, {matrixColItems.length} columns.</p>
+				</div>
+			{:else}
+				{@const rowConfig = entityConfig[matrixRowType]}
+				{@const colConfig = entityConfig[matrixColType]}
 				<table class="matrix">
 					<thead>
 						<tr>
-							<th class="row-header">Risk</th>
-							{#each filteredControls as ctrl}
-								{@const subcategory = getControlSubcategory(ctrl.subcategoryId)}
+							<th class="row-header">{rowConfig.label}</th>
+							{#each matrixColItems as colItem}
 								<th
 									class="col-header"
-									class:highlighted={matrixHoverCol === ctrl.id}
-									title={ctrl.name + ' (' + (subcategory?.name || ctrl.subcategoryId) + ')'}
-									onmouseenter={() => matrixHoverCol = ctrl.id}
+									class:highlighted={matrixHoverCol === colItem.id}
+									title={colConfig.getLabel(colItem)}
+									onmouseenter={() => matrixHoverCol = colItem.id}
 								>
 									{#if matrixVerbose}
-										<span class="verbose-label">{ctrl.name}</span>
+										<span class="verbose-label">{colConfig.getLabel(colItem)}</span>
 									{:else}
-										{ctrl.id.split('_')[0]}
+										{colConfig.getShortLabel(colItem)}
 									{/if}
 								</th>
 							{/each}
 						</tr>
 					</thead>
 					<tbody>
-						{#each filteredRisks as risk}
-							<tr class:row-highlighted={matrixHoverRow === risk.id}>
+						{#each matrixRowItems as rowItem}
+							<tr class:row-highlighted={matrixHoverRow === rowItem.id}>
 								<td
 									class="row-label"
-									class:highlighted={matrixHoverRow === risk.id}
-									title={risk.name}
-									onmouseenter={() => matrixHoverRow = risk.id}
+									class:highlighted={matrixHoverRow === rowItem.id}
+									title={rowConfig.getLabel(rowItem)}
+									onmouseenter={() => matrixHoverRow = rowItem.id}
 								>
 									{#if matrixVerbose}
-										<span class="verbose-label">{risk.shortName}</span>
+										<span class="verbose-label">{rowConfig.getLabel(rowItem)}</span>
 									{:else}
-										{risk.code}
+										{rowConfig.getShortLabel(rowItem)}
 									{/if}
 								</td>
-								{#each filteredControls as ctrl}
-									{@const link = getControlLink(risk.id, ctrl.id)}
+								{#each matrixColItems as colItem}
+									{@const link = getMatrixLink(matrixRowType, rowItem.id, matrixColType, colItem.id)}
 									<td
 										class="matrix-cell"
 										class:linked={link}
-										class:col-highlighted={matrixHoverCol === ctrl.id}
-										class:row-highlighted={matrixHoverRow === risk.id}
-										onclick={() => toggleMatrixLink('control', risk.id, ctrl.id)}
-										onmouseenter={() => { matrixHoverRow = risk.id; matrixHoverCol = ctrl.id; }}
+										class:col-highlighted={matrixHoverCol === colItem.id}
+										class:row-highlighted={matrixHoverRow === rowItem.id}
+										onclick={() => toggleGenericMatrixLink(matrixRowType, rowItem.id, matrixColType, colItem.id)}
+										onmouseenter={() => { matrixHoverRow = rowItem.id; matrixHoverCol = colItem.id; }}
 										title={link ? `Click to edit link` : `Click to link`}
 									>
 										{#if link}
@@ -1414,195 +1604,155 @@
 			{/if}
 		</div>
 
-	<!-- RISK EDITOR VIEW -->
-	{:else if currentView === 'risk-editor'}
-		<div class="risk-editor">
-			<div class="risk-list">
-				<div class="risk-list-header">
-					<input type="text" placeholder="Search risks..." bind:value={searchQuery} class="search" />
-				</div>
-				<div class="risk-list-items">
-					{#each filterBySearch(allRisks, r => r.shortName + ' ' + r.name) as risk}
-						{@const triggerCount = getTriggersForRisk(risk.id).length}
-						{@const mitigationCount = getMitigationsForRisk(risk.id).length}
-						{@const regulationCount = getRegulationsForRisk(risk.id).length}
-						<button
-							class="risk-list-item"
-							class:selected={selectedRiskId === risk.id}
-							onclick={() => selectedRiskId = risk.id}
-						>
-							<span class="risk-code">{risk.code}</span>
-							<span class="risk-name">{risk.shortName}</span>
-							<div class="risk-counts">
-								<span class="count-badge trigger" title="Triggers">{triggerCount}</span>
-								<span class="count-badge mitigation" title="Mitigations">{mitigationCount}</span>
-								<span class="count-badge regulation" title="Regulations">{regulationCount}</span>
-							</div>
-						</button>
-					{/each}
+	<!-- TRACE VIEW (placeholder - will build visual flow editor) -->
+	{:else if currentView === 'trace'}
+		<div class="trace-view">
+			<div class="trace-toolbar">
+				<div class="trace-start-selector">
+					<label>Start from:</label>
+					<select bind:value={traceStartType}>
+						<option value="question">Question</option>
+						<option value="risk">Risk</option>
+						<option value="control">Control</option>
+					</select>
+					{#if traceStartType === 'question'}
+						<select bind:value={traceStartId}>
+							<option value="">Select a question...</option>
+							{#each allQuestions.filter(q => !q.showIf || Object.keys(q.showIf).length === 0) as q}
+								<option value={q.id}>{q.id}: {q.text.slice(0, 50)}...</option>
+							{/each}
+						</select>
+					{:else if traceStartType === 'risk'}
+						<select bind:value={traceStartId}>
+							<option value="">Select a risk...</option>
+							{#each allRisks as r}
+								<option value={r.id}>{r.code}: {r.shortName}</option>
+							{/each}
+						</select>
+					{:else}
+						<select bind:value={traceStartId}>
+							<option value="">Select a control...</option>
+							{#each allControls.slice(0, 100) as c}
+								<option value={c.id}>{c.id}: {c.name.slice(0, 40)}...</option>
+							{/each}
+						</select>
+					{/if}
 				</div>
 			</div>
-
-			<div class="risk-detail">
-				{#if selectedRisk}
-					<div class="risk-detail-header">
-						<h2>{selectedRisk.code}: {selectedRisk.shortName}</h2>
-						<p class="risk-full-name">{selectedRisk.name}</p>
+			<div class="trace-canvas">
+				{#if !traceStartId}
+					<div class="trace-placeholder">
+						<p>Select a starting point above to visualize the dependency flow.</p>
+						<p class="hint">You'll see questions → risks → controls → regulations as a visual tree.</p>
 					</div>
-
-					<div class="risk-section">
-						<h3>Triggers (Questions that activate this risk)</h3>
-						<div class="link-list">
-							{#each getTriggersForRisk(selectedRisk.id) as link}
-								{@const question = getQuestion(link.from.id)}
-								<button class="link-item" onclick={() => { editingLink = JSON.parse(JSON.stringify(link)); showLinkEditor = true; }}>
-									<span class="link-icon">?</span>
-									<span class="link-text">{question?.text || link.from.id}</span>
-									<span class="link-meta">
-										{#if link.answerValues?.length}
-											when: {link.answerValues.join(', ')}
-										{/if}
-										{#if link.phases?.length < 3}
-											| {link.phases.map((p: string) => p.replace('phase-', 'P')).join(', ')}
-										{/if}
-									</span>
-								</button>
-							{/each}
-							<button class="add-link-btn" onclick={() => { showRiskPicker = 'trigger'; riskPickerSearch = ''; }}>+ Add Trigger</button>
-						</div>
-					</div>
-
-					<div class="risk-section">
-						<h3>Control Categories</h3>
-						<div class="link-list">
-							{#each getMitigationsForRisk(selectedRisk.id) as link}
-								{@const mitigation = getMitigation(link.to.id)}
-								<button class="link-item" onclick={() => { editingLink = JSON.parse(JSON.stringify(link)); showLinkEditor = true; }}>
-									<span class="link-icon mitigation">M</span>
-									<span class="link-text">{mitigation?.name || link.to.id}</span>
-									<span class="link-meta">
-										{#if link.phases?.length < 3}
-											{link.phases.map((p: string) => p.replace('phase-', 'P')).join(', ')}
-										{/if}
-									</span>
-								</button>
-							{/each}
-							<button class="add-link-btn" onclick={() => { showRiskPicker = 'mitigation'; riskPickerSearch = ''; }}>+ Add Control Category</button>
-						</div>
-					</div>
-
-					<div class="risk-section">
-						<h3>Regulations</h3>
-						<div class="link-list">
-							{#each getRegulationsForRisk(selectedRisk.id) as link}
-								{@const regulation = getRegulation(link.to.id)}
-								<button class="link-item" onclick={() => { editingLink = JSON.parse(JSON.stringify(link)); showLinkEditor = true; }}>
-									<span class="link-icon regulation">R</span>
-									<span class="link-text">{regulation?.citation || link.to.id}</span>
-									<span class="link-meta">{regulation?.framework}</span>
-								</button>
-							{/each}
-							<button class="add-link-btn" onclick={() => { showRiskPicker = 'regulation'; riskPickerSearch = ''; }}>+ Add Regulation</button>
-						</div>
+				{:else if !traceTree}
+					<div class="trace-placeholder">
+						<p>No data found for <strong>{traceStartType}</strong>: {traceStartId}</p>
 					</div>
 				{:else}
-					<div class="no-selection">
-						<p>Select a risk from the list to view and edit its configuration.</p>
-					</div>
-				{/if}
-			</div>
-
-			<!-- Risk Picker Modal -->
-			{#if showRiskPicker && selectedRisk}
-				<div class="picker-overlay" onclick={() => { showRiskPicker = null; pickerCreateMode = false; }}>
-					<div class="picker-modal" onclick={(e) => e.stopPropagation()}>
-						<div class="picker-header">
-							<h3>
-								{#if showRiskPicker === 'trigger'}Add Trigger Question
-								{:else if showRiskPicker === 'mitigation'}Add Control Category
-								{:else}Add Regulation{/if}
-							</h3>
-							<button class="close-btn" onclick={() => { showRiskPicker = null; pickerCreateMode = false; }}>×</button>
-						</div>
-
-						{#if pickerCreateMode && pickerNewEntity && showRiskPicker !== 'mitigation'}
-							<!-- Inline Create Form (not available for control categories - they come from controls taxonomy) -->
-							<div class="picker-create-form">
-								<h4>Create New {showRiskPicker === 'trigger' ? 'Question' : 'Regulation'}</h4>
-								{#if showRiskPicker === 'trigger'}
-									<div class="form-row">
-										<label>ID <input type="text" bind:value={pickerNewEntity.id} placeholder="e.g., my-question" /></label>
-									</div>
-									<div class="form-row">
-										<label>Question Text <textarea bind:value={pickerNewEntity.text} placeholder="Enter the question..." rows="2"></textarea></label>
-									</div>
-									<div class="form-row">
-										<label>Type
-											<select bind:value={pickerNewEntity.type}>
-												<option value="yes-no">Yes/No</option>
-												<option value="single-select">Single Select</option>
-												<option value="multi-select">Multi Select</option>
-											</select>
-										</label>
-									</div>
-								{:else}
-									<div class="form-row">
-										<label>ID <input type="text" bind:value={pickerNewEntity.id} placeholder="e.g., my-reg-1" /></label>
-									</div>
-									<div class="form-row">
-										<label>Citation <input type="text" bind:value={pickerNewEntity.citation} placeholder="e.g., 21 CFR 820.30" /></label>
-									</div>
-									<div class="form-row">
-										<label>Description <input type="text" bind:value={pickerNewEntity.description} placeholder="Brief description" /></label>
-									</div>
-									<div class="form-row">
-										<label>Requirement <textarea bind:value={pickerNewEntity.requirement} placeholder="Full requirement text..." rows="2"></textarea></label>
+					{@const renderNode = (node: TraceNode, parentId?: string): any => null}
+					<div class="trace-flow">
+						{#snippet traceNode(node: TraceNode, indent: number)}
+							<div class="trace-row" style="--indent: {indent}">
+								<div
+									class="trace-node {node.type}"
+									class:selected={traceSelectedNode?.type === node.type && traceSelectedNode?.id === node.id}
+									onclick={() => traceSelectedNode = { type: node.type, id: node.id }}
+								>
+									{#if node.link}
+										<button
+											class="trace-link-btn"
+											title="Edit link"
+											onclick={(e) => { e.stopPropagation(); editingLink = JSON.parse(JSON.stringify(node.link)); showLinkEditor = true; }}
+										>⟿</button>
+									{/if}
+									<span class="trace-node-type">{node.type.charAt(0).toUpperCase()}</span>
+									<span class="trace-node-label" title={node.label}>{node.shortLabel}</span>
+									{#if node.children.length > 0}
+										<span class="trace-children-count">{node.children.length}</span>
+									{/if}
+								</div>
+								{#if node.children.length > 0}
+									<div class="trace-children">
+										{#each node.children as child}
+											{@render traceNode(child, indent + 1)}
+										{/each}
 									</div>
 								{/if}
-								<div class="form-actions">
-									<button class="btn" onclick={() => { pickerCreateMode = false; pickerNewEntity = null; }}>Cancel</button>
-									<button class="btn primary" onclick={createAndLinkEntity}>Create & Link</button>
-								</div>
 							</div>
-						{:else}
-							<!-- Search & List -->
-							<div class="picker-search">
-								<input type="text" placeholder="Search..." bind:value={riskPickerSearch} />
-								<button class="btn primary create-new-btn" onclick={initPickerNewEntity}>+ Create New</button>
-							</div>
-							<div class="picker-list">
-								{#each riskPickerItems as item}
-									{@const alreadyLinked = isLinkedToRisk(showRiskPicker, item.id)}
-									<button
-										class="picker-item"
-										class:linked={alreadyLinked}
-										disabled={alreadyLinked}
-										onclick={() => addLinkFromPicker(item.id)}
-									>
-										{#if showRiskPicker === 'trigger'}
-											<span class="picker-code question">{item.id}</span>
-											<span class="picker-name">{item.text}</span>
-										{:else if showRiskPicker === 'mitigation'}
-											<span class="picker-code mitigation">{item.code}</span>
-											<span class="picker-name">{item.name}</span>
-											<span class="picker-category">{item.category}</span>
-										{:else}
-											<span class="picker-code regulation">{item.citation}</span>
-											<span class="picker-name">{item.description}</span>
-											<span class="picker-category">{item.framework}</span>
-										{/if}
-										{#if alreadyLinked}
-											<span class="already-linked">Already linked</span>
-										{/if}
-									</button>
-								{:else}
-									<div class="picker-empty">No items found.{#if showRiskPicker !== 'mitigation'} <button class="link-btn" onclick={initPickerNewEntity}>Create new?</button>{/if}</div>
-								{/each}
-							</div>
-						{/if}
+						{/snippet}
+
+						<!-- Render tree starting from root -->
+						{@render traceNode(traceTree, 0)}
+
+						<!-- Stats summary -->
+						<div class="trace-stats">
+							{#each Array.from(traceColumns.entries()) as [type, nodes]}
+								<span class="trace-stat {type}">{nodes.length} {type}{nodes.length !== 1 ? 's' : ''}</span>
+							{/each}
+						</div>
 					</div>
-				</div>
-			{/if}
+
+					<!-- Selected node details panel -->
+					{#if traceSelectedNode}
+						{@const selectedItem = (() => {
+							const t = traceSelectedNode.type;
+							const id = traceSelectedNode.id;
+							if (t === 'question') return allQuestions.find(q => q.id === id);
+							if (t === 'risk') return allRisks.find(r => r.id === id);
+							if (t === 'mitigation') return allMitigations.find(m => m.id === id);
+							if (t === 'control') return allControls.find(c => c.id === id);
+							if (t === 'regulation') return allRegulations.find(r => r.id === id);
+							return null;
+						})()}
+						<aside class="trace-detail-panel">
+							<div class="trace-detail-header">
+								<span class="badge {traceSelectedNode.type}">{traceSelectedNode.type}</span>
+								<button class="close-btn" onclick={() => traceSelectedNode = null}>×</button>
+							</div>
+							{#if selectedItem}
+								<h4>
+									{#if traceSelectedNode.type === 'question'}
+										{selectedItem.id}
+									{:else if traceSelectedNode.type === 'risk'}
+										{selectedItem.code}
+									{:else if traceSelectedNode.type === 'mitigation'}
+										{selectedItem.code}
+									{:else if traceSelectedNode.type === 'regulation'}
+										{selectedItem.citation}
+									{:else if traceSelectedNode.type === 'control'}
+										{selectedItem.id}
+									{/if}
+								</h4>
+								<p class="trace-detail-text">
+									{#if traceSelectedNode.type === 'question'}
+										{selectedItem.text}
+									{:else if traceSelectedNode.type === 'risk'}
+										{selectedItem.shortName}
+									{:else if traceSelectedNode.type === 'mitigation'}
+										{selectedItem.name}
+									{:else if traceSelectedNode.type === 'regulation'}
+										{selectedItem.description}
+									{:else if traceSelectedNode.type === 'control'}
+										{selectedItem.name}
+									{/if}
+								</p>
+								<button
+									class="btn edit-entity"
+									onclick={() => {
+										if (traceSelectedNode?.type === 'question') { entityType = 'questions'; editEntity(selectedItem); }
+										else if (traceSelectedNode?.type === 'risk') { entityType = 'risks'; editEntity(selectedItem); }
+										else if (traceSelectedNode?.type === 'regulation') { entityType = 'regulations'; editEntity(selectedItem); }
+										else if (traceSelectedNode?.type === 'control') { entityType = 'controls'; editEntity(selectedItem); }
+									}}
+								>Edit {traceSelectedNode.type}</button>
+							{:else}
+								<p class="no-data">Item not found</p>
+							{/if}
+						</aside>
+					{/if}
+				{/if}
+			</div>
 		</div>
 
 	<!-- GRAPH VIEW -->
@@ -1620,28 +1770,10 @@
 		{/if}
 
 		<div class="graph-toolbar">
-			<div class="filter-group">
-				<span class="filter-label">Phase:</span>
-				<div class="filter-buttons">
-					<button class:active={selectedPhase === 'all'} onclick={() => selectedPhase = 'all'}>All</button>
-					{#each phases as phase}
-						<button class:active={selectedPhase === phase.id} onclick={() => selectedPhase = phase.id}>{phase.short}</button>
-					{/each}
-				</div>
-			</div>
-			<div class="filter-group">
-				<span class="filter-label">Tech:</span>
-				<select bind:value={selectedTechType} class="toolbar-select">
-					<option value="all">All Types</option>
-					{#each data.modelTypes as mt}
-						<option value={mt.id}>{mt.name}</option>
-					{/each}
-				</select>
-			</div>
 			<button class="btn focus-toggle" class:active={focusMode} onclick={() => focusMode = !focusMode}>
 				{focusMode ? 'Focus: ON' : 'Focus'}
 			</button>
-			<input type="text" placeholder="Search..." bind:value={searchQuery} class="search" />
+			<input type="text" placeholder="Search graph..." bind:value={searchQuery} class="search" />
 		</div>
 
 		<div class="layout">
@@ -1652,7 +1784,7 @@
 				<div class="column-header">
 					<span class="column-icon">?</span>
 					<h2>Questions</h2>
-					<span class="count">{allQuestions.length}</span>
+					<span class="count" title="{visibleQuestionCount} of {allQuestions.length}">{visibleQuestionCount}</span>
 				</div>
 				<div class="nodes">
 					{#each filterBySearch(allQuestions, q => q.text, 'question') as q}
@@ -1704,7 +1836,7 @@
 				<div class="column-header">
 					<span class="column-icon">!</span>
 					<h2>Risks</h2>
-					<span class="count">{allRisks.length}</span>
+					<span class="count" title="{visibleRiskCount} of {allRisks.length}">{visibleRiskCount}</span>
 				</div>
 				<div class="nodes">
 					{#each filterBySearch(allRisks, r => r.shortName + ' ' + r.name, 'risk') as r}
@@ -1744,7 +1876,7 @@
 				<div class="column-header">
 					<span class="column-icon">C</span>
 					<h2>Control Categories</h2>
-					<span class="count">{allMitigations.length}</span>
+					<span class="count" title="{visibleMitigationCount} of {allMitigations.length}">{visibleMitigationCount}</span>
 				</div>
 				<div class="nodes">
 					{#each filterBySearch(allMitigations, m => m.name, 'mitigation') as m}
@@ -1788,7 +1920,7 @@
 				<div class="column-header">
 					<span class="column-icon">R</span>
 					<h2>Regulations</h2>
-					<span class="count">{allRegulations.length}</span>
+					<span class="count" title="{visibleRegulationCount} of {allRegulations.length}">{visibleRegulationCount}</span>
 				</div>
 				<div class="nodes">
 					{#each filterBySearch(allRegulations, r => r.citation + ' ' + r.description, 'regulation') as r}
@@ -1828,7 +1960,7 @@
 				<div class="column-header">
 					<span class="column-icon">⚙</span>
 					<h2>Controls</h2>
-					<span class="count">{graphFilteredControls.length}</span>
+					<span class="count" title="{visibleControlCount} of {graphFilteredControls.length}">{visibleControlCount}</span>
 				</div>
 				<div class="nodes">
 					{#each graphFilteredControls.slice(0, 50) as ctrl}
@@ -1893,6 +2025,9 @@
 							<span class="option-tag">{opt.label}</span>
 						{/each}
 					</div>
+					<button class="btn edit-entity" onclick={() => { entityType = 'questions'; editEntity(selectedDetails.item); }}>
+						Edit Question
+					</button>
 				{:else if selectedDetails.type === 'risk' && selectedDetails.item}
 					<h3>{selectedDetails.item.name}</h3>
 					<div class="detail-meta">
@@ -1900,6 +2035,9 @@
 						<span class="meta-item">Domain: {selectedDetails.item.domain}</span>
 					</div>
 					<p class="detail-desc">{selectedDetails.item.shortName}</p>
+					<button class="btn edit-entity" onclick={() => { entityType = 'risks'; editEntity(selectedDetails.item); }}>
+						Edit Risk
+					</button>
 				{:else if selectedDetails.type === 'mitigation' && selectedDetails.item}
 					{@const subcategoryControls = allControls.filter(c => c.subcategoryId === selectedDetails.item?.id)}
 					<h3>{selectedDetails.item.name}</h3>
@@ -1929,6 +2067,9 @@
 						<span class="meta-item">{selectedDetails.item.framework}</span>
 					</div>
 					<p class="detail-desc">{selectedDetails.item.description}</p>
+					<button class="btn edit-entity" onclick={() => { entityType = 'regulations'; editEntity(selectedDetails.item); }}>
+						Edit Regulation
+					</button>
 				{:else if selectedDetails.type === 'control' && selectedDetails.item}
 					{@const subcategory = getControlSubcategory(selectedDetails.item.subcategoryId)}
 					<h3>{selectedDetails.item.name}</h3>
@@ -1963,7 +2104,7 @@
 							{/each}
 						</div>
 					</div>
-					<button class="btn edit-control" onclick={() => { entityType = 'controls'; editEntity(selectedDetails.item); currentView = 'entities'; }}>
+					<button class="btn edit-control" onclick={() => { entityType = 'controls'; editEntity(selectedDetails.item); }}>
 						Edit Control
 					</button>
 				{/if}
@@ -1999,129 +2140,6 @@
 	</div>
 	{/if}
 
-	<!-- ENTITIES VIEW -->
-	{#if currentView === 'entities'}
-		<div class="entities-view">
-			<div class="entities-toolbar">
-				<div class="entity-type-tabs">
-					<button class:active={entityType === 'risks'} onclick={() => entityType = 'risks'}>
-						Risks ({allRisks.length})
-					</button>
-					<button class:active={entityType === 'controls'} onclick={() => entityType = 'controls'}>
-						Controls ({allControls.length})
-					</button>
-					<button class:active={entityType === 'questions'} onclick={() => entityType = 'questions'}>
-						Questions ({allQuestions.length})
-					</button>
-					<button class:active={entityType === 'regulations'} onclick={() => entityType = 'regulations'}>
-						Regulations ({allRegulations.length})
-					</button>
-				</div>
-				<div class="entities-actions">
-					<input type="text" placeholder="Search..." bind:value={entitySearch} class="search" />
-					<button class="btn primary" onclick={createNewEntity}>+ Add New</button>
-					{#if hasEntityChanges}
-						<button class="btn danger-outline" onclick={resetEntities}>Reset to Defaults</button>
-					{/if}
-				</div>
-			</div>
-
-			<div class="entities-list">
-				{#if entityType === 'risks'}
-					<div class="entity-table-header">
-						<span class="col-code">Code</span>
-						<span class="col-name">Name</span>
-						<span class="col-short">Short Name</span>
-						<span class="col-domain">Domain</span>
-						<span class="col-actions">Actions</span>
-					</div>
-					{#each filteredEntities as entity}
-						<div class="entity-row">
-							<span class="col-code">
-								<span class="code-badge risk">{entity.code}</span>
-							</span>
-							<span class="col-name">{entity.name}</span>
-							<span class="col-short">{entity.shortName}</span>
-							<span class="col-domain">{entity.domain}</span>
-							<span class="col-actions">
-								<button class="action-btn" onclick={() => editEntity(entity)}>Edit</button>
-							</span>
-						</div>
-					{:else}
-						<div class="no-entities">No risks found matching your search</div>
-					{/each}
-				{:else if entityType === 'questions'}
-					<div class="entity-table-header">
-						<span class="col-id">ID</span>
-						<span class="col-text">Question</span>
-						<span class="col-type">Type</span>
-						<span class="col-category">Category</span>
-						<span class="col-actions">Actions</span>
-					</div>
-					{#each filteredEntities as entity}
-						<div class="entity-row">
-							<span class="col-id">
-								<span class="code-badge question">{entity.id}</span>
-							</span>
-							<span class="col-text">{entity.text}</span>
-							<span class="col-type">{entity.type}</span>
-							<span class="col-category">{entity.category}</span>
-							<span class="col-actions">
-								<button class="action-btn" onclick={() => editEntity(entity)}>Edit</button>
-							</span>
-						</div>
-					{:else}
-						<div class="no-entities">No questions found matching your search</div>
-					{/each}
-				{:else if entityType === 'regulations'}
-					<div class="entity-table-header">
-						<span class="col-citation">Citation</span>
-						<span class="col-desc">Description</span>
-						<span class="col-framework">Framework</span>
-						<span class="col-actions">Actions</span>
-					</div>
-					{#each filteredEntities as entity}
-						<div class="entity-row">
-							<span class="col-citation">
-								<span class="code-badge regulation">{entity.citation}</span>
-							</span>
-							<span class="col-desc">{entity.description}</span>
-							<span class="col-framework">{entity.framework}</span>
-							<span class="col-actions">
-								<button class="action-btn" onclick={() => editEntity(entity)}>Edit</button>
-							</span>
-						</div>
-					{:else}
-						<div class="no-entities">No regulations found matching your search</div>
-					{/each}
-				{:else if entityType === 'controls'}
-					<div class="entity-table-header">
-						<span class="col-id">ID</span>
-						<span class="col-name">Name</span>
-						<span class="col-subcategory">Subcategory</span>
-						<span class="col-source">Source</span>
-						<span class="col-actions">Actions</span>
-					</div>
-					{#each filteredEntities as entity}
-						{@const subcategory = getControlSubcategory(entity.subcategoryId)}
-						<div class="entity-row">
-							<span class="col-id">
-								<span class="code-badge control">{entity.id.split('_')[0]}</span>
-							</span>
-							<span class="col-name">{entity.name}</span>
-							<span class="col-subcategory">{subcategory?.name || entity.subcategoryId}</span>
-							<span class="col-source">{entity.source}</span>
-							<span class="col-actions">
-								<button class="action-btn" onclick={() => editEntity(entity)}>Edit</button>
-							</span>
-						</div>
-					{:else}
-						<div class="no-entities">No controls found matching your search</div>
-					{/each}
-				{/if}
-			</div>
-		</div>
-	{/if}
 </div>
 
 <!-- Entity Editor Modal -->
@@ -2660,27 +2678,6 @@
 		color: #f1f5f9;
 	}
 
-	.phase-filter {
-		display: flex;
-		gap: 0.25rem;
-		background: #1e293b;
-		padding: 0.25rem;
-		border-radius: 0.375rem;
-	}
-
-	.phase-filter button {
-		padding: 0.375rem 0.75rem;
-		background: transparent;
-		border: none;
-		border-radius: 0.25rem;
-		color: #94a3b8;
-		font-size: 0.75rem;
-		cursor: pointer;
-	}
-
-	.phase-filter button:hover { color: #e2e8f0; }
-	.phase-filter button.active { background: #60a5fa; color: #0f172a; }
-
 	.view-tabs {
 		display: flex;
 		gap: 0.25rem;
@@ -2712,23 +2709,70 @@
 		gap: 1rem;
 	}
 
-	.matrix-tabs {
+	.matrix-selectors {
 		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+	}
+
+	.selector-group {
+		display: flex;
+		align-items: center;
 		gap: 0.5rem;
 	}
 
-	.matrix-tabs button {
-		padding: 0.5rem 1rem;
+	.selector-group label {
+		font-size: 0.75rem;
+		color: #94a3b8;
+	}
+
+	.selector-group select {
+		padding: 0.375rem 0.75rem;
 		background: #1e293b;
 		border: 1px solid #334155;
 		border-radius: 0.375rem;
-		color: #94a3b8;
+		color: #f1f5f9;
 		font-size: 0.75rem;
 		cursor: pointer;
 	}
 
-	.matrix-tabs button:hover { border-color: #475569; color: #e2e8f0; }
-	.matrix-tabs button.active { background: #334155; color: #e2e8f0; border-color: #60a5fa; }
+	.selector-group select:focus {
+		outline: none;
+		border-color: #60a5fa;
+	}
+
+	.selector-arrow {
+		font-size: 1rem;
+		color: #64748b;
+		font-weight: bold;
+	}
+
+	.no-link-warning {
+		font-size: 0.7rem;
+		color: #f59e0b;
+		background: rgba(245, 158, 11, 0.1);
+		padding: 0.25rem 0.5rem;
+		border-radius: 0.25rem;
+	}
+
+	.matrix-no-pair {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		padding: 3rem;
+		text-align: center;
+		color: #94a3b8;
+	}
+
+	.matrix-no-pair p {
+		margin: 0.25rem 0;
+	}
+
+	.matrix-no-pair .hint {
+		font-size: 0.75rem;
+		color: #64748b;
+	}
 
 	.matrix-options {
 		display: flex;
@@ -2839,33 +2883,6 @@
 		margin-bottom: 0.5rem;
 		font-size: 0.75rem;
 		color: #94a3b8;
-	}
-
-	.controls-matrix-filters {
-		display: flex;
-		align-items: center;
-		gap: 1rem;
-		padding: 0.5rem 1rem;
-		background: rgba(6, 182, 212, 0.1);
-		border-left: 3px solid #06b6d4;
-		margin-bottom: 0.5rem;
-		font-size: 0.75rem;
-		color: #94a3b8;
-	}
-
-	.controls-matrix-filters .filter-group {
-		display: flex;
-		align-items: center;
-		gap: 0.5rem;
-	}
-
-	.controls-matrix-filters select {
-		background: #1e293b;
-		border: 1px solid #334155;
-		border-radius: 4px;
-		padding: 0.25rem 0.5rem;
-		color: #e2e8f0;
-		font-size: 0.75rem;
 	}
 
 	.matrix {
@@ -3007,210 +3024,259 @@
 		font-size: 0.75rem;
 	}
 
-	/* Risk Editor View */
-	.risk-editor {
+	/* Trace View */
+	.trace-view {
 		display: flex;
+		flex-direction: column;
 		flex: 1;
 		overflow: hidden;
 	}
 
-	.risk-list {
-		width: 280px;
+	.trace-toolbar {
+		padding: 0.75rem 1rem;
 		background: #1e293b;
-		border-right: 1px solid #334155;
-		display: flex;
-		flex-direction: column;
-	}
-
-	.risk-list-header {
-		padding: 0.75rem;
 		border-bottom: 1px solid #334155;
 	}
 
-	.risk-list-header .search {
-		width: 100%;
-	}
-
-	.risk-list-items {
-		flex: 1;
-		overflow-y: auto;
-		padding: 0.5rem;
-	}
-
-	.risk-list-item {
-		width: 100%;
-		text-align: left;
-		padding: 0.75rem;
-		background: #0f172a;
-		border: 1px solid #334155;
-		border-radius: 0.375rem;
-		margin-bottom: 0.375rem;
-		cursor: pointer;
-		display: flex;
-		flex-direction: column;
-		gap: 0.25rem;
-	}
-
-	.risk-list-item:hover {
-		border-color: #475569;
-	}
-
-	.risk-list-item.selected {
-		border-color: #ef4444;
-		background: rgba(239, 68, 68, 0.1);
-	}
-
-	.risk-code {
-		font-family: monospace;
-		font-size: 0.625rem;
-		color: #ef4444;
-		background: rgba(239, 68, 68, 0.2);
-		padding: 0.125rem 0.25rem;
-		border-radius: 0.125rem;
-		width: fit-content;
-	}
-
-	.risk-name {
-		font-size: 0.75rem;
-		color: #e2e8f0;
-	}
-
-	.risk-counts {
-		display: flex;
-		gap: 0.375rem;
-		margin-top: 0.25rem;
-	}
-
-	.count-badge {
-		font-size: 0.5625rem;
-		padding: 0.125rem 0.375rem;
-		border-radius: 0.25rem;
-	}
-
-	.count-badge.trigger {
-		background: rgba(96, 165, 250, 0.2);
-		color: #60a5fa;
-	}
-
-	.count-badge.mitigation {
-		background: rgba(34, 197, 94, 0.2);
-		color: #22c55e;
-	}
-
-	.count-badge.regulation {
-		background: rgba(168, 85, 247, 0.2);
-		color: #a855f7;
-	}
-
-	.risk-detail {
-		flex: 1;
-		padding: 1.5rem;
-		overflow-y: auto;
-	}
-
-	.risk-detail-header h2 {
-		font-size: 1.25rem;
-		color: #f1f5f9;
-		margin-bottom: 0.25rem;
-	}
-
-	.risk-full-name {
-		font-size: 0.875rem;
-		color: #94a3b8;
-		margin-bottom: 1.5rem;
-	}
-
-	.risk-section {
-		margin-bottom: 1.5rem;
-	}
-
-	.risk-section h3 {
-		font-size: 0.875rem;
-		color: #94a3b8;
-		margin-bottom: 0.75rem;
-		text-transform: uppercase;
-		letter-spacing: 0.05em;
-	}
-
-	.link-list {
-		display: flex;
-		flex-direction: column;
-		gap: 0.375rem;
-	}
-
-	.link-item {
+	.trace-start-selector {
 		display: flex;
 		align-items: center;
 		gap: 0.75rem;
-		padding: 0.75rem;
-		background: #1e293b;
+	}
+
+	.trace-start-selector label {
+		font-size: 0.8125rem;
+		color: #94a3b8;
+	}
+
+	.trace-start-selector select {
+		padding: 0.5rem 0.75rem;
+		background: #0f172a;
 		border: 1px solid #334155;
 		border-radius: 0.375rem;
-		cursor: pointer;
-		text-align: left;
-	}
-
-	.link-item:hover {
-		border-color: #475569;
-	}
-
-	.link-icon {
-		width: 1.5rem;
-		height: 1.5rem;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		background: rgba(96, 165, 250, 0.2);
-		color: #60a5fa;
-		border-radius: 0.25rem;
-		font-size: 0.75rem;
-		font-weight: bold;
-		flex-shrink: 0;
-	}
-
-	.link-icon.mitigation {
-		background: rgba(34, 197, 94, 0.2);
-		color: #22c55e;
-	}
-
-	.link-icon.regulation {
-		background: rgba(168, 85, 247, 0.2);
-		color: #a855f7;
-	}
-
-	.link-text {
-		flex: 1;
-		font-size: 0.8125rem;
 		color: #e2e8f0;
-	}
-
-	.link-meta {
-		font-size: 0.6875rem;
-		color: #64748b;
-	}
-
-	.add-link-btn {
-		padding: 0.625rem;
-		background: transparent;
-		border: 1px dashed #475569;
-		border-radius: 0.375rem;
-		color: #64748b;
 		font-size: 0.8125rem;
-		cursor: pointer;
-		text-align: center;
 	}
 
-	.add-link-btn:hover {
+	.trace-start-selector select:focus {
+		outline: none;
 		border-color: #60a5fa;
-		color: #60a5fa;
 	}
 
-	.no-selection {
+	.trace-canvas {
+		flex: 1;
+		overflow: auto;
+		padding: 1.5rem;
+		background: #0f172a;
+	}
+
+	.trace-placeholder {
 		display: flex;
+		flex-direction: column;
 		align-items: center;
 		justify-content: center;
 		height: 100%;
 		color: #64748b;
+		text-align: center;
+	}
+
+	.trace-placeholder p {
+		margin: 0.5rem 0;
+	}
+
+	.trace-placeholder .hint {
+		font-size: 0.8125rem;
+		color: #475569;
+	}
+
+	.trace-flow {
+		display: flex;
+		flex-direction: column;
+		gap: 0.25rem;
+		position: relative;
+	}
+
+	.trace-row {
+		display: flex;
+		flex-direction: column;
+		margin-left: calc(var(--indent, 0) * 1.5rem);
+		position: relative;
+	}
+
+	.trace-row::before {
+		content: '';
+		position: absolute;
+		left: -1rem;
+		top: 0.75rem;
+		width: 0.75rem;
+		height: 1px;
+		background: #334155;
+	}
+
+	.trace-row:first-child::before {
+		display: none;
+	}
+
+	.trace-node {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		padding: 0.5rem 0.75rem;
+		background: #1e293b;
+		border: 1px solid #334155;
+		border-radius: 0.375rem;
+		cursor: pointer;
+		transition: all 0.15s ease;
+		max-width: fit-content;
+		margin: 0.125rem 0;
+	}
+
+	.trace-node:hover {
+		border-color: #475569;
+		background: #334155;
+	}
+
+	.trace-node.selected {
+		border-color: #60a5fa;
+		box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.2);
+	}
+
+	.trace-node.question { border-left: 3px solid #60a5fa; }
+	.trace-node.risk { border-left: 3px solid #f59e0b; }
+	.trace-node.mitigation { border-left: 3px solid #10b981; }
+	.trace-node.control { border-left: 3px solid #06b6d4; }
+	.trace-node.regulation { border-left: 3px solid #a78bfa; }
+
+	.trace-node-type {
+		font-size: 0.625rem;
+		font-weight: 600;
+		width: 1.25rem;
+		height: 1.25rem;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: 3px;
+		background: #0f172a;
+	}
+
+	.trace-node.question .trace-node-type { color: #60a5fa; }
+	.trace-node.risk .trace-node-type { color: #f59e0b; }
+	.trace-node.mitigation .trace-node-type { color: #10b981; }
+	.trace-node.control .trace-node-type { color: #06b6d4; }
+	.trace-node.regulation .trace-node-type { color: #a78bfa; }
+
+	.trace-node-label {
+		font-size: 0.8125rem;
+		color: #e2e8f0;
+		max-width: 200px;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	.trace-children-count {
+		font-size: 0.625rem;
+		background: #334155;
+		color: #94a3b8;
+		padding: 0.125rem 0.375rem;
+		border-radius: 0.75rem;
+	}
+
+	.trace-link-btn {
+		padding: 0;
+		background: none;
+		border: none;
+		color: #64748b;
+		font-size: 0.875rem;
+		cursor: pointer;
+		opacity: 0.6;
+		transition: all 0.15s ease;
+	}
+
+	.trace-link-btn:hover {
+		opacity: 1;
+		color: #60a5fa;
+	}
+
+	.trace-children {
+		display: flex;
+		flex-direction: column;
+		padding-left: 0.5rem;
+		border-left: 1px dashed #334155;
+		margin-left: 0.5rem;
+	}
+
+	.trace-stats {
+		display: flex;
+		gap: 1rem;
+		margin-top: 1.5rem;
+		padding-top: 1rem;
+		border-top: 1px solid #334155;
+	}
+
+	.trace-stat {
+		font-size: 0.75rem;
+		color: #94a3b8;
+		padding: 0.25rem 0.5rem;
+		background: #1e293b;
+		border-radius: 0.25rem;
+	}
+
+	.trace-stat.question { border-left: 2px solid #60a5fa; }
+	.trace-stat.risk { border-left: 2px solid #f59e0b; }
+	.trace-stat.mitigation { border-left: 2px solid #10b981; }
+	.trace-stat.control { border-left: 2px solid #06b6d4; }
+	.trace-stat.regulation { border-left: 2px solid #a78bfa; }
+
+	.trace-detail-panel {
+		position: fixed;
+		top: 4rem;
+		right: 1rem;
+		width: 300px;
+		background: #1e293b;
+		border: 1px solid #334155;
+		border-radius: 0.5rem;
+		padding: 1rem;
+		box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+		z-index: 100;
+	}
+
+	.trace-detail-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 0.75rem;
+	}
+
+	.trace-detail-header .badge {
+		font-size: 0.6875rem;
+		padding: 0.25rem 0.5rem;
+		border-radius: 0.25rem;
+		text-transform: uppercase;
+		font-weight: 600;
+	}
+
+	.trace-detail-header .badge.question { background: rgba(96, 165, 250, 0.2); color: #60a5fa; }
+	.trace-detail-header .badge.risk { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+	.trace-detail-header .badge.mitigation { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+	.trace-detail-header .badge.control { background: rgba(6, 182, 212, 0.2); color: #06b6d4; }
+	.trace-detail-header .badge.regulation { background: rgba(167, 139, 250, 0.2); color: #a78bfa; }
+
+	.trace-detail-panel h4 {
+		margin: 0 0 0.5rem;
+		font-size: 0.875rem;
+		color: #f1f5f9;
+	}
+
+	.trace-detail-text {
+		font-size: 0.8125rem;
+		color: #94a3b8;
+		margin: 0 0 1rem;
+		line-height: 1.4;
+	}
+
+	.trace-detail-panel .edit-entity {
+		width: 100%;
 	}
 
 	/* Graph View Toolbar */
@@ -3220,54 +3286,6 @@
 		gap: 1rem;
 		padding: 0.5rem 0;
 		border-bottom: 1px solid #334155;
-		flex-wrap: wrap;
-	}
-
-	.graph-toolbar .filter-group {
-		display: flex;
-		align-items: center;
-		gap: 0.5rem;
-	}
-
-	.graph-toolbar .filter-label {
-		font-size: 0.75rem;
-		color: #94a3b8;
-		font-weight: 500;
-	}
-
-	.graph-toolbar .filter-buttons {
-		display: flex;
-		gap: 0.25rem;
-	}
-
-	.graph-toolbar .filter-buttons button {
-		padding: 0.375rem 0.625rem;
-		background: #1e293b;
-		border: 1px solid #334155;
-		border-radius: 0.25rem;
-		color: #94a3b8;
-		font-size: 0.75rem;
-		cursor: pointer;
-	}
-
-	.graph-toolbar .filter-buttons button:hover {
-		background: #334155;
-	}
-
-	.graph-toolbar .filter-buttons button.active {
-		background: #3b82f6;
-		border-color: #3b82f6;
-		color: white;
-	}
-
-	.toolbar-select {
-		background: #1e293b;
-		border: 1px solid #334155;
-		border-radius: 0.25rem;
-		padding: 0.375rem 0.625rem;
-		color: #e2e8f0;
-		font-size: 0.75rem;
-		min-width: 120px;
 	}
 
 	.search {
@@ -3771,7 +3789,7 @@
 		border-radius: 0.1875rem;
 	}
 
-	.edit-control {
+	.edit-control, .edit-entity {
 		width: 100%;
 		margin-top: 1rem;
 		background: rgba(249, 115, 22, 0.2);
@@ -3779,7 +3797,7 @@
 		color: #f97316;
 	}
 
-	.edit-control:hover {
+	.edit-control:hover, .edit-entity:hover {
 		background: rgba(249, 115, 22, 0.3);
 	}
 
@@ -4282,346 +4300,9 @@
 		}
 	}
 
-	/* Entities View */
-	.entities-view {
-		display: flex;
-		flex-direction: column;
-		flex: 1;
-		overflow: hidden;
-	}
-
-	.entities-toolbar {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		padding: 0.75rem 0;
-		border-bottom: 1px solid #334155;
-		gap: 1rem;
-		flex-wrap: wrap;
-	}
-
-	.entity-type-tabs {
-		display: flex;
-		gap: 0.5rem;
-	}
-
-	.entity-type-tabs button {
-		padding: 0.5rem 1rem;
-		background: #1e293b;
-		border: 1px solid #334155;
-		border-radius: 0.375rem;
-		color: #94a3b8;
-		font-size: 0.75rem;
-		cursor: pointer;
-	}
-
-	.entity-type-tabs button:hover {
-		border-color: #475569;
-		color: #e2e8f0;
-	}
-
-	.entity-type-tabs button.active {
-		background: #334155;
-		color: #e2e8f0;
-		border-color: #60a5fa;
-	}
-
-	.entities-actions {
-		display: flex;
-		gap: 0.5rem;
-		align-items: center;
-	}
-
-	.entities-list {
-		flex: 1;
-		overflow-y: auto;
-		padding: 0.5rem 0;
-	}
-
-	.entity-table-header {
-		display: flex;
-		gap: 1rem;
-		padding: 0.75rem;
-		background: #1e293b;
-		border-bottom: 1px solid #334155;
-		position: sticky;
-		top: 0;
-		z-index: 1;
-		font-size: 0.6875rem;
-		color: #94a3b8;
-		font-weight: 600;
-		text-transform: uppercase;
-	}
-
-	.entity-row {
-		display: flex;
-		gap: 1rem;
-		padding: 0.625rem 0.75rem;
-		border-bottom: 1px solid #1e293b;
-		align-items: center;
-		transition: background 0.1s;
-	}
-
-	.entity-row:hover {
-		background: #1e293b;
-	}
-
-	.entity-row.custom {
-		background: rgba(251, 191, 36, 0.05);
-	}
-
-	.entity-row.custom:hover {
-		background: rgba(251, 191, 36, 0.1);
-	}
-
-	.col-code, .col-id, .col-citation { flex: 0 0 100px; }
-	.col-name { flex: 2; }
-	.col-short { flex: 1; }
-	.col-domain, .col-category, .col-framework { flex: 0 0 120px; }
-	.col-type { flex: 0 0 80px; }
-	.col-text { flex: 3; }
-	.col-desc { flex: 2; }
-	.col-actions { flex: 0 0 80px; text-align: right; }
-
-	.code-badge {
-		font-family: monospace;
-		font-size: 0.625rem;
-		padding: 0.125rem 0.375rem;
-		border-radius: 0.25rem;
-		display: inline-block;
-	}
-
-	.code-badge.risk { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
-	.code-badge.mitigation { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
-	.code-badge.question { background: rgba(96, 165, 250, 0.2); color: #60a5fa; }
-	.code-badge.regulation { background: rgba(168, 85, 247, 0.2); color: #a855f7; }
-	.code-badge.control { background: rgba(6, 182, 212, 0.2); color: #06b6d4; }
-
-	.entity-row span:not(.code-badge):not(.readonly-badge) {
-		font-size: 0.75rem;
-		color: #e2e8f0;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
-	}
-
-	.action-btn {
-		padding: 0.25rem 0.5rem;
-		background: #334155;
-		border: none;
-		border-radius: 0.25rem;
-		color: #e2e8f0;
-		font-size: 0.6875rem;
-		cursor: pointer;
-	}
-
-	.action-btn:hover {
-		background: #475569;
-	}
-
-	.readonly-badge {
-		font-size: 0.5625rem;
-		color: #64748b;
-		background: #1e293b;
-		padding: 0.125rem 0.375rem;
-		border-radius: 0.25rem;
-	}
-
+	/* Entity Editor Modal */
 	.entity-editor .modal-body {
 		max-height: 60vh;
-	}
-
-	/* Risk Picker Modal */
-	.picker-overlay {
-		position: fixed;
-		inset: 0;
-		background: rgba(0, 0, 0, 0.6);
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		z-index: 150;
-	}
-
-	.picker-modal {
-		background: #1e293b;
-		border: 1px solid #334155;
-		border-radius: 0.5rem;
-		width: 500px;
-		max-width: 90vw;
-		max-height: 70vh;
-		display: flex;
-		flex-direction: column;
-	}
-
-	.picker-header {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		padding: 1rem;
-		border-bottom: 1px solid #334155;
-	}
-
-	.picker-header h3 {
-		font-size: 1rem;
-		color: #f1f5f9;
-	}
-
-	.picker-search {
-		padding: 0.75rem;
-		border-bottom: 1px solid #334155;
-		display: flex;
-		gap: 0.5rem;
-		align-items: center;
-	}
-
-	.picker-search input {
-		flex: 1;
-		padding: 0.5rem 0.75rem;
-		background: #0f172a;
-		border: 1px solid #334155;
-		border-radius: 0.375rem;
-		color: #e2e8f0;
-		font-size: 0.875rem;
-	}
-
-	.picker-search input:focus {
-		outline: none;
-		border-color: #60a5fa;
-	}
-
-	.create-new-btn {
-		white-space: nowrap;
-		padding: 0.5rem 0.75rem;
-		font-size: 0.75rem;
-	}
-
-	/* Picker create form */
-	.picker-create-form {
-		padding: 1rem;
-		background: #0f172a;
-		border-bottom: 1px solid #334155;
-	}
-
-	.picker-create-form h4 {
-		margin: 0 0 0.75rem;
-		font-size: 0.875rem;
-		color: #60a5fa;
-	}
-
-	.picker-create-form .form-row {
-		margin-bottom: 0.75rem;
-	}
-
-	.picker-create-form label {
-		display: block;
-		font-size: 0.75rem;
-		color: #94a3b8;
-		margin-bottom: 0.25rem;
-	}
-
-	.picker-create-form input,
-	.picker-create-form textarea,
-	.picker-create-form select {
-		width: 100%;
-		padding: 0.5rem 0.75rem;
-		background: #1e293b;
-		border: 1px solid #334155;
-		border-radius: 0.375rem;
-		color: #e2e8f0;
-		font-size: 0.875rem;
-		margin-top: 0.25rem;
-	}
-
-	.picker-create-form textarea {
-		resize: vertical;
-		min-height: 60px;
-	}
-
-	.picker-create-form input:focus,
-	.picker-create-form textarea:focus,
-	.picker-create-form select:focus {
-		outline: none;
-		border-color: #60a5fa;
-	}
-
-	.picker-create-form .form-actions {
-		display: flex;
-		gap: 0.5rem;
-		justify-content: flex-end;
-		margin-top: 1rem;
-	}
-
-	.picker-list {
-		flex: 1;
-		overflow-y: auto;
-		max-height: 400px;
-	}
-
-	.picker-item {
-		width: 100%;
-		display: flex;
-		align-items: center;
-		gap: 0.75rem;
-		padding: 0.75rem 1rem;
-		background: transparent;
-		border: none;
-		border-bottom: 1px solid #1e293b;
-		cursor: pointer;
-		text-align: left;
-		transition: background 0.1s;
-	}
-
-	.picker-item:hover:not(:disabled) {
-		background: #0f172a;
-	}
-
-	.picker-item.linked {
-		opacity: 0.5;
-		cursor: not-allowed;
-	}
-
-	.picker-code {
-		font-family: monospace;
-		font-size: 0.625rem;
-		padding: 0.25rem 0.5rem;
-		border-radius: 0.25rem;
-		flex-shrink: 0;
-		min-width: 70px;
-		text-align: center;
-	}
-
-	.picker-code.question { background: rgba(96, 165, 250, 0.2); color: #60a5fa; }
-	.picker-code.mitigation { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
-	.picker-code.regulation { background: rgba(168, 85, 247, 0.2); color: #a855f7; }
-
-	.picker-name {
-		flex: 1;
-		font-size: 0.8125rem;
-		color: #e2e8f0;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
-	}
-
-	.picker-category {
-		font-size: 0.6875rem;
-		color: #64748b;
-		flex-shrink: 0;
-	}
-
-	.already-linked {
-		font-size: 0.625rem;
-		color: #64748b;
-		background: #334155;
-		padding: 0.125rem 0.375rem;
-		border-radius: 0.25rem;
-	}
-
-	.picker-empty {
-		padding: 2rem;
-		text-align: center;
-		color: #64748b;
-		font-size: 0.875rem;
 	}
 
 	/* Show Conditions Editor */
