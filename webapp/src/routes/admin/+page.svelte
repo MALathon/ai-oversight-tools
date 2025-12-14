@@ -157,6 +157,10 @@
 	let editingEntity = $state<any>(null);
 	let isNewEntity = $state(false);
 
+	// Show condition editor state (for question dependencies)
+	let newConditionQuestionId = $state('');
+	let newConditionValues = $state<string[]>([]);
+
 	// Editable entities (full copies that can be modified)
 	const ENTITIES_STORAGE_KEY = 'ai-oversight-entities';
 
@@ -205,7 +209,7 @@
 
 	// Build flat lists for each entity type (use editable if available, else defaults)
 	let defaultQuestions = $derived.by(() => {
-		const items: Array<{ id: string; text: string; type: string; category: string; options: Array<{ value: string; label: string }> }> = [];
+		const items: Array<{ id: string; text: string; type: string; category: string; options: Array<{ value: string; label: string }>; showIf?: Record<string, string | string[]> }> = [];
 		for (const cat of data.questionCategories) {
 			for (const q of cat.questions) {
 				let options: Array<{ value: string; label: string }> = [];
@@ -214,7 +218,7 @@
 				} else if (q.options) {
 					options = q.options.map((o: any) => ({ value: o.value, label: o.label }));
 				}
-				items.push({ id: q.id, text: q.question, type: q.type, category: cat.name, options });
+				items.push({ id: q.id, text: q.question, type: q.type, category: cat.name, options, showIf: q.showIf });
 			}
 		}
 		return items;
@@ -225,7 +229,8 @@
 		code: s.code,
 		name: s.name,
 		shortName: s.shortName,
-		domain: s.domain
+		domain: s.domain,
+		phaseGuidance: s.phaseGuidance || { 'phase-1': '', 'phase-2': '', 'phase-3': '' }
 	})));
 
 	let defaultMitigations = $derived.by(() => {
@@ -528,9 +533,11 @@
 	function createNewEntity() {
 		isNewEntity = true;
 		if (entityType === 'questions') {
-			editingEntity = { id: '', text: '', type: 'yes-no', category: 'Custom', options: [{ value: 'yes', label: 'Yes' }, { value: 'no', label: 'No' }] };
+			editingEntity = { id: '', text: '', type: 'yes-no', category: 'Custom', options: [{ value: 'yes', label: 'Yes' }, { value: 'no', label: 'No' }], showIf: undefined };
+			newConditionQuestionId = '';
+			newConditionValues = [];
 		} else if (entityType === 'risks') {
-			editingEntity = { id: '', code: '', name: '', shortName: '', domain: '' };
+			editingEntity = { id: '', code: '', name: '', shortName: '', domain: '', phaseGuidance: { 'phase-1': '', 'phase-2': '', 'phase-3': '' } };
 		} else if (entityType === 'mitigations') {
 			editingEntity = { id: '', code: '', name: '', category: '' };
 		} else if (entityType === 'regulations') {
@@ -543,6 +550,8 @@
 	function editEntity(entity: any) {
 		isNewEntity = false;
 		editingEntity = JSON.parse(JSON.stringify(entity));
+		newConditionQuestionId = '';
+		newConditionValues = [];
 		showEntityEditor = true;
 	}
 
@@ -1760,6 +1769,39 @@
 						<label>Domain</label>
 						<input type="text" bind:value={editingEntity.domain} placeholder="Risk domain" />
 					</div>
+
+					<!-- Phase Guidance Editor -->
+					<div class="phase-guidance-section">
+						<h4>Phase-Specific Guidance</h4>
+						<p class="guidance-hint">Prose that researchers can adapt for their IRB protocols</p>
+
+						{#if editingEntity.phaseGuidance}
+							<div class="form-group">
+								<label>Phase 1: Discovery <span class="phase-tag p1">P1</span></label>
+								<textarea
+									bind:value={editingEntity.phaseGuidance['phase-1']}
+									placeholder="Guidance for Phase 1 (Discovery) - retrospective data, algorithm development..."
+									rows="4"
+								></textarea>
+							</div>
+							<div class="form-group">
+								<label>Phase 2: Validation <span class="phase-tag p2">P2</span></label>
+								<textarea
+									bind:value={editingEntity.phaseGuidance['phase-2']}
+									placeholder="Guidance for Phase 2 (Validation) - prospective testing, controlled settings..."
+									rows="4"
+								></textarea>
+							</div>
+							<div class="form-group">
+								<label>Phase 3: Deployment <span class="phase-tag p3">P3</span></label>
+								<textarea
+									bind:value={editingEntity.phaseGuidance['phase-3']}
+									placeholder="Guidance for Phase 3 (Deployment) - live use, influences decisions..."
+									rows="4"
+								></textarea>
+							</div>
+						{/if}
+					</div>
 				{:else if entityType === 'mitigations'}
 					<div class="form-group">
 						<label>Code (e.g., "M1")</label>
@@ -1793,6 +1835,99 @@
 					<div class="form-group">
 						<label>Category</label>
 						<input type="text" bind:value={editingEntity.category} placeholder="Category" />
+					</div>
+
+					<!-- Show Conditions Editor -->
+					<div class="form-group show-conditions">
+						<label>Show Conditions <span class="hint">(Only show this question when...)</span></label>
+						{#if !editingEntity.showIf || Object.keys(editingEntity.showIf).length === 0}
+							<p class="no-conditions">Always shown (no conditions)</p>
+						{:else}
+							<div class="conditions-list">
+								{#each Object.entries(editingEntity.showIf) as [questionId, values]}
+									{@const depQuestion = allQuestions.find(q => q.id === questionId)}
+									<div class="condition-item">
+										<span class="condition-question">{depQuestion?.text || questionId}</span>
+										<span class="condition-equals">=</span>
+										<span class="condition-values">
+											{#if Array.isArray(values)}
+												{values.map(v => {
+													const opt = depQuestion?.options?.find(o => o.value === v);
+													return opt?.label || v;
+												}).join(' OR ')}
+											{:else}
+												{@const opt = depQuestion?.options?.find(o => o.value === values)}
+												{opt?.label || values}
+											{/if}
+										</span>
+										<button
+											class="remove-condition"
+											onclick={() => {
+												const newShowIf = { ...editingEntity.showIf };
+												delete newShowIf[questionId];
+												editingEntity.showIf = Object.keys(newShowIf).length > 0 ? newShowIf : undefined;
+											}}
+											title="Remove condition"
+										>×</button>
+									</div>
+								{/each}
+							</div>
+						{/if}
+
+						<!-- Add New Condition -->
+						<div class="add-condition">
+							<select
+								bind:value={newConditionQuestionId}
+								onchange={() => { newConditionValues = []; }}
+							>
+								<option value="">Select dependency question...</option>
+								{#each allQuestions.filter(q => q.id !== editingEntity.id) as q}
+									<option value={q.id} disabled={editingEntity.showIf?.[q.id] !== undefined}>
+										{q.text.length > 50 ? q.text.slice(0, 50) + '...' : q.text}
+									</option>
+								{/each}
+							</select>
+
+							{#if newConditionQuestionId}
+								{@const selectedQ = allQuestions.find(q => q.id === newConditionQuestionId)}
+								{#if selectedQ?.options}
+									<div class="condition-values-select">
+										<span class="when-label">when answer is:</span>
+										{#each selectedQ.options as opt}
+											<label class="checkbox-label">
+												<input
+													type="checkbox"
+													checked={newConditionValues.includes(opt.value)}
+													onchange={(e) => {
+														if (e.currentTarget.checked) {
+															newConditionValues = [...newConditionValues, opt.value];
+														} else {
+															newConditionValues = newConditionValues.filter(v => v !== opt.value);
+														}
+													}}
+												/>
+												{opt.label}
+											</label>
+										{/each}
+									</div>
+									<button
+										class="btn small"
+										disabled={newConditionValues.length === 0}
+										onclick={() => {
+											const newShowIf = { ...editingEntity.showIf };
+											newShowIf[newConditionQuestionId] = newConditionValues.length === 1
+												? newConditionValues[0]
+												: [...newConditionValues];
+											editingEntity.showIf = newShowIf;
+											newConditionQuestionId = '';
+											newConditionValues = [];
+										}}
+									>
+										Add Condition
+									</button>
+								{/if}
+							{/if}
+						</div>
 					</div>
 				{:else if entityType === 'regulations'}
 					<div class="form-group">
@@ -3681,5 +3816,173 @@
 		text-align: center;
 		color: #64748b;
 		font-size: 0.875rem;
+	}
+
+	/* Show Conditions Editor */
+	.show-conditions {
+		margin-top: 1rem;
+		padding-top: 1rem;
+		border-top: 1px solid #334155;
+	}
+
+	.show-conditions label .hint {
+		font-weight: normal;
+		color: #64748b;
+		font-size: 0.75rem;
+	}
+
+	.no-conditions {
+		color: #64748b;
+		font-style: italic;
+		font-size: 0.875rem;
+		margin: 0.5rem 0;
+	}
+
+	.conditions-list {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+		margin: 0.5rem 0;
+	}
+
+	.condition-item {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		background: #1e293b;
+		padding: 0.5rem 0.75rem;
+		border-radius: 0.375rem;
+		font-size: 0.875rem;
+		flex-wrap: wrap;
+	}
+
+	.condition-question {
+		color: #3b82f6;
+		font-weight: 500;
+		max-width: 200px;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	.condition-equals {
+		color: #64748b;
+	}
+
+	.condition-values {
+		color: #22c55e;
+		font-weight: 500;
+	}
+
+	.remove-condition {
+		margin-left: auto;
+		background: transparent;
+		border: none;
+		color: #ef4444;
+		font-size: 1.25rem;
+		cursor: pointer;
+		padding: 0 0.25rem;
+		line-height: 1;
+	}
+
+	.remove-condition:hover {
+		color: #f87171;
+	}
+
+	.add-condition {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+		margin-top: 0.75rem;
+	}
+
+	.add-condition select {
+		width: 100%;
+	}
+
+	.condition-values-select {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+		align-items: center;
+		padding: 0.5rem;
+		background: #1e293b;
+		border-radius: 0.375rem;
+	}
+
+	.condition-values-select .when-label {
+		color: #64748b;
+		font-size: 0.75rem;
+		width: 100%;
+		margin-bottom: 0.25rem;
+	}
+
+	.condition-values-select .checkbox-label {
+		display: flex;
+		align-items: center;
+		gap: 0.375rem;
+		font-size: 0.875rem;
+		color: #e2e8f0;
+		cursor: pointer;
+	}
+
+	.condition-values-select .checkbox-label input[type="checkbox"] {
+		width: auto;
+		margin: 0;
+	}
+
+	.btn.small {
+		padding: 0.375rem 0.75rem;
+		font-size: 0.75rem;
+		align-self: flex-start;
+	}
+
+	/* Phase Guidance Editor */
+	.phase-guidance-section {
+		margin-top: 1.5rem;
+		padding-top: 1rem;
+		border-top: 1px solid #334155;
+	}
+
+	.phase-guidance-section h4 {
+		margin: 0 0 0.25rem 0;
+		font-size: 0.9375rem;
+		color: #e2e8f0;
+	}
+
+	.guidance-hint {
+		font-size: 0.75rem;
+		color: #64748b;
+		margin: 0 0 1rem 0;
+	}
+
+	.phase-guidance-section textarea {
+		font-size: 0.8125rem;
+		line-height: 1.5;
+	}
+
+	.phase-tag {
+		display: inline-block;
+		font-size: 0.625rem;
+		font-weight: 600;
+		padding: 0.125rem 0.375rem;
+		border-radius: 0.25rem;
+		margin-left: 0.5rem;
+		vertical-align: middle;
+	}
+
+	.phase-tag.p1 {
+		background: #166534;
+		color: #bbf7d0;
+	}
+
+	.phase-tag.p2 {
+		background: #854d0e;
+		color: #fef08a;
+	}
+
+	.phase-tag.p3 {
+		background: #991b1b;
+		color: #fecaca;
 	}
 </style>

@@ -16,17 +16,17 @@
   },
 
   "coreDataFiles": {
-    "_note": "These files in docs/reference/aihsr/ contain all SME-reviewed data",
+    "_note": "These files contain all SME-reviewed data. phaseGuidance is now embedded in riskSubdomains.",
     "riskDomains": "data/risk-domains.json",
-    "riskSubdomains": "data/risk-subdomains.json",
+    "riskSubdomains": "data/risk-subdomains.json (includes phaseGuidance per risk)",
     "modelTypes": "data/model-types.json",
     "populationVulnerabilities": "data/population-vulnerabilities.json",
     "phases": "data/phases.json",
     "mitigationStrategies": "data/mitigation-strategies.json",
     "reviewerPrompts": "data/reviewer-prompts.json",
-    "phaseMitigations": "rules/phase-mitigations.json",
-    "cfrRegulations": "rules/cfr-regulations.json",
-    "useCases": "examples/use-cases.json"
+    "cfrRegulations": "data/cfr-regulations.json",
+    "traceability": "data/traceability.json",
+    "useCases": "data/use-cases.json"
   },
 
   "riskMatrix": {
