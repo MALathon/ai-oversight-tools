@@ -1,6 +1,6 @@
 {
   "$schema": "./schemas/traceability.schema.json",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "lastUpdated": "2025-12-13",
   "description": "Comprehensive traceability linking questions, risks, mitigations, and regulations based on AIHSR Risk Reference Tool",
   "source": "AIHSR Risk Reference Tool v1.5 (Tamiko Eto) - Map Risk-Mitigation-Prompt sheet",
@@ -3844,37 +3844,7 @@
       "note": "HIPAA definitions and scope"
     },
     {
-      "id": "mit-p1-3000",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "unfair-discrimination-1.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "safety-frameworks-1.5"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-3001",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "unfair-discrimination-1.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "societal-impact-1.7"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-3002",
+      "id": "mit-p1-4000",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -3889,7 +3859,97 @@
       ]
     },
     {
-      "id": "mit-p2-3003",
+      "id": "mit-p1-4001",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "unfair-discrimination-1.1"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "societal-impact-1.7"
+      },
+      "phases": [
+        "phase-1"
+      ]
+    },
+    {
+      "id": "mit-p2-4002",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "unfair-discrimination-1.1"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "staged-deployment-3.4"
+      },
+      "phases": [
+        "phase-2"
+      ]
+    },
+    {
+      "id": "mit-p2-4003",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "unfair-discrimination-1.1"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "infrastructure-security-2.1"
+      },
+      "phases": [
+        "phase-2"
+      ]
+    },
+    {
+      "id": "mit-p3-4004",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "unfair-discrimination-1.1"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "post-deployment-3.5"
+      },
+      "phases": [
+        "phase-3"
+      ]
+    },
+    {
+      "id": "mit-p3-4005",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "unfair-discrimination-1.1"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "incident-response-3.6"
+      },
+      "phases": [
+        "phase-3"
+      ]
+    },
+    {
+      "id": "mit-p3-4006",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "unfair-discrimination-1.1"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "access-management-3.3"
+      },
+      "phases": [
+        "phase-3"
+      ]
+    },
+    {
+      "id": "mit-p3-4007",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -3900,86 +3960,11 @@
         "id": "content-safety-2.4"
       },
       "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-3004",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "unfair-discrimination-1.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "infrastructure-security-2.1"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-3005",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "unfair-discrimination-1.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "access-management-3.3"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-3006",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "unfair-discrimination-1.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "staged-deployment-3.4"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p3-3007",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "unfair-discrimination-1.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "post-deployment-3.5"
-      },
-      "phases": [
         "phase-3"
       ]
     },
     {
-      "id": "mit-p3-3008",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "unfair-discrimination-1.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "incident-response-3.6"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-3009",
+      "id": "mit-p3-4008",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -3994,7 +3979,7 @@
       ]
     },
     {
-      "id": "mit-p3-3010",
+      "id": "mit-p3-4009",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -4009,7 +3994,7 @@
       ]
     },
     {
-      "id": "mit-p3-3011",
+      "id": "mit-p3-4010",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -4024,7 +4009,7 @@
       ]
     },
     {
-      "id": "mit-p3-3012",
+      "id": "mit-p3-4011",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -4039,7 +4024,7 @@
       ]
     },
     {
-      "id": "mit-all-3013",
+      "id": "mit-p3-4012",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -4050,43 +4035,11 @@
         "id": "governance-disclosure-4.4"
       },
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ]
     },
     {
-      "id": "mit-p1-3014",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "toxic-content-1.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "safety-frameworks-1.5"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-3015",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "toxic-content-1.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "societal-impact-1.7"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-3016",
+      "id": "mit-p1-4013",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -4101,7 +4054,7 @@
       ]
     },
     {
-      "id": "mit-p2-3017",
+      "id": "mit-p1-4014",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -4109,29 +4062,14 @@
       },
       "to": {
         "entity": "mitigation",
-        "id": "infrastructure-security-2.1"
+        "id": "societal-impact-1.7"
       },
       "phases": [
-        "phase-2"
+        "phase-1"
       ]
     },
     {
-      "id": "mit-p2-3018",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "toxic-content-1.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "access-management-3.3"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-3019",
+      "id": "mit-p2-4015",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -4146,7 +4084,22 @@
       ]
     },
     {
-      "id": "mit-p3-3020",
+      "id": "mit-p2-4016",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "toxic-content-1.2"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "infrastructure-security-2.1"
+      },
+      "phases": [
+        "phase-2"
+      ]
+    },
+    {
+      "id": "mit-p3-4017",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -4161,7 +4114,7 @@
       ]
     },
     {
-      "id": "mit-p3-3021",
+      "id": "mit-p3-4018",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -4176,7 +4129,22 @@
       ]
     },
     {
-      "id": "mit-p3-3022",
+      "id": "mit-p3-4019",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "toxic-content-1.2"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "access-management-3.3"
+      },
+      "phases": [
+        "phase-3"
+      ]
+    },
+    {
+      "id": "mit-p3-4020",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -4191,7 +4159,7 @@
       ]
     },
     {
-      "id": "mit-p3-3023",
+      "id": "mit-p3-4021",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -4206,7 +4174,7 @@
       ]
     },
     {
-      "id": "mit-p3-3024",
+      "id": "mit-p3-4022",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -4221,7 +4189,7 @@
       ]
     },
     {
-      "id": "mit-p3-3025",
+      "id": "mit-p3-4023",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -4236,7 +4204,7 @@
       ]
     },
     {
-      "id": "mit-all-3026",
+      "id": "mit-p3-4024",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -4247,28 +4215,11 @@
         "id": "governance-disclosure-4.4"
       },
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ]
     },
     {
-      "id": "mit-p1-3027",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "unequal-performance-1.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "safety-frameworks-1.5"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-3028",
+      "id": "mit-p1-4025",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -4283,7 +4234,7 @@
       ]
     },
     {
-      "id": "mit-p2-3029",
+      "id": "mit-p2-4026",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -4298,7 +4249,7 @@
       ]
     },
     {
-      "id": "mit-p2-3030",
+      "id": "mit-p2-4027",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -4313,52 +4264,7 @@
       ]
     },
     {
-      "id": "mit-p2-3031",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "unequal-performance-1.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "content-safety-2.4"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-3032",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "unequal-performance-1.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "infrastructure-security-2.1"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-3033",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "unequal-performance-1.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "access-management-3.3"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-3034",
+      "id": "mit-p2-4028",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -4373,7 +4279,22 @@
       ]
     },
     {
-      "id": "mit-p3-3035",
+      "id": "mit-p2-4029",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "unequal-performance-1.3"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "infrastructure-security-2.1"
+      },
+      "phases": [
+        "phase-2"
+      ]
+    },
+    {
+      "id": "mit-p3-4030",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -4388,7 +4309,37 @@
       ]
     },
     {
-      "id": "mit-p3-3036",
+      "id": "mit-p3-4031",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "unequal-performance-1.3"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "access-management-3.3"
+      },
+      "phases": [
+        "phase-3"
+      ]
+    },
+    {
+      "id": "mit-p3-4032",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "unequal-performance-1.3"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "content-safety-2.4"
+      },
+      "phases": [
+        "phase-3"
+      ]
+    },
+    {
+      "id": "mit-p3-4033",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -4403,7 +4354,7 @@
       ]
     },
     {
-      "id": "mit-p3-3037",
+      "id": "mit-p3-4034",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -4418,7 +4369,7 @@
       ]
     },
     {
-      "id": "mit-p3-3038",
+      "id": "mit-p3-4035",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -4433,7 +4384,7 @@
       ]
     },
     {
-      "id": "mit-p3-3039",
+      "id": "mit-p3-4036",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -4448,7 +4399,7 @@
       ]
     },
     {
-      "id": "mit-all-3040",
+      "id": "mit-p3-4037",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -4459,28 +4410,11 @@
         "id": "governance-disclosure-4.4"
       },
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ]
     },
     {
-      "id": "mit-p1-3041",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "privacy-breach-2.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "safety-frameworks-1.5"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-3042",
+      "id": "mit-p1-4038",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -4495,7 +4429,7 @@
       ]
     },
     {
-      "id": "mit-p2-3043",
+      "id": "mit-p2-4039",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -4510,7 +4444,7 @@
       ]
     },
     {
-      "id": "mit-p2-3044",
+      "id": "mit-p2-4040",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -4525,7 +4459,7 @@
       ]
     },
     {
-      "id": "mit-p2-3045",
+      "id": "mit-p2-4041",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -4540,37 +4474,7 @@
       ]
     },
     {
-      "id": "mit-p2-3046",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "privacy-breach-2.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "content-safety-2.4"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-3047",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "privacy-breach-2.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "infrastructure-security-2.1"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-3048",
+      "id": "mit-p2-4042",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -4585,7 +4489,22 @@
       ]
     },
     {
-      "id": "mit-p3-3049",
+      "id": "mit-p2-4043",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "privacy-breach-2.1"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "infrastructure-security-2.1"
+      },
+      "phases": [
+        "phase-2"
+      ]
+    },
+    {
+      "id": "mit-p3-4044",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -4600,7 +4519,22 @@
       ]
     },
     {
-      "id": "mit-p3-3050",
+      "id": "mit-p3-4045",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "privacy-breach-2.1"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "content-safety-2.4"
+      },
+      "phases": [
+        "phase-3"
+      ]
+    },
+    {
+      "id": "mit-p3-4046",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -4615,7 +4549,7 @@
       ]
     },
     {
-      "id": "mit-p3-3051",
+      "id": "mit-p3-4047",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -4630,7 +4564,7 @@
       ]
     },
     {
-      "id": "mit-p3-3052",
+      "id": "mit-p3-4048",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -4645,7 +4579,7 @@
       ]
     },
     {
-      "id": "mit-all-3053",
+      "id": "mit-p3-4049",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -4656,58 +4590,11 @@
         "id": "governance-disclosure-4.4"
       },
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ]
     },
     {
-      "id": "mit-p1-3054",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "security-vulnerabilities-2.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "safety-frameworks-1.5"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-3055",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "security-vulnerabilities-2.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "societal-impact-1.7"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-3056",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "security-vulnerabilities-2.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "data-governance-3.2"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-3057",
+      "id": "mit-p1-4050",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -4722,7 +4609,22 @@
       ]
     },
     {
-      "id": "mit-p2-3058",
+      "id": "mit-p1-4051",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "security-vulnerabilities-2.2"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "societal-impact-1.7"
+      },
+      "phases": [
+        "phase-1"
+      ]
+    },
+    {
+      "id": "mit-p2-4052",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -4737,7 +4639,7 @@
       ]
     },
     {
-      "id": "mit-p2-3059",
+      "id": "mit-p2-4053",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -4752,7 +4654,52 @@
       ]
     },
     {
-      "id": "mit-p2-3060",
+      "id": "mit-p2-4054",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "security-vulnerabilities-2.2"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "data-governance-3.2"
+      },
+      "phases": [
+        "phase-2"
+      ]
+    },
+    {
+      "id": "mit-p2-4055",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "security-vulnerabilities-2.2"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "staged-deployment-3.4"
+      },
+      "phases": [
+        "phase-2"
+      ]
+    },
+    {
+      "id": "mit-p3-4056",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "security-vulnerabilities-2.2"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "post-deployment-3.5"
+      },
+      "phases": [
+        "phase-3"
+      ]
+    },
+    {
+      "id": "mit-p3-4057",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -4763,41 +4710,11 @@
         "id": "content-safety-2.4"
       },
       "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-3061",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "security-vulnerabilities-2.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "staged-deployment-3.4"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p3-3062",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "security-vulnerabilities-2.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "post-deployment-3.5"
-      },
-      "phases": [
         "phase-3"
       ]
     },
     {
-      "id": "mit-p3-3063",
+      "id": "mit-p3-4058",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -4812,7 +4729,7 @@
       ]
     },
     {
-      "id": "mit-p3-3064",
+      "id": "mit-p3-4059",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -4827,7 +4744,7 @@
       ]
     },
     {
-      "id": "mit-p3-3065",
+      "id": "mit-p3-4060",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -4842,7 +4759,7 @@
       ]
     },
     {
-      "id": "mit-p3-3066",
+      "id": "mit-p3-4061",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -4857,7 +4774,7 @@
       ]
     },
     {
-      "id": "mit-all-3067",
+      "id": "mit-p3-4062",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -4868,43 +4785,11 @@
         "id": "governance-disclosure-4.4"
       },
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ]
     },
     {
-      "id": "mit-p1-3068",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "false-information-3.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "safety-frameworks-1.5"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-3069",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "false-information-3.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "societal-impact-1.7"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-3070",
+      "id": "mit-p1-4063",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -4919,7 +4804,7 @@
       ]
     },
     {
-      "id": "mit-p2-3071",
+      "id": "mit-p1-4064",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -4927,44 +4812,14 @@
       },
       "to": {
         "entity": "mitigation",
-        "id": "content-safety-2.4"
+        "id": "societal-impact-1.7"
       },
       "phases": [
-        "phase-2"
+        "phase-1"
       ]
     },
     {
-      "id": "mit-p2-3072",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "false-information-3.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "infrastructure-security-2.1"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-3073",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "false-information-3.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "access-management-3.3"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-3074",
+      "id": "mit-p2-4065",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -4979,7 +4834,22 @@
       ]
     },
     {
-      "id": "mit-p3-3075",
+      "id": "mit-p2-4066",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "false-information-3.1"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "infrastructure-security-2.1"
+      },
+      "phases": [
+        "phase-2"
+      ]
+    },
+    {
+      "id": "mit-p3-4067",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -4994,7 +4864,7 @@
       ]
     },
     {
-      "id": "mit-p3-3076",
+      "id": "mit-p3-4068",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -5009,7 +4879,37 @@
       ]
     },
     {
-      "id": "mit-p3-3077",
+      "id": "mit-p3-4069",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "false-information-3.1"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "access-management-3.3"
+      },
+      "phases": [
+        "phase-3"
+      ]
+    },
+    {
+      "id": "mit-p3-4070",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "false-information-3.1"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "content-safety-2.4"
+      },
+      "phases": [
+        "phase-3"
+      ]
+    },
+    {
+      "id": "mit-p3-4071",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -5024,7 +4924,7 @@
       ]
     },
     {
-      "id": "mit-p3-3078",
+      "id": "mit-p3-4072",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -5039,7 +4939,7 @@
       ]
     },
     {
-      "id": "mit-p3-3079",
+      "id": "mit-p3-4073",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -5054,7 +4954,7 @@
       ]
     },
     {
-      "id": "mit-p3-3080",
+      "id": "mit-p3-4074",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -5069,7 +4969,7 @@
       ]
     },
     {
-      "id": "mit-all-3081",
+      "id": "mit-p3-4075",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -5080,58 +4980,11 @@
         "id": "governance-disclosure-4.4"
       },
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ]
     },
     {
-      "id": "mit-p1-3082",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "information-pollution-3.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "risk-management-1.2"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-3083",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "information-pollution-3.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "safety-frameworks-1.5"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-3084",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "information-pollution-3.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "societal-impact-1.7"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-3085",
+      "id": "mit-p1-4076",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -5146,7 +4999,37 @@
       ]
     },
     {
-      "id": "mit-p2-3086",
+      "id": "mit-p1-4077",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "information-pollution-3.2"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "risk-management-1.2"
+      },
+      "phases": [
+        "phase-1"
+      ]
+    },
+    {
+      "id": "mit-p1-4078",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "information-pollution-3.2"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "societal-impact-1.7"
+      },
+      "phases": [
+        "phase-1"
+      ]
+    },
+    {
+      "id": "mit-p2-4079",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -5161,7 +5044,7 @@
       ]
     },
     {
-      "id": "mit-p2-3087",
+      "id": "mit-p2-4080",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -5176,7 +5059,7 @@
       ]
     },
     {
-      "id": "mit-p2-3088",
+      "id": "mit-p2-4081",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -5191,22 +5074,7 @@
       ]
     },
     {
-      "id": "mit-p2-3089",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "information-pollution-3.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "infrastructure-security-2.1"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-3090",
+      "id": "mit-p2-4082",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -5221,7 +5089,22 @@
       ]
     },
     {
-      "id": "mit-p3-3091",
+      "id": "mit-p2-4083",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "information-pollution-3.2"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "infrastructure-security-2.1"
+      },
+      "phases": [
+        "phase-2"
+      ]
+    },
+    {
+      "id": "mit-p3-4084",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -5236,7 +5119,7 @@
       ]
     },
     {
-      "id": "mit-p3-3092",
+      "id": "mit-p3-4085",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -5251,7 +5134,7 @@
       ]
     },
     {
-      "id": "mit-p3-3093",
+      "id": "mit-p3-4086",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -5266,7 +5149,7 @@
       ]
     },
     {
-      "id": "mit-p3-3094",
+      "id": "mit-p3-4087",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -5281,7 +5164,7 @@
       ]
     },
     {
-      "id": "mit-p3-3095",
+      "id": "mit-p3-4088",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -5296,7 +5179,7 @@
       ]
     },
     {
-      "id": "mit-all-3096",
+      "id": "mit-p3-4089",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -5307,73 +5190,11 @@
         "id": "governance-disclosure-4.4"
       },
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ]
     },
     {
-      "id": "mit-p1-3097",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "disinformation-surveillance-4.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "risk-management-1.2"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-3098",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "disinformation-surveillance-4.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "safety-frameworks-1.5"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-3099",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "disinformation-surveillance-4.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "societal-impact-1.7"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-3100",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "disinformation-surveillance-4.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "data-governance-3.2"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-3101",
+      "id": "mit-p1-4090",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -5388,7 +5209,37 @@
       ]
     },
     {
-      "id": "mit-p2-3102",
+      "id": "mit-p1-4091",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "disinformation-surveillance-4.1"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "risk-management-1.2"
+      },
+      "phases": [
+        "phase-1"
+      ]
+    },
+    {
+      "id": "mit-p1-4092",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "disinformation-surveillance-4.1"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "societal-impact-1.7"
+      },
+      "phases": [
+        "phase-1"
+      ]
+    },
+    {
+      "id": "mit-p2-4093",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -5403,7 +5254,7 @@
       ]
     },
     {
-      "id": "mit-p2-3103",
+      "id": "mit-p2-4094",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -5418,7 +5269,7 @@
       ]
     },
     {
-      "id": "mit-p2-3104",
+      "id": "mit-p2-4095",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -5433,7 +5284,37 @@
       ]
     },
     {
-      "id": "mit-p2-3105",
+      "id": "mit-p2-4096",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "disinformation-surveillance-4.1"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "data-governance-3.2"
+      },
+      "phases": [
+        "phase-2"
+      ]
+    },
+    {
+      "id": "mit-p2-4097",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "disinformation-surveillance-4.1"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "staged-deployment-3.4"
+      },
+      "phases": [
+        "phase-2"
+      ]
+    },
+    {
+      "id": "mit-p2-4098",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -5448,22 +5329,7 @@
       ]
     },
     {
-      "id": "mit-p2-3106",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "disinformation-surveillance-4.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "staged-deployment-3.4"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p3-3107",
+      "id": "mit-p3-4099",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -5478,7 +5344,7 @@
       ]
     },
     {
-      "id": "mit-p3-3108",
+      "id": "mit-p3-4100",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -5493,7 +5359,7 @@
       ]
     },
     {
-      "id": "mit-p3-3109",
+      "id": "mit-p3-4101",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -5508,7 +5374,7 @@
       ]
     },
     {
-      "id": "mit-p3-3110",
+      "id": "mit-p3-4102",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -5523,7 +5389,7 @@
       ]
     },
     {
-      "id": "mit-p3-3111",
+      "id": "mit-p3-4103",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -5538,7 +5404,7 @@
       ]
     },
     {
-      "id": "mit-all-3112",
+      "id": "mit-p3-4104",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -5549,58 +5415,11 @@
         "id": "governance-disclosure-4.4"
       },
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ]
     },
     {
-      "id": "mit-p1-3113",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "cyberattacks-mass-harm-4.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "risk-management-1.2"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-3114",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "cyberattacks-mass-harm-4.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "societal-impact-1.7"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-3115",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "cyberattacks-mass-harm-4.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "data-governance-3.2"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-3116",
+      "id": "mit-p1-4105",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -5615,7 +5434,37 @@
       ]
     },
     {
-      "id": "mit-p2-3117",
+      "id": "mit-p1-4106",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "cyberattacks-mass-harm-4.2"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "risk-management-1.2"
+      },
+      "phases": [
+        "phase-1"
+      ]
+    },
+    {
+      "id": "mit-p1-4107",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "cyberattacks-mass-harm-4.2"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "societal-impact-1.7"
+      },
+      "phases": [
+        "phase-1"
+      ]
+    },
+    {
+      "id": "mit-p2-4108",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -5630,7 +5479,7 @@
       ]
     },
     {
-      "id": "mit-p2-3118",
+      "id": "mit-p2-4109",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -5645,7 +5494,7 @@
       ]
     },
     {
-      "id": "mit-p2-3119",
+      "id": "mit-p2-4110",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -5660,7 +5509,52 @@
       ]
     },
     {
-      "id": "mit-p2-3120",
+      "id": "mit-p2-4111",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "cyberattacks-mass-harm-4.2"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "data-governance-3.2"
+      },
+      "phases": [
+        "phase-2"
+      ]
+    },
+    {
+      "id": "mit-p2-4112",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "cyberattacks-mass-harm-4.2"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "staged-deployment-3.4"
+      },
+      "phases": [
+        "phase-2"
+      ]
+    },
+    {
+      "id": "mit-p3-4113",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "cyberattacks-mass-harm-4.2"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "post-deployment-3.5"
+      },
+      "phases": [
+        "phase-3"
+      ]
+    },
+    {
+      "id": "mit-p3-4114",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -5671,41 +5565,11 @@
         "id": "content-safety-2.4"
       },
       "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-3121",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "cyberattacks-mass-harm-4.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "staged-deployment-3.4"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p3-3122",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "cyberattacks-mass-harm-4.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "post-deployment-3.5"
-      },
-      "phases": [
         "phase-3"
       ]
     },
     {
-      "id": "mit-p3-3123",
+      "id": "mit-p3-4115",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -5720,7 +5584,7 @@
       ]
     },
     {
-      "id": "mit-p3-3124",
+      "id": "mit-p3-4116",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -5735,7 +5599,7 @@
       ]
     },
     {
-      "id": "mit-p3-3125",
+      "id": "mit-p3-4117",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -5750,7 +5614,7 @@
       ]
     },
     {
-      "id": "mit-p3-3126",
+      "id": "mit-p3-4118",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -5765,7 +5629,7 @@
       ]
     },
     {
-      "id": "mit-all-3127",
+      "id": "mit-p3-4119",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -5776,73 +5640,11 @@
         "id": "governance-disclosure-4.4"
       },
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ]
     },
     {
-      "id": "mit-p1-3128",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "fraud-manipulation-4.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "risk-management-1.2"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-3129",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "fraud-manipulation-4.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "safety-frameworks-1.5"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-3130",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "fraud-manipulation-4.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "societal-impact-1.7"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-3131",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "fraud-manipulation-4.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "data-governance-3.2"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-3132",
+      "id": "mit-p1-4120",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -5857,7 +5659,37 @@
       ]
     },
     {
-      "id": "mit-p2-3133",
+      "id": "mit-p1-4121",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "fraud-manipulation-4.3"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "risk-management-1.2"
+      },
+      "phases": [
+        "phase-1"
+      ]
+    },
+    {
+      "id": "mit-p1-4122",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "fraud-manipulation-4.3"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "societal-impact-1.7"
+      },
+      "phases": [
+        "phase-1"
+      ]
+    },
+    {
+      "id": "mit-p2-4123",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -5872,7 +5704,7 @@
       ]
     },
     {
-      "id": "mit-p2-3134",
+      "id": "mit-p2-4124",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -5887,7 +5719,7 @@
       ]
     },
     {
-      "id": "mit-p2-3135",
+      "id": "mit-p2-4125",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -5895,29 +5727,14 @@
       },
       "to": {
         "entity": "mitigation",
-        "id": "infrastructure-security-2.1"
+        "id": "data-governance-3.2"
       },
       "phases": [
         "phase-2"
       ]
     },
     {
-      "id": "mit-p2-3136",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "fraud-manipulation-4.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "access-management-3.3"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-3137",
+      "id": "mit-p2-4126",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -5932,7 +5749,22 @@
       ]
     },
     {
-      "id": "mit-p3-3138",
+      "id": "mit-p2-4127",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "fraud-manipulation-4.3"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "infrastructure-security-2.1"
+      },
+      "phases": [
+        "phase-2"
+      ]
+    },
+    {
+      "id": "mit-p3-4128",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -5947,7 +5779,7 @@
       ]
     },
     {
-      "id": "mit-p3-3139",
+      "id": "mit-p3-4129",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -5962,7 +5794,22 @@
       ]
     },
     {
-      "id": "mit-p3-3140",
+      "id": "mit-p3-4130",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "fraud-manipulation-4.3"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "access-management-3.3"
+      },
+      "phases": [
+        "phase-3"
+      ]
+    },
+    {
+      "id": "mit-p3-4131",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -5977,7 +5824,7 @@
       ]
     },
     {
-      "id": "mit-p3-3141",
+      "id": "mit-p3-4132",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -5992,7 +5839,7 @@
       ]
     },
     {
-      "id": "mit-p3-3142",
+      "id": "mit-p3-4133",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -6007,7 +5854,7 @@
       ]
     },
     {
-      "id": "mit-all-3143",
+      "id": "mit-p3-4134",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -6018,28 +5865,11 @@
         "id": "governance-disclosure-4.4"
       },
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ]
     },
     {
-      "id": "mit-p1-3144",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "overreliance-5.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "safety-frameworks-1.5"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-3145",
+      "id": "mit-p1-4135",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -6054,22 +5884,7 @@
       ]
     },
     {
-      "id": "mit-p1-3146",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "overreliance-5.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "data-governance-3.2"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p2-3147",
+      "id": "mit-p2-4136",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -6084,7 +5899,7 @@
       ]
     },
     {
-      "id": "mit-p2-3148",
+      "id": "mit-p2-4137",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -6099,7 +5914,7 @@
       ]
     },
     {
-      "id": "mit-p2-3149",
+      "id": "mit-p2-4138",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -6107,14 +5922,14 @@
       },
       "to": {
         "entity": "mitigation",
-        "id": "content-safety-2.4"
+        "id": "data-governance-3.2"
       },
       "phases": [
         "phase-2"
       ]
     },
     {
-      "id": "mit-p2-3150",
+      "id": "mit-p2-4139",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -6129,22 +5944,7 @@
       ]
     },
     {
-      "id": "mit-p2-3151",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "overreliance-5.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "access-management-3.3"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p3-3152",
+      "id": "mit-p3-4140",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -6159,7 +5959,37 @@
       ]
     },
     {
-      "id": "mit-p3-3153",
+      "id": "mit-p3-4141",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "overreliance-5.1"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "access-management-3.3"
+      },
+      "phases": [
+        "phase-3"
+      ]
+    },
+    {
+      "id": "mit-p3-4142",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "overreliance-5.1"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "content-safety-2.4"
+      },
+      "phases": [
+        "phase-3"
+      ]
+    },
+    {
+      "id": "mit-p3-4143",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -6174,7 +6004,7 @@
       ]
     },
     {
-      "id": "mit-p3-3154",
+      "id": "mit-p3-4144",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -6189,7 +6019,7 @@
       ]
     },
     {
-      "id": "mit-p3-3155",
+      "id": "mit-p3-4145",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -6204,7 +6034,7 @@
       ]
     },
     {
-      "id": "mit-all-3156",
+      "id": "mit-p3-4146",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -6215,73 +6045,11 @@
         "id": "governance-disclosure-4.4"
       },
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ]
     },
     {
-      "id": "mit-p1-3157",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "loss-of-agency-5.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "risk-management-1.2"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-3158",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "loss-of-agency-5.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "safety-frameworks-1.5"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-3159",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "loss-of-agency-5.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "societal-impact-1.7"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-3160",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "loss-of-agency-5.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "data-governance-3.2"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-3161",
+      "id": "mit-p1-4147",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -6296,7 +6064,37 @@
       ]
     },
     {
-      "id": "mit-p2-3162",
+      "id": "mit-p1-4148",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "loss-of-agency-5.2"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "risk-management-1.2"
+      },
+      "phases": [
+        "phase-1"
+      ]
+    },
+    {
+      "id": "mit-p1-4149",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "loss-of-agency-5.2"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "societal-impact-1.7"
+      },
+      "phases": [
+        "phase-1"
+      ]
+    },
+    {
+      "id": "mit-p2-4150",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -6311,7 +6109,7 @@
       ]
     },
     {
-      "id": "mit-p2-3163",
+      "id": "mit-p2-4151",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -6326,7 +6124,7 @@
       ]
     },
     {
-      "id": "mit-p2-3164",
+      "id": "mit-p2-4152",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -6334,14 +6132,14 @@
       },
       "to": {
         "entity": "mitigation",
-        "id": "content-safety-2.4"
+        "id": "data-governance-3.2"
       },
       "phases": [
         "phase-2"
       ]
     },
     {
-      "id": "mit-p2-3165",
+      "id": "mit-p2-4153",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -6356,22 +6154,7 @@
       ]
     },
     {
-      "id": "mit-p2-3166",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "loss-of-agency-5.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "access-management-3.3"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p3-3167",
+      "id": "mit-p3-4154",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -6386,7 +6169,7 @@
       ]
     },
     {
-      "id": "mit-p3-3168",
+      "id": "mit-p3-4155",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -6401,7 +6184,37 @@
       ]
     },
     {
-      "id": "mit-p3-3169",
+      "id": "mit-p3-4156",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "loss-of-agency-5.2"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "access-management-3.3"
+      },
+      "phases": [
+        "phase-3"
+      ]
+    },
+    {
+      "id": "mit-p3-4157",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "loss-of-agency-5.2"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "content-safety-2.4"
+      },
+      "phases": [
+        "phase-3"
+      ]
+    },
+    {
+      "id": "mit-p3-4158",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -6416,7 +6229,7 @@
       ]
     },
     {
-      "id": "mit-p3-3170",
+      "id": "mit-p3-4159",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -6431,7 +6244,7 @@
       ]
     },
     {
-      "id": "mit-p3-3171",
+      "id": "mit-p3-4160",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -6446,7 +6259,7 @@
       ]
     },
     {
-      "id": "mit-all-3172",
+      "id": "mit-p3-4161",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -6457,58 +6270,11 @@
         "id": "governance-disclosure-4.4"
       },
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ]
     },
     {
-      "id": "mit-p1-3173",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "power-centralization-6.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "risk-management-1.2"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-3174",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "power-centralization-6.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "safety-frameworks-1.5"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-3175",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "power-centralization-6.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "data-governance-3.2"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-3176",
+      "id": "mit-p1-4162",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -6523,7 +6289,22 @@
       ]
     },
     {
-      "id": "mit-p2-3177",
+      "id": "mit-p1-4163",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "power-centralization-6.1"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "risk-management-1.2"
+      },
+      "phases": [
+        "phase-1"
+      ]
+    },
+    {
+      "id": "mit-p2-4164",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -6538,7 +6319,7 @@
       ]
     },
     {
-      "id": "mit-p2-3178",
+      "id": "mit-p2-4165",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -6553,7 +6334,7 @@
       ]
     },
     {
-      "id": "mit-p2-3179",
+      "id": "mit-p2-4166",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -6568,7 +6349,7 @@
       ]
     },
     {
-      "id": "mit-p2-3180",
+      "id": "mit-p2-4167",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -6576,44 +6357,14 @@
       },
       "to": {
         "entity": "mitigation",
-        "id": "content-safety-2.4"
+        "id": "data-governance-3.2"
       },
       "phases": [
         "phase-2"
       ]
     },
     {
-      "id": "mit-p2-3181",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "power-centralization-6.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "infrastructure-security-2.1"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-3182",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "power-centralization-6.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "access-management-3.3"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-3183",
+      "id": "mit-p2-4168",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -6628,7 +6379,22 @@
       ]
     },
     {
-      "id": "mit-p3-3184",
+      "id": "mit-p2-4169",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "power-centralization-6.1"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "infrastructure-security-2.1"
+      },
+      "phases": [
+        "phase-2"
+      ]
+    },
+    {
+      "id": "mit-p3-4170",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -6643,7 +6409,7 @@
       ]
     },
     {
-      "id": "mit-p3-3185",
+      "id": "mit-p3-4171",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -6658,7 +6424,37 @@
       ]
     },
     {
-      "id": "mit-p3-3186",
+      "id": "mit-p3-4172",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "power-centralization-6.1"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "access-management-3.3"
+      },
+      "phases": [
+        "phase-3"
+      ]
+    },
+    {
+      "id": "mit-p3-4173",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "power-centralization-6.1"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "content-safety-2.4"
+      },
+      "phases": [
+        "phase-3"
+      ]
+    },
+    {
+      "id": "mit-p3-4174",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -6673,7 +6469,7 @@
       ]
     },
     {
-      "id": "mit-p3-3187",
+      "id": "mit-p3-4175",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -6688,7 +6484,7 @@
       ]
     },
     {
-      "id": "mit-p3-3188",
+      "id": "mit-p3-4176",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -6703,7 +6499,7 @@
       ]
     },
     {
-      "id": "mit-p3-3189",
+      "id": "mit-p3-4177",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -6718,52 +6514,7 @@
       ]
     },
     {
-      "id": "mit-p1-3190",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "inequality-employment-6.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "risk-management-1.2"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-3191",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "inequality-employment-6.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "safety-frameworks-1.5"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-3192",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "inequality-employment-6.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "data-governance-3.2"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-3193",
+      "id": "mit-p1-4178",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -6778,7 +6529,22 @@
       ]
     },
     {
-      "id": "mit-p2-3194",
+      "id": "mit-p1-4179",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "inequality-employment-6.2"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "risk-management-1.2"
+      },
+      "phases": [
+        "phase-1"
+      ]
+    },
+    {
+      "id": "mit-p2-4180",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -6793,7 +6559,7 @@
       ]
     },
     {
-      "id": "mit-p2-3195",
+      "id": "mit-p2-4181",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -6808,7 +6574,7 @@
       ]
     },
     {
-      "id": "mit-p2-3196",
+      "id": "mit-p2-4182",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -6823,7 +6589,7 @@
       ]
     },
     {
-      "id": "mit-p2-3197",
+      "id": "mit-p2-4183",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -6831,14 +6597,14 @@
       },
       "to": {
         "entity": "mitigation",
-        "id": "content-safety-2.4"
+        "id": "data-governance-3.2"
       },
       "phases": [
         "phase-2"
       ]
     },
     {
-      "id": "mit-p2-3198",
+      "id": "mit-p2-4184",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -6853,22 +6619,7 @@
       ]
     },
     {
-      "id": "mit-p2-3199",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "inequality-employment-6.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "access-management-3.3"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p3-3200",
+      "id": "mit-p3-4185",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -6883,7 +6634,7 @@
       ]
     },
     {
-      "id": "mit-p3-3201",
+      "id": "mit-p3-4186",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -6898,7 +6649,37 @@
       ]
     },
     {
-      "id": "mit-p3-3202",
+      "id": "mit-p3-4187",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "inequality-employment-6.2"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "access-management-3.3"
+      },
+      "phases": [
+        "phase-3"
+      ]
+    },
+    {
+      "id": "mit-p3-4188",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "inequality-employment-6.2"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "content-safety-2.4"
+      },
+      "phases": [
+        "phase-3"
+      ]
+    },
+    {
+      "id": "mit-p3-4189",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -6913,7 +6694,7 @@
       ]
     },
     {
-      "id": "mit-p3-3203",
+      "id": "mit-p3-4190",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -6928,7 +6709,7 @@
       ]
     },
     {
-      "id": "mit-p3-3204",
+      "id": "mit-p3-4191",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -6943,7 +6724,7 @@
       ]
     },
     {
-      "id": "mit-all-3205",
+      "id": "mit-p3-4192",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -6954,58 +6735,11 @@
         "id": "governance-disclosure-4.4"
       },
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ]
     },
     {
-      "id": "mit-p1-3206",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "devaluation-human-effort-6.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "risk-management-1.2"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-3207",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "devaluation-human-effort-6.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "safety-frameworks-1.5"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-3208",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "devaluation-human-effort-6.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "data-governance-3.2"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-3209",
+      "id": "mit-p1-4193",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -7020,7 +6754,22 @@
       ]
     },
     {
-      "id": "mit-p2-3210",
+      "id": "mit-p1-4194",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "devaluation-human-effort-6.3"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "risk-management-1.2"
+      },
+      "phases": [
+        "phase-1"
+      ]
+    },
+    {
+      "id": "mit-p2-4195",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -7035,7 +6784,7 @@
       ]
     },
     {
-      "id": "mit-p2-3211",
+      "id": "mit-p2-4196",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -7050,7 +6799,7 @@
       ]
     },
     {
-      "id": "mit-p2-3212",
+      "id": "mit-p2-4197",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -7065,7 +6814,7 @@
       ]
     },
     {
-      "id": "mit-p2-3213",
+      "id": "mit-p2-4198",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -7073,44 +6822,14 @@
       },
       "to": {
         "entity": "mitigation",
-        "id": "content-safety-2.4"
+        "id": "data-governance-3.2"
       },
       "phases": [
         "phase-2"
       ]
     },
     {
-      "id": "mit-p2-3214",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "devaluation-human-effort-6.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "infrastructure-security-2.1"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-3215",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "devaluation-human-effort-6.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "access-management-3.3"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-3216",
+      "id": "mit-p2-4199",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -7125,7 +6844,22 @@
       ]
     },
     {
-      "id": "mit-p3-3217",
+      "id": "mit-p2-4200",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "devaluation-human-effort-6.3"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "infrastructure-security-2.1"
+      },
+      "phases": [
+        "phase-2"
+      ]
+    },
+    {
+      "id": "mit-p3-4201",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -7140,7 +6874,7 @@
       ]
     },
     {
-      "id": "mit-p3-3218",
+      "id": "mit-p3-4202",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -7155,7 +6889,37 @@
       ]
     },
     {
-      "id": "mit-p3-3219",
+      "id": "mit-p3-4203",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "devaluation-human-effort-6.3"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "access-management-3.3"
+      },
+      "phases": [
+        "phase-3"
+      ]
+    },
+    {
+      "id": "mit-p3-4204",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "devaluation-human-effort-6.3"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "content-safety-2.4"
+      },
+      "phases": [
+        "phase-3"
+      ]
+    },
+    {
+      "id": "mit-p3-4205",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -7170,7 +6934,7 @@
       ]
     },
     {
-      "id": "mit-p3-3220",
+      "id": "mit-p3-4206",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -7185,7 +6949,7 @@
       ]
     },
     {
-      "id": "mit-p3-3221",
+      "id": "mit-p3-4207",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -7200,7 +6964,7 @@
       ]
     },
     {
-      "id": "mit-all-3222",
+      "id": "mit-p3-4208",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -7211,58 +6975,11 @@
         "id": "governance-disclosure-4.4"
       },
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ]
     },
     {
-      "id": "mit-p1-3223",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "competitive-dynamics-6.4"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "risk-management-1.2"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-3224",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "competitive-dynamics-6.4"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "societal-impact-1.7"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-3225",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "competitive-dynamics-6.4"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "data-governance-3.2"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-3226",
+      "id": "mit-p1-4209",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -7277,7 +6994,37 @@
       ]
     },
     {
-      "id": "mit-p2-3227",
+      "id": "mit-p1-4210",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "competitive-dynamics-6.4"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "risk-management-1.2"
+      },
+      "phases": [
+        "phase-1"
+      ]
+    },
+    {
+      "id": "mit-p1-4211",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "competitive-dynamics-6.4"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "societal-impact-1.7"
+      },
+      "phases": [
+        "phase-1"
+      ]
+    },
+    {
+      "id": "mit-p2-4212",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -7292,7 +7039,7 @@
       ]
     },
     {
-      "id": "mit-p2-3228",
+      "id": "mit-p2-4213",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -7307,7 +7054,7 @@
       ]
     },
     {
-      "id": "mit-p2-3229",
+      "id": "mit-p2-4214",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -7322,7 +7069,7 @@
       ]
     },
     {
-      "id": "mit-p2-3230",
+      "id": "mit-p2-4215",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -7330,44 +7077,14 @@
       },
       "to": {
         "entity": "mitigation",
-        "id": "content-safety-2.4"
+        "id": "data-governance-3.2"
       },
       "phases": [
         "phase-2"
       ]
     },
     {
-      "id": "mit-p2-3231",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "competitive-dynamics-6.4"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "infrastructure-security-2.1"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-3232",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "competitive-dynamics-6.4"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "access-management-3.3"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-3233",
+      "id": "mit-p2-4216",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -7382,7 +7099,22 @@
       ]
     },
     {
-      "id": "mit-p3-3234",
+      "id": "mit-p2-4217",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "competitive-dynamics-6.4"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "infrastructure-security-2.1"
+      },
+      "phases": [
+        "phase-2"
+      ]
+    },
+    {
+      "id": "mit-p3-4218",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -7397,7 +7129,7 @@
       ]
     },
     {
-      "id": "mit-p3-3235",
+      "id": "mit-p3-4219",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -7412,7 +7144,37 @@
       ]
     },
     {
-      "id": "mit-p3-3236",
+      "id": "mit-p3-4220",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "competitive-dynamics-6.4"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "access-management-3.3"
+      },
+      "phases": [
+        "phase-3"
+      ]
+    },
+    {
+      "id": "mit-p3-4221",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "competitive-dynamics-6.4"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "content-safety-2.4"
+      },
+      "phases": [
+        "phase-3"
+      ]
+    },
+    {
+      "id": "mit-p3-4222",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -7427,7 +7189,7 @@
       ]
     },
     {
-      "id": "mit-p3-3237",
+      "id": "mit-p3-4223",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -7442,7 +7204,7 @@
       ]
     },
     {
-      "id": "mit-p3-3238",
+      "id": "mit-p3-4224",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -7457,7 +7219,7 @@
       ]
     },
     {
-      "id": "mit-all-3239",
+      "id": "mit-p3-4225",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -7468,28 +7230,11 @@
         "id": "governance-disclosure-4.4"
       },
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ]
     },
     {
-      "id": "mit-p1-3240",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "governance-failure-6.5"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "safety-frameworks-1.5"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-3241",
+      "id": "mit-p1-4226",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -7504,22 +7249,7 @@
       ]
     },
     {
-      "id": "mit-p1-3242",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "governance-failure-6.5"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "data-governance-3.2"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p2-3243",
+      "id": "mit-p2-4227",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -7534,7 +7264,7 @@
       ]
     },
     {
-      "id": "mit-p2-3244",
+      "id": "mit-p2-4228",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -7549,7 +7279,7 @@
       ]
     },
     {
-      "id": "mit-p2-3245",
+      "id": "mit-p2-4229",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -7564,7 +7294,7 @@
       ]
     },
     {
-      "id": "mit-p2-3246",
+      "id": "mit-p2-4230",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -7572,44 +7302,14 @@
       },
       "to": {
         "entity": "mitigation",
-        "id": "content-safety-2.4"
+        "id": "data-governance-3.2"
       },
       "phases": [
         "phase-2"
       ]
     },
     {
-      "id": "mit-p2-3247",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "governance-failure-6.5"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "infrastructure-security-2.1"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-3248",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "governance-failure-6.5"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "access-management-3.3"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-3249",
+      "id": "mit-p2-4231",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -7624,7 +7324,22 @@
       ]
     },
     {
-      "id": "mit-p3-3250",
+      "id": "mit-p2-4232",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "governance-failure-6.5"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "infrastructure-security-2.1"
+      },
+      "phases": [
+        "phase-2"
+      ]
+    },
+    {
+      "id": "mit-p3-4233",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -7639,7 +7354,37 @@
       ]
     },
     {
-      "id": "mit-p3-3251",
+      "id": "mit-p3-4234",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "governance-failure-6.5"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "access-management-3.3"
+      },
+      "phases": [
+        "phase-3"
+      ]
+    },
+    {
+      "id": "mit-p3-4235",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "governance-failure-6.5"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "content-safety-2.4"
+      },
+      "phases": [
+        "phase-3"
+      ]
+    },
+    {
+      "id": "mit-p3-4236",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -7654,7 +7399,7 @@
       ]
     },
     {
-      "id": "mit-p3-3252",
+      "id": "mit-p3-4237",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -7669,7 +7414,7 @@
       ]
     },
     {
-      "id": "mit-p3-3253",
+      "id": "mit-p3-4238",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -7684,7 +7429,7 @@
       ]
     },
     {
-      "id": "mit-p1-3254",
+      "id": "mit-p1-4239",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -7699,22 +7444,7 @@
       ]
     },
     {
-      "id": "mit-p1-3255",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "environmental-harm-6.6"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "safety-frameworks-1.5"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-3256",
+      "id": "mit-p1-4240",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -7729,22 +7459,7 @@
       ]
     },
     {
-      "id": "mit-p1-3257",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "environmental-harm-6.6"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "data-governance-3.2"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p2-3258",
+      "id": "mit-p2-4241",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -7759,7 +7474,7 @@
       ]
     },
     {
-      "id": "mit-p2-3259",
+      "id": "mit-p2-4242",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -7774,7 +7489,7 @@
       ]
     },
     {
-      "id": "mit-p2-3260",
+      "id": "mit-p2-4243",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -7789,7 +7504,7 @@
       ]
     },
     {
-      "id": "mit-p2-3261",
+      "id": "mit-p2-4244",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -7797,44 +7512,14 @@
       },
       "to": {
         "entity": "mitigation",
-        "id": "content-safety-2.4"
+        "id": "data-governance-3.2"
       },
       "phases": [
         "phase-2"
       ]
     },
     {
-      "id": "mit-p2-3262",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "environmental-harm-6.6"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "infrastructure-security-2.1"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-3263",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "environmental-harm-6.6"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "access-management-3.3"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-3264",
+      "id": "mit-p2-4245",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -7849,7 +7534,22 @@
       ]
     },
     {
-      "id": "mit-p3-3265",
+      "id": "mit-p2-4246",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "environmental-harm-6.6"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "infrastructure-security-2.1"
+      },
+      "phases": [
+        "phase-2"
+      ]
+    },
+    {
+      "id": "mit-p3-4247",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -7864,7 +7564,7 @@
       ]
     },
     {
-      "id": "mit-p3-3266",
+      "id": "mit-p3-4248",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -7879,7 +7579,37 @@
       ]
     },
     {
-      "id": "mit-p3-3267",
+      "id": "mit-p3-4249",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "environmental-harm-6.6"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "access-management-3.3"
+      },
+      "phases": [
+        "phase-3"
+      ]
+    },
+    {
+      "id": "mit-p3-4250",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "environmental-harm-6.6"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "content-safety-2.4"
+      },
+      "phases": [
+        "phase-3"
+      ]
+    },
+    {
+      "id": "mit-p3-4251",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -7894,7 +7624,7 @@
       ]
     },
     {
-      "id": "mit-p3-3268",
+      "id": "mit-p3-4252",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -7909,7 +7639,7 @@
       ]
     },
     {
-      "id": "mit-p3-3269",
+      "id": "mit-p3-4253",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -7924,7 +7654,7 @@
       ]
     },
     {
-      "id": "mit-p3-3270",
+      "id": "mit-p3-4254",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -7939,7 +7669,7 @@
       ]
     },
     {
-      "id": "mit-all-3271",
+      "id": "mit-p3-4255",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -7950,73 +7680,11 @@
         "id": "governance-disclosure-4.4"
       },
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ]
     },
     {
-      "id": "mit-p1-3272",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "misaligned-goals-7.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "risk-management-1.2"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-3273",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "misaligned-goals-7.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "safety-frameworks-1.5"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-3274",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "misaligned-goals-7.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "societal-impact-1.7"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-3275",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "misaligned-goals-7.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "data-governance-3.2"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-3276",
+      "id": "mit-p1-4256",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -8031,7 +7699,7 @@
       ]
     },
     {
-      "id": "mit-p2-3277",
+      "id": "mit-p1-4257",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -8039,14 +7707,14 @@
       },
       "to": {
         "entity": "mitigation",
-        "id": "content-safety-2.4"
+        "id": "risk-management-1.2"
       },
       "phases": [
-        "phase-2"
+        "phase-1"
       ]
     },
     {
-      "id": "mit-p2-3278",
+      "id": "mit-p1-4258",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -8054,14 +7722,14 @@
       },
       "to": {
         "entity": "mitigation",
-        "id": "infrastructure-security-2.1"
+        "id": "societal-impact-1.7"
       },
       "phases": [
-        "phase-2"
+        "phase-1"
       ]
     },
     {
-      "id": "mit-p2-3279",
+      "id": "mit-p2-4259",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -8069,14 +7737,14 @@
       },
       "to": {
         "entity": "mitigation",
-        "id": "access-management-3.3"
+        "id": "data-governance-3.2"
       },
       "phases": [
         "phase-2"
       ]
     },
     {
-      "id": "mit-p2-3280",
+      "id": "mit-p2-4260",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -8091,7 +7759,22 @@
       ]
     },
     {
-      "id": "mit-p3-3281",
+      "id": "mit-p2-4261",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "misaligned-goals-7.1"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "infrastructure-security-2.1"
+      },
+      "phases": [
+        "phase-2"
+      ]
+    },
+    {
+      "id": "mit-p3-4262",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -8106,7 +7789,7 @@
       ]
     },
     {
-      "id": "mit-p3-3282",
+      "id": "mit-p3-4263",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -8121,7 +7804,37 @@
       ]
     },
     {
-      "id": "mit-p3-3283",
+      "id": "mit-p3-4264",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "misaligned-goals-7.1"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "access-management-3.3"
+      },
+      "phases": [
+        "phase-3"
+      ]
+    },
+    {
+      "id": "mit-p3-4265",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "misaligned-goals-7.1"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "content-safety-2.4"
+      },
+      "phases": [
+        "phase-3"
+      ]
+    },
+    {
+      "id": "mit-p3-4266",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -8136,7 +7849,7 @@
       ]
     },
     {
-      "id": "mit-p3-3284",
+      "id": "mit-p3-4267",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -8151,7 +7864,7 @@
       ]
     },
     {
-      "id": "mit-p3-3285",
+      "id": "mit-p3-4268",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -8166,7 +7879,7 @@
       ]
     },
     {
-      "id": "mit-p3-3286",
+      "id": "mit-p3-4269",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -8181,7 +7894,7 @@
       ]
     },
     {
-      "id": "mit-all-3287",
+      "id": "mit-p3-4270",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -8192,58 +7905,11 @@
         "id": "governance-disclosure-4.4"
       },
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ]
     },
     {
-      "id": "mit-p1-3288",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "dangerous-capabilities-7.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "risk-management-1.2"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-3289",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "dangerous-capabilities-7.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "societal-impact-1.7"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-3290",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "dangerous-capabilities-7.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "data-governance-3.2"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-3291",
+      "id": "mit-p1-4271",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -8258,7 +7924,37 @@
       ]
     },
     {
-      "id": "mit-p2-3292",
+      "id": "mit-p1-4272",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "dangerous-capabilities-7.2"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "risk-management-1.2"
+      },
+      "phases": [
+        "phase-1"
+      ]
+    },
+    {
+      "id": "mit-p1-4273",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "dangerous-capabilities-7.2"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "societal-impact-1.7"
+      },
+      "phases": [
+        "phase-1"
+      ]
+    },
+    {
+      "id": "mit-p2-4274",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -8273,7 +7969,7 @@
       ]
     },
     {
-      "id": "mit-p2-3293",
+      "id": "mit-p2-4275",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -8281,29 +7977,14 @@
       },
       "to": {
         "entity": "mitigation",
-        "id": "content-safety-2.4"
+        "id": "data-governance-3.2"
       },
       "phases": [
         "phase-2"
       ]
     },
     {
-      "id": "mit-p2-3294",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "dangerous-capabilities-7.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "infrastructure-security-2.1"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-3295",
+      "id": "mit-p2-4276",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -8318,7 +7999,22 @@
       ]
     },
     {
-      "id": "mit-p3-3296",
+      "id": "mit-p2-4277",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "dangerous-capabilities-7.2"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "infrastructure-security-2.1"
+      },
+      "phases": [
+        "phase-2"
+      ]
+    },
+    {
+      "id": "mit-p3-4278",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -8333,7 +8029,7 @@
       ]
     },
     {
-      "id": "mit-p3-3297",
+      "id": "mit-p3-4279",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -8348,7 +8044,22 @@
       ]
     },
     {
-      "id": "mit-p3-3298",
+      "id": "mit-p3-4280",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "dangerous-capabilities-7.2"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "content-safety-2.4"
+      },
+      "phases": [
+        "phase-3"
+      ]
+    },
+    {
+      "id": "mit-p3-4281",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -8363,7 +8074,7 @@
       ]
     },
     {
-      "id": "mit-p3-3299",
+      "id": "mit-p3-4282",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -8378,7 +8089,7 @@
       ]
     },
     {
-      "id": "mit-p3-3300",
+      "id": "mit-p3-4283",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -8393,7 +8104,7 @@
       ]
     },
     {
-      "id": "mit-p3-3301",
+      "id": "mit-p3-4284",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -8408,7 +8119,7 @@
       ]
     },
     {
-      "id": "mit-all-3302",
+      "id": "mit-p3-4285",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -8419,58 +8130,11 @@
         "id": "governance-disclosure-4.4"
       },
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ]
     },
     {
-      "id": "mit-p1-3303",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "lack-robustness-7.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "safety-frameworks-1.5"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-3304",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "lack-robustness-7.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "societal-impact-1.7"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-3305",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "lack-robustness-7.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "data-governance-3.2"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-3306",
+      "id": "mit-p1-4286",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -8485,7 +8149,22 @@
       ]
     },
     {
-      "id": "mit-p2-3307",
+      "id": "mit-p1-4287",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "lack-robustness-7.3"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "societal-impact-1.7"
+      },
+      "phases": [
+        "phase-1"
+      ]
+    },
+    {
+      "id": "mit-p2-4288",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -8500,7 +8179,7 @@
       ]
     },
     {
-      "id": "mit-p2-3308",
+      "id": "mit-p2-4289",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -8508,14 +8187,14 @@
       },
       "to": {
         "entity": "mitigation",
-        "id": "content-safety-2.4"
+        "id": "data-governance-3.2"
       },
       "phases": [
         "phase-2"
       ]
     },
     {
-      "id": "mit-p2-3309",
+      "id": "mit-p2-4290",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -8530,7 +8209,7 @@
       ]
     },
     {
-      "id": "mit-p2-3310",
+      "id": "mit-p3-4291",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -8541,11 +8220,26 @@
         "id": "access-management-3.3"
       },
       "phases": [
-        "phase-2"
+        "phase-3"
       ]
     },
     {
-      "id": "mit-p3-3311",
+      "id": "mit-p3-4292",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "lack-robustness-7.3"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "content-safety-2.4"
+      },
+      "phases": [
+        "phase-3"
+      ]
+    },
+    {
+      "id": "mit-p3-4293",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -8560,7 +8254,7 @@
       ]
     },
     {
-      "id": "mit-p3-3312",
+      "id": "mit-p3-4294",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -8575,7 +8269,7 @@
       ]
     },
     {
-      "id": "mit-p3-3313",
+      "id": "mit-p3-4295",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -8590,7 +8284,7 @@
       ]
     },
     {
-      "id": "mit-p3-3314",
+      "id": "mit-p3-4296",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -8605,7 +8299,7 @@
       ]
     },
     {
-      "id": "mit-all-3315",
+      "id": "mit-p3-4297",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -8616,13 +8310,11 @@
         "id": "governance-disclosure-4.4"
       },
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ]
     },
     {
-      "id": "mit-p1-3316",
+      "id": "mit-p1-4298",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -8637,22 +8329,7 @@
       ]
     },
     {
-      "id": "mit-p1-3317",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "lack-transparency-7.4"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "safety-frameworks-1.5"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-3318",
+      "id": "mit-p1-4299",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -8667,22 +8344,7 @@
       ]
     },
     {
-      "id": "mit-p1-3319",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "lack-transparency-7.4"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "data-governance-3.2"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p2-3320",
+      "id": "mit-p2-4300",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -8697,7 +8359,7 @@
       ]
     },
     {
-      "id": "mit-p2-3321",
+      "id": "mit-p2-4301",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -8712,7 +8374,7 @@
       ]
     },
     {
-      "id": "mit-p2-3322",
+      "id": "mit-p2-4302",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -8727,7 +8389,7 @@
       ]
     },
     {
-      "id": "mit-p2-3323",
+      "id": "mit-p2-4303",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -8735,14 +8397,14 @@
       },
       "to": {
         "entity": "mitigation",
-        "id": "content-safety-2.4"
+        "id": "data-governance-3.2"
       },
       "phases": [
         "phase-2"
       ]
     },
     {
-      "id": "mit-p2-3324",
+      "id": "mit-p2-4304",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -8757,22 +8419,7 @@
       ]
     },
     {
-      "id": "mit-p2-3325",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "lack-transparency-7.4"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "access-management-3.3"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p3-3326",
+      "id": "mit-p3-4305",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -8787,7 +8434,7 @@
       ]
     },
     {
-      "id": "mit-p3-3327",
+      "id": "mit-p3-4306",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -8802,7 +8449,37 @@
       ]
     },
     {
-      "id": "mit-p3-3328",
+      "id": "mit-p3-4307",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "lack-transparency-7.4"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "access-management-3.3"
+      },
+      "phases": [
+        "phase-3"
+      ]
+    },
+    {
+      "id": "mit-p3-4308",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "lack-transparency-7.4"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "content-safety-2.4"
+      },
+      "phases": [
+        "phase-3"
+      ]
+    },
+    {
+      "id": "mit-p3-4309",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -8817,7 +8494,7 @@
       ]
     },
     {
-      "id": "mit-p3-3329",
+      "id": "mit-p3-4310",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -8832,7 +8509,7 @@
       ]
     },
     {
-      "id": "mit-p3-3330",
+      "id": "mit-p3-4311",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -8847,67 +8524,7 @@
       ]
     },
     {
-      "id": "mit-p1-3331",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "ai-welfare-7.5"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "risk-management-1.2"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-3332",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "ai-welfare-7.5"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "safety-frameworks-1.5"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-3333",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "ai-welfare-7.5"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "societal-impact-1.7"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-3334",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "ai-welfare-7.5"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "data-governance-3.2"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-3335",
+      "id": "mit-p1-4312",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -8922,7 +8539,37 @@
       ]
     },
     {
-      "id": "mit-p2-3336",
+      "id": "mit-p1-4313",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "ai-welfare-7.5"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "risk-management-1.2"
+      },
+      "phases": [
+        "phase-1"
+      ]
+    },
+    {
+      "id": "mit-p1-4314",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "ai-welfare-7.5"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "societal-impact-1.7"
+      },
+      "phases": [
+        "phase-1"
+      ]
+    },
+    {
+      "id": "mit-p2-4315",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -8937,7 +8584,7 @@
       ]
     },
     {
-      "id": "mit-p2-3337",
+      "id": "mit-p2-4316",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -8952,7 +8599,7 @@
       ]
     },
     {
-      "id": "mit-p2-3338",
+      "id": "mit-p2-4317",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -8967,7 +8614,7 @@
       ]
     },
     {
-      "id": "mit-p2-3339",
+      "id": "mit-p2-4318",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -8975,44 +8622,14 @@
       },
       "to": {
         "entity": "mitigation",
-        "id": "content-safety-2.4"
+        "id": "data-governance-3.2"
       },
       "phases": [
         "phase-2"
       ]
     },
     {
-      "id": "mit-p2-3340",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "ai-welfare-7.5"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "infrastructure-security-2.1"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-3341",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "ai-welfare-7.5"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "access-management-3.3"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-3342",
+      "id": "mit-p2-4319",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -9027,7 +8644,22 @@
       ]
     },
     {
-      "id": "mit-p3-3343",
+      "id": "mit-p2-4320",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "ai-welfare-7.5"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "infrastructure-security-2.1"
+      },
+      "phases": [
+        "phase-2"
+      ]
+    },
+    {
+      "id": "mit-p3-4321",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -9042,7 +8674,7 @@
       ]
     },
     {
-      "id": "mit-p3-3344",
+      "id": "mit-p3-4322",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -9057,7 +8689,37 @@
       ]
     },
     {
-      "id": "mit-p3-3345",
+      "id": "mit-p3-4323",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "ai-welfare-7.5"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "access-management-3.3"
+      },
+      "phases": [
+        "phase-3"
+      ]
+    },
+    {
+      "id": "mit-p3-4324",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "ai-welfare-7.5"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "content-safety-2.4"
+      },
+      "phases": [
+        "phase-3"
+      ]
+    },
+    {
+      "id": "mit-p3-4325",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -9072,7 +8734,7 @@
       ]
     },
     {
-      "id": "mit-p3-3346",
+      "id": "mit-p3-4326",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -9087,7 +8749,7 @@
       ]
     },
     {
-      "id": "mit-p3-3347",
+      "id": "mit-p3-4327",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -9102,7 +8764,7 @@
       ]
     },
     {
-      "id": "mit-p3-3348",
+      "id": "mit-p3-4328",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -9117,7 +8779,7 @@
       ]
     },
     {
-      "id": "mit-all-3349",
+      "id": "mit-p3-4329",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -9128,73 +8790,11 @@
         "id": "governance-disclosure-4.4"
       },
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ]
     },
     {
-      "id": "mit-p1-3350",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "multi-agent-risks-7.6"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "risk-management-1.2"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-3351",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "multi-agent-risks-7.6"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "safety-frameworks-1.5"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-3352",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "multi-agent-risks-7.6"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "societal-impact-1.7"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-3353",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "multi-agent-risks-7.6"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "data-governance-3.2"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-3354",
+      "id": "mit-p1-4330",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -9209,7 +8809,37 @@
       ]
     },
     {
-      "id": "mit-p2-3355",
+      "id": "mit-p1-4331",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "multi-agent-risks-7.6"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "risk-management-1.2"
+      },
+      "phases": [
+        "phase-1"
+      ]
+    },
+    {
+      "id": "mit-p1-4332",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "multi-agent-risks-7.6"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "societal-impact-1.7"
+      },
+      "phases": [
+        "phase-1"
+      ]
+    },
+    {
+      "id": "mit-p2-4333",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -9224,7 +8854,7 @@
       ]
     },
     {
-      "id": "mit-p2-3356",
+      "id": "mit-p2-4334",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -9232,44 +8862,14 @@
       },
       "to": {
         "entity": "mitigation",
-        "id": "content-safety-2.4"
+        "id": "data-governance-3.2"
       },
       "phases": [
         "phase-2"
       ]
     },
     {
-      "id": "mit-p2-3357",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "multi-agent-risks-7.6"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "infrastructure-security-2.1"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-3358",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "multi-agent-risks-7.6"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "access-management-3.3"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-3359",
+      "id": "mit-p2-4335",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -9284,7 +8884,22 @@
       ]
     },
     {
-      "id": "mit-p3-3360",
+      "id": "mit-p2-4336",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "multi-agent-risks-7.6"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "infrastructure-security-2.1"
+      },
+      "phases": [
+        "phase-2"
+      ]
+    },
+    {
+      "id": "mit-p3-4337",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -9299,7 +8914,7 @@
       ]
     },
     {
-      "id": "mit-p3-3361",
+      "id": "mit-p3-4338",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -9314,7 +8929,37 @@
       ]
     },
     {
-      "id": "mit-p3-3362",
+      "id": "mit-p3-4339",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "multi-agent-risks-7.6"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "access-management-3.3"
+      },
+      "phases": [
+        "phase-3"
+      ]
+    },
+    {
+      "id": "mit-p3-4340",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "multi-agent-risks-7.6"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "content-safety-2.4"
+      },
+      "phases": [
+        "phase-3"
+      ]
+    },
+    {
+      "id": "mit-p3-4341",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -9329,7 +8974,7 @@
       ]
     },
     {
-      "id": "mit-p3-3363",
+      "id": "mit-p3-4342",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -9344,7 +8989,7 @@
       ]
     },
     {
-      "id": "mit-p3-3364",
+      "id": "mit-p3-4343",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -9359,7 +9004,7 @@
       ]
     },
     {
-      "id": "mit-p3-3365",
+      "id": "mit-p3-4344",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -9374,7 +9019,7 @@
       ]
     },
     {
-      "id": "mit-all-3366",
+      "id": "mit-p3-4345",
       "type": "mitigation",
       "from": {
         "entity": "risk",
@@ -9385,13 +9030,11 @@
         "id": "governance-disclosure-4.4"
       },
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ]
     },
     {
-      "id": "reg-phase-3367",
+      "id": "reg-p2-4346",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -9400,11 +9043,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.6"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3368",
+      "id": "reg-p2-4347",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -9413,24 +9055,10 @@
       "to": {
         "entity": "regulation",
         "id": "820.30.g"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3369",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "unfair-discrimination-1.1"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "820.70"
-      },
-      "note": "Applicable regulatory requirement"
-    },
-    {
-      "id": "reg-phase-3370",
+      "id": "reg-p3-4348",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -9439,11 +9067,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.7"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3371",
+      "id": "reg-p3-4349",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -9452,11 +9079,10 @@
       "to": {
         "entity": "regulation",
         "id": "820.100"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3372",
+      "id": "reg-p3-4350",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -9465,24 +9091,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.116.a"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3373",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "toxic-content-1.2"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.a.3"
-      },
-      "note": "Applicable regulatory requirement"
-    },
-    {
-      "id": "reg-phase-3374",
+      "id": "reg-p2-4351",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -9491,11 +9103,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.6"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3375",
+      "id": "reg-p2-4352",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -9504,24 +9115,10 @@
       "to": {
         "entity": "regulation",
         "id": "820.30.g"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3376",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "toxic-content-1.2"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "820.70"
-      },
-      "note": "Applicable regulatory requirement"
-    },
-    {
-      "id": "reg-phase-3377",
+      "id": "reg-p3-4353",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -9530,11 +9127,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.7"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3378",
+      "id": "reg-p3-4354",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -9543,11 +9139,10 @@
       "to": {
         "entity": "regulation",
         "id": "820.100"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3379",
+      "id": "reg-p3-4355",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -9556,11 +9151,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.116.a"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3380",
+      "id": "reg-p1-4356",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -9569,11 +9163,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.1"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3381",
+      "id": "reg-p1-4357",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -9582,11 +9175,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.2"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3382",
+      "id": "reg-p2-4358",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -9595,11 +9187,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.6"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3383",
+      "id": "reg-p2-4359",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -9608,24 +9199,10 @@
       "to": {
         "entity": "regulation",
         "id": "820.30.g"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3384",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "unequal-performance-1.3"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "820.70"
-      },
-      "note": "Applicable regulatory requirement"
-    },
-    {
-      "id": "reg-phase-3385",
+      "id": "reg-p3-4360",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -9634,11 +9211,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.7"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3386",
+      "id": "reg-p3-4361",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -9647,11 +9223,10 @@
       "to": {
         "entity": "regulation",
         "id": "820.100"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3387",
+      "id": "reg-p3-4362",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -9660,11 +9235,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.116.a"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3388",
+      "id": "reg-p1-4363",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -9673,11 +9247,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.1"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3389",
+      "id": "reg-p1-4364",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -9686,24 +9259,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.2"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3390",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "privacy-breach-2.1"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.a.3"
-      },
-      "note": "Applicable regulatory requirement"
-    },
-    {
-      "id": "reg-phase-3391",
+      "id": "reg-p2-4365",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -9712,11 +9271,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.6"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3392",
+      "id": "reg-p2-4366",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -9725,24 +9283,10 @@
       "to": {
         "entity": "regulation",
         "id": "820.30.g"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3393",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "privacy-breach-2.1"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "820.70"
-      },
-      "note": "Applicable regulatory requirement"
-    },
-    {
-      "id": "reg-phase-3394",
+      "id": "reg-p3-4367",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -9751,11 +9295,10 @@
       "to": {
         "entity": "regulation",
         "id": "820.100"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3395",
+      "id": "reg-p1-4368",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -9764,11 +9307,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.1"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3396",
+      "id": "reg-p1-4369",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -9777,24 +9319,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.2"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3397",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "security-vulnerabilities-2.2"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.a.3"
-      },
-      "note": "Applicable regulatory requirement"
-    },
-    {
-      "id": "reg-phase-3398",
+      "id": "reg-p2-4370",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -9803,24 +9331,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.6"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3399",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "security-vulnerabilities-2.2"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "820.70"
-      },
-      "note": "Applicable regulatory requirement"
-    },
-    {
-      "id": "reg-phase-3400",
+      "id": "reg-p3-4371",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -9829,11 +9343,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.7"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3401",
+      "id": "reg-p3-4372",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -9842,11 +9355,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.116.a"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3402",
+      "id": "reg-p1-4373",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -9855,11 +9367,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.1"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3403",
+      "id": "reg-p1-4374",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -9868,24 +9379,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.2"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3404",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "false-information-3.1"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.a.3"
-      },
-      "note": "Applicable regulatory requirement"
-    },
-    {
-      "id": "reg-phase-3405",
+      "id": "reg-p2-4375",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -9894,11 +9391,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.6"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3406",
+      "id": "reg-p2-4376",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -9907,24 +9403,10 @@
       "to": {
         "entity": "regulation",
         "id": "820.30.g"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3407",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "false-information-3.1"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "820.70"
-      },
-      "note": "Applicable regulatory requirement"
-    },
-    {
-      "id": "reg-phase-3408",
+      "id": "reg-p3-4377",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -9933,11 +9415,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.7"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3409",
+      "id": "reg-p3-4378",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -9946,24 +9427,10 @@
       "to": {
         "entity": "regulation",
         "id": "820.100"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3410",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "information-pollution-3.2"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.a.3"
-      },
-      "note": "Applicable regulatory requirement"
-    },
-    {
-      "id": "reg-phase-3411",
+      "id": "reg-p2-4379",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -9972,11 +9439,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.6"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3412",
+      "id": "reg-p2-4380",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -9985,24 +9451,10 @@
       "to": {
         "entity": "regulation",
         "id": "820.30.g"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3413",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "information-pollution-3.2"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "820.70"
-      },
-      "note": "Applicable regulatory requirement"
-    },
-    {
-      "id": "reg-phase-3414",
+      "id": "reg-p3-4381",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -10011,11 +9463,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.7"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3415",
+      "id": "reg-p3-4382",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -10024,11 +9475,10 @@
       "to": {
         "entity": "regulation",
         "id": "820.100"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3416",
+      "id": "reg-p3-4383",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -10037,11 +9487,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.116.a"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3417",
+      "id": "reg-p1-4384",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -10050,11 +9499,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.1"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3418",
+      "id": "reg-p1-4385",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -10063,24 +9511,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.2"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3419",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "disinformation-surveillance-4.1"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.a.3"
-      },
-      "note": "Applicable regulatory requirement"
-    },
-    {
-      "id": "reg-phase-3420",
+      "id": "reg-p2-4386",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -10089,11 +9523,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.6"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3421",
+      "id": "reg-p2-4387",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -10102,24 +9535,10 @@
       "to": {
         "entity": "regulation",
         "id": "820.30.g"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3422",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "disinformation-surveillance-4.1"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "820.70"
-      },
-      "note": "Applicable regulatory requirement"
-    },
-    {
-      "id": "reg-phase-3423",
+      "id": "reg-p3-4388",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -10128,11 +9547,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.7"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3424",
+      "id": "reg-p3-4389",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -10141,11 +9559,10 @@
       "to": {
         "entity": "regulation",
         "id": "820.100"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3425",
+      "id": "reg-p1-4390",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -10154,24 +9571,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.2"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3426",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "cyberattacks-mass-harm-4.2"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.a.3"
-      },
-      "note": "Applicable regulatory requirement"
-    },
-    {
-      "id": "reg-phase-3427",
+      "id": "reg-p2-4391",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -10180,24 +9583,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.6"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3428",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "cyberattacks-mass-harm-4.2"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "820.70"
-      },
-      "note": "Applicable regulatory requirement"
-    },
-    {
-      "id": "reg-phase-3429",
+      "id": "reg-p3-4392",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -10206,11 +9595,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.7"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3430",
+      "id": "reg-p3-4393",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -10219,11 +9607,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.116.a"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3431",
+      "id": "reg-p1-4394",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -10232,11 +9619,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.1"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3432",
+      "id": "reg-p1-4395",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -10245,24 +9631,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.2"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3433",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "fraud-manipulation-4.3"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.a.3"
-      },
-      "note": "Applicable regulatory requirement"
-    },
-    {
-      "id": "reg-phase-3434",
+      "id": "reg-p2-4396",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -10271,11 +9643,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.6"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3435",
+      "id": "reg-p2-4397",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -10284,24 +9655,10 @@
       "to": {
         "entity": "regulation",
         "id": "820.30.g"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3436",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "fraud-manipulation-4.3"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "820.70"
-      },
-      "note": "Applicable regulatory requirement"
-    },
-    {
-      "id": "reg-phase-3437",
+      "id": "reg-p3-4398",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -10310,11 +9667,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.7"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3438",
+      "id": "reg-p3-4399",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -10323,11 +9679,10 @@
       "to": {
         "entity": "regulation",
         "id": "820.100"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3439",
+      "id": "reg-p1-4400",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -10336,24 +9691,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.2"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3440",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "overreliance-5.1"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.a.3"
-      },
-      "note": "Applicable regulatory requirement"
-    },
-    {
-      "id": "reg-phase-3441",
+      "id": "reg-p2-4401",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -10362,11 +9703,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.6"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3442",
+      "id": "reg-p2-4402",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -10375,11 +9715,10 @@
       "to": {
         "entity": "regulation",
         "id": "820.30.g"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3443",
+      "id": "reg-p3-4403",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -10388,11 +9727,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.7"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3444",
+      "id": "reg-p3-4404",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -10401,11 +9739,10 @@
       "to": {
         "entity": "regulation",
         "id": "820.100"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3445",
+      "id": "reg-p3-4405",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -10414,11 +9751,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.116.a"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3446",
+      "id": "reg-p1-4406",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -10427,11 +9763,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.1"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3447",
+      "id": "reg-p1-4407",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -10440,24 +9775,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.2"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3448",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "loss-of-agency-5.2"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.a.3"
-      },
-      "note": "Applicable regulatory requirement"
-    },
-    {
-      "id": "reg-phase-3449",
+      "id": "reg-p2-4408",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -10466,11 +9787,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.6"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3450",
+      "id": "reg-p2-4409",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -10479,24 +9799,10 @@
       "to": {
         "entity": "regulation",
         "id": "820.30.g"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3451",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "loss-of-agency-5.2"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "820.70"
-      },
-      "note": "Applicable regulatory requirement"
-    },
-    {
-      "id": "reg-phase-3452",
+      "id": "reg-p3-4410",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -10505,11 +9811,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.7"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3453",
+      "id": "reg-p3-4411",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -10518,11 +9823,10 @@
       "to": {
         "entity": "regulation",
         "id": "820.100"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3454",
+      "id": "reg-p1-4412",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -10531,11 +9835,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.1"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3455",
+      "id": "reg-p1-4413",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -10544,11 +9847,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.2"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3456",
+      "id": "reg-p2-4414",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -10557,11 +9859,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.6"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3457",
+      "id": "reg-p2-4415",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -10570,24 +9871,10 @@
       "to": {
         "entity": "regulation",
         "id": "820.30.g"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3458",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "power-centralization-6.1"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "820.70"
-      },
-      "note": "Applicable regulatory requirement"
-    },
-    {
-      "id": "reg-phase-3459",
+      "id": "reg-p3-4416",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -10596,11 +9883,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.7"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3460",
+      "id": "reg-p3-4417",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -10609,11 +9895,10 @@
       "to": {
         "entity": "regulation",
         "id": "820.100"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3461",
+      "id": "reg-p3-4418",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -10622,11 +9907,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.116.a"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3462",
+      "id": "reg-p1-4419",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -10635,11 +9919,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.1"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3463",
+      "id": "reg-p1-4420",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -10648,24 +9931,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.2"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3464",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "inequality-employment-6.2"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.a.3"
-      },
-      "note": "Applicable regulatory requirement"
-    },
-    {
-      "id": "reg-phase-3465",
+      "id": "reg-p2-4421",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -10674,11 +9943,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.6"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3466",
+      "id": "reg-p2-4422",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -10687,24 +9955,10 @@
       "to": {
         "entity": "regulation",
         "id": "820.30.g"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3467",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "inequality-employment-6.2"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "820.70"
-      },
-      "note": "Applicable regulatory requirement"
-    },
-    {
-      "id": "reg-phase-3468",
+      "id": "reg-p3-4423",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -10713,11 +9967,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.7"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3469",
+      "id": "reg-p3-4424",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -10726,11 +9979,10 @@
       "to": {
         "entity": "regulation",
         "id": "820.100"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3470",
+      "id": "reg-p3-4425",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -10739,11 +9991,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.116.a"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3471",
+      "id": "reg-p1-4426",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -10752,11 +10003,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.1"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3472",
+      "id": "reg-p1-4427",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -10765,24 +10015,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.2"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3473",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "devaluation-human-effort-6.3"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.a.3"
-      },
-      "note": "Applicable regulatory requirement"
-    },
-    {
-      "id": "reg-phase-3474",
+      "id": "reg-p2-4428",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -10791,11 +10027,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.6"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3475",
+      "id": "reg-p2-4429",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -10804,24 +10039,10 @@
       "to": {
         "entity": "regulation",
         "id": "820.30.g"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3476",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "devaluation-human-effort-6.3"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "820.70"
-      },
-      "note": "Applicable regulatory requirement"
-    },
-    {
-      "id": "reg-phase-3477",
+      "id": "reg-p3-4430",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -10830,11 +10051,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.7"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3478",
+      "id": "reg-p3-4431",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -10843,11 +10063,10 @@
       "to": {
         "entity": "regulation",
         "id": "820.100"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3479",
+      "id": "reg-p3-4432",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -10856,11 +10075,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.116.a"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3480",
+      "id": "reg-p1-4433",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -10869,11 +10087,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.1"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3481",
+      "id": "reg-p1-4434",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -10882,24 +10099,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.2"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3482",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "competitive-dynamics-6.4"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.a.3"
-      },
-      "note": "Applicable regulatory requirement"
-    },
-    {
-      "id": "reg-phase-3483",
+      "id": "reg-p2-4435",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -10908,11 +10111,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.6"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3484",
+      "id": "reg-p2-4436",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -10921,24 +10123,10 @@
       "to": {
         "entity": "regulation",
         "id": "820.30.g"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3485",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "competitive-dynamics-6.4"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "820.70"
-      },
-      "note": "Applicable regulatory requirement"
-    },
-    {
-      "id": "reg-phase-3486",
+      "id": "reg-p3-4437",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -10947,11 +10135,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.7"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3487",
+      "id": "reg-p3-4438",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -10960,11 +10147,10 @@
       "to": {
         "entity": "regulation",
         "id": "820.100"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3488",
+      "id": "reg-p3-4439",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -10973,11 +10159,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.116.a"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3489",
+      "id": "reg-p1-4440",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -10986,24 +10171,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.2"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3490",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "governance-failure-6.5"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.a.3"
-      },
-      "note": "Applicable regulatory requirement"
-    },
-    {
-      "id": "reg-phase-3491",
+      "id": "reg-p2-4441",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -11012,11 +10183,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.6"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3492",
+      "id": "reg-p2-4442",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -11025,24 +10195,10 @@
       "to": {
         "entity": "regulation",
         "id": "820.30.g"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3493",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "governance-failure-6.5"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "820.70"
-      },
-      "note": "Applicable regulatory requirement"
-    },
-    {
-      "id": "reg-phase-3494",
+      "id": "reg-p3-4443",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -11051,11 +10207,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.7"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3495",
+      "id": "reg-p3-4444",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -11064,11 +10219,10 @@
       "to": {
         "entity": "regulation",
         "id": "820.100"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3496",
+      "id": "reg-p3-4445",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -11077,11 +10231,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.116.a"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3497",
+      "id": "reg-p1-4446",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -11090,11 +10243,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.1"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3498",
+      "id": "reg-p1-4447",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -11103,24 +10255,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.2"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3499",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "environmental-harm-6.6"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.a.3"
-      },
-      "note": "Applicable regulatory requirement"
-    },
-    {
-      "id": "reg-phase-3500",
+      "id": "reg-p2-4448",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -11129,11 +10267,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.6"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3501",
+      "id": "reg-p2-4449",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -11142,24 +10279,10 @@
       "to": {
         "entity": "regulation",
         "id": "820.30.g"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3502",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "environmental-harm-6.6"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "820.70"
-      },
-      "note": "Applicable regulatory requirement"
-    },
-    {
-      "id": "reg-phase-3503",
+      "id": "reg-p3-4450",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -11168,11 +10291,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.7"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3504",
+      "id": "reg-p3-4451",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -11181,11 +10303,10 @@
       "to": {
         "entity": "regulation",
         "id": "820.100"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3505",
+      "id": "reg-p3-4452",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -11194,24 +10315,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.116.a"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3506",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "misaligned-goals-7.1"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.a.3"
-      },
-      "note": "Applicable regulatory requirement"
-    },
-    {
-      "id": "reg-phase-3507",
+      "id": "reg-p2-4453",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -11220,11 +10327,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.6"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3508",
+      "id": "reg-p2-4454",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -11233,24 +10339,10 @@
       "to": {
         "entity": "regulation",
         "id": "820.30.g"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3509",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "misaligned-goals-7.1"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "820.70"
-      },
-      "note": "Applicable regulatory requirement"
-    },
-    {
-      "id": "reg-phase-3510",
+      "id": "reg-p3-4455",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -11259,11 +10351,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.7"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3511",
+      "id": "reg-p3-4456",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -11272,11 +10363,10 @@
       "to": {
         "entity": "regulation",
         "id": "820.100"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3512",
+      "id": "reg-p3-4457",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -11285,24 +10375,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.116.a"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3513",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "dangerous-capabilities-7.2"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.a.3"
-      },
-      "note": "Applicable regulatory requirement"
-    },
-    {
-      "id": "reg-phase-3514",
+      "id": "reg-p2-4458",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -11311,11 +10387,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.6"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3515",
+      "id": "reg-p2-4459",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -11324,24 +10399,10 @@
       "to": {
         "entity": "regulation",
         "id": "820.30.g"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3516",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "dangerous-capabilities-7.2"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "820.70"
-      },
-      "note": "Applicable regulatory requirement"
-    },
-    {
-      "id": "reg-phase-3517",
+      "id": "reg-p3-4460",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -11350,11 +10411,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.7"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3518",
+      "id": "reg-p3-4461",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -11363,11 +10423,10 @@
       "to": {
         "entity": "regulation",
         "id": "820.100"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3519",
+      "id": "reg-p3-4462",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -11376,11 +10435,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.116.a"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3520",
+      "id": "reg-p1-4463",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -11389,24 +10447,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.2"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3521",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "lack-robustness-7.3"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.a.3"
-      },
-      "note": "Applicable regulatory requirement"
-    },
-    {
-      "id": "reg-phase-3522",
+      "id": "reg-p2-4464",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -11415,11 +10459,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.6"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3523",
+      "id": "reg-p2-4465",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -11428,24 +10471,10 @@
       "to": {
         "entity": "regulation",
         "id": "820.30.g"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3524",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "lack-robustness-7.3"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "820.70"
-      },
-      "note": "Applicable regulatory requirement"
-    },
-    {
-      "id": "reg-phase-3525",
+      "id": "reg-p3-4466",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -11454,11 +10483,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.7"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3526",
+      "id": "reg-p3-4467",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -11467,11 +10495,10 @@
       "to": {
         "entity": "regulation",
         "id": "820.100"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3527",
+      "id": "reg-p3-4468",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -11480,11 +10507,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.116.a"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3528",
+      "id": "reg-p1-4469",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -11493,11 +10519,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.1"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3529",
+      "id": "reg-p1-4470",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -11506,24 +10531,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.2"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3530",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "lack-transparency-7.4"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.a.3"
-      },
-      "note": "Applicable regulatory requirement"
-    },
-    {
-      "id": "reg-phase-3531",
+      "id": "reg-p2-4471",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -11532,11 +10543,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.6"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3532",
+      "id": "reg-p2-4472",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -11545,24 +10555,10 @@
       "to": {
         "entity": "regulation",
         "id": "820.30.g"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3533",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "lack-transparency-7.4"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "820.70"
-      },
-      "note": "Applicable regulatory requirement"
-    },
-    {
-      "id": "reg-phase-3534",
+      "id": "reg-p3-4473",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -11571,11 +10567,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.7"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3535",
+      "id": "reg-p3-4474",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -11584,11 +10579,10 @@
       "to": {
         "entity": "regulation",
         "id": "820.100"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3536",
+      "id": "reg-p1-4475",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -11597,11 +10591,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.1"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3537",
+      "id": "reg-p1-4476",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -11610,24 +10603,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.2"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3538",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "ai-welfare-7.5"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.a.3"
-      },
-      "note": "Applicable regulatory requirement"
-    },
-    {
-      "id": "reg-phase-3539",
+      "id": "reg-p2-4477",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -11636,11 +10615,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.6"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3540",
+      "id": "reg-p2-4478",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -11649,24 +10627,10 @@
       "to": {
         "entity": "regulation",
         "id": "820.30.g"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3541",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "ai-welfare-7.5"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "820.70"
-      },
-      "note": "Applicable regulatory requirement"
-    },
-    {
-      "id": "reg-phase-3542",
+      "id": "reg-p3-4479",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -11675,11 +10639,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.7"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3543",
+      "id": "reg-p3-4480",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -11688,11 +10651,10 @@
       "to": {
         "entity": "regulation",
         "id": "820.100"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3544",
+      "id": "reg-p3-4481",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -11701,11 +10663,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.116.a"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3545",
+      "id": "reg-p1-4482",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -11714,24 +10675,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.2"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3546",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "multi-agent-risks-7.6"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.a.3"
-      },
-      "note": "Applicable regulatory requirement"
-    },
-    {
-      "id": "reg-phase-3547",
+      "id": "reg-p2-4483",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -11740,24 +10687,10 @@
       "to": {
         "entity": "regulation",
         "id": "820.30.g"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3548",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "multi-agent-risks-7.6"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "820.70"
-      },
-      "note": "Applicable regulatory requirement"
-    },
-    {
-      "id": "reg-phase-3549",
+      "id": "reg-p3-4484",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -11766,11 +10699,10 @@
       "to": {
         "entity": "regulation",
         "id": "46.111.a.7"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3550",
+      "id": "reg-p3-4485",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -11779,11 +10711,10 @@
       "to": {
         "entity": "regulation",
         "id": "820.100"
-      },
-      "note": "Applicable regulatory requirement"
+      }
     },
     {
-      "id": "reg-phase-3551",
+      "id": "reg-p3-4486",
       "type": "regulation",
       "from": {
         "entity": "risk",
@@ -11792,1256 +10723,7 @@
       "to": {
         "entity": "regulation",
         "id": "46.116.a"
-      },
-      "note": "Applicable regulatory requirement"
-    },
-    {
-      "id": "reg-cr-5000",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "unfair-discrimination-1.1"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.a.4"
-      },
-      "note": "Common Rule requirement"
-    },
-    {
-      "id": "reg-cr-5001",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "unfair-discrimination-1.1"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.a.5"
-      },
-      "note": "Common Rule requirement"
-    },
-    {
-      "id": "reg-cr-5002",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "toxic-content-1.2"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.a.5"
-      },
-      "note": "Common Rule requirement"
-    },
-    {
-      "id": "reg-cr-5003",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "toxic-content-1.2"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.b"
-      },
-      "note": "Common Rule requirement"
-    },
-    {
-      "id": "reg-cr-5004",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "unequal-performance-1.3"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.a.5"
-      },
-      "note": "Common Rule requirement"
-    },
-    {
-      "id": "reg-cr-5005",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "privacy-breach-2.1"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.a.4"
-      },
-      "note": "Common Rule requirement"
-    },
-    {
-      "id": "reg-cr-5006",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "privacy-breach-2.1"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.b"
-      },
-      "note": "Common Rule requirement"
-    },
-    {
-      "id": "reg-cr-5007",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "security-vulnerabilities-2.2"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.a.4"
-      },
-      "note": "Common Rule requirement"
-    },
-    {
-      "id": "reg-cr-5008",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "security-vulnerabilities-2.2"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.a.5"
-      },
-      "note": "Common Rule requirement"
-    },
-    {
-      "id": "reg-cr-5009",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "security-vulnerabilities-2.2"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.b"
-      },
-      "note": "Common Rule requirement"
-    },
-    {
-      "id": "reg-cr-5010",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "false-information-3.1"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.a.4"
-      },
-      "note": "Common Rule requirement"
-    },
-    {
-      "id": "reg-cr-5011",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "false-information-3.1"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.a.5"
-      },
-      "note": "Common Rule requirement"
-    },
-    {
-      "id": "reg-cr-5012",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "false-information-3.1"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.b"
-      },
-      "note": "Common Rule requirement"
-    },
-    {
-      "id": "reg-cr-5013",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "information-pollution-3.2"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.a.4"
-      },
-      "note": "Common Rule requirement"
-    },
-    {
-      "id": "reg-cr-5014",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "information-pollution-3.2"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.a.5"
-      },
-      "note": "Common Rule requirement"
-    },
-    {
-      "id": "reg-cr-5015",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "information-pollution-3.2"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.b"
-      },
-      "note": "Common Rule requirement"
-    },
-    {
-      "id": "reg-cr-5016",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "disinformation-surveillance-4.1"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.a.4"
-      },
-      "note": "Common Rule requirement"
-    },
-    {
-      "id": "reg-cr-5017",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "disinformation-surveillance-4.1"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.a.5"
-      },
-      "note": "Common Rule requirement"
-    },
-    {
-      "id": "reg-cr-5018",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "cyberattacks-mass-harm-4.2"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.a.4"
-      },
-      "note": "Common Rule requirement"
-    },
-    {
-      "id": "reg-cr-5019",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "cyberattacks-mass-harm-4.2"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.a.5"
-      },
-      "note": "Common Rule requirement"
-    },
-    {
-      "id": "reg-cr-5020",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "cyberattacks-mass-harm-4.2"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.b"
-      },
-      "note": "Common Rule requirement"
-    },
-    {
-      "id": "reg-cr-5021",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "fraud-manipulation-4.3"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.a.4"
-      },
-      "note": "Common Rule requirement"
-    },
-    {
-      "id": "reg-cr-5022",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "fraud-manipulation-4.3"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.a.5"
-      },
-      "note": "Common Rule requirement"
-    },
-    {
-      "id": "reg-cr-5023",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "fraud-manipulation-4.3"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.b"
-      },
-      "note": "Common Rule requirement"
-    },
-    {
-      "id": "reg-cr-5024",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "overreliance-5.1"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.a.4"
-      },
-      "note": "Common Rule requirement"
-    },
-    {
-      "id": "reg-cr-5025",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "overreliance-5.1"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.a.5"
-      },
-      "note": "Common Rule requirement"
-    },
-    {
-      "id": "reg-cr-5026",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "overreliance-5.1"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.b"
-      },
-      "note": "Common Rule requirement"
-    },
-    {
-      "id": "reg-cr-5027",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "loss-of-agency-5.2"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.a.4"
-      },
-      "note": "Common Rule requirement"
-    },
-    {
-      "id": "reg-cr-5028",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "loss-of-agency-5.2"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.a.5"
-      },
-      "note": "Common Rule requirement"
-    },
-    {
-      "id": "reg-cr-5029",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "loss-of-agency-5.2"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.b"
-      },
-      "note": "Common Rule requirement"
-    },
-    {
-      "id": "reg-cr-5030",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "power-centralization-6.1"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.a.4"
-      },
-      "note": "Common Rule requirement"
-    },
-    {
-      "id": "reg-cr-5031",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "power-centralization-6.1"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.a.5"
-      },
-      "note": "Common Rule requirement"
-    },
-    {
-      "id": "reg-cr-5032",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "power-centralization-6.1"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.b"
-      },
-      "note": "Common Rule requirement"
-    },
-    {
-      "id": "reg-cr-5033",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "inequality-employment-6.2"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.a.4"
-      },
-      "note": "Common Rule requirement"
-    },
-    {
-      "id": "reg-cr-5034",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "inequality-employment-6.2"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.a.5"
-      },
-      "note": "Common Rule requirement"
-    },
-    {
-      "id": "reg-cr-5035",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "inequality-employment-6.2"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.b"
-      },
-      "note": "Common Rule requirement"
-    },
-    {
-      "id": "reg-cr-5036",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "devaluation-human-effort-6.3"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.a.4"
-      },
-      "note": "Common Rule requirement"
-    },
-    {
-      "id": "reg-cr-5037",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "devaluation-human-effort-6.3"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.a.5"
-      },
-      "note": "Common Rule requirement"
-    },
-    {
-      "id": "reg-cr-5038",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "devaluation-human-effort-6.3"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.b"
-      },
-      "note": "Common Rule requirement"
-    },
-    {
-      "id": "reg-cr-5039",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "competitive-dynamics-6.4"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.a.4"
-      },
-      "note": "Common Rule requirement"
-    },
-    {
-      "id": "reg-cr-5040",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "competitive-dynamics-6.4"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.a.5"
-      },
-      "note": "Common Rule requirement"
-    },
-    {
-      "id": "reg-cr-5041",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "competitive-dynamics-6.4"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.b"
-      },
-      "note": "Common Rule requirement"
-    },
-    {
-      "id": "reg-cr-5042",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "governance-failure-6.5"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.a.4"
-      },
-      "note": "Common Rule requirement"
-    },
-    {
-      "id": "reg-cr-5043",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "governance-failure-6.5"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.a.5"
-      },
-      "note": "Common Rule requirement"
-    },
-    {
-      "id": "reg-cr-5044",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "governance-failure-6.5"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.b"
-      },
-      "note": "Common Rule requirement"
-    },
-    {
-      "id": "reg-cr-5045",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "environmental-harm-6.6"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.a.4"
-      },
-      "note": "Common Rule requirement"
-    },
-    {
-      "id": "reg-cr-5046",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "environmental-harm-6.6"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.a.5"
-      },
-      "note": "Common Rule requirement"
-    },
-    {
-      "id": "reg-cr-5047",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "environmental-harm-6.6"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.b"
-      },
-      "note": "Common Rule requirement"
-    },
-    {
-      "id": "reg-cr-5048",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "misaligned-goals-7.1"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.a.4"
-      },
-      "note": "Common Rule requirement"
-    },
-    {
-      "id": "reg-cr-5049",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "misaligned-goals-7.1"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.a.5"
-      },
-      "note": "Common Rule requirement"
-    },
-    {
-      "id": "reg-cr-5050",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "misaligned-goals-7.1"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.b"
-      },
-      "note": "Common Rule requirement"
-    },
-    {
-      "id": "reg-cr-5051",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "dangerous-capabilities-7.2"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.a.4"
-      },
-      "note": "Common Rule requirement"
-    },
-    {
-      "id": "reg-cr-5052",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "dangerous-capabilities-7.2"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.a.5"
-      },
-      "note": "Common Rule requirement"
-    },
-    {
-      "id": "reg-cr-5053",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "dangerous-capabilities-7.2"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.b"
-      },
-      "note": "Common Rule requirement"
-    },
-    {
-      "id": "reg-cr-5054",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "lack-robustness-7.3"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.a.4"
-      },
-      "note": "Common Rule requirement"
-    },
-    {
-      "id": "reg-cr-5055",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "lack-robustness-7.3"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.a.5"
-      },
-      "note": "Common Rule requirement"
-    },
-    {
-      "id": "reg-cr-5056",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "lack-robustness-7.3"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.b"
-      },
-      "note": "Common Rule requirement"
-    },
-    {
-      "id": "reg-cr-5057",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "lack-transparency-7.4"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.a.4"
-      },
-      "note": "Common Rule requirement"
-    },
-    {
-      "id": "reg-cr-5058",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "lack-transparency-7.4"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.a.5"
-      },
-      "note": "Common Rule requirement"
-    },
-    {
-      "id": "reg-cr-5059",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "lack-transparency-7.4"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.b"
-      },
-      "note": "Common Rule requirement"
-    },
-    {
-      "id": "reg-cr-5060",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "ai-welfare-7.5"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.a.4"
-      },
-      "note": "Common Rule requirement"
-    },
-    {
-      "id": "reg-cr-5061",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "ai-welfare-7.5"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.a.5"
-      },
-      "note": "Common Rule requirement"
-    },
-    {
-      "id": "reg-cr-5062",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "ai-welfare-7.5"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.b"
-      },
-      "note": "Common Rule requirement"
-    },
-    {
-      "id": "reg-cr-5063",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "multi-agent-risks-7.6"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.a.4"
-      },
-      "note": "Common Rule requirement"
-    },
-    {
-      "id": "reg-cr-5064",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "multi-agent-risks-7.6"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.a.5"
-      },
-      "note": "Common Rule requirement"
-    },
-    {
-      "id": "reg-cr-5065",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "multi-agent-risks-7.6"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.111.b"
-      },
-      "note": "Common Rule requirement"
-    },
-    {
-      "id": "reg-cons-5066",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "privacy-breach-2.1"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "50.20"
-      },
-      "note": "Informed consent requirement"
-    },
-    {
-      "id": "reg-cons-5067",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "false-information-3.1"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.116.c"
-      },
-      "note": "Informed consent requirement"
-    },
-    {
-      "id": "reg-cons-5068",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "false-information-3.1"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.117.a"
-      },
-      "note": "Informed consent requirement"
-    },
-    {
-      "id": "reg-cons-5069",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "overreliance-5.1"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.116.c"
-      },
-      "note": "Informed consent requirement"
-    },
-    {
-      "id": "reg-cons-5070",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "overreliance-5.1"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.117.a"
-      },
-      "note": "Informed consent requirement"
-    },
-    {
-      "id": "reg-cons-5071",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "overreliance-5.1"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "50.20"
-      },
-      "note": "Informed consent requirement"
-    },
-    {
-      "id": "reg-cons-5072",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "loss-of-agency-5.2"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.116.c"
-      },
-      "note": "Informed consent requirement"
-    },
-    {
-      "id": "reg-cons-5073",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "loss-of-agency-5.2"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.117.a"
-      },
-      "note": "Informed consent requirement"
-    },
-    {
-      "id": "reg-cons-5074",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "loss-of-agency-5.2"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "50.20"
-      },
-      "note": "Informed consent requirement"
-    },
-    {
-      "id": "reg-cons-5075",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "fraud-manipulation-4.3"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.116.c"
-      },
-      "note": "Informed consent requirement"
-    },
-    {
-      "id": "reg-cons-5076",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "fraud-manipulation-4.3"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.117.a"
-      },
-      "note": "Informed consent requirement"
-    },
-    {
-      "id": "reg-cons-5077",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "lack-transparency-7.4"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.116.c"
-      },
-      "note": "Informed consent requirement"
-    },
-    {
-      "id": "reg-cons-5078",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "lack-transparency-7.4"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "46.117.a"
-      },
-      "note": "Informed consent requirement"
-    },
-    {
-      "id": "reg-dev-5079",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "security-vulnerabilities-2.2"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "812.38"
-      },
-      "note": "Device regulation requirement"
-    },
-    {
-      "id": "reg-dev-5080",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "security-vulnerabilities-2.2"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "812.40"
-      },
-      "note": "Device regulation requirement"
-    },
-    {
-      "id": "reg-dev-5081",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "cyberattacks-mass-harm-4.2"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "812.38"
-      },
-      "note": "Device regulation requirement"
-    },
-    {
-      "id": "reg-dev-5082",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "cyberattacks-mass-harm-4.2"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "812.40"
-      },
-      "note": "Device regulation requirement"
-    },
-    {
-      "id": "reg-dev-5083",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "cyberattacks-mass-harm-4.2"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "812.140"
-      },
-      "note": "Device regulation requirement"
-    },
-    {
-      "id": "reg-dev-5084",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "dangerous-capabilities-7.2"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "812.38"
-      },
-      "note": "Device regulation requirement"
-    },
-    {
-      "id": "reg-dev-5085",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "dangerous-capabilities-7.2"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "812.40"
-      },
-      "note": "Device regulation requirement"
-    },
-    {
-      "id": "reg-dev-5086",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "dangerous-capabilities-7.2"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "812.140"
-      },
-      "note": "Device regulation requirement"
-    },
-    {
-      "id": "reg-dev-5087",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "lack-robustness-7.3"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "812.38"
-      },
-      "note": "Device regulation requirement"
-    },
-    {
-      "id": "reg-dev-5088",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "lack-robustness-7.3"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "812.40"
-      },
-      "note": "Device regulation requirement"
-    },
-    {
-      "id": "reg-dev-5089",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "lack-robustness-7.3"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "812.140"
-      },
-      "note": "Device regulation requirement"
-    },
-    {
-      "id": "reg-dev-5090",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "multi-agent-risks-7.6"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "812.38"
-      },
-      "note": "Device regulation requirement"
-    },
-    {
-      "id": "reg-dev-5091",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "multi-agent-risks-7.6"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "812.40"
-      },
-      "note": "Device regulation requirement"
-    },
-    {
-      "id": "reg-dev-5092",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "multi-agent-risks-7.6"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "812.140"
-      },
-      "note": "Device regulation requirement"
-    },
-    {
-      "id": "reg-hipaa-5093",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "privacy-breach-2.1"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "part-11"
-      },
-      "note": "HIPAA requirement"
-    },
-    {
-      "id": "reg-hipaa-5094",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "security-vulnerabilities-2.2"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "160"
-      },
-      "note": "HIPAA requirement"
-    },
-    {
-      "id": "reg-hipaa-5095",
-      "type": "regulation",
-      "from": {
-        "entity": "risk",
-        "id": "security-vulnerabilities-2.2"
-      },
-      "to": {
-        "entity": "regulation",
-        "id": "164.501"
-      },
-      "note": "HIPAA requirement"
+      }
     }
   ]
 }

@@ -69,6 +69,7 @@
           "question": "Does the AI generate text, images, or recommendations?",
           "type": "yes-no",
           "required": true,
+          "showIf": {"model-types": ["llm", "generative-non-llm", "predictive"]},
           "triggers": {
             "yes": ["false-information-3.1", "information-pollution-3.2", "toxic-content-1.2"]
           }
@@ -78,6 +79,7 @@
           "question": "Can the AI act without human approval?",
           "type": "yes-no",
           "required": true,
+          "showIf": {"phase": ["phase-2", "phase-3"]},
           "triggers": {
             "yes": ["overreliance-5.1", "loss-of-agency-5.2", "governance-failure-6.5", "misaligned-goals-7.1"]
           }
@@ -87,6 +89,7 @@
           "question": "Can users understand why the AI made a decision?",
           "type": "single-select",
           "required": true,
+          "showIf": {"clinical-decisions": "yes"},
           "options": [
             {"value": "yes", "label": "Yes - Clear explanations"},
             {"value": "partial", "label": "Partially - Some insight"},
