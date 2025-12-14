@@ -8,7 +8,8 @@
 	const tools = [
 		{ href: '/risk-matrix', label: 'Risk Matrix' },
 		{ href: '/reviewer', label: 'Reviewer Checklist' },
-		{ href: '/innovator', label: 'Innovator Checklist' }
+		{ href: '/innovator', label: 'Innovator Checklist' },
+		{ href: '/admin', label: 'Admin' }
 	];
 </script>
 
