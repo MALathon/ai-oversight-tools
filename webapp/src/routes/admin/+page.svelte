@@ -88,6 +88,7 @@
 	// UI State
 	let currentView = $state<'matrix' | 'risk-editor' | 'graph' | 'entities'>('matrix');
 	let selectedPhase = $state<string>('all');
+	let selectedTechType = $state<string>('all');
 	let selectedNode = $state<{ type: string; id: string } | null>(null);
 	let connectingFrom = $state<{ type: string; id: string } | null>(null);
 	let showLinkEditor = $state(false);
@@ -1176,9 +1177,24 @@
 				</table>
 			{:else if matrixType === 'controls'}
 				{@const filteredRisks = filterBySearch(allRisks, r => r.shortName)}
-				{@const filteredControls = filterBySearch(allControls, c => c.name + ' ' + c.id).slice(0, 50)}
-				<div class="controls-matrix-note">
-					<span class="note-text">Showing first 50 of {allControls.length} controls. Use search to filter.</span>
+				{@const phaseFilteredControls = selectedPhase === 'all'
+					? allControls
+					: allControls.filter(c => c.phases?.includes(selectedPhase))}
+				{@const techFilteredControls = selectedTechType === 'all'
+					? phaseFilteredControls
+					: phaseFilteredControls.filter(c => c.techTypes?.includes('all') || c.techTypes?.includes(selectedTechType))}
+				{@const filteredControls = filterBySearch(techFilteredControls, c => c.name + ' ' + c.id).slice(0, 50)}
+				<div class="controls-matrix-filters">
+					<div class="filter-group">
+						<label>Tech Type:</label>
+						<select bind:value={selectedTechType}>
+							<option value="all">All Types</option>
+							{#each data.modelTypes as modelType}
+								<option value={modelType.id}>{modelType.name}</option>
+							{/each}
+						</select>
+					</div>
+					<span class="note-text">Showing {filteredControls.length} of {techFilteredControls.length} controls (filtered from {allControls.length} total)</span>
 				</div>
 				<table class="matrix">
 					<thead>
@@ -2544,6 +2560,33 @@
 		margin-bottom: 0.5rem;
 		font-size: 0.75rem;
 		color: #94a3b8;
+	}
+
+	.controls-matrix-filters {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+		padding: 0.5rem 1rem;
+		background: rgba(6, 182, 212, 0.1);
+		border-left: 3px solid #06b6d4;
+		margin-bottom: 0.5rem;
+		font-size: 0.75rem;
+		color: #94a3b8;
+	}
+
+	.controls-matrix-filters .filter-group {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+	}
+
+	.controls-matrix-filters select {
+		background: #1e293b;
+		border: 1px solid #334155;
+		border-radius: 4px;
+		padding: 0.25rem 0.5rem;
+		color: #e2e8f0;
+		font-size: 0.75rem;
 	}
 
 	.matrix {

@@ -349,7 +349,7 @@ def update_traceability_risk_control_links():
                     "id": risk_id
                 },
                 "to": {
-                    "entity": "controlSubcategory",
+                    "entity": "mitigation",
                     "id": subcat_id
                 },
                 "reasoning": "AIHSR-based mapping"
