@@ -1,6 +1,6 @@
 {
   "$schema": "./schemas/traceability.schema.json",
-  "version": "5.0.0",
+  "version": "6.0.0",
   "lastUpdated": "2025-12-14",
   "description": "Comprehensive traceability linking questions, risks, mitigations, and regulations based on AIHSR Risk Reference Tool",
   "source": "AIHSR Risk Reference Tool v1.5 (Tamiko Eto) - Map Risk-Mitigation-Prompt sheet",
@@ -570,1329 +570,6 @@
         "phase-3"
       ],
       "logic": "OR"
-    },
-    {
-      "id": "mit-discrimination-board",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "unfair-discrimination-1.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "board-oversight-1.1"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-discrimination-risk-mgmt",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "unfair-discrimination-1.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "risk-management-1.2"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-discrimination-safety-eng",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "unfair-discrimination-1.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "safety-engineering-2.3"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-discrimination-testing",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "unfair-discrimination-1.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "testing-auditing-3.1"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ],
-      "guidance": {
-        "phase-1": "Perform bias analysis using stratified performance metrics across racial, gender, and age groups using retrospective datasets.",
-        "phase-2": "Prospective validation will include subgroup performance audits with fairness thresholds.",
-        "phase-3": "DSMB will review demographic impacts monthly. Clinical teams will receive training on limits of generalizability."
-      }
-    },
-    {
-      "id": "mit-discrimination-data-gov",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "unfair-discrimination-1.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "data-governance-3.2"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-discrimination-alignment",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "unfair-discrimination-1.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "model-alignment-2.2"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-toxic-board",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "toxic-content-1.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "board-oversight-1.1"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-toxic-risk-mgmt",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "toxic-content-1.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "risk-management-1.2"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-toxic-safety-eng",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "toxic-content-1.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "safety-engineering-2.3"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-toxic-testing",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "toxic-content-1.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "testing-auditing-3.1"
-      },
-      "phases": [
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-toxic-data-gov",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "toxic-content-1.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "data-governance-3.2"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-toxic-alignment",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "toxic-content-1.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "model-alignment-2.2"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-toxic-content-safety",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "toxic-content-1.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "content-safety-2.4"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ],
-      "guidance": {
-        "phase-1": "Curate training datasets to exclude harmful or graphic material. Apply automated and manual content filtering.",
-        "phase-2": "Deploy content moderation filters. Human oversight panel reviews flagged content.",
-        "phase-3": "Persistent safety layers detect and block toxic content. Real-time monitoring with incident logging."
-      }
-    },
-    {
-      "id": "mit-unequal-board",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "unequal-performance-1.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "board-oversight-1.1"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-unequal-risk-mgmt",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "unequal-performance-1.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "risk-management-1.2"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-unequal-testing",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "unequal-performance-1.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "testing-auditing-3.1"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ],
-      "guidance": {
-        "phase-1": "Analyze training datasets for representational gaps across demographic groups. Apply fairness-aware preprocessing.",
-        "phase-2": "Blinded subgroup performance evaluations against predefined fairness thresholds.",
-        "phase-3": "Continuous fairness monitoring dashboard. Quarterly disparity reports to IRB."
-      }
-    },
-    {
-      "id": "mit-unequal-data-gov",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "unequal-performance-1.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "data-governance-3.2"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-unequal-post-deploy",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "unequal-performance-1.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "post-deployment-3.5"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-unequal-documentation",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "unequal-performance-1.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "documentation-4.1"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-privacy-board",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "privacy-breach-2.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "board-oversight-1.1"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-privacy-risk-mgmt",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "privacy-breach-2.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "risk-management-1.2"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-privacy-data-gov",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "privacy-breach-2.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "data-governance-3.2"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ],
-      "guidance": {
-        "phase-1": "De-identify training datasets per HIPAA Safe Harbor. Apply differential privacy and k-anonymity. Store on secure servers.",
-        "phase-2": "Monitor data pipelines for re-identification risks. Conduct membership inference and red-team testing.",
-        "phase-3": "Weekly log reviews for inference/leakage events. Opt-out mechanisms. Strict access controls."
-      }
-    },
-    {
-      "id": "mit-privacy-access",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "privacy-breach-2.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "access-management-3.3"
-      },
-      "phases": [
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-privacy-incident",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "privacy-breach-2.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "incident-response-3.6"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-privacy-documentation",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "privacy-breach-2.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "documentation-4.1"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-privacy-user-rights",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "privacy-breach-2.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "user-rights-4.6"
-      },
-      "phases": [
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-security-board",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "security-vulnerabilities-2.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "board-oversight-1.1"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-security-risk-mgmt",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "security-vulnerabilities-2.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "risk-management-1.2"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-security-infra",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "security-vulnerabilities-2.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "infrastructure-security-2.1"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ],
-      "guidance": {
-        "phase-1": "Comprehensive threat modeling. Penetration testing by internal and external teams.",
-        "phase-2": "Test against adversarial attacks in sandbox environment. Document response protocols.",
-        "phase-3": "Secure segmented network with intrusion detection. Rapid rollback procedures. Regular penetration testing."
-      }
-    },
-    {
-      "id": "mit-security-testing",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "security-vulnerabilities-2.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "testing-auditing-3.1"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-security-access",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "security-vulnerabilities-2.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "access-management-3.3"
-      },
-      "phases": [
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-security-incident",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "security-vulnerabilities-2.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "incident-response-3.6"
-      },
-      "phases": [
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-false-info-board",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "false-information-3.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "board-oversight-1.1"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-false-info-risk-mgmt",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "false-information-3.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "risk-management-1.2"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-false-info-safety-eng",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "false-information-3.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "safety-engineering-2.3"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-false-info-testing",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "false-information-3.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "testing-auditing-3.1"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ],
-      "guidance": {
-        "phase-1": "Training incorporates factuality constraints and retrieval-augmented generation. Validate against authoritative sources.",
-        "phase-2": "Independent panel of SMEs reviews outputs against authoritative resources. Log discrepancies.",
-        "phase-3": "Visible disclaimers and inline citations. User 'report error' function. Quarterly error trend reports."
-      }
-    },
-    {
-      "id": "mit-false-info-data-gov",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "false-information-3.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "data-governance-3.2"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-false-info-alignment",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "false-information-3.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "model-alignment-2.2"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-pollution-board",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "information-pollution-3.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "board-oversight-1.1"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-pollution-data-gov",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "information-pollution-3.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "data-governance-3.2"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ],
-      "guidance": {
-        "phase-1": "Source training data exclusively from verified, high-quality sources. Automated provenance verification.",
-        "phase-2": "Blinded reviewers rate credibility and factual accuracy of outputs.",
-        "phase-3": "Closed verified-user systems. Monitor for 'narrative drift'. Immediate recalibration when drift detected."
-      }
-    },
-    {
-      "id": "mit-pollution-content-safety",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "information-pollution-3.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "content-safety-2.4"
-      },
-      "phases": [
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-pollution-access",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "information-pollution-3.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "access-management-3.3"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-pollution-post-deploy",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "information-pollution-3.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "post-deployment-3.5"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-overreliance-board",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "overreliance-5.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "board-oversight-1.1"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-overreliance-risk-mgmt",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "overreliance-5.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "risk-management-1.2"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-overreliance-safety-eng",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "overreliance-5.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "safety-engineering-2.3"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-overreliance-documentation",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "overreliance-5.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "documentation-4.1"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ],
-      "guidance": {
-        "phase-1": "Design AI to provide confidence scores and explicit uncertainty statements.",
-        "phase-2": "Targeted orientation and training on AI limitations. Human-in-the-loop requirement. Track override rates.",
-        "phase-3": "Staged deployment with embedded warnings. Integrated incident reporting form. Audit for overreliance patterns."
-      }
-    },
-    {
-      "id": "mit-overreliance-staged",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "overreliance-5.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "staged-deployment-3.4"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-overreliance-post-deploy",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "overreliance-5.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "post-deployment-3.5"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-overreliance-user-rights",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "overreliance-5.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "user-rights-4.6"
-      },
-      "phases": [
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-loss-agency-board",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "loss-of-agency-5.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "board-oversight-1.1"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-loss-agency-safety-eng",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "loss-of-agency-5.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "safety-engineering-2.3"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ],
-      "guidance": {
-        "phase-1": "Design outputs using suggestive rather than directive language to support human decision-making.",
-        "phase-2": "Collect participant feedback on perceived autonomy through surveys and interviews.",
-        "phase-3": "Require user consent prompts before automated actions. Log consent patterns. Report to IRB."
-      }
-    },
-    {
-      "id": "mit-loss-agency-staged",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "loss-of-agency-5.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "staged-deployment-3.4"
-      },
-      "phases": [
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-loss-agency-user-rights",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "loss-of-agency-5.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "user-rights-4.6"
-      },
-      "phases": [
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-governance-board",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "governance-failure-6.5"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "board-oversight-1.1"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ],
-      "guidance": {
-        "phase-1": "Identify required governance structure prior to model training. Obtain all necessary approvals.",
-        "phase-2": "Conduct mock incident drills to assess governance response readiness.",
-        "phase-3": "Periodic third-party audits of governance processes. Report findings to IRB."
-      }
-    },
-    {
-      "id": "mit-governance-risk-mgmt",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "governance-failure-6.5"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "risk-management-1.2"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-governance-whistleblower",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "governance-failure-6.5"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "whistleblower-1.4"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-governance-disclosure",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "governance-failure-6.5"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "governance-disclosure-4.4"
-      },
-      "phases": [
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-governance-documentation",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "governance-failure-6.5"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "documentation-4.1"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-governance-incident",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "governance-failure-6.5"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "incident-response-3.6"
-      },
-      "phases": [
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-misaligned-board",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "misaligned-goals-7.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "board-oversight-1.1"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-misaligned-alignment",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "misaligned-goals-7.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "model-alignment-2.2"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ],
-      "guidance": {
-        "phase-1": "Train with alignment objectives reinforced through human feedback loops. Prohibit self-modifying code.",
-        "phase-2": "Stress-test in sandbox environments to detect goal drift under varying conditions.",
-        "phase-3": "Continuous alignment monitoring. Kill-switch mechanism available if drift detected."
-      }
-    },
-    {
-      "id": "mit-misaligned-testing",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "misaligned-goals-7.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "testing-auditing-3.1"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-misaligned-safety-eng",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "misaligned-goals-7.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "safety-engineering-2.3"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-robustness-board",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "lack-robustness-7.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "board-oversight-1.1"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-robustness-risk-mgmt",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "lack-robustness-7.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "risk-management-1.2"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-robustness-testing",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "lack-robustness-7.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "testing-auditing-3.1"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ],
-      "guidance": {
-        "phase-1": "Rigorous unit testing and edge-case evaluations during training.",
-        "phase-2": "Stress testing with out-of-distribution data to evaluate resilience.",
-        "phase-3": "Continuous live performance monitoring. Rollback protocols for significant failures."
-      }
-    },
-    {
-      "id": "mit-robustness-safety-eng",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "lack-robustness-7.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "safety-engineering-2.3"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-robustness-staged",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "lack-robustness-7.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "staged-deployment-3.4"
-      },
-      "phases": [
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-robustness-post-deploy",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "lack-robustness-7.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "post-deployment-3.5"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-robustness-incident",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "lack-robustness-7.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "incident-response-3.6"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-transparency-board",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "lack-transparency-7.4"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "board-oversight-1.1"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-transparency-documentation",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "lack-transparency-7.4"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "documentation-4.1"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ],
-      "guidance": {
-        "phase-1": "Prioritize interpretable model architectures. Integrate feature importance maps and explainability modules.",
-        "phase-2": "Share model explanations with clinicians and end-users for validation. Assess clarity.",
-        "phase-3": "Inform participants when AI is used. Provide lay-language explanations. Document reasoning pathways."
-      }
-    },
-    {
-      "id": "mit-transparency-staged",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "lack-transparency-7.4"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "staged-deployment-3.4"
-      },
-      "phases": [
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-transparency-disclosure",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "lack-transparency-7.4"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "governance-disclosure-4.4"
-      },
-      "phases": [
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-transparency-user-rights",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "lack-transparency-7.4"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "user-rights-4.6"
-      },
-      "phases": [
-        "phase-3"
-      ]
     },
     {
       "id": "reg-discrimination-equitable",
@@ -2811,745 +1488,6 @@
       "logic": "OR"
     },
     {
-      "id": "mit-disinformation-board",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "disinformation-surveillance-4.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "board-oversight-1.1"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-disinformation-content-safety",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "disinformation-surveillance-4.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "content-safety-2.4"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ],
-      "guidance": {
-        "phase-1": "Design content filters to detect and prevent manipulative messaging patterns.",
-        "phase-2": "Test for potential disinformation generation with adversarial scenarios.",
-        "phase-3": "Deploy real-time monitoring for manipulative content. Enable user reporting."
-      }
-    },
-    {
-      "id": "mit-disinformation-access",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "disinformation-surveillance-4.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "access-management-3.3"
-      },
-      "phases": [
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-disinformation-user-rights",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "disinformation-surveillance-4.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "user-rights-4.6"
-      },
-      "phases": [
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-cyberattacks-board",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "cyberattacks-mass-harm-4.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "board-oversight-1.1"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-cyberattacks-infra",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "cyberattacks-mass-harm-4.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "infrastructure-security-2.1"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ],
-      "guidance": {
-        "phase-1": "Threat model for potential weaponization. Implement secure development practices.",
-        "phase-2": "Penetration testing and red team exercises targeting misuse scenarios.",
-        "phase-3": "Continuous security monitoring. Rate limiting and anomaly detection."
-      }
-    },
-    {
-      "id": "mit-cyberattacks-safety-frameworks",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "cyberattacks-mass-harm-4.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "safety-frameworks-1.5"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-cyberattacks-access",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "cyberattacks-mass-harm-4.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "access-management-3.3"
-      },
-      "phases": [
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-cyberattacks-incident",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "cyberattacks-mass-harm-4.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "incident-response-3.6"
-      },
-      "phases": [
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-fraud-board",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "fraud-manipulation-4.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "board-oversight-1.1"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-fraud-content-safety",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "fraud-manipulation-4.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "content-safety-2.4"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ],
-      "guidance": {
-        "phase-1": "Train models to refuse generating deceptive or fraudulent content.",
-        "phase-2": "Test with adversarial prompts attempting to elicit scam content.",
-        "phase-3": "Monitor for patterns indicating fraudulent use. Block and report."
-      }
-    },
-    {
-      "id": "mit-fraud-testing",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "fraud-manipulation-4.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "testing-auditing-3.1"
-      },
-      "phases": [
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-fraud-incident-reporting",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "fraud-manipulation-4.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "incident-reporting-4.3"
-      },
-      "phases": [
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-power-board",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "power-centralization-6.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "board-oversight-1.1"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-power-societal",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "power-centralization-6.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "societal-impact-1.7"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ],
-      "guidance": {
-        "phase-1": "Assess distribution of benefits and burdens across stakeholders.",
-        "phase-2": "Engage diverse stakeholders in evaluation. Document access policies.",
-        "phase-3": "Monitor for inequitable access patterns. Ensure broad availability."
-      }
-    },
-    {
-      "id": "mit-power-governance-disclosure",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "power-centralization-6.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "governance-disclosure-4.4"
-      },
-      "phases": [
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-power-third-party",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "power-centralization-6.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "third-party-access-4.5"
-      },
-      "phases": [
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-inequality-board",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "inequality-employment-6.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "board-oversight-1.1"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-inequality-societal",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "inequality-employment-6.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "societal-impact-1.7"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ],
-      "guidance": {
-        "phase-1": "Assess potential workforce impacts. Plan for retraining needs.",
-        "phase-2": "Evaluate impact on clinical workflows and staffing requirements.",
-        "phase-3": "Monitor for negative employment effects. Support transition planning."
-      }
-    },
-    {
-      "id": "mit-inequality-staged",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "inequality-employment-6.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "staged-deployment-3.4"
-      },
-      "phases": [
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-inequality-risk-disclosure",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "inequality-employment-6.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "risk-disclosure-4.2"
-      },
-      "phases": [
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-devaluation-board",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "devaluation-human-effort-6.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "board-oversight-1.1"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-devaluation-societal",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "devaluation-human-effort-6.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "societal-impact-1.7"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ],
-      "guidance": {
-        "phase-1": "Design AI to augment rather than replace human expertise.",
-        "phase-2": "Evaluate user perceptions of AI's role vs human judgment.",
-        "phase-3": "Maintain meaningful human involvement. Recognize human contributions."
-      }
-    },
-    {
-      "id": "mit-devaluation-user-rights",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "devaluation-human-effort-6.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "user-rights-4.6"
-      },
-      "phases": [
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-competitive-board",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "competitive-dynamics-6.4"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "board-oversight-1.1"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-competitive-safety-frameworks",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "competitive-dynamics-6.4"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "safety-frameworks-1.5"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ],
-      "guidance": {
-        "phase-1": "Establish safety standards that won't be compromised for speed.",
-        "phase-2": "Independent safety review regardless of competitive pressures.",
-        "phase-3": "Maintain safety standards even when facing market pressure."
-      }
-    },
-    {
-      "id": "mit-competitive-conflict",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "competitive-dynamics-6.4"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "conflict-interest-1.3"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-competitive-whistleblower",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "competitive-dynamics-6.4"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "whistleblower-1.4"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-environmental-board",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "environmental-harm-6.6"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "board-oversight-1.1"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-environmental-impact",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "environmental-harm-6.6"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "environmental-1.6"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ],
-      "guidance": {
-        "phase-1": "Estimate computational requirements and energy consumption. Consider efficient architectures.",
-        "phase-2": "Monitor energy usage during testing. Document carbon footprint.",
-        "phase-3": "Track ongoing energy consumption. Use renewable energy where possible."
-      }
-    },
-    {
-      "id": "mit-environmental-documentation",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "environmental-harm-6.6"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "documentation-4.1"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-dangerous-board",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "dangerous-capabilities-7.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "board-oversight-1.1"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-dangerous-safety-frameworks",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "dangerous-capabilities-7.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "safety-frameworks-1.5"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ],
-      "guidance": {
-        "phase-1": "Capability assessment for potential dangerous applications. Establish red lines.",
-        "phase-2": "Red team testing for dangerous capability emergence.",
-        "phase-3": "Continuous monitoring for capability drift. Kill switch available."
-      }
-    },
-    {
-      "id": "mit-dangerous-safety-eng",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "dangerous-capabilities-7.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "safety-engineering-2.3"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-dangerous-testing",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "dangerous-capabilities-7.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "testing-auditing-3.1"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-dangerous-access",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "dangerous-capabilities-7.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "access-management-3.3"
-      },
-      "phases": [
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-ai-welfare-board",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "ai-welfare-7.5"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "board-oversight-1.1"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ],
-      "guidance": {
-        "phase-1": "Consider emerging ethical frameworks for AI moral status.",
-        "phase-2": "Monitor for signs of emergent behavior requiring ethical consideration.",
-        "phase-3": "Maintain awareness of AI welfare discourse. Document ethical stance."
-      }
-    },
-    {
-      "id": "mit-multiagent-board",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "multi-agent-risks-7.6"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "board-oversight-1.1"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-multiagent-testing",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "multi-agent-risks-7.6"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "testing-auditing-3.1"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ],
-      "guidance": {
-        "phase-1": "Model interactions between AI components. Identify emergent risk scenarios.",
-        "phase-2": "Test multi-system interactions in controlled environment.",
-        "phase-3": "Monitor for unexpected emergent behaviors from system interactions."
-      }
-    },
-    {
-      "id": "mit-multiagent-safety-eng",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "multi-agent-risks-7.6"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "safety-engineering-2.3"
-      },
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-multiagent-third-party",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "multi-agent-risks-7.6"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "third-party-access-4.5"
-      },
-      "phases": [
-        "phase-2",
-        "phase-3"
-      ]
-    },
-    {
       "id": "reg-disinformation-vulnerable",
       "type": "regulation",
       "from": {
@@ -3843,5196 +1781,6 @@
         "id": "164.501"
       },
       "note": "HIPAA definitions and scope"
-    },
-    {
-      "id": "mit-p1-4000",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "unfair-discrimination-1.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "documentation-4.1"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-4001",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "unfair-discrimination-1.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "societal-impact-1.7"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p2-4002",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "unfair-discrimination-1.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "staged-deployment-3.4"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4003",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "unfair-discrimination-1.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "infrastructure-security-2.1"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p3-4004",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "unfair-discrimination-1.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "post-deployment-3.5"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4005",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "unfair-discrimination-1.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "incident-response-3.6"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4006",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "unfair-discrimination-1.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "access-management-3.3"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4007",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "unfair-discrimination-1.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "content-safety-2.4"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4008",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "unfair-discrimination-1.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "risk-disclosure-4.2"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4009",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "unfair-discrimination-1.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "incident-reporting-4.3"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4010",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "unfair-discrimination-1.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "user-rights-4.6"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4011",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "unfair-discrimination-1.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "whistleblower-1.4"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4012",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "unfair-discrimination-1.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "governance-disclosure-4.4"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p1-4013",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "toxic-content-1.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "documentation-4.1"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-4014",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "toxic-content-1.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "societal-impact-1.7"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p2-4015",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "toxic-content-1.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "staged-deployment-3.4"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4016",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "toxic-content-1.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "infrastructure-security-2.1"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p3-4017",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "toxic-content-1.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "post-deployment-3.5"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4018",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "toxic-content-1.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "incident-response-3.6"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4019",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "toxic-content-1.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "access-management-3.3"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4020",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "toxic-content-1.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "risk-disclosure-4.2"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4021",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "toxic-content-1.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "incident-reporting-4.3"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4022",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "toxic-content-1.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "user-rights-4.6"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4023",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "toxic-content-1.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "whistleblower-1.4"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4024",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "toxic-content-1.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "governance-disclosure-4.4"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p1-4025",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "unequal-performance-1.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "societal-impact-1.7"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p2-4026",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "unequal-performance-1.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "model-alignment-2.2"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4027",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "unequal-performance-1.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "safety-engineering-2.3"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4028",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "unequal-performance-1.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "staged-deployment-3.4"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4029",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "unequal-performance-1.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "infrastructure-security-2.1"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p3-4030",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "unequal-performance-1.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "incident-response-3.6"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4031",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "unequal-performance-1.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "access-management-3.3"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4032",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "unequal-performance-1.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "content-safety-2.4"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4033",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "unequal-performance-1.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "risk-disclosure-4.2"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4034",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "unequal-performance-1.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "incident-reporting-4.3"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4035",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "unequal-performance-1.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "user-rights-4.6"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4036",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "unequal-performance-1.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "whistleblower-1.4"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4037",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "unequal-performance-1.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "governance-disclosure-4.4"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p1-4038",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "privacy-breach-2.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "societal-impact-1.7"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p2-4039",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "privacy-breach-2.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "testing-auditing-3.1"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4040",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "privacy-breach-2.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "model-alignment-2.2"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4041",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "privacy-breach-2.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "safety-engineering-2.3"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4042",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "privacy-breach-2.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "staged-deployment-3.4"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4043",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "privacy-breach-2.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "infrastructure-security-2.1"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p3-4044",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "privacy-breach-2.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "post-deployment-3.5"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4045",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "privacy-breach-2.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "content-safety-2.4"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4046",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "privacy-breach-2.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "risk-disclosure-4.2"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4047",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "privacy-breach-2.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "incident-reporting-4.3"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4048",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "privacy-breach-2.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "whistleblower-1.4"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4049",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "privacy-breach-2.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "governance-disclosure-4.4"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p1-4050",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "security-vulnerabilities-2.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "documentation-4.1"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-4051",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "security-vulnerabilities-2.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "societal-impact-1.7"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p2-4052",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "security-vulnerabilities-2.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "model-alignment-2.2"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4053",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "security-vulnerabilities-2.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "safety-engineering-2.3"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4054",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "security-vulnerabilities-2.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "data-governance-3.2"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4055",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "security-vulnerabilities-2.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "staged-deployment-3.4"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p3-4056",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "security-vulnerabilities-2.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "post-deployment-3.5"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4057",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "security-vulnerabilities-2.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "content-safety-2.4"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4058",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "security-vulnerabilities-2.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "risk-disclosure-4.2"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4059",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "security-vulnerabilities-2.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "incident-reporting-4.3"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4060",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "security-vulnerabilities-2.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "user-rights-4.6"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4061",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "security-vulnerabilities-2.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "whistleblower-1.4"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4062",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "security-vulnerabilities-2.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "governance-disclosure-4.4"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p1-4063",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "false-information-3.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "documentation-4.1"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-4064",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "false-information-3.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "societal-impact-1.7"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p2-4065",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "false-information-3.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "staged-deployment-3.4"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4066",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "false-information-3.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "infrastructure-security-2.1"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p3-4067",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "false-information-3.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "post-deployment-3.5"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4068",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "false-information-3.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "incident-response-3.6"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4069",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "false-information-3.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "access-management-3.3"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4070",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "false-information-3.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "content-safety-2.4"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4071",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "false-information-3.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "risk-disclosure-4.2"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4072",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "false-information-3.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "incident-reporting-4.3"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4073",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "false-information-3.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "user-rights-4.6"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4074",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "false-information-3.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "whistleblower-1.4"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4075",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "false-information-3.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "governance-disclosure-4.4"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p1-4076",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "information-pollution-3.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "documentation-4.1"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-4077",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "information-pollution-3.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "risk-management-1.2"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-4078",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "information-pollution-3.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "societal-impact-1.7"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p2-4079",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "information-pollution-3.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "testing-auditing-3.1"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4080",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "information-pollution-3.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "model-alignment-2.2"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4081",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "information-pollution-3.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "safety-engineering-2.3"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4082",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "information-pollution-3.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "staged-deployment-3.4"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4083",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "information-pollution-3.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "infrastructure-security-2.1"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p3-4084",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "information-pollution-3.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "incident-response-3.6"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4085",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "information-pollution-3.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "risk-disclosure-4.2"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4086",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "information-pollution-3.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "incident-reporting-4.3"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4087",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "information-pollution-3.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "user-rights-4.6"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4088",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "information-pollution-3.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "whistleblower-1.4"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4089",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "information-pollution-3.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "governance-disclosure-4.4"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p1-4090",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "disinformation-surveillance-4.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "documentation-4.1"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-4091",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "disinformation-surveillance-4.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "risk-management-1.2"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-4092",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "disinformation-surveillance-4.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "societal-impact-1.7"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p2-4093",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "disinformation-surveillance-4.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "testing-auditing-3.1"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4094",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "disinformation-surveillance-4.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "model-alignment-2.2"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4095",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "disinformation-surveillance-4.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "safety-engineering-2.3"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4096",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "disinformation-surveillance-4.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "data-governance-3.2"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4097",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "disinformation-surveillance-4.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "staged-deployment-3.4"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4098",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "disinformation-surveillance-4.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "infrastructure-security-2.1"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p3-4099",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "disinformation-surveillance-4.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "post-deployment-3.5"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4100",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "disinformation-surveillance-4.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "incident-response-3.6"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4101",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "disinformation-surveillance-4.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "risk-disclosure-4.2"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4102",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "disinformation-surveillance-4.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "incident-reporting-4.3"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4103",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "disinformation-surveillance-4.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "whistleblower-1.4"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4104",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "disinformation-surveillance-4.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "governance-disclosure-4.4"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p1-4105",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "cyberattacks-mass-harm-4.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "documentation-4.1"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-4106",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "cyberattacks-mass-harm-4.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "risk-management-1.2"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-4107",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "cyberattacks-mass-harm-4.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "societal-impact-1.7"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p2-4108",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "cyberattacks-mass-harm-4.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "testing-auditing-3.1"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4109",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "cyberattacks-mass-harm-4.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "model-alignment-2.2"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4110",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "cyberattacks-mass-harm-4.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "safety-engineering-2.3"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4111",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "cyberattacks-mass-harm-4.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "data-governance-3.2"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4112",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "cyberattacks-mass-harm-4.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "staged-deployment-3.4"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p3-4113",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "cyberattacks-mass-harm-4.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "post-deployment-3.5"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4114",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "cyberattacks-mass-harm-4.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "content-safety-2.4"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4115",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "cyberattacks-mass-harm-4.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "risk-disclosure-4.2"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4116",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "cyberattacks-mass-harm-4.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "incident-reporting-4.3"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4117",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "cyberattacks-mass-harm-4.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "user-rights-4.6"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4118",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "cyberattacks-mass-harm-4.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "whistleblower-1.4"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4119",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "cyberattacks-mass-harm-4.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "governance-disclosure-4.4"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p1-4120",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "fraud-manipulation-4.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "documentation-4.1"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-4121",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "fraud-manipulation-4.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "risk-management-1.2"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-4122",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "fraud-manipulation-4.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "societal-impact-1.7"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p2-4123",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "fraud-manipulation-4.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "model-alignment-2.2"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4124",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "fraud-manipulation-4.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "safety-engineering-2.3"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4125",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "fraud-manipulation-4.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "data-governance-3.2"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4126",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "fraud-manipulation-4.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "staged-deployment-3.4"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4127",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "fraud-manipulation-4.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "infrastructure-security-2.1"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p3-4128",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "fraud-manipulation-4.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "post-deployment-3.5"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4129",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "fraud-manipulation-4.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "incident-response-3.6"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4130",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "fraud-manipulation-4.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "access-management-3.3"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4131",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "fraud-manipulation-4.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "risk-disclosure-4.2"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4132",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "fraud-manipulation-4.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "user-rights-4.6"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4133",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "fraud-manipulation-4.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "whistleblower-1.4"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4134",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "fraud-manipulation-4.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "governance-disclosure-4.4"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p1-4135",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "overreliance-5.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "societal-impact-1.7"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p2-4136",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "overreliance-5.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "testing-auditing-3.1"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4137",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "overreliance-5.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "model-alignment-2.2"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4138",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "overreliance-5.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "data-governance-3.2"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4139",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "overreliance-5.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "infrastructure-security-2.1"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p3-4140",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "overreliance-5.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "incident-response-3.6"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4141",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "overreliance-5.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "access-management-3.3"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4142",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "overreliance-5.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "content-safety-2.4"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4143",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "overreliance-5.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "risk-disclosure-4.2"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4144",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "overreliance-5.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "incident-reporting-4.3"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4145",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "overreliance-5.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "whistleblower-1.4"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4146",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "overreliance-5.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "governance-disclosure-4.4"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p1-4147",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "loss-of-agency-5.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "documentation-4.1"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-4148",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "loss-of-agency-5.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "risk-management-1.2"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-4149",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "loss-of-agency-5.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "societal-impact-1.7"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p2-4150",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "loss-of-agency-5.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "testing-auditing-3.1"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4151",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "loss-of-agency-5.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "model-alignment-2.2"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4152",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "loss-of-agency-5.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "data-governance-3.2"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4153",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "loss-of-agency-5.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "infrastructure-security-2.1"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p3-4154",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "loss-of-agency-5.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "post-deployment-3.5"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4155",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "loss-of-agency-5.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "incident-response-3.6"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4156",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "loss-of-agency-5.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "access-management-3.3"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4157",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "loss-of-agency-5.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "content-safety-2.4"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4158",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "loss-of-agency-5.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "risk-disclosure-4.2"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4159",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "loss-of-agency-5.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "incident-reporting-4.3"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4160",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "loss-of-agency-5.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "whistleblower-1.4"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4161",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "loss-of-agency-5.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "governance-disclosure-4.4"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p1-4162",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "power-centralization-6.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "documentation-4.1"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-4163",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "power-centralization-6.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "risk-management-1.2"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p2-4164",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "power-centralization-6.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "testing-auditing-3.1"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4165",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "power-centralization-6.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "model-alignment-2.2"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4166",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "power-centralization-6.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "safety-engineering-2.3"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4167",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "power-centralization-6.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "data-governance-3.2"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4168",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "power-centralization-6.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "staged-deployment-3.4"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4169",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "power-centralization-6.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "infrastructure-security-2.1"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p3-4170",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "power-centralization-6.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "post-deployment-3.5"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4171",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "power-centralization-6.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "incident-response-3.6"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4172",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "power-centralization-6.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "access-management-3.3"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4173",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "power-centralization-6.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "content-safety-2.4"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4174",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "power-centralization-6.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "risk-disclosure-4.2"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4175",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "power-centralization-6.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "incident-reporting-4.3"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4176",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "power-centralization-6.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "user-rights-4.6"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4177",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "power-centralization-6.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "whistleblower-1.4"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p1-4178",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "inequality-employment-6.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "documentation-4.1"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-4179",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "inequality-employment-6.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "risk-management-1.2"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p2-4180",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "inequality-employment-6.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "testing-auditing-3.1"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4181",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "inequality-employment-6.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "model-alignment-2.2"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4182",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "inequality-employment-6.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "safety-engineering-2.3"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4183",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "inequality-employment-6.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "data-governance-3.2"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4184",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "inequality-employment-6.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "infrastructure-security-2.1"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p3-4185",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "inequality-employment-6.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "post-deployment-3.5"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4186",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "inequality-employment-6.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "incident-response-3.6"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4187",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "inequality-employment-6.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "access-management-3.3"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4188",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "inequality-employment-6.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "content-safety-2.4"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4189",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "inequality-employment-6.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "incident-reporting-4.3"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4190",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "inequality-employment-6.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "user-rights-4.6"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4191",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "inequality-employment-6.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "whistleblower-1.4"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4192",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "inequality-employment-6.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "governance-disclosure-4.4"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p1-4193",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "devaluation-human-effort-6.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "documentation-4.1"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-4194",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "devaluation-human-effort-6.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "risk-management-1.2"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p2-4195",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "devaluation-human-effort-6.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "testing-auditing-3.1"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4196",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "devaluation-human-effort-6.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "model-alignment-2.2"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4197",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "devaluation-human-effort-6.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "safety-engineering-2.3"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4198",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "devaluation-human-effort-6.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "data-governance-3.2"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4199",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "devaluation-human-effort-6.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "staged-deployment-3.4"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4200",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "devaluation-human-effort-6.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "infrastructure-security-2.1"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p3-4201",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "devaluation-human-effort-6.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "post-deployment-3.5"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4202",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "devaluation-human-effort-6.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "incident-response-3.6"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4203",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "devaluation-human-effort-6.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "access-management-3.3"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4204",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "devaluation-human-effort-6.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "content-safety-2.4"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4205",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "devaluation-human-effort-6.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "risk-disclosure-4.2"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4206",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "devaluation-human-effort-6.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "incident-reporting-4.3"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4207",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "devaluation-human-effort-6.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "whistleblower-1.4"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4208",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "devaluation-human-effort-6.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "governance-disclosure-4.4"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p1-4209",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "competitive-dynamics-6.4"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "documentation-4.1"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-4210",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "competitive-dynamics-6.4"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "risk-management-1.2"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-4211",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "competitive-dynamics-6.4"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "societal-impact-1.7"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p2-4212",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "competitive-dynamics-6.4"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "testing-auditing-3.1"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4213",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "competitive-dynamics-6.4"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "model-alignment-2.2"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4214",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "competitive-dynamics-6.4"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "safety-engineering-2.3"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4215",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "competitive-dynamics-6.4"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "data-governance-3.2"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4216",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "competitive-dynamics-6.4"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "staged-deployment-3.4"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4217",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "competitive-dynamics-6.4"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "infrastructure-security-2.1"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p3-4218",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "competitive-dynamics-6.4"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "post-deployment-3.5"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4219",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "competitive-dynamics-6.4"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "incident-response-3.6"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4220",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "competitive-dynamics-6.4"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "access-management-3.3"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4221",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "competitive-dynamics-6.4"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "content-safety-2.4"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4222",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "competitive-dynamics-6.4"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "risk-disclosure-4.2"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4223",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "competitive-dynamics-6.4"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "incident-reporting-4.3"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4224",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "competitive-dynamics-6.4"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "user-rights-4.6"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4225",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "competitive-dynamics-6.4"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "governance-disclosure-4.4"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p1-4226",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "governance-failure-6.5"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "societal-impact-1.7"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p2-4227",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "governance-failure-6.5"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "testing-auditing-3.1"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4228",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "governance-failure-6.5"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "model-alignment-2.2"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4229",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "governance-failure-6.5"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "safety-engineering-2.3"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4230",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "governance-failure-6.5"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "data-governance-3.2"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4231",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "governance-failure-6.5"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "staged-deployment-3.4"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4232",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "governance-failure-6.5"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "infrastructure-security-2.1"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p3-4233",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "governance-failure-6.5"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "post-deployment-3.5"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4234",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "governance-failure-6.5"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "access-management-3.3"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4235",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "governance-failure-6.5"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "content-safety-2.4"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4236",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "governance-failure-6.5"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "risk-disclosure-4.2"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4237",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "governance-failure-6.5"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "incident-reporting-4.3"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4238",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "governance-failure-6.5"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "user-rights-4.6"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p1-4239",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "environmental-harm-6.6"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "risk-management-1.2"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-4240",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "environmental-harm-6.6"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "societal-impact-1.7"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p2-4241",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "environmental-harm-6.6"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "testing-auditing-3.1"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4242",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "environmental-harm-6.6"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "model-alignment-2.2"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4243",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "environmental-harm-6.6"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "safety-engineering-2.3"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4244",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "environmental-harm-6.6"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "data-governance-3.2"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4245",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "environmental-harm-6.6"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "staged-deployment-3.4"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4246",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "environmental-harm-6.6"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "infrastructure-security-2.1"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p3-4247",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "environmental-harm-6.6"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "post-deployment-3.5"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4248",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "environmental-harm-6.6"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "incident-response-3.6"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4249",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "environmental-harm-6.6"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "access-management-3.3"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4250",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "environmental-harm-6.6"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "content-safety-2.4"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4251",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "environmental-harm-6.6"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "risk-disclosure-4.2"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4252",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "environmental-harm-6.6"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "incident-reporting-4.3"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4253",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "environmental-harm-6.6"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "user-rights-4.6"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4254",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "environmental-harm-6.6"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "whistleblower-1.4"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4255",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "environmental-harm-6.6"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "governance-disclosure-4.4"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p1-4256",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "misaligned-goals-7.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "documentation-4.1"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-4257",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "misaligned-goals-7.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "risk-management-1.2"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-4258",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "misaligned-goals-7.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "societal-impact-1.7"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p2-4259",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "misaligned-goals-7.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "data-governance-3.2"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4260",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "misaligned-goals-7.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "staged-deployment-3.4"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4261",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "misaligned-goals-7.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "infrastructure-security-2.1"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p3-4262",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "misaligned-goals-7.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "post-deployment-3.5"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4263",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "misaligned-goals-7.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "incident-response-3.6"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4264",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "misaligned-goals-7.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "access-management-3.3"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4265",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "misaligned-goals-7.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "content-safety-2.4"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4266",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "misaligned-goals-7.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "risk-disclosure-4.2"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4267",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "misaligned-goals-7.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "incident-reporting-4.3"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4268",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "misaligned-goals-7.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "user-rights-4.6"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4269",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "misaligned-goals-7.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "whistleblower-1.4"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4270",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "misaligned-goals-7.1"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "governance-disclosure-4.4"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p1-4271",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "dangerous-capabilities-7.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "documentation-4.1"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-4272",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "dangerous-capabilities-7.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "risk-management-1.2"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-4273",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "dangerous-capabilities-7.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "societal-impact-1.7"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p2-4274",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "dangerous-capabilities-7.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "model-alignment-2.2"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4275",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "dangerous-capabilities-7.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "data-governance-3.2"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4276",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "dangerous-capabilities-7.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "staged-deployment-3.4"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4277",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "dangerous-capabilities-7.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "infrastructure-security-2.1"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p3-4278",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "dangerous-capabilities-7.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "post-deployment-3.5"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4279",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "dangerous-capabilities-7.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "incident-response-3.6"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4280",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "dangerous-capabilities-7.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "content-safety-2.4"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4281",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "dangerous-capabilities-7.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "risk-disclosure-4.2"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4282",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "dangerous-capabilities-7.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "incident-reporting-4.3"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4283",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "dangerous-capabilities-7.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "user-rights-4.6"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4284",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "dangerous-capabilities-7.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "whistleblower-1.4"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4285",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "dangerous-capabilities-7.2"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "governance-disclosure-4.4"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p1-4286",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "lack-robustness-7.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "documentation-4.1"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-4287",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "lack-robustness-7.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "societal-impact-1.7"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p2-4288",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "lack-robustness-7.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "model-alignment-2.2"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4289",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "lack-robustness-7.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "data-governance-3.2"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4290",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "lack-robustness-7.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "infrastructure-security-2.1"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p3-4291",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "lack-robustness-7.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "access-management-3.3"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4292",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "lack-robustness-7.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "content-safety-2.4"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4293",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "lack-robustness-7.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "risk-disclosure-4.2"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4294",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "lack-robustness-7.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "incident-reporting-4.3"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4295",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "lack-robustness-7.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "user-rights-4.6"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4296",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "lack-robustness-7.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "whistleblower-1.4"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4297",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "lack-robustness-7.3"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "governance-disclosure-4.4"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p1-4298",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "lack-transparency-7.4"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "risk-management-1.2"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-4299",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "lack-transparency-7.4"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "societal-impact-1.7"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p2-4300",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "lack-transparency-7.4"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "testing-auditing-3.1"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4301",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "lack-transparency-7.4"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "model-alignment-2.2"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4302",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "lack-transparency-7.4"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "safety-engineering-2.3"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4303",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "lack-transparency-7.4"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "data-governance-3.2"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4304",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "lack-transparency-7.4"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "infrastructure-security-2.1"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p3-4305",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "lack-transparency-7.4"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "post-deployment-3.5"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4306",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "lack-transparency-7.4"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "incident-response-3.6"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4307",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "lack-transparency-7.4"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "access-management-3.3"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4308",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "lack-transparency-7.4"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "content-safety-2.4"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4309",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "lack-transparency-7.4"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "risk-disclosure-4.2"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4310",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "lack-transparency-7.4"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "incident-reporting-4.3"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4311",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "lack-transparency-7.4"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "whistleblower-1.4"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p1-4312",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "ai-welfare-7.5"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "documentation-4.1"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-4313",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "ai-welfare-7.5"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "risk-management-1.2"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-4314",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "ai-welfare-7.5"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "societal-impact-1.7"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p2-4315",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "ai-welfare-7.5"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "testing-auditing-3.1"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4316",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "ai-welfare-7.5"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "model-alignment-2.2"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4317",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "ai-welfare-7.5"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "safety-engineering-2.3"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4318",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "ai-welfare-7.5"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "data-governance-3.2"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4319",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "ai-welfare-7.5"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "staged-deployment-3.4"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4320",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "ai-welfare-7.5"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "infrastructure-security-2.1"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p3-4321",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "ai-welfare-7.5"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "post-deployment-3.5"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4322",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "ai-welfare-7.5"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "incident-response-3.6"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4323",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "ai-welfare-7.5"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "access-management-3.3"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4324",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "ai-welfare-7.5"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "content-safety-2.4"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4325",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "ai-welfare-7.5"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "risk-disclosure-4.2"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4326",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "ai-welfare-7.5"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "incident-reporting-4.3"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4327",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "ai-welfare-7.5"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "user-rights-4.6"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4328",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "ai-welfare-7.5"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "whistleblower-1.4"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4329",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "ai-welfare-7.5"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "governance-disclosure-4.4"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p1-4330",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "multi-agent-risks-7.6"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "documentation-4.1"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-4331",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "multi-agent-risks-7.6"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "risk-management-1.2"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p1-4332",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "multi-agent-risks-7.6"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "societal-impact-1.7"
-      },
-      "phases": [
-        "phase-1"
-      ]
-    },
-    {
-      "id": "mit-p2-4333",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "multi-agent-risks-7.6"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "model-alignment-2.2"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4334",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "multi-agent-risks-7.6"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "data-governance-3.2"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4335",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "multi-agent-risks-7.6"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "staged-deployment-3.4"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p2-4336",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "multi-agent-risks-7.6"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "infrastructure-security-2.1"
-      },
-      "phases": [
-        "phase-2"
-      ]
-    },
-    {
-      "id": "mit-p3-4337",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "multi-agent-risks-7.6"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "post-deployment-3.5"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4338",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "multi-agent-risks-7.6"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "incident-response-3.6"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4339",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "multi-agent-risks-7.6"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "access-management-3.3"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4340",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "multi-agent-risks-7.6"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "content-safety-2.4"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4341",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "multi-agent-risks-7.6"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "risk-disclosure-4.2"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4342",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "multi-agent-risks-7.6"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "incident-reporting-4.3"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4343",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "multi-agent-risks-7.6"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "user-rights-4.6"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4344",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "multi-agent-risks-7.6"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "whistleblower-1.4"
-      },
-      "phases": [
-        "phase-3"
-      ]
-    },
-    {
-      "id": "mit-p3-4345",
-      "type": "mitigation",
-      "from": {
-        "entity": "risk",
-        "id": "multi-agent-risks-7.6"
-      },
-      "to": {
-        "entity": "mitigation",
-        "id": "governance-disclosure-4.4"
-      },
-      "phases": [
-        "phase-3"
-      ]
     },
     {
       "id": "reg-p2-4346",
@@ -13785,6 +6533,1319 @@
         "phase-2",
         "phase-3"
       ]
+    },
+    {
+      "id": "control-cat-1",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "unfair-discrimination-1.1"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "testing-auditing-3.1"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-2",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "unfair-discrimination-1.1"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "data-governance-3.2"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-3",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "unfair-discrimination-1.1"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "societal-impact-1.7"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-4",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "unfair-discrimination-1.1"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "documentation-4.1"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-5",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "unfair-discrimination-1.1"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "post-deployment-3.5"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-6",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "toxic-content-1.2"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "content-safety-2.4"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-7",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "toxic-content-1.2"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "model-alignment-2.2"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-8",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "toxic-content-1.2"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "testing-auditing-3.1"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-9",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "toxic-content-1.2"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "data-governance-3.2"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-10",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "toxic-content-1.2"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "incident-response-3.6"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-11",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "unequal-performance-1.3"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "testing-auditing-3.1"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-12",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "unequal-performance-1.3"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "data-governance-3.2"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-13",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "unequal-performance-1.3"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "post-deployment-3.5"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-14",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "unequal-performance-1.3"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "documentation-4.1"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-15",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "unequal-performance-1.3"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "risk-disclosure-4.2"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-16",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "privacy-breach-2.1"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "data-governance-3.2"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-17",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "privacy-breach-2.1"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "infrastructure-security-2.1"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-18",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "privacy-breach-2.1"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "access-management-3.3"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-19",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "privacy-breach-2.1"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "testing-auditing-3.1"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-20",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "privacy-breach-2.1"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "incident-reporting-4.3"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-21",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "security-vulnerabilities-2.2"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "infrastructure-security-2.1"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-22",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "security-vulnerabilities-2.2"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "testing-auditing-3.1"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-23",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "security-vulnerabilities-2.2"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "incident-response-3.6"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-24",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "security-vulnerabilities-2.2"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "access-management-3.3"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-25",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "security-vulnerabilities-2.2"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "post-deployment-3.5"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-26",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "false-information-3.1"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "testing-auditing-3.1"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-27",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "false-information-3.1"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "content-safety-2.4"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-28",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "false-information-3.1"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "documentation-4.1"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-29",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "false-information-3.1"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "risk-disclosure-4.2"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-30",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "false-information-3.1"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "post-deployment-3.5"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-31",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "information-pollution-3.2"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "data-governance-3.2"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-32",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "information-pollution-3.2"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "content-safety-2.4"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-33",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "information-pollution-3.2"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "testing-auditing-3.1"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-34",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "information-pollution-3.2"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "access-management-3.3"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-35",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "disinformation-surveillance-4.1"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "content-safety-2.4"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-36",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "disinformation-surveillance-4.1"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "access-management-3.3"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-37",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "disinformation-surveillance-4.1"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "data-governance-3.2"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-38",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "disinformation-surveillance-4.1"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "testing-auditing-3.1"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-39",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "disinformation-surveillance-4.1"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "incident-reporting-4.3"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-40",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "cyberattacks-mass-harm-4.2"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "infrastructure-security-2.1"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-41",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "cyberattacks-mass-harm-4.2"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "content-safety-2.4"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-42",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "cyberattacks-mass-harm-4.2"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "access-management-3.3"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-43",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "cyberattacks-mass-harm-4.2"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "data-governance-3.2"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-44",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "cyberattacks-mass-harm-4.2"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "incident-response-3.6"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-45",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "fraud-manipulation-4.3"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "content-safety-2.4"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-46",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "fraud-manipulation-4.3"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "testing-auditing-3.1"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-47",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "fraud-manipulation-4.3"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "access-management-3.3"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-48",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "fraud-manipulation-4.3"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "documentation-4.1"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-49",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "overreliance-5.1"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "documentation-4.1"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-50",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "overreliance-5.1"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "risk-disclosure-4.2"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-51",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "overreliance-5.1"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "user-rights-4.6"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-52",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "overreliance-5.1"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "safety-frameworks-1.5"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-53",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "overreliance-5.1"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "post-deployment-3.5"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-54",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "loss-of-agency-5.2"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "user-rights-4.6"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-55",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "loss-of-agency-5.2"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "documentation-4.1"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-56",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "loss-of-agency-5.2"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "risk-disclosure-4.2"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-57",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "loss-of-agency-5.2"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "societal-impact-1.7"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-58",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "power-centralization-6.1"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "societal-impact-1.7"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-59",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "power-centralization-6.1"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "governance-disclosure-4.4"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-60",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "power-centralization-6.1"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "third-party-access-4.5"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-61",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "power-centralization-6.1"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "board-oversight-1.1"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-62",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "inequality-employment-6.2"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "societal-impact-1.7"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-63",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "inequality-employment-6.2"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "documentation-4.1"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-64",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "inequality-employment-6.2"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "risk-disclosure-4.2"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-65",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "devaluation-human-effort-6.3"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "societal-impact-1.7"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-66",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "devaluation-human-effort-6.3"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "documentation-4.1"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-67",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "devaluation-human-effort-6.3"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "post-deployment-3.5"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-68",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "competitive-dynamics-6.4"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "safety-frameworks-1.5"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-69",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "competitive-dynamics-6.4"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "board-oversight-1.1"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-70",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "competitive-dynamics-6.4"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "risk-management-1.2"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-71",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "governance-failure-6.5"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "board-oversight-1.1"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-72",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "governance-failure-6.5"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "governance-disclosure-4.4"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-73",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "governance-failure-6.5"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "third-party-access-4.5"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-74",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "governance-failure-6.5"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "incident-reporting-4.3"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-75",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "environmental-harm-6.6"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "environmental-1.6"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-76",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "environmental-harm-6.6"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "documentation-4.1"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-77",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "environmental-harm-6.6"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "testing-auditing-3.1"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-78",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "misaligned-goals-7.1"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "model-alignment-2.2"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-79",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "misaligned-goals-7.1"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "testing-auditing-3.1"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-80",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "misaligned-goals-7.1"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "safety-engineering-2.3"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-81",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "misaligned-goals-7.1"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "post-deployment-3.5"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-82",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "dangerous-capabilities-7.2"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "safety-engineering-2.3"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-83",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "dangerous-capabilities-7.2"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "access-management-3.3"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-84",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "dangerous-capabilities-7.2"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "content-safety-2.4"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-85",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "dangerous-capabilities-7.2"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "testing-auditing-3.1"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-86",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "dangerous-capabilities-7.2"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "data-governance-3.2"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-87",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "lack-robustness-7.3"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "testing-auditing-3.1"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-88",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "lack-robustness-7.3"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "safety-engineering-2.3"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-89",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "lack-robustness-7.3"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "data-governance-3.2"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-90",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "lack-robustness-7.3"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "incident-response-3.6"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-91",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "lack-robustness-7.3"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "post-deployment-3.5"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-92",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "lack-transparency-7.4"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "documentation-4.1"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-93",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "lack-transparency-7.4"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "risk-disclosure-4.2"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-94",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "lack-transparency-7.4"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "governance-disclosure-4.4"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-95",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "lack-transparency-7.4"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "user-rights-4.6"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-96",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "ai-welfare-7.5"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "documentation-4.1"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-97",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "ai-welfare-7.5"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "board-oversight-1.1"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-98",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "multi-agent-risks-7.6"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "testing-auditing-3.1"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-99",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "multi-agent-risks-7.6"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "safety-engineering-2.3"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-100",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "multi-agent-risks-7.6"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "post-deployment-3.5"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-101",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "multi-agent-risks-7.6"
+      },
+      "to": {
+        "entity": "controlSubcategory",
+        "id": "incident-response-3.6"
+      },
+      "reasoning": "AIHSR-based mapping"
     }
   ]
 }

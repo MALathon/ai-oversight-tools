@@ -339,11 +339,14 @@
       "subcategoryId": "societal-impact-1.7",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
-        "all"
+        "predictive",
+        "classification",
+        "recommendation",
+        "computer-vision",
+        "supervised-ml"
       ]
     },
     {
@@ -354,8 +357,7 @@
       "subcategoryId": "safety-frameworks-1.5",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -369,11 +371,14 @@
       "subcategoryId": "societal-impact-1.7",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
-        "all"
+        "predictive",
+        "classification",
+        "recommendation",
+        "computer-vision",
+        "supervised-ml"
       ]
     },
     {
@@ -383,8 +388,6 @@
       "source": "Bengio2025",
       "subcategoryId": "incident-reporting-4.3",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -474,8 +477,7 @@
       "subcategoryId": "safety-frameworks-1.5",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -504,8 +506,7 @@
       "subcategoryId": "safety-engineering-2.3",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -518,7 +519,6 @@
       "source": "Bengio2025",
       "subcategoryId": "governance-disclosure-4.4",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -534,8 +534,7 @@
       "subcategoryId": "safety-engineering-2.3",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -578,7 +577,6 @@
       "source": "Bengio2025",
       "subcategoryId": "whistleblower-1.4",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -608,8 +606,6 @@
       "source": "Bengio2025",
       "subcategoryId": "staged-deployment-3.4",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -639,11 +635,14 @@
       "subcategoryId": "societal-impact-1.7",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
-        "all"
+        "predictive",
+        "classification",
+        "recommendation",
+        "computer-vision",
+        "supervised-ml"
       ]
     },
     {
@@ -683,8 +682,6 @@
       "source": "Casper2025",
       "subcategoryId": "user-rights-4.6",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -698,8 +695,6 @@
       "source": "Casper2025",
       "subcategoryId": "incident-reporting-4.3",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -748,7 +743,10 @@
         "phase-3"
       ],
       "techTypes": [
-        "all"
+        "llm",
+        "generative-non-llm",
+        "multi-modal",
+        "foundation"
       ]
     },
     {
@@ -758,7 +756,6 @@
       "source": "Casper2025",
       "subcategoryId": "risk-disclosure-4.2",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -789,11 +786,14 @@
       "subcategoryId": "societal-impact-1.7",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
-        "all"
+        "predictive",
+        "classification",
+        "recommendation",
+        "computer-vision",
+        "supervised-ml"
       ]
     },
     {
@@ -803,8 +803,6 @@
       "source": "Casper2025",
       "subcategoryId": "post-deployment-3.5",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -818,7 +816,6 @@
       "source": "Casper2025",
       "subcategoryId": "infrastructure-security-2.1",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -833,8 +830,6 @@
       "source": "Casper2025",
       "subcategoryId": "incident-response-3.6",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -848,7 +843,6 @@
       "source": "Casper2025",
       "subcategoryId": "whistleblower-1.4",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -863,12 +857,13 @@
       "source": "Eisenberg2025",
       "subcategoryId": "access-management-3.3",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
       "techTypes": [
-        "all"
+        "llm",
+        "foundation",
+        "multi-modal"
       ]
     },
     {
@@ -878,7 +873,6 @@
       "source": "Eisenberg2025",
       "subcategoryId": "infrastructure-security-2.1",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -893,7 +887,6 @@
       "source": "Eisenberg2025",
       "subcategoryId": "infrastructure-security-2.1",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -908,7 +901,6 @@
       "source": "Eisenberg2025",
       "subcategoryId": "infrastructure-security-2.1",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -923,7 +915,6 @@
       "source": "Eisenberg2025",
       "subcategoryId": "infrastructure-security-2.1",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -953,8 +944,6 @@
       "source": "Eisenberg2025",
       "subcategoryId": "post-deployment-3.5",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -968,8 +957,6 @@
       "source": "Eisenberg2025",
       "subcategoryId": "user-rights-4.6",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -998,8 +985,6 @@
       "source": "Eisenberg2025",
       "subcategoryId": "post-deployment-3.5",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -1028,8 +1013,6 @@
       "source": "Eisenberg2025",
       "subcategoryId": "post-deployment-3.5",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -1043,8 +1026,6 @@
       "source": "Eisenberg2025",
       "subcategoryId": "user-rights-4.6",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -1059,8 +1040,7 @@
       "subcategoryId": "safety-frameworks-1.5",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -1078,7 +1058,10 @@
         "phase-3"
       ],
       "techTypes": [
-        "all"
+        "llm",
+        "generative-non-llm",
+        "multi-modal",
+        "foundation"
       ]
     },
     {
@@ -1093,7 +1076,10 @@
         "phase-3"
       ],
       "techTypes": [
-        "all"
+        "llm",
+        "generative-non-llm",
+        "multi-modal",
+        "foundation"
       ]
     },
     {
@@ -1103,8 +1089,6 @@
       "source": "Eisenberg2025",
       "subcategoryId": "post-deployment-3.5",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -1119,8 +1103,7 @@
       "subcategoryId": "safety-frameworks-1.5",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -1148,8 +1131,6 @@
       "source": "Eisenberg2025",
       "subcategoryId": "post-deployment-3.5",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -1163,12 +1144,13 @@
       "source": "Eisenberg2025",
       "subcategoryId": "access-management-3.3",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
       "techTypes": [
-        "all"
+        "llm",
+        "foundation",
+        "multi-modal"
       ]
     },
     {
@@ -1178,8 +1160,6 @@
       "source": "Eisenberg2025",
       "subcategoryId": "user-rights-4.6",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -1223,8 +1203,6 @@
       "source": "Eisenberg2025",
       "subcategoryId": "user-rights-4.6",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -1239,8 +1217,7 @@
       "subcategoryId": "safety-frameworks-1.5",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -1254,11 +1231,14 @@
       "subcategoryId": "societal-impact-1.7",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
-        "all"
+        "predictive",
+        "classification",
+        "recommendation",
+        "computer-vision",
+        "supervised-ml"
       ]
     },
     {
@@ -1268,12 +1248,12 @@
       "source": "Eisenberg2025",
       "subcategoryId": "environmental-1.6",
       "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-1"
       ],
       "techTypes": [
-        "all"
+        "llm",
+        "foundation",
+        "multi-modal"
       ]
     },
     {
@@ -1283,7 +1263,6 @@
       "source": "Eisenberg2025",
       "subcategoryId": "third-party-access-4.5",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -1314,11 +1293,14 @@
       "subcategoryId": "societal-impact-1.7",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
-        "all"
+        "predictive",
+        "classification",
+        "recommendation",
+        "computer-vision",
+        "supervised-ml"
       ]
     },
     {
@@ -1329,8 +1311,7 @@
       "subcategoryId": "safety-frameworks-1.5",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -1344,11 +1325,12 @@
       "subcategoryId": "model-alignment-2.2",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
-        "all"
+        "llm",
+        "reinforcement-learning",
+        "foundation"
       ]
     },
     {
@@ -1403,7 +1385,6 @@
       "source": "Eisenberg2025",
       "subcategoryId": "risk-disclosure-4.2",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -1418,8 +1399,6 @@
       "source": "Eisenberg2025",
       "subcategoryId": "incident-reporting-4.3",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -1448,8 +1427,6 @@
       "source": "Future of Life Institute2024",
       "subcategoryId": "incident-reporting-4.3",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -1483,7 +1460,10 @@
         "phase-3"
       ],
       "techTypes": [
-        "all"
+        "llm",
+        "generative-non-llm",
+        "multi-modal",
+        "foundation"
       ]
     },
     {
@@ -1493,7 +1473,6 @@
       "source": "Future of Life Institute2024",
       "subcategoryId": "whistleblower-1.4",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -1583,12 +1562,12 @@
       "source": "Future of Life Institute2024",
       "subcategoryId": "environmental-1.6",
       "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-1"
       ],
       "techTypes": [
-        "all"
+        "llm",
+        "foundation",
+        "multi-modal"
       ]
     },
     {
@@ -1598,12 +1577,12 @@
       "source": "Future of Life Institute2024",
       "subcategoryId": "environmental-1.6",
       "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-1"
       ],
       "techTypes": [
-        "all"
+        "llm",
+        "foundation",
+        "multi-modal"
       ]
     },
     {
@@ -1628,7 +1607,6 @@
       "source": "Future of Life Institute2024",
       "subcategoryId": "governance-disclosure-4.4",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -1643,7 +1621,6 @@
       "source": "Future of Life Institute2024",
       "subcategoryId": "governance-disclosure-4.4",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -1673,7 +1650,6 @@
       "source": "Future of Life Institute2024",
       "subcategoryId": "infrastructure-security-2.1",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -1688,7 +1664,6 @@
       "source": "Future of Life Institute2024",
       "subcategoryId": "governance-disclosure-4.4",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -1733,7 +1708,6 @@
       "source": "Future of Life Institute2024",
       "subcategoryId": "whistleblower-1.4",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -1748,7 +1722,6 @@
       "source": "Future of Life Institute2024",
       "subcategoryId": "governance-disclosure-4.4",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -1763,8 +1736,6 @@
       "source": "Future of Life Institute2024",
       "subcategoryId": "incident-reporting-4.3",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -1798,7 +1769,10 @@
         "phase-3"
       ],
       "techTypes": [
-        "all"
+        "llm",
+        "generative-non-llm",
+        "multi-modal",
+        "foundation"
       ]
     },
     {
@@ -1823,8 +1797,6 @@
       "source": "Future of Life Institute2024",
       "subcategoryId": "incident-response-3.6",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -1839,11 +1811,14 @@
       "subcategoryId": "societal-impact-1.7",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
-        "all"
+        "predictive",
+        "classification",
+        "recommendation",
+        "computer-vision",
+        "supervised-ml"
       ]
     },
     {
@@ -1869,8 +1844,7 @@
       "subcategoryId": "safety-frameworks-1.5",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -1883,12 +1857,13 @@
       "source": "Future of Life Institute2024",
       "subcategoryId": "access-management-3.3",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
       "techTypes": [
-        "all"
+        "llm",
+        "foundation",
+        "multi-modal"
       ]
     },
     {
@@ -1899,11 +1874,14 @@
       "subcategoryId": "societal-impact-1.7",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
-        "all"
+        "predictive",
+        "classification",
+        "recommendation",
+        "computer-vision",
+        "supervised-ml"
       ]
     },
     {
@@ -1913,7 +1891,6 @@
       "source": "Future of Life Institute2024",
       "subcategoryId": "third-party-access-4.5",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -1944,8 +1921,7 @@
       "subcategoryId": "safety-engineering-2.3",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -2003,7 +1979,6 @@
       "source": "Future of Life Institute2024",
       "subcategoryId": "governance-disclosure-4.4",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -2033,12 +2008,13 @@
       "source": "Future of Life Institute2024",
       "subcategoryId": "access-management-3.3",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
       "techTypes": [
-        "all"
+        "llm",
+        "foundation",
+        "multi-modal"
       ]
     },
     {
@@ -2048,7 +2024,6 @@
       "source": "Future of Life Institute2024",
       "subcategoryId": "governance-disclosure-4.4",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -2063,7 +2038,6 @@
       "source": "Future of Life Institute2024",
       "subcategoryId": "infrastructure-security-2.1",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -2078,12 +2052,13 @@
       "source": "Future of Life Institute2024",
       "subcategoryId": "access-management-3.3",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
       "techTypes": [
-        "all"
+        "llm",
+        "foundation",
+        "multi-modal"
       ]
     },
     {
@@ -2093,8 +2068,6 @@
       "source": "Future of Life Institute2024",
       "subcategoryId": "post-deployment-3.5",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -2123,7 +2096,6 @@
       "source": "Future of Life Institute2024",
       "subcategoryId": "risk-disclosure-4.2",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -2138,12 +2110,12 @@
       "source": "Future of Life Institute2024",
       "subcategoryId": "environmental-1.6",
       "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-1"
       ],
       "techTypes": [
-        "all"
+        "llm",
+        "foundation",
+        "multi-modal"
       ]
     },
     {
@@ -2183,7 +2155,6 @@
       "source": "Future of Life Institute2024",
       "subcategoryId": "infrastructure-security-2.1",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -2198,7 +2169,6 @@
       "source": "Future of Life Institute2024",
       "subcategoryId": "third-party-access-4.5",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -2243,7 +2213,6 @@
       "source": "Future of Life Institute2024",
       "subcategoryId": "risk-disclosure-4.2",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -2288,7 +2257,6 @@
       "source": "Future of Life Institute2024",
       "subcategoryId": "risk-disclosure-4.2",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -2333,7 +2301,6 @@
       "source": "Future of Life Institute2024",
       "subcategoryId": "governance-disclosure-4.4",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -2349,8 +2316,7 @@
       "subcategoryId": "safety-frameworks-1.5",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -2393,7 +2359,6 @@
       "source": "Future of Life Institute2024",
       "subcategoryId": "infrastructure-security-2.1",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -2408,7 +2373,6 @@
       "source": "Future of Life Institute2024",
       "subcategoryId": "risk-disclosure-4.2",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -2424,8 +2388,7 @@
       "subcategoryId": "safety-frameworks-1.5",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -2438,8 +2401,6 @@
       "source": "Future of Life Institute2024",
       "subcategoryId": "incident-reporting-4.3",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -2453,8 +2414,6 @@
       "source": "Future of Life Institute2024",
       "subcategoryId": "incident-reporting-4.3",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -2483,7 +2442,6 @@
       "source": "Future of Life Institute2024",
       "subcategoryId": "third-party-access-4.5",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -2498,7 +2456,6 @@
       "source": "Future of Life Institute2024",
       "subcategoryId": "third-party-access-4.5",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -2558,8 +2515,6 @@
       "source": "Future of Life Institute2024",
       "subcategoryId": "post-deployment-3.5",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -2578,7 +2533,10 @@
         "phase-3"
       ],
       "techTypes": [
-        "all"
+        "llm",
+        "generative-non-llm",
+        "multi-modal",
+        "foundation"
       ]
     },
     {
@@ -2588,7 +2546,6 @@
       "source": "Future of Life Institute2024",
       "subcategoryId": "whistleblower-1.4",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -2663,7 +2620,6 @@
       "source": "Future of Life Institute2024",
       "subcategoryId": "governance-disclosure-4.4",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -2678,7 +2634,6 @@
       "source": "Future of Life Institute2024",
       "subcategoryId": "governance-disclosure-4.4",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -2693,7 +2648,6 @@
       "source": "Future of Life Institute2024",
       "subcategoryId": "governance-disclosure-4.4",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -2709,11 +2663,12 @@
       "subcategoryId": "model-alignment-2.2",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
-        "all"
+        "llm",
+        "reinforcement-learning",
+        "foundation"
       ]
     },
     {
@@ -2723,12 +2678,13 @@
       "source": "Schuett2023",
       "subcategoryId": "access-management-3.3",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
       "techTypes": [
-        "all"
+        "llm",
+        "foundation",
+        "multi-modal"
       ]
     },
     {
@@ -2739,8 +2695,7 @@
       "subcategoryId": "safety-frameworks-1.5",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -2828,8 +2783,6 @@
       "source": "Schuett2023",
       "subcategoryId": "incident-response-3.6",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -2859,8 +2812,7 @@
       "subcategoryId": "safety-frameworks-1.5",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -2873,7 +2825,6 @@
       "source": "Schuett2023",
       "subcategoryId": "governance-disclosure-4.4",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -2888,8 +2839,6 @@
       "source": "Schuett2023",
       "subcategoryId": "incident-reporting-4.3",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -2933,12 +2882,13 @@
       "source": "Schuett2023",
       "subcategoryId": "access-management-3.3",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
       "techTypes": [
-        "all"
+        "llm",
+        "foundation",
+        "multi-modal"
       ]
     },
     {
@@ -2948,7 +2898,6 @@
       "source": "Schuett2023",
       "subcategoryId": "infrastructure-security-2.1",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -2963,8 +2912,6 @@
       "source": "Schuett2023",
       "subcategoryId": "incident-response-3.6",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -2978,8 +2925,6 @@
       "source": "Schuett2023",
       "subcategoryId": "post-deployment-3.5",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -2993,8 +2938,6 @@
       "source": "Schuett2023",
       "subcategoryId": "post-deployment-3.5",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -3009,8 +2952,7 @@
       "subcategoryId": "safety-frameworks-1.5",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -3023,7 +2965,6 @@
       "source": "Schuett2023",
       "subcategoryId": "risk-disclosure-4.2",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -3038,7 +2979,6 @@
       "source": "Schuett2023",
       "subcategoryId": "risk-disclosure-4.2",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -3054,8 +2994,7 @@
       "subcategoryId": "safety-frameworks-1.5",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -3068,8 +3007,6 @@
       "source": "Schuett2023",
       "subcategoryId": "post-deployment-3.5",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -3113,7 +3050,6 @@
       "source": "Schuett2023",
       "subcategoryId": "infrastructure-security-2.1",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -3128,7 +3064,6 @@
       "source": "Schuett2023",
       "subcategoryId": "governance-disclosure-4.4",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -3143,7 +3078,6 @@
       "source": "Schuett2023",
       "subcategoryId": "risk-disclosure-4.2",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -3158,7 +3092,6 @@
       "source": "Schuett2023",
       "subcategoryId": "governance-disclosure-4.4",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -3173,7 +3106,6 @@
       "source": "Schuett2023",
       "subcategoryId": "governance-disclosure-4.4",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -3203,8 +3135,6 @@
       "source": "Schuett2023",
       "subcategoryId": "incident-reporting-4.3",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -3218,7 +3148,6 @@
       "source": "Schuett2023",
       "subcategoryId": "third-party-access-4.5",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -3233,12 +3162,13 @@
       "source": "Schuett2023",
       "subcategoryId": "access-management-3.3",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
       "techTypes": [
-        "all"
+        "llm",
+        "foundation",
+        "multi-modal"
       ]
     },
     {
@@ -3249,8 +3179,7 @@
       "subcategoryId": "safety-frameworks-1.5",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -3263,8 +3192,6 @@
       "source": "Schuett2023",
       "subcategoryId": "incident-response-3.6",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -3278,7 +3205,6 @@
       "source": "Schuett2023",
       "subcategoryId": "infrastructure-security-2.1",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -3293,8 +3219,6 @@
       "source": "Schuett2023",
       "subcategoryId": "staged-deployment-3.4",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -3308,7 +3232,6 @@
       "source": "Schuett2023",
       "subcategoryId": "governance-disclosure-4.4",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -3353,7 +3276,6 @@
       "source": "Schuett2023",
       "subcategoryId": "infrastructure-security-2.1",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -3368,8 +3290,6 @@
       "source": "Schuett2023",
       "subcategoryId": "staged-deployment-3.4",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -3398,7 +3318,6 @@
       "source": "Schuett2023",
       "subcategoryId": "third-party-access-4.5",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -3413,8 +3332,6 @@
       "source": "Schuett2023",
       "subcategoryId": "staged-deployment-3.4",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -3428,7 +3345,6 @@
       "source": "Schuett2023",
       "subcategoryId": "risk-disclosure-4.2",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -3443,7 +3359,6 @@
       "source": "Schuett2023",
       "subcategoryId": "risk-disclosure-4.2",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -3473,8 +3388,6 @@
       "source": "Wiener2024",
       "subcategoryId": "incident-response-3.6",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -3488,7 +3401,6 @@
       "source": "Wiener2024",
       "subcategoryId": "infrastructure-security-2.1",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -3519,8 +3431,7 @@
       "subcategoryId": "safety-frameworks-1.5",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -3533,7 +3444,6 @@
       "source": "Wiener2024",
       "subcategoryId": "governance-disclosure-4.4",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -3563,7 +3473,6 @@
       "source": "Wiener2024",
       "subcategoryId": "risk-disclosure-4.2",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -3593,7 +3502,6 @@
       "source": "Wiener2024",
       "subcategoryId": "risk-disclosure-4.2",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -3609,8 +3517,7 @@
       "subcategoryId": "safety-frameworks-1.5",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -3623,7 +3530,6 @@
       "source": "EU AI Office2025",
       "subcategoryId": "infrastructure-security-2.1",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -3653,8 +3559,6 @@
       "source": "EU AI Office2025",
       "subcategoryId": "incident-reporting-4.3",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -3713,7 +3617,6 @@
       "source": "EU AI Office2025",
       "subcategoryId": "whistleblower-1.4",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -3728,7 +3631,6 @@
       "source": "EU AI Office2025",
       "subcategoryId": "whistleblower-1.4",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -3743,7 +3645,6 @@
       "source": "EU AI Office2025",
       "subcategoryId": "risk-disclosure-4.2",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -3759,8 +3660,7 @@
       "subcategoryId": "safety-engineering-2.3",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -3803,7 +3703,6 @@
       "source": "EU AI Office2025",
       "subcategoryId": "risk-disclosure-4.2",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -3894,8 +3793,7 @@
       "subcategoryId": "safety-frameworks-1.5",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -3908,7 +3806,6 @@
       "source": "Campos2025",
       "subcategoryId": "risk-disclosure-4.2",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -3924,8 +3821,7 @@
       "subcategoryId": "safety-frameworks-1.5",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -3939,8 +3835,7 @@
       "subcategoryId": "safety-frameworks-1.5",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -3968,8 +3863,6 @@
       "source": "Campos2025",
       "subcategoryId": "post-deployment-3.5",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -3983,7 +3876,6 @@
       "source": "Campos2025",
       "subcategoryId": "third-party-access-4.5",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -4014,8 +3906,7 @@
       "subcategoryId": "safety-frameworks-1.5",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -4073,7 +3964,6 @@
       "source": "Campos2025",
       "subcategoryId": "whistleblower-1.4",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -4118,7 +4008,6 @@
       "source": "Campos2025",
       "subcategoryId": "governance-disclosure-4.4",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -4194,8 +4083,7 @@
       "subcategoryId": "safety-frameworks-1.5",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -4224,11 +4112,14 @@
       "subcategoryId": "societal-impact-1.7",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
-        "all"
+        "predictive",
+        "classification",
+        "recommendation",
+        "computer-vision",
+        "supervised-ml"
       ]
     },
     {
@@ -4269,8 +4160,7 @@
       "subcategoryId": "safety-frameworks-1.5",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -4288,7 +4178,10 @@
         "phase-3"
       ],
       "techTypes": [
-        "all"
+        "llm",
+        "generative-non-llm",
+        "multi-modal",
+        "foundation"
       ]
     },
     {
@@ -4298,12 +4191,13 @@
       "source": "NIST2024",
       "subcategoryId": "access-management-3.3",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
       "techTypes": [
-        "all"
+        "llm",
+        "foundation",
+        "multi-modal"
       ]
     },
     {
@@ -4313,8 +4207,6 @@
       "source": "NIST2024",
       "subcategoryId": "post-deployment-3.5",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -4328,8 +4220,6 @@
       "source": "NIST2024",
       "subcategoryId": "incident-response-3.6",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -4403,8 +4293,6 @@
       "source": "NIST2024",
       "subcategoryId": "incident-response-3.6",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -4433,8 +4321,6 @@
       "source": "NIST2024",
       "subcategoryId": "incident-reporting-4.3",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -4448,8 +4334,6 @@
       "source": "NIST2024",
       "subcategoryId": "incident-response-3.6",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -4463,8 +4347,6 @@
       "source": "NIST2024",
       "subcategoryId": "incident-response-3.6",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -4478,7 +4360,6 @@
       "source": "NIST2024",
       "subcategoryId": "risk-disclosure-4.2",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -4493,7 +4374,6 @@
       "source": "NIST2024",
       "subcategoryId": "whistleblower-1.4",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -4538,12 +4418,13 @@
       "source": "NIST2024",
       "subcategoryId": "access-management-3.3",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
       "techTypes": [
-        "all"
+        "llm",
+        "foundation",
+        "multi-modal"
       ]
     },
     {
@@ -4553,8 +4434,6 @@
       "source": "NIST2024",
       "subcategoryId": "user-rights-4.6",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -4569,8 +4448,7 @@
       "subcategoryId": "safety-engineering-2.3",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -4628,12 +4506,13 @@
       "source": "NIST2024",
       "subcategoryId": "access-management-3.3",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
       "techTypes": [
-        "all"
+        "llm",
+        "foundation",
+        "multi-modal"
       ]
     },
     {
@@ -4644,11 +4523,14 @@
       "subcategoryId": "societal-impact-1.7",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
-        "all"
+        "predictive",
+        "classification",
+        "recommendation",
+        "computer-vision",
+        "supervised-ml"
       ]
     },
     {
@@ -4678,7 +4560,10 @@
         "phase-3"
       ],
       "techTypes": [
-        "all"
+        "llm",
+        "generative-non-llm",
+        "multi-modal",
+        "foundation"
       ]
     },
     {
@@ -4688,8 +4573,6 @@
       "source": "NIST2024",
       "subcategoryId": "incident-reporting-4.3",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -4703,8 +4586,6 @@
       "source": "NIST2024",
       "subcategoryId": "user-rights-4.6",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -4734,11 +4615,14 @@
       "subcategoryId": "societal-impact-1.7",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
-        "all"
+        "predictive",
+        "classification",
+        "recommendation",
+        "computer-vision",
+        "supervised-ml"
       ]
     },
     {
@@ -4748,8 +4632,6 @@
       "source": "NIST2024",
       "subcategoryId": "post-deployment-3.5",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -4808,12 +4690,13 @@
       "source": "NIST2024",
       "subcategoryId": "access-management-3.3",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
       "techTypes": [
-        "all"
+        "llm",
+        "foundation",
+        "multi-modal"
       ]
     },
     {
@@ -4853,12 +4736,13 @@
       "source": "NIST2024",
       "subcategoryId": "access-management-3.3",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
       "techTypes": [
-        "all"
+        "llm",
+        "foundation",
+        "multi-modal"
       ]
     },
     {
@@ -4883,8 +4767,6 @@
       "source": "NIST2024",
       "subcategoryId": "incident-reporting-4.3",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -4898,8 +4780,6 @@
       "source": "NIST2024",
       "subcategoryId": "incident-response-3.6",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -4913,8 +4793,6 @@
       "source": "NIST2024",
       "subcategoryId": "post-deployment-3.5",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -4943,8 +4821,6 @@
       "source": "NIST2024",
       "subcategoryId": "incident-response-3.6",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -4974,11 +4850,14 @@
       "subcategoryId": "societal-impact-1.7",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
-        "all"
+        "predictive",
+        "classification",
+        "recommendation",
+        "computer-vision",
+        "supervised-ml"
       ]
     },
     {
@@ -4989,11 +4868,14 @@
       "subcategoryId": "societal-impact-1.7",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
-        "all"
+        "predictive",
+        "classification",
+        "recommendation",
+        "computer-vision",
+        "supervised-ml"
       ]
     },
     {
@@ -5018,12 +4900,13 @@
       "source": "NIST2024",
       "subcategoryId": "access-management-3.3",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
       "techTypes": [
-        "all"
+        "llm",
+        "foundation",
+        "multi-modal"
       ]
     },
     {
@@ -5108,8 +4991,6 @@
       "source": "NIST2024",
       "subcategoryId": "post-deployment-3.5",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -5158,7 +5039,10 @@
         "phase-3"
       ],
       "techTypes": [
-        "all"
+        "llm",
+        "generative-non-llm",
+        "multi-modal",
+        "foundation"
       ]
     },
     {
@@ -5173,7 +5057,10 @@
         "phase-3"
       ],
       "techTypes": [
-        "all"
+        "llm",
+        "generative-non-llm",
+        "multi-modal",
+        "foundation"
       ]
     },
     {
@@ -5258,8 +5145,6 @@
       "source": "NIST2024",
       "subcategoryId": "post-deployment-3.5",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -5288,8 +5173,6 @@
       "source": "NIST2024",
       "subcategoryId": "post-deployment-3.5",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -5303,8 +5186,6 @@
       "source": "NIST2024",
       "subcategoryId": "incident-response-3.6",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -5393,8 +5274,6 @@
       "source": "NIST2024",
       "subcategoryId": "post-deployment-3.5",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -5413,7 +5292,10 @@
         "phase-3"
       ],
       "techTypes": [
-        "all"
+        "llm",
+        "generative-non-llm",
+        "multi-modal",
+        "foundation"
       ]
     },
     {
@@ -5458,7 +5340,10 @@
         "phase-3"
       ],
       "techTypes": [
-        "all"
+        "llm",
+        "generative-non-llm",
+        "multi-modal",
+        "foundation"
       ]
     },
     {
@@ -5468,8 +5353,6 @@
       "source": "NIST2024",
       "subcategoryId": "user-rights-4.6",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -5514,8 +5397,7 @@
       "subcategoryId": "safety-engineering-2.3",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -5528,8 +5410,6 @@
       "source": "NIST2024",
       "subcategoryId": "post-deployment-3.5",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -5543,8 +5423,6 @@
       "source": "NIST2024",
       "subcategoryId": "post-deployment-3.5",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -5563,7 +5441,10 @@
         "phase-3"
       ],
       "techTypes": [
-        "all"
+        "llm",
+        "generative-non-llm",
+        "multi-modal",
+        "foundation"
       ]
     },
     {
@@ -5578,7 +5459,10 @@
         "phase-3"
       ],
       "techTypes": [
-        "all"
+        "llm",
+        "generative-non-llm",
+        "multi-modal",
+        "foundation"
       ]
     },
     {
@@ -5633,8 +5517,6 @@
       "source": "NIST2024",
       "subcategoryId": "post-deployment-3.5",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -5694,11 +5576,14 @@
       "subcategoryId": "societal-impact-1.7",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
-        "all"
+        "predictive",
+        "classification",
+        "recommendation",
+        "computer-vision",
+        "supervised-ml"
       ]
     },
     {
@@ -5739,8 +5624,7 @@
       "subcategoryId": "safety-engineering-2.3",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -5768,8 +5652,6 @@
       "source": "NIST2024",
       "subcategoryId": "user-rights-4.6",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -5784,8 +5666,7 @@
       "subcategoryId": "safety-engineering-2.3",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -5828,7 +5709,6 @@
       "source": "NIST2024",
       "subcategoryId": "risk-disclosure-4.2",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -5888,8 +5768,6 @@
       "source": "NIST2024",
       "subcategoryId": "post-deployment-3.5",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -5903,8 +5781,6 @@
       "source": "NIST2024",
       "subcategoryId": "post-deployment-3.5",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -5933,8 +5809,6 @@
       "source": "NIST2024",
       "subcategoryId": "post-deployment-3.5",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -5949,11 +5823,14 @@
       "subcategoryId": "societal-impact-1.7",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
-        "all"
+        "predictive",
+        "classification",
+        "recommendation",
+        "computer-vision",
+        "supervised-ml"
       ]
     },
     {
@@ -6008,7 +5885,6 @@
       "source": "NIST2024",
       "subcategoryId": "infrastructure-security-2.1",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -6024,8 +5900,7 @@
       "subcategoryId": "safety-engineering-2.3",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -6053,7 +5928,6 @@
       "source": "NIST2024",
       "subcategoryId": "infrastructure-security-2.1",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -6084,8 +5958,7 @@
       "subcategoryId": "safety-engineering-2.3",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -6098,7 +5971,6 @@
       "source": "NIST2024",
       "subcategoryId": "infrastructure-security-2.1",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -6118,7 +5990,10 @@
         "phase-3"
       ],
       "techTypes": [
-        "all"
+        "llm",
+        "generative-non-llm",
+        "multi-modal",
+        "foundation"
       ]
     },
     {
@@ -6128,8 +6003,6 @@
       "source": "NIST2024",
       "subcategoryId": "incident-response-3.6",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -6173,8 +6046,6 @@
       "source": "NIST2024",
       "subcategoryId": "post-deployment-3.5",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -6188,8 +6059,6 @@
       "source": "NIST2024",
       "subcategoryId": "post-deployment-3.5",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -6203,7 +6072,6 @@
       "source": "NIST2024",
       "subcategoryId": "risk-disclosure-4.2",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -6223,7 +6091,10 @@
         "phase-3"
       ],
       "techTypes": [
-        "all"
+        "llm",
+        "generative-non-llm",
+        "multi-modal",
+        "foundation"
       ]
     },
     {
@@ -6233,8 +6104,6 @@
       "source": "NIST2024",
       "subcategoryId": "incident-response-3.6",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -6249,8 +6118,7 @@
       "subcategoryId": "safety-engineering-2.3",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -6294,11 +6162,14 @@
       "subcategoryId": "societal-impact-1.7",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
-        "all"
+        "predictive",
+        "classification",
+        "recommendation",
+        "computer-vision",
+        "supervised-ml"
       ]
     },
     {
@@ -6369,11 +6240,14 @@
       "subcategoryId": "societal-impact-1.7",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
-        "all"
+        "predictive",
+        "classification",
+        "recommendation",
+        "computer-vision",
+        "supervised-ml"
       ]
     },
     {
@@ -6413,8 +6287,6 @@
       "source": "Barrett2024",
       "subcategoryId": "post-deployment-3.5",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -6443,7 +6315,6 @@
       "source": "Barrett2024",
       "subcategoryId": "risk-disclosure-4.2",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -6488,7 +6359,6 @@
       "source": "Barrett2024",
       "subcategoryId": "governance-disclosure-4.4",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -6533,8 +6403,6 @@
       "source": "Barrett2024",
       "subcategoryId": "incident-response-3.6",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -6623,7 +6491,6 @@
       "source": "Barrett2024",
       "subcategoryId": "risk-disclosure-4.2",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -6654,11 +6521,14 @@
       "subcategoryId": "societal-impact-1.7",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
-        "all"
+        "predictive",
+        "classification",
+        "recommendation",
+        "computer-vision",
+        "supervised-ml"
       ]
     },
     {
@@ -6684,8 +6554,7 @@
       "subcategoryId": "safety-frameworks-1.5",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -6698,8 +6567,6 @@
       "source": "Barrett2024",
       "subcategoryId": "incident-response-3.6",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -7058,8 +6925,6 @@
       "source": "Barrett2024",
       "subcategoryId": "post-deployment-3.5",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -7103,7 +6968,6 @@
       "source": "Barrett2024",
       "subcategoryId": "infrastructure-security-2.1",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -7163,12 +7027,12 @@
       "source": "Barrett2024",
       "subcategoryId": "environmental-1.6",
       "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-1"
       ],
       "techTypes": [
-        "all"
+        "llm",
+        "foundation",
+        "multi-modal"
       ]
     },
     {
@@ -7223,8 +7087,6 @@
       "source": "Barrett2024",
       "subcategoryId": "user-rights-4.6",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -7268,8 +7130,6 @@
       "source": "Barrett2024",
       "subcategoryId": "post-deployment-3.5",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -7284,8 +7144,7 @@
       "subcategoryId": "safety-frameworks-1.5",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -7358,8 +7217,6 @@
       "source": "Barrett2024",
       "subcategoryId": "incident-response-3.6",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -7373,8 +7230,6 @@
       "source": "Barrett2024",
       "subcategoryId": "incident-response-3.6",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -7403,8 +7258,6 @@
       "source": "Barrett2024",
       "subcategoryId": "post-deployment-3.5",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -7418,8 +7271,6 @@
       "source": "Barrett2024",
       "subcategoryId": "post-deployment-3.5",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -7433,8 +7284,6 @@
       "source": "Barrett2024",
       "subcategoryId": "post-deployment-3.5",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -7448,8 +7297,6 @@
       "source": "Barrett2024",
       "subcategoryId": "incident-reporting-4.3",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -7479,11 +7326,14 @@
       "subcategoryId": "societal-impact-1.7",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
-        "all"
+        "predictive",
+        "classification",
+        "recommendation",
+        "computer-vision",
+        "supervised-ml"
       ]
     },
     {
@@ -7524,11 +7374,14 @@
       "subcategoryId": "societal-impact-1.7",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
-        "all"
+        "predictive",
+        "classification",
+        "recommendation",
+        "computer-vision",
+        "supervised-ml"
       ]
     },
     {
@@ -7538,12 +7391,12 @@
       "source": "NIST2024",
       "subcategoryId": "environmental-1.6",
       "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-1"
       ],
       "techTypes": [
-        "all"
+        "llm",
+        "foundation",
+        "multi-modal"
       ]
     },
     {
@@ -7553,12 +7406,12 @@
       "source": "NIST2024",
       "subcategoryId": "environmental-1.6",
       "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-1"
       ],
       "techTypes": [
-        "all"
+        "llm",
+        "foundation",
+        "multi-modal"
       ]
     },
     {
@@ -7568,12 +7421,12 @@
       "source": "NIST2024",
       "subcategoryId": "environmental-1.6",
       "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-1"
       ],
       "techTypes": [
-        "all"
+        "llm",
+        "foundation",
+        "multi-modal"
       ]
     },
     {
@@ -7599,11 +7452,14 @@
       "subcategoryId": "societal-impact-1.7",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
-        "all"
+        "predictive",
+        "classification",
+        "recommendation",
+        "computer-vision",
+        "supervised-ml"
       ]
     },
     {
@@ -7614,11 +7470,14 @@
       "subcategoryId": "societal-impact-1.7",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
-        "all"
+        "predictive",
+        "classification",
+        "recommendation",
+        "computer-vision",
+        "supervised-ml"
       ]
     },
     {
@@ -7658,8 +7517,6 @@
       "source": "NIST2024",
       "subcategoryId": "user-rights-4.6",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -7718,8 +7575,6 @@
       "source": "NIST2024",
       "subcategoryId": "post-deployment-3.5",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -7733,8 +7588,6 @@
       "source": "NIST2024",
       "subcategoryId": "user-rights-4.6",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -7808,8 +7661,6 @@
       "source": "NIST2024",
       "subcategoryId": "post-deployment-3.5",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -7824,8 +7675,7 @@
       "subcategoryId": "safety-engineering-2.3",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -7854,11 +7704,14 @@
       "subcategoryId": "societal-impact-1.7",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
-        "all"
+        "predictive",
+        "classification",
+        "recommendation",
+        "computer-vision",
+        "supervised-ml"
       ]
     },
     {
@@ -7868,8 +7721,6 @@
       "source": "NIST2024",
       "subcategoryId": "post-deployment-3.5",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -7883,8 +7734,6 @@
       "source": "NIST2024",
       "subcategoryId": "user-rights-4.6",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -7913,8 +7762,6 @@
       "source": "NIST2024",
       "subcategoryId": "incident-response-3.6",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -7928,8 +7775,6 @@
       "source": "NIST2024",
       "subcategoryId": "user-rights-4.6",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -7943,8 +7788,6 @@
       "source": "NIST2024",
       "subcategoryId": "incident-response-3.6",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -7958,8 +7801,6 @@
       "source": "NIST2024",
       "subcategoryId": "incident-response-3.6",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -7974,8 +7815,7 @@
       "subcategoryId": "safety-frameworks-1.5",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -8063,8 +7903,6 @@
       "source": "NIST2024",
       "subcategoryId": "post-deployment-3.5",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -8093,8 +7931,6 @@
       "source": "NIST2024",
       "subcategoryId": "post-deployment-3.5",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -8109,8 +7945,7 @@
       "subcategoryId": "safety-frameworks-1.5",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -8138,8 +7973,6 @@
       "source": "NIST2024",
       "subcategoryId": "post-deployment-3.5",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -8154,11 +7987,14 @@
       "subcategoryId": "societal-impact-1.7",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
-        "all"
+        "predictive",
+        "classification",
+        "recommendation",
+        "computer-vision",
+        "supervised-ml"
       ]
     },
     {
@@ -8168,8 +8004,6 @@
       "source": "NIST2024",
       "subcategoryId": "post-deployment-3.5",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -8183,7 +8017,6 @@
       "source": "NIST2024",
       "subcategoryId": "risk-disclosure-4.2",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -8228,8 +8061,6 @@
       "source": "NIST2024",
       "subcategoryId": "post-deployment-3.5",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -8243,8 +8074,6 @@
       "source": "NIST2024",
       "subcategoryId": "incident-response-3.6",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -8273,8 +8102,6 @@
       "source": "NIST2024",
       "subcategoryId": "incident-reporting-4.3",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -8288,8 +8115,6 @@
       "source": "NIST2024",
       "subcategoryId": "incident-reporting-4.3",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -8439,8 +8264,7 @@
       "subcategoryId": "safety-frameworks-1.5",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -8528,8 +8352,6 @@
       "source": "UK Government2023",
       "subcategoryId": "staged-deployment-3.4",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -8544,8 +8366,7 @@
       "subcategoryId": "safety-frameworks-1.5",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -8573,7 +8394,6 @@
       "source": "UK Government2023",
       "subcategoryId": "risk-disclosure-4.2",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -8618,7 +8438,6 @@
       "source": "UK Government2023",
       "subcategoryId": "governance-disclosure-4.4",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -8694,8 +8513,7 @@
       "subcategoryId": "safety-frameworks-1.5",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -8798,7 +8616,6 @@
       "source": "UK Government2023",
       "subcategoryId": "third-party-access-4.5",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -8828,7 +8645,6 @@
       "source": "UK Government2023",
       "subcategoryId": "third-party-access-4.5",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -8843,7 +8659,6 @@
       "source": "UK Government2023",
       "subcategoryId": "third-party-access-4.5",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -8858,7 +8673,6 @@
       "source": "UK Government2023",
       "subcategoryId": "third-party-access-4.5",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -8873,7 +8687,6 @@
       "source": "UK Government2023",
       "subcategoryId": "third-party-access-4.5",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -8888,7 +8701,6 @@
       "source": "UK Government2023",
       "subcategoryId": "risk-disclosure-4.2",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -8918,7 +8730,6 @@
       "source": "UK Government2023",
       "subcategoryId": "risk-disclosure-4.2",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -8933,7 +8744,6 @@
       "source": "UK Government2023",
       "subcategoryId": "risk-disclosure-4.2",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -8948,7 +8758,6 @@
       "source": "UK Government2023",
       "subcategoryId": "governance-disclosure-4.4",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -8963,8 +8772,6 @@
       "source": "UK Government2023",
       "subcategoryId": "incident-reporting-4.3",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -8978,7 +8785,6 @@
       "source": "UK Government2023",
       "subcategoryId": "risk-disclosure-4.2",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -8993,7 +8799,6 @@
       "source": "UK Government2023",
       "subcategoryId": "risk-disclosure-4.2",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -9008,7 +8813,6 @@
       "source": "UK Government2023",
       "subcategoryId": "risk-disclosure-4.2",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -9023,7 +8827,6 @@
       "source": "UK Government2023",
       "subcategoryId": "risk-disclosure-4.2",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -9038,7 +8841,6 @@
       "source": "UK Government2023",
       "subcategoryId": "risk-disclosure-4.2",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -9053,7 +8855,6 @@
       "source": "UK Government2023",
       "subcategoryId": "risk-disclosure-4.2",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -9068,7 +8869,6 @@
       "source": "UK Government2023",
       "subcategoryId": "risk-disclosure-4.2",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -9083,7 +8883,6 @@
       "source": "UK Government2023",
       "subcategoryId": "third-party-access-4.5",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -9113,7 +8912,6 @@
       "source": "UK Government2023",
       "subcategoryId": "risk-disclosure-4.2",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -9128,7 +8926,6 @@
       "source": "UK Government2023",
       "subcategoryId": "infrastructure-security-2.1",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -9143,7 +8940,6 @@
       "source": "UK Government2023",
       "subcategoryId": "infrastructure-security-2.1",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -9218,7 +9014,6 @@
       "source": "UK Government2023",
       "subcategoryId": "infrastructure-security-2.1",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -9293,8 +9088,6 @@
       "source": "UK Government2023",
       "subcategoryId": "incident-response-3.6",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -9308,8 +9101,6 @@
       "source": "UK Government2023",
       "subcategoryId": "post-deployment-3.5",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -9323,8 +9114,6 @@
       "source": "UK Government2023",
       "subcategoryId": "post-deployment-3.5",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -9338,8 +9127,6 @@
       "source": "UK Government2023",
       "subcategoryId": "incident-response-3.6",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -9353,8 +9140,6 @@
       "source": "UK Government2023",
       "subcategoryId": "user-rights-4.6",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -9368,7 +9153,6 @@
       "source": "UK Government2023",
       "subcategoryId": "infrastructure-security-2.1",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -9383,7 +9167,6 @@
       "source": "UK Government2023",
       "subcategoryId": "infrastructure-security-2.1",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -9413,8 +9196,6 @@
       "source": "UK Government2023",
       "subcategoryId": "incident-reporting-4.3",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -9563,7 +9344,6 @@
       "source": "UK Government2023",
       "subcategoryId": "infrastructure-security-2.1",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -9653,8 +9433,6 @@
       "source": "UK Government2023",
       "subcategoryId": "incident-reporting-4.3",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -9668,8 +9446,6 @@
       "source": "UK Government2023",
       "subcategoryId": "incident-reporting-4.3",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -9683,8 +9459,6 @@
       "source": "UK Government2023",
       "subcategoryId": "incident-reporting-4.3",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -9698,8 +9472,6 @@
       "source": "UK Government2023",
       "subcategoryId": "incident-reporting-4.3",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -9713,8 +9485,6 @@
       "source": "UK Government2023",
       "subcategoryId": "incident-reporting-4.3",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -9728,8 +9498,6 @@
       "source": "UK Government2023",
       "subcategoryId": "incident-reporting-4.3",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -9743,8 +9511,6 @@
       "source": "UK Government2023",
       "subcategoryId": "incident-reporting-4.3",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -9758,8 +9524,6 @@
       "source": "UK Government2023",
       "subcategoryId": "incident-reporting-4.3",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -9773,8 +9537,6 @@
       "source": "UK Government2023",
       "subcategoryId": "incident-reporting-4.3",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -9788,7 +9550,6 @@
       "source": "UK Government2023",
       "subcategoryId": "risk-disclosure-4.2",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -9803,7 +9564,6 @@
       "source": "UK Government2023",
       "subcategoryId": "risk-disclosure-4.2",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -9818,7 +9578,6 @@
       "source": "UK Government2023",
       "subcategoryId": "risk-disclosure-4.2",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -9833,7 +9592,6 @@
       "source": "UK Government2023",
       "subcategoryId": "risk-disclosure-4.2",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -9853,7 +9611,10 @@
         "phase-3"
       ],
       "techTypes": [
-        "all"
+        "llm",
+        "generative-non-llm",
+        "multi-modal",
+        "foundation"
       ]
     },
     {
@@ -9868,7 +9629,10 @@
         "phase-3"
       ],
       "techTypes": [
-        "all"
+        "llm",
+        "generative-non-llm",
+        "multi-modal",
+        "foundation"
       ]
     },
     {
@@ -9883,7 +9647,10 @@
         "phase-3"
       ],
       "techTypes": [
-        "all"
+        "llm",
+        "generative-non-llm",
+        "multi-modal",
+        "foundation"
       ]
     },
     {
@@ -9894,11 +9661,12 @@
       "subcategoryId": "model-alignment-2.2",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
-        "all"
+        "llm",
+        "reinforcement-learning",
+        "foundation"
       ]
     },
     {
@@ -9924,8 +9692,7 @@
       "subcategoryId": "safety-engineering-2.3",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -9939,11 +9706,12 @@
       "subcategoryId": "model-alignment-2.2",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
-        "all"
+        "llm",
+        "reinforcement-learning",
+        "foundation"
       ]
     },
     {
@@ -9954,8 +9722,7 @@
       "subcategoryId": "safety-engineering-2.3",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -9968,7 +9735,6 @@
       "source": "UK Government2023",
       "subcategoryId": "infrastructure-security-2.1",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -9983,7 +9749,6 @@
       "source": "UK Government2023",
       "subcategoryId": "infrastructure-security-2.1",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -9998,7 +9763,6 @@
       "source": "UK Government2023",
       "subcategoryId": "infrastructure-security-2.1",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -10014,8 +9778,7 @@
       "subcategoryId": "safety-engineering-2.3",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -10029,8 +9792,7 @@
       "subcategoryId": "safety-engineering-2.3",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -10044,8 +9806,7 @@
       "subcategoryId": "safety-frameworks-1.5",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -10058,7 +9819,6 @@
       "source": "UK Government2023",
       "subcategoryId": "risk-disclosure-4.2",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -10073,8 +9833,6 @@
       "source": "UK Government2023",
       "subcategoryId": "incident-response-3.6",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -10089,11 +9847,14 @@
       "subcategoryId": "societal-impact-1.7",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
-        "all"
+        "predictive",
+        "classification",
+        "recommendation",
+        "computer-vision",
+        "supervised-ml"
       ]
     },
     {
@@ -10104,11 +9865,14 @@
       "subcategoryId": "societal-impact-1.7",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
-        "all"
+        "predictive",
+        "classification",
+        "recommendation",
+        "computer-vision",
+        "supervised-ml"
       ]
     },
     {
@@ -10119,11 +9883,14 @@
       "subcategoryId": "societal-impact-1.7",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
-        "all"
+        "predictive",
+        "classification",
+        "recommendation",
+        "computer-vision",
+        "supervised-ml"
       ]
     },
     {
@@ -10133,7 +9900,6 @@
       "source": "UK Government2023",
       "subcategoryId": "third-party-access-4.5",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -10148,7 +9914,6 @@
       "source": "UK Government2023",
       "subcategoryId": "risk-disclosure-4.2",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -10163,8 +9928,6 @@
       "source": "UK Government2023",
       "subcategoryId": "post-deployment-3.5",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -10178,7 +9941,6 @@
       "source": "UK Government2023",
       "subcategoryId": "risk-disclosure-4.2",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -10209,8 +9971,7 @@
       "subcategoryId": "safety-engineering-2.3",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -10239,8 +10000,7 @@
       "subcategoryId": "safety-engineering-2.3",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -10253,7 +10013,6 @@
       "source": "UK Government2023",
       "subcategoryId": "infrastructure-security-2.1",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -10269,11 +10028,12 @@
       "subcategoryId": "model-alignment-2.2",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
-        "all"
+        "llm",
+        "reinforcement-learning",
+        "foundation"
       ]
     },
     {
@@ -10284,8 +10044,7 @@
       "subcategoryId": "safety-engineering-2.3",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -10299,8 +10058,7 @@
       "subcategoryId": "safety-engineering-2.3",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -10313,12 +10071,13 @@
       "source": "UK Government2023",
       "subcategoryId": "access-management-3.3",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
       "techTypes": [
-        "all"
+        "llm",
+        "foundation",
+        "multi-modal"
       ]
     },
     {
@@ -10328,8 +10087,6 @@
       "source": "UK Government2023",
       "subcategoryId": "user-rights-4.6",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -10343,12 +10100,13 @@
       "source": "UK Government2023",
       "subcategoryId": "access-management-3.3",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
       "techTypes": [
-        "all"
+        "llm",
+        "foundation",
+        "multi-modal"
       ]
     },
     {
@@ -10358,12 +10116,13 @@
       "source": "UK Government2023",
       "subcategoryId": "access-management-3.3",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
       "techTypes": [
-        "all"
+        "llm",
+        "foundation",
+        "multi-modal"
       ]
     },
     {
@@ -10373,7 +10132,6 @@
       "source": "UK Government2023",
       "subcategoryId": "risk-disclosure-4.2",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -10388,8 +10146,6 @@
       "source": "UK Government2023",
       "subcategoryId": "incident-response-3.6",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -10403,8 +10159,6 @@
       "source": "UK Government2023",
       "subcategoryId": "user-rights-4.6",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -10449,8 +10203,7 @@
       "subcategoryId": "safety-engineering-2.3",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -10463,8 +10216,6 @@
       "source": "UK Government2023",
       "subcategoryId": "post-deployment-3.5",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -10479,11 +10230,14 @@
       "subcategoryId": "societal-impact-1.7",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
-        "all"
+        "predictive",
+        "classification",
+        "recommendation",
+        "computer-vision",
+        "supervised-ml"
       ]
     },
     {
@@ -10494,8 +10248,7 @@
       "subcategoryId": "safety-engineering-2.3",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -10764,11 +10517,12 @@
       "subcategoryId": "model-alignment-2.2",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
-        "all"
+        "llm",
+        "reinforcement-learning",
+        "foundation"
       ]
     },
     {
@@ -10808,7 +10562,6 @@
       "source": "UK Government2023",
       "subcategoryId": "third-party-access-4.5",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -10823,7 +10576,6 @@
       "source": "UK Government2023",
       "subcategoryId": "risk-disclosure-4.2",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -10854,8 +10606,7 @@
       "subcategoryId": "safety-engineering-2.3",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -10869,8 +10620,7 @@
       "subcategoryId": "safety-engineering-2.3",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -10899,8 +10649,7 @@
       "subcategoryId": "safety-engineering-2.3",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -10928,8 +10677,6 @@
       "source": "Gipi\u0161kis2024",
       "subcategoryId": "incident-response-3.6",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -10973,7 +10720,6 @@
       "source": "Gipi\u0161kis2024",
       "subcategoryId": "third-party-access-4.5",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -11019,8 +10765,7 @@
       "subcategoryId": "safety-engineering-2.3",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -11034,8 +10779,7 @@
       "subcategoryId": "safety-engineering-2.3",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -11063,8 +10807,6 @@
       "source": "Gipi\u0161kis2024",
       "subcategoryId": "post-deployment-3.5",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -11079,8 +10821,7 @@
       "subcategoryId": "safety-engineering-2.3",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -11094,8 +10835,7 @@
       "subcategoryId": "safety-engineering-2.3",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -11333,8 +11073,6 @@
       "source": "Gipi\u0161kis2024",
       "subcategoryId": "staged-deployment-3.4",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -11348,8 +11086,6 @@
       "source": "Gipi\u0161kis2024",
       "subcategoryId": "staged-deployment-3.4",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -11363,12 +11099,13 @@
       "source": "Gipi\u0161kis2024",
       "subcategoryId": "access-management-3.3",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
       "techTypes": [
-        "all"
+        "llm",
+        "foundation",
+        "multi-modal"
       ]
     },
     {
@@ -11378,12 +11115,13 @@
       "source": "Gipi\u0161kis2024",
       "subcategoryId": "access-management-3.3",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
       "techTypes": [
-        "all"
+        "llm",
+        "foundation",
+        "multi-modal"
       ]
     },
     {
@@ -11393,7 +11131,6 @@
       "source": "Gipi\u0161kis2024",
       "subcategoryId": "governance-disclosure-4.4",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -11409,8 +11146,7 @@
       "subcategoryId": "safety-engineering-2.3",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -11428,7 +11164,10 @@
         "phase-3"
       ],
       "techTypes": [
-        "all"
+        "llm",
+        "generative-non-llm",
+        "multi-modal",
+        "foundation"
       ]
     },
     {
@@ -11443,7 +11182,10 @@
         "phase-3"
       ],
       "techTypes": [
-        "all"
+        "llm",
+        "generative-non-llm",
+        "multi-modal",
+        "foundation"
       ]
     },
     {
@@ -11458,7 +11200,10 @@
         "phase-3"
       ],
       "techTypes": [
-        "all"
+        "llm",
+        "generative-non-llm",
+        "multi-modal",
+        "foundation"
       ]
     },
     {
@@ -11468,8 +11213,6 @@
       "source": "Gipi\u0161kis2024",
       "subcategoryId": "post-deployment-3.5",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -11484,11 +11227,12 @@
       "subcategoryId": "model-alignment-2.2",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
-        "all"
+        "llm",
+        "reinforcement-learning",
+        "foundation"
       ]
     },
     {
@@ -11498,8 +11242,6 @@
       "source": "Gipi\u0161kis2024",
       "subcategoryId": "post-deployment-3.5",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -11513,8 +11255,6 @@
       "source": "Gipi\u0161kis2024",
       "subcategoryId": "post-deployment-3.5",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -11543,8 +11283,6 @@
       "source": "Gipi\u0161kis2024",
       "subcategoryId": "incident-reporting-4.3",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -11559,8 +11297,7 @@
       "subcategoryId": "safety-engineering-2.3",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -11573,7 +11310,6 @@
       "source": "Gipi\u0161kis2024",
       "subcategoryId": "infrastructure-security-2.1",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -11588,7 +11324,6 @@
       "source": "Gipi\u0161kis2024",
       "subcategoryId": "infrastructure-security-2.1",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -11603,12 +11338,13 @@
       "source": "Gipi\u0161kis2024",
       "subcategoryId": "access-management-3.3",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
       "techTypes": [
-        "all"
+        "llm",
+        "foundation",
+        "multi-modal"
       ]
     },
     {
@@ -11633,8 +11369,6 @@
       "source": "Gipi\u0161kis2024",
       "subcategoryId": "incident-response-3.6",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -11664,8 +11398,7 @@
       "subcategoryId": "safety-engineering-2.3",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -11679,8 +11412,7 @@
       "subcategoryId": "safety-engineering-2.3",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -11723,12 +11455,12 @@
       "source": "Gipi\u0161kis2024",
       "subcategoryId": "environmental-1.6",
       "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-1"
       ],
       "techTypes": [
-        "all"
+        "llm",
+        "foundation",
+        "multi-modal"
       ]
     },
     {
@@ -11738,12 +11470,12 @@
       "source": "Gipi\u0161kis2024",
       "subcategoryId": "environmental-1.6",
       "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-1"
       ],
       "techTypes": [
-        "all"
+        "llm",
+        "foundation",
+        "multi-modal"
       ]
     },
     {
@@ -11753,12 +11485,12 @@
       "source": "Gipi\u0161kis2024",
       "subcategoryId": "environmental-1.6",
       "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-1"
       ],
       "techTypes": [
-        "all"
+        "llm",
+        "foundation",
+        "multi-modal"
       ]
     },
     {
@@ -11888,8 +11620,6 @@
       "source": "Gipi\u0161kis2024",
       "subcategoryId": "post-deployment-3.5",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -11979,11 +11709,12 @@
       "subcategoryId": "model-alignment-2.2",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
-        "all"
+        "llm",
+        "reinforcement-learning",
+        "foundation"
       ]
     },
     {
@@ -12024,8 +11755,7 @@
       "subcategoryId": "safety-engineering-2.3",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -12068,7 +11798,6 @@
       "source": "Uuk2024",
       "subcategoryId": "third-party-access-4.5",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -12084,8 +11813,7 @@
       "subcategoryId": "safety-engineering-2.3",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -12114,8 +11842,7 @@
       "subcategoryId": "safety-engineering-2.3",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -12143,8 +11870,6 @@
       "source": "Uuk2024",
       "subcategoryId": "staged-deployment-3.4",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -12173,12 +11898,13 @@
       "source": "Uuk2024",
       "subcategoryId": "access-management-3.3",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
       "techTypes": [
-        "all"
+        "llm",
+        "foundation",
+        "multi-modal"
       ]
     },
     {
@@ -12189,11 +11915,12 @@
       "subcategoryId": "model-alignment-2.2",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
-        "all"
+        "llm",
+        "reinforcement-learning",
+        "foundation"
       ]
     },
     {
@@ -12204,8 +11931,7 @@
       "subcategoryId": "safety-engineering-2.3",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -12233,12 +11959,13 @@
       "source": "Uuk2024",
       "subcategoryId": "access-management-3.3",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
       "techTypes": [
-        "all"
+        "llm",
+        "foundation",
+        "multi-modal"
       ]
     },
     {
@@ -12278,7 +12005,6 @@
       "source": "Uuk2024",
       "subcategoryId": "risk-disclosure-4.2",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -12293,12 +12019,13 @@
       "source": "Uuk2024",
       "subcategoryId": "access-management-3.3",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
       "techTypes": [
-        "all"
+        "llm",
+        "foundation",
+        "multi-modal"
       ]
     },
     {
@@ -12323,8 +12050,6 @@
       "source": "Uuk2024",
       "subcategoryId": "incident-response-3.6",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -12338,8 +12063,6 @@
       "source": "Uuk2024",
       "subcategoryId": "incident-reporting-4.3",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -12353,8 +12076,6 @@
       "source": "Uuk2024",
       "subcategoryId": "incident-reporting-4.3",
       "phases": [
-        "phase-1",
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -12369,8 +12090,7 @@
       "subcategoryId": "safety-frameworks-1.5",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -12383,7 +12103,6 @@
       "source": "Uuk2024",
       "subcategoryId": "governance-disclosure-4.4",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -12413,7 +12132,6 @@
       "source": "Uuk2024",
       "subcategoryId": "governance-disclosure-4.4",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -12429,8 +12147,7 @@
       "subcategoryId": "safety-engineering-2.3",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
+        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -12443,7 +12160,6 @@
       "source": "Uuk2024",
       "subcategoryId": "third-party-access-4.5",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -12458,7 +12174,6 @@
       "source": "Uuk2024",
       "subcategoryId": "whistleblower-1.4",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -12473,7 +12188,6 @@
       "source": "Uuk2024",
       "subcategoryId": "infrastructure-security-2.1",
       "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
