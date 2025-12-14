@@ -3,664 +3,484 @@
 
 	let { data }: { data: PageData } = $props();
 
-	// Make copies of data for editing
-	let questions = $state(structuredClone(data.questions));
-	let phaseMitigations = $state(structuredClone(data.phaseMitigations));
+	// Build traceability: subdomain → what triggers it → mitigation text
+	let traceability = $derived.by(() => {
+		const trace: Record<string, {
+			subdomain: any;
+			domain: any;
+			triggeredBy: Array<{ questionId: string; questionText: string; answerValue: string }>;
+			mitigations: { 'phase-1': string; 'phase-2': string; 'phase-3': string };
+		}> = {};
 
-	let activeTab = $state<'questions' | 'mitigations'>('questions');
-	let selectedCategory = $state(0);
-	let selectedQuestion = $state(0);
+		// Initialize all subdomains that have mitigations
+		for (const domain of data.domains) {
+			for (const subId of domain.subdomains) {
+				const sub = data.subdomains.find((s: any) => s.id === subId);
+				const mitigations = data.phaseMitigations[subId];
+				if (sub && mitigations) {
+					trace[subId] = {
+						subdomain: sub,
+						domain,
+						triggeredBy: [],
+						mitigations
+					};
+				}
+			}
+		}
+
+		// Find all triggers from questions
+		for (const category of data.questions.questionCategories) {
+			for (const question of category.questions) {
+				if (!question.triggers) continue;
+				for (const [answerValue, subdomainIds] of Object.entries(question.triggers)) {
+					if (answerValue === '_note') continue;
+					for (const subId of subdomainIds as string[]) {
+						if (trace[subId]) {
+							trace[subId].triggeredBy.push({
+								questionId: question.id,
+								questionText: question.question,
+								answerValue
+							});
+						}
+					}
+				}
+			}
+		}
+
+		return trace;
+	});
+
 	let selectedSubdomain = $state('');
+	let filterText = $state('');
 
-	// Get all subdomains for dropdown
-	let allSubdomains = $derived(data.subdomains.map((s: any) => ({
-		id: s.id,
-		code: s.code,
-		name: s.shortName
-	})));
-
-	// Current question being edited
-	let currentQuestion = $derived(
-		questions.questionCategories[selectedCategory]?.questions[selectedQuestion]
+	let filteredSubdomains = $derived(
+		Object.entries(traceability).filter(([id, data]) => {
+			if (!filterText) return true;
+			const search = filterText.toLowerCase();
+			return (
+				data.subdomain.name.toLowerCase().includes(search) ||
+				data.subdomain.shortName.toLowerCase().includes(search) ||
+				data.subdomain.code.includes(search) ||
+				data.triggeredBy.some(t => t.questionText.toLowerCase().includes(search))
+			);
+		})
 	);
 
-	// Add a new trigger to current question
-	function addTrigger(value: string) {
-		if (!currentQuestion.triggers) {
-			currentQuestion.triggers = {};
-		}
-		if (!currentQuestion.triggers[value]) {
-			currentQuestion.triggers[value] = [];
-		}
+	// Editable mitigations
+	let editableMitigations = $state<Record<string, any>>({});
+
+	function startEditing(subId: string) {
+		editableMitigations[subId] = JSON.parse(JSON.stringify(traceability[subId].mitigations));
 	}
 
-	// Add subdomain to a trigger
-	function addSubdomainToTrigger(triggerKey: string, subdomainId: string) {
-		if (!currentQuestion.triggers[triggerKey].includes(subdomainId)) {
-			currentQuestion.triggers[triggerKey] = [...currentQuestion.triggers[triggerKey], subdomainId];
+	function cancelEditing(subId: string) {
+		delete editableMitigations[subId];
+	}
+
+	function exportAll() {
+		const output = {
+			phaseMitigations: {} as Record<string, any>,
+			questions: data.questions
+		};
+
+		for (const [subId, trace] of Object.entries(traceability)) {
+			output.phaseMitigations[subId] = editableMitigations[subId] || trace.mitigations;
 		}
-	}
 
-	// Remove subdomain from trigger
-	function removeSubdomainFromTrigger(triggerKey: string, subdomainId: string) {
-		currentQuestion.triggers[triggerKey] = currentQuestion.triggers[triggerKey].filter(
-			(s: string) => s !== subdomainId
-		);
-	}
-
-	// Export questions JSON
-	function exportQuestions() {
-		const blob = new Blob([JSON.stringify(questions, null, 2)], { type: 'application/json' });
+		const blob = new Blob([JSON.stringify(output, null, 2)], { type: 'application/json' });
 		const url = URL.createObjectURL(blob);
 		const a = document.createElement('a');
 		a.href = url;
-		a.download = 'assessment-questions.json';
+		a.download = 'ai-oversight-config.json';
 		a.click();
 		URL.revokeObjectURL(url);
-	}
-
-	// Export mitigations JSON
-	function exportMitigations() {
-		const blob = new Blob([JSON.stringify(phaseMitigations, null, 2)], { type: 'application/json' });
-		const url = URL.createObjectURL(blob);
-		const a = document.createElement('a');
-		a.href = url;
-		a.download = 'phase-mitigations.json';
-		a.click();
-		URL.revokeObjectURL(url);
-	}
-
-	// Reset to original data
-	function resetQuestions() {
-		questions = structuredClone(data.questions);
-	}
-
-	function resetMitigations() {
-		phaseMitigations = structuredClone(data.phaseMitigations);
 	}
 </script>
 
 <svelte:head>
-	<title>Admin Panel - AI Oversight Tools</title>
+	<title>Admin - AI Oversight Tools</title>
 </svelte:head>
 
 <div class="admin">
-	<div class="admin-header">
-		<h1>Admin Panel</h1>
-		<p>Edit assessment questions, triggers, and mitigation text. Export updated JSON to commit to the repository.</p>
+	<div class="header">
+		<div>
+			<h1>Configuration Traceability</h1>
+			<p>View and edit how questions trigger risk subdomains and their mitigation text</p>
+		</div>
+		<button class="export-btn" onclick={exportAll}>Export Config</button>
 	</div>
 
-	<div class="tabs">
-		<button
-			class="tab"
-			class:active={activeTab === 'questions'}
-			onclick={() => activeTab = 'questions'}
-		>
-			Questions & Triggers
-		</button>
-		<button
-			class="tab"
-			class:active={activeTab === 'mitigations'}
-			onclick={() => activeTab = 'mitigations'}
-		>
-			Phase Mitigations
-		</button>
+	<div class="search">
+		<input
+			type="text"
+			placeholder="Filter by subdomain name, code, or question text..."
+			bind:value={filterText}
+		/>
 	</div>
 
-	{#if activeTab === 'questions'}
-		<div class="panel">
-			<div class="panel-header">
-				<h2>Assessment Questions</h2>
-				<div class="actions">
-					<button class="btn secondary" onclick={resetQuestions}>Reset</button>
-					<button class="btn primary" onclick={exportQuestions}>Export JSON</button>
-				</div>
-			</div>
+	<div class="trace-list">
+		{#each filteredSubdomains as [subId, trace]}
+			<div class="trace-card" class:expanded={selectedSubdomain === subId}>
+				<button class="trace-header" onclick={() => selectedSubdomain = selectedSubdomain === subId ? '' : subId}>
+					<div class="trace-info">
+						<span class="code">{trace.subdomain.code}</span>
+						<span class="name">{trace.subdomain.shortName}</span>
+						<span class="domain-tag">{trace.domain.name}</span>
+					</div>
+					<div class="trigger-count">
+						{trace.triggeredBy.length} trigger{trace.triggeredBy.length !== 1 ? 's' : ''}
+					</div>
+				</button>
 
-			<div class="editor-layout">
-				<!-- Category/Question Selector -->
-				<div class="sidebar">
-					<h3>Categories</h3>
-					{#each questions.questionCategories as category, catIdx}
-						<div class="category-group">
-							<button
-								class="category-btn"
-								class:active={selectedCategory === catIdx}
-								onclick={() => { selectedCategory = catIdx; selectedQuestion = 0; }}
-							>
-								{category.name}
-							</button>
-							{#if selectedCategory === catIdx}
-								<div class="question-list">
-									{#each category.questions as q, qIdx}
-										<button
-											class="question-btn"
-											class:active={selectedQuestion === qIdx}
-											onclick={() => selectedQuestion = qIdx}
-										>
-											{q.id}
-										</button>
-									{/each}
+				{#if selectedSubdomain === subId}
+					<div class="trace-body">
+						<div class="section">
+							<h4>Triggered By</h4>
+							{#if trace.triggeredBy.length === 0}
+								<p class="empty-note">No direct question triggers. May be triggered by model type selection.</p>
+							{:else}
+								{#each trace.triggeredBy as trigger}
+									<div class="trigger-item">
+										<span class="answer-badge">{trigger.answerValue}</span>
+										<span class="question-text">{trigger.questionText}</span>
+									</div>
+								{/each}
+							{/if}
+						</div>
+
+						<div class="section">
+							<h4>
+								Mitigation Text
+								{#if !editableMitigations[subId]}
+									<button class="edit-btn" onclick={() => startEditing(subId)}>Edit</button>
+								{:else}
+									<button class="save-btn" onclick={() => cancelEditing(subId)}>Done</button>
+								{/if}
+							</h4>
+
+							{#if editableMitigations[subId]}
+								<div class="phase-edit">
+									<label>Phase 1</label>
+									<textarea bind:value={editableMitigations[subId]['phase-1']} rows="3"></textarea>
+								</div>
+								<div class="phase-edit">
+									<label>Phase 2</label>
+									<textarea bind:value={editableMitigations[subId]['phase-2']} rows="3"></textarea>
+								</div>
+								<div class="phase-edit">
+									<label>Phase 3</label>
+									<textarea bind:value={editableMitigations[subId]['phase-3']} rows="3"></textarea>
+								</div>
+							{:else}
+								<div class="phase-view">
+									<div class="phase">
+										<span class="phase-label">P1</span>
+										<span class="phase-text">{trace.mitigations['phase-1']?.slice(0, 100)}...</span>
+									</div>
+									<div class="phase">
+										<span class="phase-label">P2</span>
+										<span class="phase-text">{trace.mitigations['phase-2']?.slice(0, 100)}...</span>
+									</div>
+									<div class="phase">
+										<span class="phase-label">P3</span>
+										<span class="phase-text">{trace.mitigations['phase-3']?.slice(0, 100)}...</span>
+									</div>
 								</div>
 							{/if}
 						</div>
-					{/each}
-				</div>
-
-				<!-- Question Editor -->
-				<div class="editor">
-					{#if currentQuestion}
-						<div class="field">
-							<label>Question ID</label>
-							<input type="text" bind:value={currentQuestion.id} disabled />
-						</div>
-
-						<div class="field">
-							<label>Question Text</label>
-							<textarea bind:value={currentQuestion.question} rows="2"></textarea>
-						</div>
-
-						<div class="field">
-							<label>Type</label>
-							<select bind:value={currentQuestion.type}>
-								<option value="single-select">Single Select</option>
-								<option value="multi-select">Multi Select</option>
-								<option value="yes-no">Yes/No</option>
-							</select>
-						</div>
-
-						{#if currentQuestion.type !== 'yes-no' && currentQuestion.options}
-							<div class="field">
-								<label>Options</label>
-								{#each currentQuestion.options as option, optIdx}
-									<div class="option-row">
-										<input type="text" bind:value={option.value} placeholder="Value" />
-										<input type="text" bind:value={option.label} placeholder="Label" />
-										<input type="text" bind:value={option.description} placeholder="Description" />
-									</div>
-								{/each}
-							</div>
-						{/if}
-
-						<div class="field">
-							<label>Triggers (answer value → subdomains)</label>
-							<div class="triggers-editor">
-								{#if currentQuestion.triggers}
-									{#each Object.entries(currentQuestion.triggers) as [key, subdomains]}
-										{#if key !== '_note'}
-											<div class="trigger-group">
-												<div class="trigger-key">{key}</div>
-												<div class="trigger-subdomains">
-													{#each subdomains as subdomainId}
-														<span class="subdomain-tag">
-															{subdomainId}
-															<button onclick={() => removeSubdomainFromTrigger(key, subdomainId)}>×</button>
-														</span>
-													{/each}
-													<select onchange={(e) => {
-														const target = e.target as HTMLSelectElement;
-														if (target.value) {
-															addSubdomainToTrigger(key, target.value);
-															target.value = '';
-														}
-													}}>
-														<option value="">+ Add subdomain</option>
-														{#each allSubdomains as sd}
-															<option value={sd.id}>{sd.code} - {sd.name}</option>
-														{/each}
-													</select>
-												</div>
-											</div>
-										{/if}
-									{/each}
-								{/if}
-							</div>
-						</div>
-					{/if}
-				</div>
+					</div>
+				{/if}
 			</div>
-		</div>
-	{:else}
-		<div class="panel">
-			<div class="panel-header">
-				<h2>Phase Mitigations</h2>
-				<div class="actions">
-					<button class="btn secondary" onclick={resetMitigations}>Reset</button>
-					<button class="btn primary" onclick={exportMitigations}>Export JSON</button>
-				</div>
-			</div>
+		{/each}
+	</div>
 
-			<div class="editor-layout">
-				<!-- Subdomain Selector -->
-				<div class="sidebar">
-					<h3>Risk Subdomains</h3>
-					{#each data.domains as domain}
-						<div class="domain-group">
-							<div class="domain-name">{domain.name}</div>
-							{#each domain.subdomains as subdomainId}
-								{@const subdomain = data.subdomains.find((s: any) => s.id === subdomainId)}
-								{#if subdomain}
-									<button
-										class="subdomain-btn"
-										class:active={selectedSubdomain === subdomainId}
-										onclick={() => selectedSubdomain = subdomainId}
-									>
-										<span class="code">{subdomain.code}</span>
-										{subdomain.shortName}
-									</button>
-								{/if}
-							{/each}
-						</div>
-					{/each}
-				</div>
-
-				<!-- Mitigation Editor -->
-				<div class="editor">
-					{#if selectedSubdomain && phaseMitigations.phaseMitigations[selectedSubdomain]}
-						{@const subdomain = data.subdomains.find((s: any) => s.id === selectedSubdomain)}
-						<h3>{subdomain?.name || selectedSubdomain}</h3>
-						<p class="subdomain-desc">{subdomain?.description}</p>
-
-						<div class="phase-editors">
-							<div class="phase-editor">
-								<label>Phase 1: Discovery</label>
-								<textarea
-									bind:value={phaseMitigations.phaseMitigations[selectedSubdomain]['phase-1']}
-									rows="6"
-								></textarea>
-							</div>
-
-							<div class="phase-editor">
-								<label>Phase 2: Validation</label>
-								<textarea
-									bind:value={phaseMitigations.phaseMitigations[selectedSubdomain]['phase-2']}
-									rows="6"
-								></textarea>
-							</div>
-
-							<div class="phase-editor">
-								<label>Phase 3: Deployment</label>
-								<textarea
-									bind:value={phaseMitigations.phaseMitigations[selectedSubdomain]['phase-3']}
-									rows="6"
-								></textarea>
-							</div>
-						</div>
-					{:else}
-						<div class="empty-editor">
-							<p>Select a subdomain to edit its phase mitigations</p>
-						</div>
-					{/if}
-				</div>
-			</div>
-		</div>
-	{/if}
+	<div class="help">
+		<h3>How to edit triggers</h3>
+		<p>Triggers are defined in <code>assessment-questions.json</code>. Each question can have a <code>triggers</code> object that maps answer values to subdomain IDs:</p>
+		<pre>{`"triggers": {
+  "yes": ["privacy-breach-2.1", "security-vulnerabilities-2.2"],
+  "no": []
+}`}</pre>
+	</div>
 </div>
 
 <style>
 	.admin {
-		max-width: 1400px;
+		max-width: 1000px;
 		margin: 0 auto;
 	}
 
-	.admin-header {
-		margin-bottom: 1.5rem;
-	}
-
-	.admin-header h1 {
-		font-size: 1.5rem;
-		color: #f1f5f9;
-		margin-bottom: 0.5rem;
-	}
-
-	.admin-header p {
-		color: #64748b;
-		font-size: 0.875rem;
-	}
-
-	.tabs {
+	.header {
 		display: flex;
-		gap: 0.25rem;
+		justify-content: space-between;
+		align-items: flex-start;
 		margin-bottom: 1rem;
 	}
 
-	.tab {
-		padding: 0.75rem 1.5rem;
-		background: #1e293b;
-		border: 1px solid #334155;
-		border-bottom: none;
-		border-radius: 0.5rem 0.5rem 0 0;
-		color: #94a3b8;
-		font-size: 0.875rem;
-		font-weight: 500;
-		cursor: pointer;
-		transition: all 0.1s ease;
-	}
-
-	.tab:hover {
-		color: #e2e8f0;
-	}
-
-	.tab.active {
-		background: #334155;
-		color: #60a5fa;
-	}
-
-	.panel {
-		background: #1e293b;
-		border: 1px solid #334155;
-		border-radius: 0 0.5rem 0.5rem 0.5rem;
-		padding: 1.5rem;
-	}
-
-	.panel-header {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		margin-bottom: 1.5rem;
-		padding-bottom: 1rem;
-		border-bottom: 1px solid #334155;
-	}
-
-	.panel-header h2 {
-		font-size: 1.125rem;
+	.header h1 {
+		font-size: 1.25rem;
 		color: #f1f5f9;
+		margin-bottom: 0.25rem;
 	}
 
-	.actions {
+	.header p {
+		font-size: 0.75rem;
+		color: #64748b;
+	}
+
+	.export-btn {
+		padding: 0.5rem 1rem;
+		background: #60a5fa;
+		border: none;
+		border-radius: 0.375rem;
+		color: #0f172a;
+		font-size: 0.75rem;
+		font-weight: 600;
+		cursor: pointer;
+	}
+
+	.export-btn:hover {
+		background: #3b82f6;
+	}
+
+	.search {
+		margin-bottom: 1rem;
+	}
+
+	.search input {
+		width: 100%;
+		padding: 0.625rem 0.875rem;
+		background: #1e293b;
+		border: 1px solid #334155;
+		border-radius: 0.375rem;
+		color: #e2e8f0;
+		font-size: 0.8125rem;
+	}
+
+	.search input:focus {
+		outline: none;
+		border-color: #60a5fa;
+	}
+
+	.trace-list {
 		display: flex;
+		flex-direction: column;
 		gap: 0.5rem;
 	}
 
-	.btn {
-		padding: 0.5rem 1rem;
-		border: none;
+	.trace-card {
+		background: #1e293b;
+		border: 1px solid #334155;
 		border-radius: 0.375rem;
-		font-size: 0.8125rem;
-		font-weight: 500;
-		cursor: pointer;
-		transition: all 0.1s ease;
+		overflow: hidden;
 	}
 
-	.btn.primary {
+	.trace-card.expanded {
+		border-color: #60a5fa;
+	}
+
+	.trace-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		width: 100%;
+		padding: 0.75rem 1rem;
+		background: transparent;
+		border: none;
+		color: #e2e8f0;
+		cursor: pointer;
+		text-align: left;
+	}
+
+	.trace-header:hover {
+		background: rgba(96, 165, 250, 0.05);
+	}
+
+	.trace-info {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+	}
+
+	.code {
+		font-family: monospace;
+		font-size: 0.6875rem;
+		color: #60a5fa;
+		background: rgba(96, 165, 250, 0.2);
+		padding: 0.125rem 0.375rem;
+		border-radius: 0.25rem;
+	}
+
+	.name {
+		font-size: 0.8125rem;
+		font-weight: 500;
+	}
+
+	.domain-tag {
+		font-size: 0.625rem;
+		color: #64748b;
+		background: #0f172a;
+		padding: 0.125rem 0.375rem;
+		border-radius: 0.25rem;
+	}
+
+	.trigger-count {
+		font-size: 0.6875rem;
+		color: #94a3b8;
+	}
+
+	.trace-body {
+		padding: 0 1rem 1rem;
+		border-top: 1px solid #334155;
+	}
+
+	.section {
+		margin-top: 0.75rem;
+	}
+
+	.section h4 {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		font-size: 0.6875rem;
+		font-weight: 600;
+		color: #64748b;
+		text-transform: uppercase;
+		margin-bottom: 0.5rem;
+	}
+
+	.edit-btn, .save-btn {
+		padding: 0.125rem 0.375rem;
+		background: #334155;
+		border: none;
+		border-radius: 0.125rem;
+		color: #94a3b8;
+		font-size: 0.5625rem;
+		cursor: pointer;
+		text-transform: none;
+	}
+
+	.edit-btn:hover {
 		background: #60a5fa;
 		color: #0f172a;
 	}
 
-	.btn.primary:hover {
-		background: #3b82f6;
+	.save-btn {
+		background: #22c55e;
+		color: #0f172a;
 	}
 
-	.btn.secondary {
-		background: #334155;
-		color: #94a3b8;
-	}
-
-	.btn.secondary:hover {
-		background: #475569;
-		color: #e2e8f0;
-	}
-
-	.editor-layout {
-		display: grid;
-		grid-template-columns: 280px 1fr;
-		gap: 1.5rem;
-	}
-
-	.sidebar {
-		border-right: 1px solid #334155;
-		padding-right: 1rem;
-		max-height: 600px;
-		overflow-y: auto;
-	}
-
-	.sidebar h3 {
+	.empty-note {
 		font-size: 0.75rem;
-		font-weight: 600;
 		color: #64748b;
-		text-transform: uppercase;
-		letter-spacing: 0.05em;
-		margin-bottom: 0.75rem;
+		font-style: italic;
 	}
 
-	.category-group {
-		margin-bottom: 0.5rem;
-	}
-
-	.category-btn, .question-btn, .subdomain-btn {
-		display: block;
-		width: 100%;
-		text-align: left;
-		padding: 0.5rem 0.75rem;
-		background: transparent;
-		border: none;
-		border-radius: 0.375rem;
-		color: #94a3b8;
-		font-size: 0.8125rem;
-		cursor: pointer;
-		transition: all 0.1s ease;
-	}
-
-	.category-btn:hover, .question-btn:hover, .subdomain-btn:hover {
-		background: #334155;
-		color: #e2e8f0;
-	}
-
-	.category-btn.active, .question-btn.active, .subdomain-btn.active {
-		background: rgba(96, 165, 250, 0.2);
-		color: #60a5fa;
-	}
-
-	.question-list {
-		padding-left: 1rem;
-		margin-top: 0.25rem;
-	}
-
-	.question-btn {
+	.trigger-item {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		padding: 0.375rem 0;
 		font-size: 0.75rem;
-		padding: 0.375rem 0.5rem;
 	}
 
-	.domain-group {
-		margin-bottom: 1rem;
+	.answer-badge {
+		font-size: 0.625rem;
+		font-weight: 600;
+		color: #22c55e;
+		background: rgba(34, 197, 94, 0.2);
+		padding: 0.125rem 0.375rem;
+		border-radius: 0.25rem;
 	}
 
-	.domain-name {
+	.question-text {
+		color: #94a3b8;
+	}
+
+	.phase-view {
+		display: flex;
+		flex-direction: column;
+		gap: 0.375rem;
+	}
+
+	.phase {
+		display: flex;
+		gap: 0.5rem;
 		font-size: 0.6875rem;
+	}
+
+	.phase-label {
 		font-weight: 600;
 		color: #60a5fa;
-		text-transform: uppercase;
-		letter-spacing: 0.05em;
-		padding: 0.25rem 0.5rem;
+		min-width: 1.5rem;
+	}
+
+	.phase-text {
+		color: #94a3b8;
+	}
+
+	.phase-edit {
+		margin-bottom: 0.625rem;
+	}
+
+	.phase-edit label {
+		display: block;
+		font-size: 0.625rem;
+		font-weight: 600;
+		color: #60a5fa;
 		margin-bottom: 0.25rem;
 	}
 
-	.subdomain-btn {
-		padding: 0.375rem 0.5rem;
-		font-size: 0.75rem;
-	}
-
-	.subdomain-btn .code {
-		font-family: monospace;
-		color: #60a5fa;
-		margin-right: 0.375rem;
-	}
-
-	.editor {
-		min-height: 400px;
-	}
-
-	.editor h3 {
-		font-size: 1rem;
-		color: #f1f5f9;
-		margin-bottom: 0.5rem;
-	}
-
-	.subdomain-desc {
-		font-size: 0.8125rem;
-		color: #64748b;
-		margin-bottom: 1.5rem;
-	}
-
-	.field {
-		margin-bottom: 1rem;
-	}
-
-	.field label {
-		display: block;
-		font-size: 0.75rem;
-		font-weight: 500;
-		color: #94a3b8;
-		margin-bottom: 0.375rem;
-	}
-
-	.field input, .field select, .field textarea {
+	.phase-edit textarea {
 		width: 100%;
-		padding: 0.5rem 0.75rem;
+		padding: 0.5rem;
 		background: #0f172a;
 		border: 1px solid #334155;
-		border-radius: 0.375rem;
-		color: #e2e8f0;
-		font-size: 0.8125rem;
-	}
-
-	.field input:focus, .field select:focus, .field textarea:focus {
-		outline: none;
-		border-color: #60a5fa;
-	}
-
-	.field input:disabled {
-		background: #1e293b;
-		color: #64748b;
-	}
-
-	.field textarea {
-		resize: vertical;
-		min-height: 60px;
-		line-height: 1.5;
-	}
-
-	.option-row {
-		display: grid;
-		grid-template-columns: 120px 1fr 1fr;
-		gap: 0.5rem;
-		margin-bottom: 0.5rem;
-	}
-
-	.triggers-editor {
-		background: #0f172a;
-		border: 1px solid #334155;
-		border-radius: 0.375rem;
-		padding: 0.75rem;
-	}
-
-	.trigger-group {
-		margin-bottom: 0.75rem;
-		padding-bottom: 0.75rem;
-		border-bottom: 1px solid #334155;
-	}
-
-	.trigger-group:last-child {
-		margin-bottom: 0;
-		padding-bottom: 0;
-		border-bottom: none;
-	}
-
-	.trigger-key {
-		font-family: monospace;
-		font-size: 0.75rem;
-		color: #60a5fa;
-		margin-bottom: 0.5rem;
-	}
-
-	.trigger-subdomains {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.375rem;
-		align-items: center;
-	}
-
-	.subdomain-tag {
-		display: inline-flex;
-		align-items: center;
-		gap: 0.25rem;
-		padding: 0.25rem 0.5rem;
-		background: #334155;
 		border-radius: 0.25rem;
-		font-size: 0.6875rem;
 		color: #e2e8f0;
-	}
-
-	.subdomain-tag button {
-		background: none;
-		border: none;
-		color: #94a3b8;
-		cursor: pointer;
-		padding: 0;
-		font-size: 0.875rem;
-		line-height: 1;
-	}
-
-	.subdomain-tag button:hover {
-		color: #ef4444;
-	}
-
-	.trigger-subdomains select {
-		padding: 0.25rem 0.5rem;
 		font-size: 0.6875rem;
-	}
-
-	.phase-editors {
-		display: flex;
-		flex-direction: column;
-		gap: 1rem;
-	}
-
-	.phase-editor label {
-		display: block;
-		font-size: 0.75rem;
-		font-weight: 600;
-		color: #60a5fa;
-		margin-bottom: 0.5rem;
-	}
-
-	.phase-editor textarea {
-		width: 100%;
-		padding: 0.75rem;
-		background: #0f172a;
-		border: 1px solid #334155;
-		border-radius: 0.375rem;
-		color: #e2e8f0;
-		font-size: 0.8125rem;
-		line-height: 1.6;
+		line-height: 1.4;
 		resize: vertical;
 	}
 
-	.phase-editor textarea:focus {
+	.phase-edit textarea:focus {
 		outline: none;
 		border-color: #60a5fa;
 	}
 
-	.empty-editor {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		height: 100%;
-		min-height: 300px;
-		color: #64748b;
+	.help {
+		margin-top: 2rem;
+		padding: 1rem;
+		background: #1e293b;
+		border: 1px solid #334155;
+		border-radius: 0.375rem;
 	}
 
-	@media (max-width: 900px) {
-		.editor-layout {
-			grid-template-columns: 1fr;
-		}
+	.help h3 {
+		font-size: 0.75rem;
+		color: #e2e8f0;
+		margin-bottom: 0.5rem;
+	}
 
-		.sidebar {
-			border-right: none;
-			border-bottom: 1px solid #334155;
-			padding-right: 0;
-			padding-bottom: 1rem;
-			max-height: none;
-		}
+	.help p {
+		font-size: 0.6875rem;
+		color: #94a3b8;
+		margin-bottom: 0.5rem;
+	}
+
+	.help code {
+		background: #0f172a;
+		padding: 0.0625rem 0.25rem;
+		border-radius: 0.125rem;
+		color: #60a5fa;
+	}
+
+	.help pre {
+		background: #0f172a;
+		padding: 0.625rem;
+		border-radius: 0.25rem;
+		font-size: 0.625rem;
+		color: #e2e8f0;
+		overflow-x: auto;
 	}
 </style>

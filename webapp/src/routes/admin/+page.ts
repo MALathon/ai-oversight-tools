@@ -9,13 +9,13 @@ export const load: PageLoad = async ({ fetch }) => {
 	]);
 
 	const questions = await questionsRes.json();
-	const phaseMitigations = await phaseMitigationsRes.json();
+	const phaseMitigationsData = await phaseMitigationsRes.json();
 	const subdomains = await subdomainsRes.json();
 	const domains = await domainsRes.json();
 
 	return {
 		questions,
-		phaseMitigations,
+		phaseMitigations: phaseMitigationsData.phaseMitigations,
 		subdomains: subdomains.riskSubdomains,
 		domains: domains.riskDomains
 	};
