@@ -77,6 +77,7 @@
 	];
 
 	// UI State
+	let currentView = $state<'matrix' | 'risk-editor' | 'graph'>('matrix');
 	let selectedPhase = $state<string>('all');
 	let selectedNode = $state<{ type: string; id: string } | null>(null);
 	let connectingFrom = $state<{ type: string; id: string } | null>(null);
@@ -84,6 +85,13 @@
 	let editingLink = $state<any>(null);
 	let searchQuery = $state('');
 	let focusMode = $state(false);
+
+	// Matrix view state
+	let matrixType = $state<'triggers' | 'mitigations' | 'regulations'>('triggers');
+
+	// Risk editor state
+	let selectedRiskId = $state<string | null>(null);
+	let selectedRisk = $derived(selectedRiskId ? getRisk(selectedRiskId) : null);
 
 	// Build flat lists for each entity type
 	let allQuestions = $derived.by(() => {
@@ -307,6 +315,113 @@
 		).length;
 	}
 
+	// Matrix helpers
+	function getTriggerLink(questionId: string, riskId: string) {
+		return filteredLinks.find((l: any) =>
+			l.type === 'trigger' &&
+			l.from.entity === 'question' && l.from.id === questionId &&
+			l.to.entity === 'risk' && l.to.id === riskId
+		);
+	}
+
+	function getMitigationLink(riskId: string, mitigationId: string) {
+		return filteredLinks.find((l: any) =>
+			l.type === 'mitigation' &&
+			l.from.entity === 'risk' && l.from.id === riskId &&
+			l.to.entity === 'mitigation' && l.to.id === mitigationId
+		);
+	}
+
+	function getRegulationLink(riskId: string, regulationId: string) {
+		return filteredLinks.find((l: any) =>
+			l.type === 'regulation' &&
+			l.from.entity === 'risk' && l.from.id === riskId &&
+			l.to.entity === 'regulation' && l.to.id === regulationId
+		);
+	}
+
+	// Risk editor helpers
+	function getTriggersForRisk(riskId: string) {
+		return filteredLinks.filter((l: any) =>
+			l.type === 'trigger' && l.to.entity === 'risk' && l.to.id === riskId
+		);
+	}
+
+	function getMitigationsForRisk(riskId: string) {
+		return filteredLinks.filter((l: any) =>
+			l.type === 'mitigation' && l.from.entity === 'risk' && l.from.id === riskId
+		);
+	}
+
+	function getRegulationsForRisk(riskId: string) {
+		return filteredLinks.filter((l: any) =>
+			l.type === 'regulation' && l.from.entity === 'risk' && l.from.id === riskId
+		);
+	}
+
+	// Toggle link in matrix
+	function toggleMatrixLink(type: 'trigger' | 'mitigation' | 'regulation', fromId: string, toId: string) {
+		let existing: any;
+		let newLink: any;
+
+		if (type === 'trigger') {
+			existing = getTriggerLink(fromId, toId);
+			newLink = {
+				id: `link-${Date.now()}`,
+				type: 'trigger',
+				from: { entity: 'question', id: fromId },
+				to: { entity: 'risk', id: toId },
+				phases: ['phase-1', 'phase-2', 'phase-3'],
+				answerValues: [],
+				logic: 'OR'
+			};
+		} else if (type === 'mitigation') {
+			existing = getMitigationLink(fromId, toId);
+			newLink = {
+				id: `link-${Date.now()}`,
+				type: 'mitigation',
+				from: { entity: 'risk', id: fromId },
+				to: { entity: 'mitigation', id: toId },
+				phases: ['phase-1', 'phase-2', 'phase-3'],
+				guidance: {}
+			};
+		} else {
+			existing = getRegulationLink(fromId, toId);
+			newLink = {
+				id: `link-${Date.now()}`,
+				type: 'regulation',
+				from: { entity: 'risk', id: fromId },
+				to: { entity: 'regulation', id: toId },
+				phases: ['phase-1', 'phase-2', 'phase-3']
+			};
+		}
+
+		if (existing) {
+			// Edit existing link
+			editingLink = JSON.parse(JSON.stringify(existing));
+			showLinkEditor = true;
+		} else {
+			// Create new link
+			editingLink = newLink;
+			showLinkEditor = true;
+		}
+	}
+
+	// Quick toggle (create/delete without editor)
+	function quickToggleLink(type: 'trigger' | 'mitigation' | 'regulation', fromId: string, toId: string) {
+		let existing: any;
+
+		if (type === 'trigger') existing = getTriggerLink(fromId, toId);
+		else if (type === 'mitigation') existing = getMitigationLink(fromId, toId);
+		else existing = getRegulationLink(fromId, toId);
+
+		if (existing) {
+			links = links.filter((l: any) => l.id !== existing.id);
+		} else {
+			toggleMatrixLink(type, fromId, toId);
+		}
+	}
+
 	// Get selected node details
 	let selectedDetails = $derived.by(() => {
 		if (!selectedNode) return null;
@@ -338,11 +453,10 @@
 	<header class="header">
 		<div class="header-left">
 			<h1>Traceability</h1>
-			<div class="phase-filter">
-				<button class:active={selectedPhase === 'all'} onclick={() => selectedPhase = 'all'}>All</button>
-				{#each phases as phase}
-					<button class:active={selectedPhase === phase.id} onclick={() => selectedPhase = phase.id}>{phase.short}</button>
-				{/each}
+			<div class="view-tabs">
+				<button class:active={currentView === 'matrix'} onclick={() => currentView = 'matrix'}>Matrix</button>
+				<button class:active={currentView === 'risk-editor'} onclick={() => currentView = 'risk-editor'}>Risk Editor</button>
+				<button class:active={currentView === 'graph'} onclick={() => currentView = 'graph'}>Graph</button>
 			</div>
 		</div>
 		<div class="header-right">
@@ -351,10 +465,12 @@
 			{:else}
 				<span class="status-badge default">Default</span>
 			{/if}
-			<button class="btn focus-toggle" class:active={focusMode} onclick={() => focusMode = !focusMode}>
-				{focusMode ? 'Focus: ON' : 'Focus'}
-			</button>
-			<input type="text" placeholder="Search..." bind:value={searchQuery} class="search" />
+			<div class="phase-filter">
+				<button class:active={selectedPhase === 'all'} onclick={() => selectedPhase = 'all'}>All</button>
+				{#each phases as phase}
+					<button class:active={selectedPhase === phase.id} onclick={() => selectedPhase = phase.id}>{phase.short}</button>
+				{/each}
+			</div>
 			<input type="file" accept=".json" bind:this={fileInput} onchange={handleFileImport} style="display: none" />
 			<button class="btn" onclick={importFile}>Import</button>
 			<button class="btn primary" onclick={exportConfig}>Export</button>
@@ -364,19 +480,280 @@
 		</div>
 	</header>
 
-	{#if connectingFrom}
-		<div class="connection-banner">
-			Connecting from: <strong>{getEntityName(connectingFrom.type, connectingFrom.id)}</strong> — Click another item to link them
-			<button onclick={() => connectingFrom = null}>Cancel</button>
+	<!-- MATRIX VIEW -->
+	{#if currentView === 'matrix'}
+		<div class="matrix-toolbar">
+			<div class="matrix-tabs">
+				<button class:active={matrixType === 'triggers'} onclick={() => matrixType = 'triggers'}>
+					Questions → Risks
+				</button>
+				<button class:active={matrixType === 'mitigations'} onclick={() => matrixType = 'mitigations'}>
+					Risks → Mitigations
+				</button>
+				<button class:active={matrixType === 'regulations'} onclick={() => matrixType = 'regulations'}>
+					Risks → Regulations
+				</button>
+			</div>
+			<input type="text" placeholder="Search..." bind:value={searchQuery} class="search" />
 		</div>
-	{:else if !selectedNode}
-		<div class="help-banner">
-			<strong>How to link:</strong> Click an item to select it, then click <span class="plus-hint">+</span> on it (or another item) to create a connection.
-			Questions trigger Risks. Risks link to Mitigations and Regulations.
-		</div>
-	{/if}
 
-	<div class="layout">
+		<div class="matrix-container">
+			{#if matrixType === 'triggers'}
+				<table class="matrix">
+					<thead>
+						<tr>
+							<th class="row-header">Question</th>
+							{#each allRisks as risk}
+								<th class="col-header" title={risk.name}>{risk.code}</th>
+							{/each}
+						</tr>
+					</thead>
+					<tbody>
+						{#each filterBySearch(allQuestions, q => q.text) as question}
+							<tr>
+								<td class="row-label" title={question.text}>{question.id}</td>
+								{#each allRisks as risk}
+									{@const link = getTriggerLink(question.id, risk.id)}
+									<td
+										class="matrix-cell"
+										class:linked={link}
+										onclick={() => toggleMatrixLink('trigger', question.id, risk.id)}
+										title={link ? `${question.id} triggers ${risk.code} (click to edit)` : `Click to link ${question.id} → ${risk.code}`}
+									>
+										{#if link}
+											<span class="cell-marker">✓</span>
+										{/if}
+									</td>
+								{/each}
+							</tr>
+						{/each}
+					</tbody>
+				</table>
+			{:else if matrixType === 'mitigations'}
+				<table class="matrix">
+					<thead>
+						<tr>
+							<th class="row-header">Risk</th>
+							{#each allMitigations as mit}
+								<th class="col-header" title={mit.name}>{mit.code}</th>
+							{/each}
+						</tr>
+					</thead>
+					<tbody>
+						{#each filterBySearch(allRisks, r => r.shortName) as risk}
+							<tr>
+								<td class="row-label" title={risk.name}>{risk.code}</td>
+								{#each allMitigations as mit}
+									{@const link = getMitigationLink(risk.id, mit.id)}
+									<td
+										class="matrix-cell"
+										class:linked={link}
+										onclick={() => toggleMatrixLink('mitigation', risk.id, mit.id)}
+										title={link ? `${risk.code} → ${mit.code} (click to edit)` : `Click to link ${risk.code} → ${mit.code}`}
+									>
+										{#if link}
+											<span class="cell-marker">✓</span>
+										{/if}
+									</td>
+								{/each}
+							</tr>
+						{/each}
+					</tbody>
+				</table>
+			{:else if matrixType === 'regulations'}
+				<table class="matrix">
+					<thead>
+						<tr>
+							<th class="row-header">Risk</th>
+							{#each allRegulations as reg}
+								<th class="col-header" title={reg.description}>{reg.citation}</th>
+							{/each}
+						</tr>
+					</thead>
+					<tbody>
+						{#each filterBySearch(allRisks, r => r.shortName) as risk}
+							<tr>
+								<td class="row-label" title={risk.name}>{risk.code}</td>
+								{#each allRegulations as reg}
+									{@const link = getRegulationLink(risk.id, reg.id)}
+									<td
+										class="matrix-cell"
+										class:linked={link}
+										onclick={() => toggleMatrixLink('regulation', risk.id, reg.id)}
+										title={link ? `${risk.code} → ${reg.citation} (click to edit)` : `Click to link ${risk.code} → ${reg.citation}`}
+									>
+										{#if link}
+											<span class="cell-marker">✓</span>
+										{/if}
+									</td>
+								{/each}
+							</tr>
+						{/each}
+					</tbody>
+				</table>
+			{/if}
+		</div>
+
+	<!-- RISK EDITOR VIEW -->
+	{:else if currentView === 'risk-editor'}
+		<div class="risk-editor">
+			<div class="risk-list">
+				<div class="risk-list-header">
+					<input type="text" placeholder="Search risks..." bind:value={searchQuery} class="search" />
+				</div>
+				<div class="risk-list-items">
+					{#each filterBySearch(allRisks, r => r.shortName + ' ' + r.name) as risk}
+						{@const triggerCount = getTriggersForRisk(risk.id).length}
+						{@const mitigationCount = getMitigationsForRisk(risk.id).length}
+						{@const regulationCount = getRegulationsForRisk(risk.id).length}
+						<button
+							class="risk-list-item"
+							class:selected={selectedRiskId === risk.id}
+							onclick={() => selectedRiskId = risk.id}
+						>
+							<span class="risk-code">{risk.code}</span>
+							<span class="risk-name">{risk.shortName}</span>
+							<div class="risk-counts">
+								<span class="count-badge trigger" title="Triggers">{triggerCount}</span>
+								<span class="count-badge mitigation" title="Mitigations">{mitigationCount}</span>
+								<span class="count-badge regulation" title="Regulations">{regulationCount}</span>
+							</div>
+						</button>
+					{/each}
+				</div>
+			</div>
+
+			<div class="risk-detail">
+				{#if selectedRisk}
+					<div class="risk-detail-header">
+						<h2>{selectedRisk.code}: {selectedRisk.shortName}</h2>
+						<p class="risk-full-name">{selectedRisk.name}</p>
+					</div>
+
+					<div class="risk-section">
+						<h3>Triggers (Questions that activate this risk)</h3>
+						<div class="link-list">
+							{#each getTriggersForRisk(selectedRisk.id) as link}
+								{@const question = getQuestion(link.from.id)}
+								<button class="link-item" onclick={() => { editingLink = JSON.parse(JSON.stringify(link)); showLinkEditor = true; }}>
+									<span class="link-icon">?</span>
+									<span class="link-text">{question?.text || link.from.id}</span>
+									<span class="link-meta">
+										{#if link.answerValues?.length}
+											when: {link.answerValues.join(', ')}
+										{/if}
+										{#if link.phases?.length < 3}
+											| {link.phases.map((p: string) => p.replace('phase-', 'P')).join(', ')}
+										{/if}
+									</span>
+								</button>
+							{/each}
+							<button class="add-link-btn" onclick={() => {
+								const availableQuestions = allQuestions.filter(q => !getTriggersForRisk(selectedRisk.id).some(l => l.from.id === q.id));
+								if (availableQuestions.length === 0) { alert('All questions already linked'); return; }
+								const questionId = availableQuestions[0].id;
+								editingLink = {
+									id: `link-${Date.now()}`,
+									type: 'trigger',
+									from: { entity: 'question', id: questionId },
+									to: { entity: 'risk', id: selectedRisk.id },
+									phases: ['phase-1', 'phase-2', 'phase-3'],
+									answerValues: [],
+									logic: 'OR'
+								};
+								showLinkEditor = true;
+							}}>+ Add Trigger</button>
+						</div>
+					</div>
+
+					<div class="risk-section">
+						<h3>Mitigations</h3>
+						<div class="link-list">
+							{#each getMitigationsForRisk(selectedRisk.id) as link}
+								{@const mitigation = getMitigation(link.to.id)}
+								<button class="link-item" onclick={() => { editingLink = JSON.parse(JSON.stringify(link)); showLinkEditor = true; }}>
+									<span class="link-icon mitigation">M</span>
+									<span class="link-text">{mitigation?.name || link.to.id}</span>
+									<span class="link-meta">
+										{#if link.phases?.length < 3}
+											{link.phases.map((p: string) => p.replace('phase-', 'P')).join(', ')}
+										{/if}
+									</span>
+								</button>
+							{/each}
+							<button class="add-link-btn" onclick={() => {
+								const availableMitigations = allMitigations.filter(m => !getMitigationsForRisk(selectedRisk.id).some(l => l.to.id === m.id));
+								if (availableMitigations.length === 0) { alert('All mitigations already linked'); return; }
+								const mitigationId = availableMitigations[0].id;
+								editingLink = {
+									id: `link-${Date.now()}`,
+									type: 'mitigation',
+									from: { entity: 'risk', id: selectedRisk.id },
+									to: { entity: 'mitigation', id: mitigationId },
+									phases: ['phase-1', 'phase-2', 'phase-3'],
+									guidance: {}
+								};
+								showLinkEditor = true;
+							}}>+ Add Mitigation</button>
+						</div>
+					</div>
+
+					<div class="risk-section">
+						<h3>Regulations</h3>
+						<div class="link-list">
+							{#each getRegulationsForRisk(selectedRisk.id) as link}
+								{@const regulation = getRegulation(link.to.id)}
+								<button class="link-item" onclick={() => { editingLink = JSON.parse(JSON.stringify(link)); showLinkEditor = true; }}>
+									<span class="link-icon regulation">R</span>
+									<span class="link-text">{regulation?.citation || link.to.id}</span>
+									<span class="link-meta">{regulation?.framework}</span>
+								</button>
+							{/each}
+							<button class="add-link-btn" onclick={() => {
+								const availableRegs = allRegulations.filter(r => !getRegulationsForRisk(selectedRisk.id).some(l => l.to.id === r.id));
+								if (availableRegs.length === 0) { alert('All regulations already linked'); return; }
+								const regId = availableRegs[0].id;
+								editingLink = {
+									id: `link-${Date.now()}`,
+									type: 'regulation',
+									from: { entity: 'risk', id: selectedRisk.id },
+									to: { entity: 'regulation', id: regId },
+									phases: ['phase-1', 'phase-2', 'phase-3']
+								};
+								showLinkEditor = true;
+							}}>+ Add Regulation</button>
+						</div>
+					</div>
+				{:else}
+					<div class="no-selection">
+						<p>Select a risk from the list to view and edit its configuration.</p>
+					</div>
+				{/if}
+			</div>
+		</div>
+
+	<!-- GRAPH VIEW -->
+	{:else if currentView === 'graph'}
+		{#if connectingFrom}
+			<div class="connection-banner">
+				Connecting from: <strong>{getEntityName(connectingFrom.type, connectingFrom.id)}</strong> — Click another item to link them
+				<button onclick={() => connectingFrom = null}>Cancel</button>
+			</div>
+		{:else if !selectedNode}
+			<div class="help-banner">
+				<strong>How to link:</strong> Click an item to select it, then click <span class="plus-hint">+</span> on it (or another item) to create a connection.
+				Questions trigger Risks. Risks link to Mitigations and Regulations.
+			</div>
+		{/if}
+
+		<div class="graph-toolbar">
+			<button class="btn focus-toggle" class:active={focusMode} onclick={() => focusMode = !focusMode}>
+				{focusMode ? 'Focus: ON' : 'Focus'}
+			</button>
+			<input type="text" placeholder="Search..." bind:value={searchQuery} class="search" />
+		</div>
+
+		<div class="layout">
 		<!-- Four Columns -->
 		<div class="columns">
 			<!-- Questions Column -->
@@ -627,6 +1004,7 @@
 			</aside>
 		{/if}
 	</div>
+	{/if}
 </div>
 
 <!-- Link Editor Modal -->
@@ -803,6 +1181,355 @@
 
 	.phase-filter button:hover { color: #e2e8f0; }
 	.phase-filter button.active { background: #60a5fa; color: #0f172a; }
+
+	.view-tabs {
+		display: flex;
+		gap: 0.25rem;
+		background: #1e293b;
+		padding: 0.25rem;
+		border-radius: 0.375rem;
+	}
+
+	.view-tabs button {
+		padding: 0.375rem 0.75rem;
+		background: transparent;
+		border: none;
+		border-radius: 0.25rem;
+		color: #94a3b8;
+		font-size: 0.8125rem;
+		cursor: pointer;
+	}
+
+	.view-tabs button:hover { color: #e2e8f0; }
+	.view-tabs button.active { background: #60a5fa; color: #0f172a; }
+
+	/* Matrix View */
+	.matrix-toolbar {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 0.75rem 0;
+		border-bottom: 1px solid #334155;
+		gap: 1rem;
+	}
+
+	.matrix-tabs {
+		display: flex;
+		gap: 0.5rem;
+	}
+
+	.matrix-tabs button {
+		padding: 0.5rem 1rem;
+		background: #1e293b;
+		border: 1px solid #334155;
+		border-radius: 0.375rem;
+		color: #94a3b8;
+		font-size: 0.75rem;
+		cursor: pointer;
+	}
+
+	.matrix-tabs button:hover { border-color: #475569; color: #e2e8f0; }
+	.matrix-tabs button.active { background: #334155; color: #e2e8f0; border-color: #60a5fa; }
+
+	.matrix-container {
+		flex: 1;
+		overflow: auto;
+		padding: 1rem 0;
+	}
+
+	.matrix {
+		border-collapse: collapse;
+		font-size: 0.75rem;
+	}
+
+	.matrix th, .matrix td {
+		border: 1px solid #334155;
+		padding: 0.25rem;
+		text-align: center;
+	}
+
+	.matrix .row-header {
+		background: #1e293b;
+		color: #94a3b8;
+		font-weight: 600;
+		text-align: left;
+		padding: 0.5rem;
+		position: sticky;
+		left: 0;
+		z-index: 2;
+	}
+
+	.matrix .col-header {
+		background: #1e293b;
+		color: #94a3b8;
+		font-weight: 500;
+		font-size: 0.625rem;
+		padding: 0.375rem 0.25rem;
+		writing-mode: vertical-lr;
+		text-orientation: mixed;
+		transform: rotate(180deg);
+		white-space: nowrap;
+		max-width: 2rem;
+		position: sticky;
+		top: 0;
+		z-index: 1;
+	}
+
+	.matrix .row-label {
+		background: #0f172a;
+		color: #e2e8f0;
+		font-family: monospace;
+		font-size: 0.625rem;
+		text-align: left;
+		padding: 0.375rem 0.5rem;
+		position: sticky;
+		left: 0;
+		z-index: 1;
+		max-width: 150px;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	.matrix-cell {
+		background: #0f172a;
+		cursor: pointer;
+		min-width: 1.5rem;
+		height: 1.5rem;
+		transition: background 0.15s;
+	}
+
+	.matrix-cell:hover {
+		background: #1e293b;
+	}
+
+	.matrix-cell.linked {
+		background: rgba(34, 197, 94, 0.2);
+	}
+
+	.matrix-cell.linked:hover {
+		background: rgba(34, 197, 94, 0.3);
+	}
+
+	.cell-marker {
+		color: #22c55e;
+		font-size: 0.75rem;
+	}
+
+	/* Risk Editor View */
+	.risk-editor {
+		display: flex;
+		flex: 1;
+		overflow: hidden;
+	}
+
+	.risk-list {
+		width: 280px;
+		background: #1e293b;
+		border-right: 1px solid #334155;
+		display: flex;
+		flex-direction: column;
+	}
+
+	.risk-list-header {
+		padding: 0.75rem;
+		border-bottom: 1px solid #334155;
+	}
+
+	.risk-list-header .search {
+		width: 100%;
+	}
+
+	.risk-list-items {
+		flex: 1;
+		overflow-y: auto;
+		padding: 0.5rem;
+	}
+
+	.risk-list-item {
+		width: 100%;
+		text-align: left;
+		padding: 0.75rem;
+		background: #0f172a;
+		border: 1px solid #334155;
+		border-radius: 0.375rem;
+		margin-bottom: 0.375rem;
+		cursor: pointer;
+		display: flex;
+		flex-direction: column;
+		gap: 0.25rem;
+	}
+
+	.risk-list-item:hover {
+		border-color: #475569;
+	}
+
+	.risk-list-item.selected {
+		border-color: #ef4444;
+		background: rgba(239, 68, 68, 0.1);
+	}
+
+	.risk-code {
+		font-family: monospace;
+		font-size: 0.625rem;
+		color: #ef4444;
+		background: rgba(239, 68, 68, 0.2);
+		padding: 0.125rem 0.25rem;
+		border-radius: 0.125rem;
+		width: fit-content;
+	}
+
+	.risk-name {
+		font-size: 0.75rem;
+		color: #e2e8f0;
+	}
+
+	.risk-counts {
+		display: flex;
+		gap: 0.375rem;
+		margin-top: 0.25rem;
+	}
+
+	.count-badge {
+		font-size: 0.5625rem;
+		padding: 0.125rem 0.375rem;
+		border-radius: 0.25rem;
+	}
+
+	.count-badge.trigger {
+		background: rgba(96, 165, 250, 0.2);
+		color: #60a5fa;
+	}
+
+	.count-badge.mitigation {
+		background: rgba(34, 197, 94, 0.2);
+		color: #22c55e;
+	}
+
+	.count-badge.regulation {
+		background: rgba(168, 85, 247, 0.2);
+		color: #a855f7;
+	}
+
+	.risk-detail {
+		flex: 1;
+		padding: 1.5rem;
+		overflow-y: auto;
+	}
+
+	.risk-detail-header h2 {
+		font-size: 1.25rem;
+		color: #f1f5f9;
+		margin-bottom: 0.25rem;
+	}
+
+	.risk-full-name {
+		font-size: 0.875rem;
+		color: #94a3b8;
+		margin-bottom: 1.5rem;
+	}
+
+	.risk-section {
+		margin-bottom: 1.5rem;
+	}
+
+	.risk-section h3 {
+		font-size: 0.875rem;
+		color: #94a3b8;
+		margin-bottom: 0.75rem;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+	}
+
+	.link-list {
+		display: flex;
+		flex-direction: column;
+		gap: 0.375rem;
+	}
+
+	.link-item {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		padding: 0.75rem;
+		background: #1e293b;
+		border: 1px solid #334155;
+		border-radius: 0.375rem;
+		cursor: pointer;
+		text-align: left;
+	}
+
+	.link-item:hover {
+		border-color: #475569;
+	}
+
+	.link-icon {
+		width: 1.5rem;
+		height: 1.5rem;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: rgba(96, 165, 250, 0.2);
+		color: #60a5fa;
+		border-radius: 0.25rem;
+		font-size: 0.75rem;
+		font-weight: bold;
+		flex-shrink: 0;
+	}
+
+	.link-icon.mitigation {
+		background: rgba(34, 197, 94, 0.2);
+		color: #22c55e;
+	}
+
+	.link-icon.regulation {
+		background: rgba(168, 85, 247, 0.2);
+		color: #a855f7;
+	}
+
+	.link-text {
+		flex: 1;
+		font-size: 0.8125rem;
+		color: #e2e8f0;
+	}
+
+	.link-meta {
+		font-size: 0.6875rem;
+		color: #64748b;
+	}
+
+	.add-link-btn {
+		padding: 0.625rem;
+		background: transparent;
+		border: 1px dashed #475569;
+		border-radius: 0.375rem;
+		color: #64748b;
+		font-size: 0.8125rem;
+		cursor: pointer;
+		text-align: center;
+	}
+
+	.add-link-btn:hover {
+		border-color: #60a5fa;
+		color: #60a5fa;
+	}
+
+	.no-selection {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		height: 100%;
+		color: #64748b;
+	}
+
+	/* Graph View Toolbar */
+	.graph-toolbar {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+		padding: 0.5rem 0;
+		border-bottom: 1px solid #334155;
+	}
 
 	.search {
 		padding: 0.5rem 0.75rem;
