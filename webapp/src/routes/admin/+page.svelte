@@ -3196,7 +3196,7 @@
 
 	.columns {
 		display: grid;
-		grid-template-columns: repeat(4, 1fr);
+		grid-template-columns: repeat(5, 1fr);
 		flex: 1;
 		overflow: hidden;
 	}
@@ -3213,8 +3213,8 @@
 	.column-header {
 		display: flex;
 		align-items: center;
-		gap: 0.5rem;
-		padding: 0.75rem;
+		gap: 0.375rem;
+		padding: 0.5rem;
 		background: #1e293b;
 		border-bottom: 1px solid #334155;
 	}
@@ -3234,11 +3234,15 @@
 	.risks .column-icon { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
 	.mitigations .column-icon { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
 	.regulations .column-icon { background: rgba(168, 85, 247, 0.2); color: #a855f7; }
+	.controls .column-icon { background: rgba(249, 115, 22, 0.2); color: #f97316; }
 
 	.column-header h2 {
-		font-size: 0.875rem;
+		font-size: 0.75rem;
 		color: #e2e8f0;
 		flex: 1;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 
 	.count {
@@ -3997,9 +4001,22 @@
 		flex: 1;
 	}
 
+	@media (max-width: 1600px) {
+		.columns {
+			grid-template-columns: repeat(5, minmax(160px, 1fr));
+			overflow-x: auto;
+		}
+		.node {
+			padding: 0.5rem;
+		}
+		.node-text {
+			font-size: 0.6875rem;
+		}
+	}
+
 	@media (max-width: 1200px) {
 		.columns {
-			grid-template-columns: repeat(2, 1fr);
+			grid-template-columns: repeat(3, 1fr);
 		}
 	}
 
