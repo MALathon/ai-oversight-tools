@@ -1,0 +1,85 @@
+{
+  "$schema": "../schemas/population-vulnerabilities.schema.json",
+  "version": "1.0.0",
+  "source": "AIHSR Risk Reference Tool v1.5 (Tamiko Eto)",
+  "lastUpdated": "2025-09-02",
+  "populationVulnerabilities": [
+    {
+      "id": "children",
+      "name": "Children",
+      "description": "Minors under 18 years of age requiring parental/guardian consent",
+      "requiresAdditionalProtections": true,
+      "cfrReference": "45 CFR 46 Subpart D"
+    },
+    {
+      "id": "employees",
+      "name": "Employees",
+      "description": "Workers who may feel coerced due to employment relationship",
+      "requiresAdditionalProtections": true,
+      "cfrReference": "45 CFR 46.111(b)"
+    },
+    {
+      "id": "older-adults",
+      "name": "Older Adults",
+      "description": "Elderly individuals who may have age-related cognitive or physical vulnerabilities",
+      "requiresAdditionalProtections": true,
+      "cfrReference": "45 CFR 46.111(b)"
+    },
+    {
+      "id": "cognitively-impaired",
+      "name": "Cognitively Impaired",
+      "description": "Individuals with diminished capacity to provide informed consent",
+      "requiresAdditionalProtections": true,
+      "cfrReference": "45 CFR 46.111(b)"
+    },
+    {
+      "id": "racial-ethnic-minorities",
+      "name": "Racial/Ethnic Minorities",
+      "description": "Groups that may face historical discrimination or health disparities",
+      "requiresAdditionalProtections": true,
+      "cfrReference": "45 CFR 46.111(a)(3)"
+    },
+    {
+      "id": "non-english-speaking",
+      "name": "Non-English-Speaking Participants",
+      "description": "Individuals with limited English proficiency requiring translated materials",
+      "requiresAdditionalProtections": true,
+      "cfrReference": "45 CFR 46.116, 46.117"
+    },
+    {
+      "id": "economically-disadvantaged",
+      "name": "Economically Disadvantaged",
+      "description": "Individuals who may be unduly influenced by financial incentives",
+      "requiresAdditionalProtections": true,
+      "cfrReference": "45 CFR 46.111(b)"
+    },
+    {
+      "id": "educationally-disadvantaged",
+      "name": "Educationally Disadvantaged",
+      "description": "Individuals with limited education who may have difficulty understanding consent",
+      "requiresAdditionalProtections": true,
+      "cfrReference": "45 CFR 46.111(b)"
+    },
+    {
+      "id": "students",
+      "name": "Students",
+      "description": "Students who may feel coerced due to academic relationship",
+      "requiresAdditionalProtections": true,
+      "cfrReference": "45 CFR 46.111(b)"
+    },
+    {
+      "id": "all",
+      "name": "All Populations",
+      "description": "Risk applies broadly to all participant populations",
+      "requiresAdditionalProtections": false,
+      "cfrReference": null
+    },
+    {
+      "id": "na",
+      "name": "N/A: No specific vulnerable populations",
+      "description": "No specific vulnerable populations targeted for this study",
+      "requiresAdditionalProtections": false,
+      "cfrReference": null
+    }
+  ]
+}

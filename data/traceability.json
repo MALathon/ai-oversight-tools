@@ -1,0 +1,7851 @@
+{
+  "$schema": "./schemas/traceability.schema.json",
+  "version": "6.0.0",
+  "lastUpdated": "2025-12-14",
+  "description": "Comprehensive traceability linking questions, risks, mitigations, and regulations based on AIHSR Risk Reference Tool",
+  "source": "AIHSR Risk Reference Tool v1.5 (Tamiko Eto) - Map Risk-Mitigation-Prompt sheet",
+  "nodes": {
+    "questions": "assessment-questions.json",
+    "risks": "risk-subdomains.json",
+    "mitigations": "mitigation-strategies.json",
+    "regulations": "cfr-regulations.json",
+    "controls": "technical-controls.json"
+  },
+  "links": [
+    {
+      "id": "trigger-patient-data-privacy",
+      "type": "trigger",
+      "from": {
+        "entity": "question",
+        "id": "patient-data"
+      },
+      "to": {
+        "entity": "risk",
+        "id": "privacy-breach-2.1"
+      },
+      "answerValues": [
+        "yes"
+      ],
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ],
+      "logic": "OR"
+    },
+    {
+      "id": "trigger-patient-data-security",
+      "type": "trigger",
+      "from": {
+        "entity": "question",
+        "id": "patient-data"
+      },
+      "to": {
+        "entity": "risk",
+        "id": "security-vulnerabilities-2.2"
+      },
+      "answerValues": [
+        "yes"
+      ],
+      "phases": [
+        "phase-2",
+        "phase-3"
+      ],
+      "logic": "OR"
+    },
+    {
+      "id": "trigger-clinical-decisions-overreliance",
+      "type": "trigger",
+      "from": {
+        "entity": "question",
+        "id": "clinical-decisions"
+      },
+      "to": {
+        "entity": "risk",
+        "id": "overreliance-5.1"
+      },
+      "answerValues": [
+        "yes"
+      ],
+      "phases": [
+        "phase-2",
+        "phase-3"
+      ],
+      "logic": "OR"
+    },
+    {
+      "id": "trigger-clinical-decisions-false-info",
+      "type": "trigger",
+      "from": {
+        "entity": "question",
+        "id": "clinical-decisions"
+      },
+      "to": {
+        "entity": "risk",
+        "id": "false-information-3.1"
+      },
+      "answerValues": [
+        "yes"
+      ],
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ],
+      "logic": "OR"
+    },
+    {
+      "id": "trigger-clinical-decisions-loss-agency",
+      "type": "trigger",
+      "from": {
+        "entity": "question",
+        "id": "clinical-decisions"
+      },
+      "to": {
+        "entity": "risk",
+        "id": "loss-of-agency-5.2"
+      },
+      "answerValues": [
+        "yes"
+      ],
+      "phases": [
+        "phase-2",
+        "phase-3"
+      ],
+      "logic": "OR"
+    },
+    {
+      "id": "trigger-clinical-decisions-robustness",
+      "type": "trigger",
+      "from": {
+        "entity": "question",
+        "id": "clinical-decisions"
+      },
+      "to": {
+        "entity": "risk",
+        "id": "lack-robustness-7.3"
+      },
+      "answerValues": [
+        "yes"
+      ],
+      "phases": [
+        "phase-2",
+        "phase-3"
+      ],
+      "logic": "OR"
+    },
+    {
+      "id": "trigger-generates-content-false-info",
+      "type": "trigger",
+      "from": {
+        "entity": "question",
+        "id": "generates-content"
+      },
+      "to": {
+        "entity": "risk",
+        "id": "false-information-3.1"
+      },
+      "answerValues": [
+        "yes"
+      ],
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ],
+      "logic": "OR"
+    },
+    {
+      "id": "trigger-generates-content-pollution",
+      "type": "trigger",
+      "from": {
+        "entity": "question",
+        "id": "generates-content"
+      },
+      "to": {
+        "entity": "risk",
+        "id": "information-pollution-3.2"
+      },
+      "answerValues": [
+        "yes"
+      ],
+      "phases": [
+        "phase-3"
+      ],
+      "logic": "AND"
+    },
+    {
+      "id": "trigger-generates-content-toxic",
+      "type": "trigger",
+      "from": {
+        "entity": "question",
+        "id": "generates-content"
+      },
+      "to": {
+        "entity": "risk",
+        "id": "toxic-content-1.2"
+      },
+      "answerValues": [
+        "yes"
+      ],
+      "phases": [
+        "phase-2",
+        "phase-3"
+      ],
+      "logic": "AND"
+    },
+    {
+      "id": "trigger-autonomous-overreliance",
+      "type": "trigger",
+      "from": {
+        "entity": "question",
+        "id": "autonomous-operation"
+      },
+      "to": {
+        "entity": "risk",
+        "id": "overreliance-5.1"
+      },
+      "answerValues": [
+        "yes"
+      ],
+      "phases": [
+        "phase-2"
+      ],
+      "logic": "OR"
+    },
+    {
+      "id": "trigger-autonomous-loss-agency",
+      "type": "trigger",
+      "from": {
+        "entity": "question",
+        "id": "autonomous-operation"
+      },
+      "to": {
+        "entity": "risk",
+        "id": "loss-of-agency-5.2"
+      },
+      "answerValues": [
+        "yes"
+      ],
+      "phases": [
+        "phase-2",
+        "phase-3"
+      ],
+      "logic": "OR"
+    },
+    {
+      "id": "trigger-autonomous-governance",
+      "type": "trigger",
+      "from": {
+        "entity": "question",
+        "id": "autonomous-operation"
+      },
+      "to": {
+        "entity": "risk",
+        "id": "governance-failure-6.5"
+      },
+      "answerValues": [
+        "yes"
+      ],
+      "phases": [
+        "phase-2"
+      ],
+      "logic": "OR"
+    },
+    {
+      "id": "trigger-autonomous-misaligned",
+      "type": "trigger",
+      "from": {
+        "entity": "question",
+        "id": "autonomous-operation"
+      },
+      "to": {
+        "entity": "risk",
+        "id": "misaligned-goals-7.1"
+      },
+      "answerValues": [
+        "yes"
+      ],
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ],
+      "logic": "AND"
+    },
+    {
+      "id": "trigger-explainability-transparency",
+      "type": "trigger",
+      "from": {
+        "entity": "question",
+        "id": "explainability"
+      },
+      "to": {
+        "entity": "risk",
+        "id": "lack-transparency-7.4"
+      },
+      "answerValues": [
+        "partial",
+        "no"
+      ],
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ],
+      "logic": "AND"
+    },
+    {
+      "id": "trigger-explainability-overreliance",
+      "type": "trigger",
+      "from": {
+        "entity": "question",
+        "id": "explainability"
+      },
+      "to": {
+        "entity": "risk",
+        "id": "overreliance-5.1"
+      },
+      "answerValues": [
+        "no"
+      ],
+      "phases": [
+        "phase-2"
+      ],
+      "logic": "OR"
+    },
+    {
+      "id": "trigger-training-data-discrimination",
+      "type": "trigger",
+      "from": {
+        "entity": "question",
+        "id": "training-data-diversity"
+      },
+      "to": {
+        "entity": "risk",
+        "id": "unfair-discrimination-1.1"
+      },
+      "answerValues": [
+        "limited",
+        "unknown"
+      ],
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ],
+      "logic": "OR"
+    },
+    {
+      "id": "trigger-training-data-unequal",
+      "type": "trigger",
+      "from": {
+        "entity": "question",
+        "id": "training-data-diversity"
+      },
+      "to": {
+        "entity": "risk",
+        "id": "unequal-performance-1.3"
+      },
+      "answerValues": [
+        "limited",
+        "unknown"
+      ],
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ],
+      "logic": "OR"
+    },
+    {
+      "id": "trigger-training-data-governance",
+      "type": "trigger",
+      "from": {
+        "entity": "question",
+        "id": "training-data-diversity"
+      },
+      "to": {
+        "entity": "risk",
+        "id": "governance-failure-6.5"
+      },
+      "answerValues": [
+        "unknown"
+      ],
+      "phases": [
+        "phase-1"
+      ],
+      "logic": "OR"
+    },
+    {
+      "id": "trigger-external-api-privacy",
+      "type": "trigger",
+      "from": {
+        "entity": "question",
+        "id": "external-api"
+      },
+      "to": {
+        "entity": "risk",
+        "id": "privacy-breach-2.1"
+      },
+      "answerValues": [
+        "yes"
+      ],
+      "phases": [
+        "phase-2",
+        "phase-3"
+      ],
+      "logic": "OR"
+    },
+    {
+      "id": "trigger-external-api-security",
+      "type": "trigger",
+      "from": {
+        "entity": "question",
+        "id": "external-api"
+      },
+      "to": {
+        "entity": "risk",
+        "id": "security-vulnerabilities-2.2"
+      },
+      "answerValues": [
+        "yes"
+      ],
+      "phases": [
+        "phase-2",
+        "phase-3"
+      ],
+      "logic": "OR"
+    },
+    {
+      "id": "trigger-external-api-governance",
+      "type": "trigger",
+      "from": {
+        "entity": "question",
+        "id": "external-api"
+      },
+      "to": {
+        "entity": "risk",
+        "id": "governance-failure-6.5"
+      },
+      "answerValues": [
+        "yes"
+      ],
+      "phases": [
+        "phase-2",
+        "phase-3"
+      ],
+      "logic": "OR"
+    },
+    {
+      "id": "trigger-human-oversight-overreliance",
+      "type": "trigger",
+      "from": {
+        "entity": "question",
+        "id": "human-oversight"
+      },
+      "to": {
+        "entity": "risk",
+        "id": "overreliance-5.1"
+      },
+      "answerValues": [
+        "sometimes",
+        "never"
+      ],
+      "phases": [
+        "phase-3"
+      ],
+      "logic": "OR"
+    },
+    {
+      "id": "trigger-human-oversight-loss-agency",
+      "type": "trigger",
+      "from": {
+        "entity": "question",
+        "id": "human-oversight"
+      },
+      "to": {
+        "entity": "risk",
+        "id": "loss-of-agency-5.2"
+      },
+      "answerValues": [
+        "never"
+      ],
+      "phases": [
+        "phase-3"
+      ],
+      "logic": "OR"
+    },
+    {
+      "id": "trigger-human-oversight-governance",
+      "type": "trigger",
+      "from": {
+        "entity": "question",
+        "id": "human-oversight"
+      },
+      "to": {
+        "entity": "risk",
+        "id": "governance-failure-6.5"
+      },
+      "answerValues": [
+        "never"
+      ],
+      "phases": [
+        "phase-3"
+      ],
+      "logic": "OR"
+    },
+    {
+      "id": "trigger-realtime-overreliance",
+      "type": "trigger",
+      "from": {
+        "entity": "question",
+        "id": "real-time"
+      },
+      "to": {
+        "entity": "risk",
+        "id": "overreliance-5.1"
+      },
+      "answerValues": [
+        "yes"
+      ],
+      "phases": [
+        "phase-3"
+      ],
+      "logic": "OR"
+    },
+    {
+      "id": "trigger-realtime-robustness",
+      "type": "trigger",
+      "from": {
+        "entity": "question",
+        "id": "real-time"
+      },
+      "to": {
+        "entity": "risk",
+        "id": "lack-robustness-7.3"
+      },
+      "answerValues": [
+        "yes"
+      ],
+      "phases": [
+        "phase-3"
+      ],
+      "logic": "OR"
+    },
+    {
+      "id": "trigger-multisite-unequal",
+      "type": "trigger",
+      "from": {
+        "entity": "question",
+        "id": "multi-site"
+      },
+      "to": {
+        "entity": "risk",
+        "id": "unequal-performance-1.3"
+      },
+      "answerValues": [
+        "yes"
+      ],
+      "phases": [
+        "phase-3"
+      ],
+      "logic": "OR"
+    },
+    {
+      "id": "trigger-multisite-governance",
+      "type": "trigger",
+      "from": {
+        "entity": "question",
+        "id": "multi-site"
+      },
+      "to": {
+        "entity": "risk",
+        "id": "governance-failure-6.5"
+      },
+      "answerValues": [
+        "yes"
+      ],
+      "phases": [
+        "phase-3"
+      ],
+      "logic": "OR"
+    },
+    {
+      "id": "reg-discrimination-equitable",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "unfair-discrimination-1.1"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.3"
+      },
+      "note": "Equitable subject selection requirement"
+    },
+    {
+      "id": "reg-discrimination-risk-benefit",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "unfair-discrimination-1.1"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.2"
+      },
+      "note": "Reasonable risk-benefit ratio"
+    },
+    {
+      "id": "reg-discrimination-minimize",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "unfair-discrimination-1.1"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.1"
+      },
+      "note": "Minimize risks through sound research design"
+    },
+    {
+      "id": "reg-discrimination-vulnerable",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "unfair-discrimination-1.1"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.b"
+      },
+      "note": "Additional protections for vulnerable groups"
+    },
+    {
+      "id": "reg-discrimination-fda",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "unfair-discrimination-1.1"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "56.111.a.3"
+      },
+      "note": "FDA equitable selection requirement"
+    },
+    {
+      "id": "reg-discrimination-design",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "unfair-discrimination-1.1"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "820.30"
+      },
+      "note": "Design controls for devices"
+    },
+    {
+      "id": "reg-toxic-minimize",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "toxic-content-1.2"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.1"
+      },
+      "note": "Minimize risks through sound design"
+    },
+    {
+      "id": "reg-toxic-risk-benefit",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "toxic-content-1.2"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.2"
+      },
+      "note": "Reasonable risk-benefit ratio"
+    },
+    {
+      "id": "reg-toxic-consent",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "toxic-content-1.2"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.4"
+      },
+      "note": "Informed consent documentation"
+    },
+    {
+      "id": "reg-unequal-equitable",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "unequal-performance-1.3"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.3"
+      },
+      "note": "Equitable subject selection"
+    },
+    {
+      "id": "reg-unequal-consent",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "unequal-performance-1.3"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.4"
+      },
+      "note": "Informed consent documentation"
+    },
+    {
+      "id": "reg-unequal-vulnerable",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "unequal-performance-1.3"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.b"
+      },
+      "note": "Additional protections for vulnerable groups"
+    },
+    {
+      "id": "reg-privacy-confidentiality",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "privacy-breach-2.1"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.7"
+      },
+      "note": "Privacy and confidentiality protections"
+    },
+    {
+      "id": "reg-privacy-consent-general",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "privacy-breach-2.1"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.116.a"
+      },
+      "note": "General informed consent requirements"
+    },
+    {
+      "id": "reg-privacy-consent-basic",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "privacy-breach-2.1"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.116.b"
+      },
+      "note": "Basic elements of informed consent"
+    },
+    {
+      "id": "reg-privacy-hipaa",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "privacy-breach-2.1"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "164.512.b"
+      },
+      "note": "HIPAA research use of PHI"
+    },
+    {
+      "id": "reg-privacy-ide-conf",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "privacy-breach-2.1"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "812.38"
+      },
+      "note": "IDE confidentiality requirements"
+    },
+    {
+      "id": "reg-security-capa",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "security-vulnerabilities-2.2"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "820.100"
+      },
+      "note": "Corrective and Preventive Actions"
+    },
+    {
+      "id": "reg-security-design",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "security-vulnerabilities-2.2"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "820.30.g"
+      },
+      "note": "Design validation requirements"
+    },
+    {
+      "id": "reg-security-records",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "security-vulnerabilities-2.2"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "812.140"
+      },
+      "note": "Recordkeeping and reporting"
+    },
+    {
+      "id": "reg-false-info-consent",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "false-information-3.1"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.116.a"
+      },
+      "note": "Informed consent accuracy"
+    },
+    {
+      "id": "reg-false-info-consent-basic",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "false-information-3.1"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.116.b"
+      },
+      "note": "Basic required elements of consent"
+    },
+    {
+      "id": "reg-false-info-fda-consent",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "false-information-3.1"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "50.20"
+      },
+      "note": "FDA informed consent requirements"
+    },
+    {
+      "id": "reg-pollution-minimize",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "information-pollution-3.2"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.1"
+      },
+      "note": "Minimize risks"
+    },
+    {
+      "id": "reg-pollution-risk-benefit",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "information-pollution-3.2"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.2"
+      },
+      "note": "Reasonable risk-benefit ratio"
+    },
+    {
+      "id": "reg-overreliance-minimize",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "overreliance-5.1"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.1"
+      },
+      "note": "Minimize risks through sound design"
+    },
+    {
+      "id": "reg-overreliance-risk-benefit",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "overreliance-5.1"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "812.30.b.4"
+      },
+      "note": "Risk/benefit analysis in IDE"
+    },
+    {
+      "id": "reg-overreliance-production",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "overreliance-5.1"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "820.70"
+      },
+      "note": "Production and process controls"
+    },
+    {
+      "id": "reg-loss-agency-withdraw",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "loss-of-agency-5.2"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.116.a.8"
+      },
+      "note": "Consent can be withdrawn"
+    },
+    {
+      "id": "reg-loss-agency-consent",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "loss-of-agency-5.2"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.116.a"
+      },
+      "note": "General informed consent requirements"
+    },
+    {
+      "id": "reg-governance-minimize",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "governance-failure-6.5"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.1"
+      },
+      "note": "Minimize risks through sound design"
+    },
+    {
+      "id": "reg-governance-sponsor",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "governance-failure-6.5"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "812.40"
+      },
+      "note": "Responsibilities of sponsors"
+    },
+    {
+      "id": "reg-governance-design",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "governance-failure-6.5"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "820.30"
+      },
+      "note": "Design controls"
+    },
+    {
+      "id": "reg-misaligned-minimize",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "misaligned-goals-7.1"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.1"
+      },
+      "note": "Minimize risks"
+    },
+    {
+      "id": "reg-misaligned-risk-benefit",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "misaligned-goals-7.1"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.2"
+      },
+      "note": "Reasonable risk-benefit ratio"
+    },
+    {
+      "id": "reg-robustness-minimize",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "lack-robustness-7.3"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.1"
+      },
+      "note": "Minimize risks"
+    },
+    {
+      "id": "reg-robustness-design",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "lack-robustness-7.3"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "820.30"
+      },
+      "note": "Design controls"
+    },
+    {
+      "id": "reg-transparency-consent",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "lack-transparency-7.4"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.116.a"
+      },
+      "note": "Adequate explanation in consent"
+    },
+    {
+      "id": "reg-transparency-fda-consent",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "lack-transparency-7.4"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "50.20"
+      },
+      "note": "FDA informed consent requirements"
+    },
+    {
+      "id": "trigger-vulnerable-discrimination",
+      "type": "trigger",
+      "from": {
+        "entity": "question",
+        "id": "vulnerable-populations"
+      },
+      "to": {
+        "entity": "risk",
+        "id": "unfair-discrimination-1.1"
+      },
+      "answerValues": [
+        "children",
+        "older-adults",
+        "cognitively-impaired",
+        "pregnant-women",
+        "prisoners"
+      ],
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ],
+      "logic": "OR"
+    },
+    {
+      "id": "trigger-vulnerable-unequal",
+      "type": "trigger",
+      "from": {
+        "entity": "question",
+        "id": "vulnerable-populations"
+      },
+      "to": {
+        "entity": "risk",
+        "id": "unequal-performance-1.3"
+      },
+      "answerValues": [
+        "children",
+        "older-adults",
+        "cognitively-impaired",
+        "pregnant-women",
+        "prisoners"
+      ],
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ],
+      "logic": "OR"
+    },
+    {
+      "id": "trigger-vulnerable-overreliance",
+      "type": "trigger",
+      "from": {
+        "entity": "question",
+        "id": "vulnerable-populations"
+      },
+      "to": {
+        "entity": "risk",
+        "id": "overreliance-5.1"
+      },
+      "answerValues": [
+        "cognitively-impaired"
+      ],
+      "phases": [
+        "phase-2",
+        "phase-3"
+      ],
+      "logic": "OR"
+    },
+    {
+      "id": "trigger-vulnerable-loss-agency",
+      "type": "trigger",
+      "from": {
+        "entity": "question",
+        "id": "vulnerable-populations"
+      },
+      "to": {
+        "entity": "risk",
+        "id": "loss-of-agency-5.2"
+      },
+      "answerValues": [
+        "children",
+        "cognitively-impaired",
+        "prisoners"
+      ],
+      "phases": [
+        "phase-2",
+        "phase-3"
+      ],
+      "logic": "OR"
+    },
+    {
+      "id": "trigger-vulnerable-disinformation",
+      "type": "trigger",
+      "from": {
+        "entity": "question",
+        "id": "vulnerable-populations"
+      },
+      "to": {
+        "entity": "risk",
+        "id": "disinformation-surveillance-4.1"
+      },
+      "answerValues": [
+        "children",
+        "older-adults",
+        "cognitively-impaired"
+      ],
+      "phases": [
+        "phase-2",
+        "phase-3"
+      ],
+      "logic": "OR"
+    },
+    {
+      "id": "trigger-generates-disinformation",
+      "type": "trigger",
+      "from": {
+        "entity": "question",
+        "id": "generates-content"
+      },
+      "to": {
+        "entity": "risk",
+        "id": "disinformation-surveillance-4.1"
+      },
+      "answerValues": [
+        "yes"
+      ],
+      "phases": [
+        "phase-2",
+        "phase-3"
+      ],
+      "logic": "OR"
+    },
+    {
+      "id": "trigger-generates-fraud",
+      "type": "trigger",
+      "from": {
+        "entity": "question",
+        "id": "generates-content"
+      },
+      "to": {
+        "entity": "risk",
+        "id": "fraud-manipulation-4.3"
+      },
+      "answerValues": [
+        "yes"
+      ],
+      "phases": [
+        "phase-2",
+        "phase-3"
+      ],
+      "logic": "OR"
+    },
+    {
+      "id": "trigger-generates-dangerous",
+      "type": "trigger",
+      "from": {
+        "entity": "question",
+        "id": "generates-content"
+      },
+      "to": {
+        "entity": "risk",
+        "id": "dangerous-capabilities-7.2"
+      },
+      "answerValues": [
+        "yes"
+      ],
+      "phases": [
+        "phase-2",
+        "phase-3"
+      ],
+      "logic": "AND"
+    },
+    {
+      "id": "trigger-generates-devaluation",
+      "type": "trigger",
+      "from": {
+        "entity": "question",
+        "id": "generates-content"
+      },
+      "to": {
+        "entity": "risk",
+        "id": "devaluation-human-effort-6.3"
+      },
+      "answerValues": [
+        "yes"
+      ],
+      "phases": [
+        "phase-3"
+      ],
+      "logic": "AND"
+    },
+    {
+      "id": "trigger-autonomous-cyberattacks",
+      "type": "trigger",
+      "from": {
+        "entity": "question",
+        "id": "autonomous-operation"
+      },
+      "to": {
+        "entity": "risk",
+        "id": "cyberattacks-mass-harm-4.2"
+      },
+      "answerValues": [
+        "yes"
+      ],
+      "phases": [
+        "phase-2",
+        "phase-3"
+      ],
+      "logic": "AND"
+    },
+    {
+      "id": "trigger-autonomous-dangerous",
+      "type": "trigger",
+      "from": {
+        "entity": "question",
+        "id": "autonomous-operation"
+      },
+      "to": {
+        "entity": "risk",
+        "id": "dangerous-capabilities-7.2"
+      },
+      "answerValues": [
+        "yes"
+      ],
+      "phases": [
+        "phase-2",
+        "phase-3"
+      ],
+      "logic": "AND"
+    },
+    {
+      "id": "trigger-autonomous-power",
+      "type": "trigger",
+      "from": {
+        "entity": "question",
+        "id": "autonomous-operation"
+      },
+      "to": {
+        "entity": "risk",
+        "id": "power-centralization-6.1"
+      },
+      "answerValues": [
+        "yes"
+      ],
+      "phases": [
+        "phase-3"
+      ],
+      "logic": "AND"
+    },
+    {
+      "id": "trigger-autonomous-inequality",
+      "type": "trigger",
+      "from": {
+        "entity": "question",
+        "id": "autonomous-operation"
+      },
+      "to": {
+        "entity": "risk",
+        "id": "inequality-employment-6.2"
+      },
+      "answerValues": [
+        "yes"
+      ],
+      "phases": [
+        "phase-3"
+      ],
+      "logic": "AND"
+    },
+    {
+      "id": "trigger-autonomous-devaluation",
+      "type": "trigger",
+      "from": {
+        "entity": "question",
+        "id": "autonomous-operation"
+      },
+      "to": {
+        "entity": "risk",
+        "id": "devaluation-human-effort-6.3"
+      },
+      "answerValues": [
+        "yes"
+      ],
+      "phases": [
+        "phase-3"
+      ],
+      "logic": "AND"
+    },
+    {
+      "id": "trigger-autonomous-multiagent",
+      "type": "trigger",
+      "from": {
+        "entity": "question",
+        "id": "autonomous-operation"
+      },
+      "to": {
+        "entity": "risk",
+        "id": "multi-agent-risks-7.6"
+      },
+      "answerValues": [
+        "yes"
+      ],
+      "phases": [
+        "phase-2",
+        "phase-3"
+      ],
+      "logic": "AND"
+    },
+    {
+      "id": "trigger-external-cyberattacks",
+      "type": "trigger",
+      "from": {
+        "entity": "question",
+        "id": "external-api"
+      },
+      "to": {
+        "entity": "risk",
+        "id": "cyberattacks-mass-harm-4.2"
+      },
+      "answerValues": [
+        "yes"
+      ],
+      "phases": [
+        "phase-2",
+        "phase-3"
+      ],
+      "logic": "OR"
+    },
+    {
+      "id": "trigger-external-power",
+      "type": "trigger",
+      "from": {
+        "entity": "question",
+        "id": "external-api"
+      },
+      "to": {
+        "entity": "risk",
+        "id": "power-centralization-6.1"
+      },
+      "answerValues": [
+        "yes"
+      ],
+      "phases": [
+        "phase-2",
+        "phase-3"
+      ],
+      "logic": "AND"
+    },
+    {
+      "id": "trigger-external-multiagent",
+      "type": "trigger",
+      "from": {
+        "entity": "question",
+        "id": "external-api"
+      },
+      "to": {
+        "entity": "risk",
+        "id": "multi-agent-risks-7.6"
+      },
+      "answerValues": [
+        "yes"
+      ],
+      "phases": [
+        "phase-2",
+        "phase-3"
+      ],
+      "logic": "AND"
+    },
+    {
+      "id": "trigger-external-competitive",
+      "type": "trigger",
+      "from": {
+        "entity": "question",
+        "id": "external-api"
+      },
+      "to": {
+        "entity": "risk",
+        "id": "competitive-dynamics-6.4"
+      },
+      "answerValues": [
+        "yes"
+      ],
+      "phases": [
+        "phase-2",
+        "phase-3"
+      ],
+      "logic": "AND"
+    },
+    {
+      "id": "trigger-oversight-never-dangerous",
+      "type": "trigger",
+      "from": {
+        "entity": "question",
+        "id": "human-oversight"
+      },
+      "to": {
+        "entity": "risk",
+        "id": "dangerous-capabilities-7.2"
+      },
+      "answerValues": [
+        "never"
+      ],
+      "phases": [
+        "phase-3"
+      ],
+      "logic": "OR"
+    },
+    {
+      "id": "reg-disinformation-vulnerable",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "disinformation-surveillance-4.1"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.b"
+      },
+      "note": "Additional safeguards for vulnerable groups"
+    },
+    {
+      "id": "reg-disinformation-consent",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "disinformation-surveillance-4.1"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.116.a"
+      },
+      "note": "Informed consent requirements"
+    },
+    {
+      "id": "reg-cyberattacks-capa",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "cyberattacks-mass-harm-4.2"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "820.100"
+      },
+      "note": "Corrective and Preventive Actions"
+    },
+    {
+      "id": "reg-cyberattacks-design",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "cyberattacks-mass-harm-4.2"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "820.30.g"
+      },
+      "note": "Design validation requirements"
+    },
+    {
+      "id": "reg-cyberattacks-minimize",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "cyberattacks-mass-harm-4.2"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.1"
+      },
+      "note": "Minimize risks through sound design"
+    },
+    {
+      "id": "reg-fraud-consent",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "fraud-manipulation-4.3"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.116.a"
+      },
+      "note": "Informed consent requirements"
+    },
+    {
+      "id": "reg-fraud-fda-consent",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "fraud-manipulation-4.3"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "50.20"
+      },
+      "note": "FDA informed consent requirements"
+    },
+    {
+      "id": "reg-power-equitable",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "power-centralization-6.1"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.3"
+      },
+      "note": "Equitable subject selection"
+    },
+    {
+      "id": "reg-dangerous-minimize",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "dangerous-capabilities-7.2"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.1"
+      },
+      "note": "Minimize risks through sound design"
+    },
+    {
+      "id": "reg-dangerous-risk-benefit",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "dangerous-capabilities-7.2"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.2"
+      },
+      "note": "Reasonable risk-benefit ratio"
+    },
+    {
+      "id": "reg-multiagent-minimize",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "multi-agent-risks-7.6"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.1"
+      },
+      "note": "Minimize risks through sound design"
+    },
+    {
+      "id": "reg-multiagent-monitoring",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "multi-agent-risks-7.6"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.6"
+      },
+      "note": "Data monitoring for safety"
+    },
+    {
+      "id": "trigger-external-api-environmental",
+      "type": "trigger",
+      "from": {
+        "entity": "question",
+        "id": "external-api"
+      },
+      "to": {
+        "entity": "risk",
+        "id": "environmental-harm-6.6"
+      },
+      "answerValues": [
+        "yes"
+      ],
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ],
+      "logic": "OR"
+    },
+    {
+      "id": "trigger-autonomous-environmental",
+      "type": "trigger",
+      "from": {
+        "entity": "question",
+        "id": "autonomous-operation"
+      },
+      "to": {
+        "entity": "risk",
+        "id": "environmental-harm-6.6"
+      },
+      "answerValues": [
+        "yes"
+      ],
+      "phases": [
+        "phase-2",
+        "phase-3"
+      ],
+      "logic": "OR"
+    },
+    {
+      "id": "trigger-autonomous-ai-welfare",
+      "type": "trigger",
+      "from": {
+        "entity": "question",
+        "id": "autonomous-operation"
+      },
+      "to": {
+        "entity": "risk",
+        "id": "ai-welfare-7.5"
+      },
+      "answerValues": [
+        "yes"
+      ],
+      "phases": [
+        "phase-2",
+        "phase-3"
+      ],
+      "logic": "AND"
+    },
+    {
+      "id": "reg-privacy-consent-waiver",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "privacy-breach-2.1"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.5"
+      },
+      "note": "Informed consent obtained or waiver criteria met"
+    },
+    {
+      "id": "reg-privacy-consent-elements",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "privacy-breach-2.1"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.116.c"
+      },
+      "note": "Basic elements of consent"
+    },
+    {
+      "id": "reg-privacy-consent-documentation",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "privacy-breach-2.1"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.117.a"
+      },
+      "note": "Documentation of informed consent"
+    },
+    {
+      "id": "reg-security-electronic-records",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "security-vulnerabilities-2.2"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "part-11"
+      },
+      "note": "Electronic records and signatures"
+    },
+    {
+      "id": "reg-privacy-hipaa-admin",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "privacy-breach-2.1"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "160"
+      },
+      "note": "HIPAA administrative requirements"
+    },
+    {
+      "id": "reg-privacy-hipaa-definitions",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "privacy-breach-2.1"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "164.501"
+      },
+      "note": "HIPAA definitions and scope"
+    },
+    {
+      "id": "reg-p2-4346",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "unfair-discrimination-1.1"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.6"
+      }
+    },
+    {
+      "id": "reg-p2-4347",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "unfair-discrimination-1.1"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "820.30.g"
+      }
+    },
+    {
+      "id": "reg-p3-4348",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "unfair-discrimination-1.1"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.7"
+      }
+    },
+    {
+      "id": "reg-p3-4349",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "unfair-discrimination-1.1"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "820.100"
+      }
+    },
+    {
+      "id": "reg-p3-4350",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "unfair-discrimination-1.1"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.116.a"
+      }
+    },
+    {
+      "id": "reg-p2-4351",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "toxic-content-1.2"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.6"
+      }
+    },
+    {
+      "id": "reg-p2-4352",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "toxic-content-1.2"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "820.30.g"
+      }
+    },
+    {
+      "id": "reg-p3-4353",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "toxic-content-1.2"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.7"
+      }
+    },
+    {
+      "id": "reg-p3-4354",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "toxic-content-1.2"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "820.100"
+      }
+    },
+    {
+      "id": "reg-p3-4355",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "toxic-content-1.2"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.116.a"
+      }
+    },
+    {
+      "id": "reg-p1-4356",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "unequal-performance-1.3"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.1"
+      }
+    },
+    {
+      "id": "reg-p1-4357",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "unequal-performance-1.3"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.2"
+      }
+    },
+    {
+      "id": "reg-p2-4358",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "unequal-performance-1.3"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.6"
+      }
+    },
+    {
+      "id": "reg-p2-4359",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "unequal-performance-1.3"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "820.30.g"
+      }
+    },
+    {
+      "id": "reg-p3-4360",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "unequal-performance-1.3"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.7"
+      }
+    },
+    {
+      "id": "reg-p3-4361",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "unequal-performance-1.3"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "820.100"
+      }
+    },
+    {
+      "id": "reg-p3-4362",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "unequal-performance-1.3"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.116.a"
+      }
+    },
+    {
+      "id": "reg-p1-4363",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "privacy-breach-2.1"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.1"
+      }
+    },
+    {
+      "id": "reg-p1-4364",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "privacy-breach-2.1"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.2"
+      }
+    },
+    {
+      "id": "reg-p2-4365",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "privacy-breach-2.1"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.6"
+      }
+    },
+    {
+      "id": "reg-p2-4366",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "privacy-breach-2.1"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "820.30.g"
+      }
+    },
+    {
+      "id": "reg-p3-4367",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "privacy-breach-2.1"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "820.100"
+      }
+    },
+    {
+      "id": "reg-p1-4368",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "security-vulnerabilities-2.2"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.1"
+      }
+    },
+    {
+      "id": "reg-p1-4369",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "security-vulnerabilities-2.2"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.2"
+      }
+    },
+    {
+      "id": "reg-p2-4370",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "security-vulnerabilities-2.2"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.6"
+      }
+    },
+    {
+      "id": "reg-p3-4371",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "security-vulnerabilities-2.2"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.7"
+      }
+    },
+    {
+      "id": "reg-p3-4372",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "security-vulnerabilities-2.2"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.116.a"
+      }
+    },
+    {
+      "id": "reg-p1-4373",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "false-information-3.1"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.1"
+      }
+    },
+    {
+      "id": "reg-p1-4374",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "false-information-3.1"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.2"
+      }
+    },
+    {
+      "id": "reg-p2-4375",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "false-information-3.1"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.6"
+      }
+    },
+    {
+      "id": "reg-p2-4376",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "false-information-3.1"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "820.30.g"
+      }
+    },
+    {
+      "id": "reg-p3-4377",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "false-information-3.1"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.7"
+      }
+    },
+    {
+      "id": "reg-p3-4378",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "false-information-3.1"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "820.100"
+      }
+    },
+    {
+      "id": "reg-p2-4379",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "information-pollution-3.2"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.6"
+      }
+    },
+    {
+      "id": "reg-p2-4380",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "information-pollution-3.2"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "820.30.g"
+      }
+    },
+    {
+      "id": "reg-p3-4381",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "information-pollution-3.2"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.7"
+      }
+    },
+    {
+      "id": "reg-p3-4382",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "information-pollution-3.2"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "820.100"
+      }
+    },
+    {
+      "id": "reg-p3-4383",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "information-pollution-3.2"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.116.a"
+      }
+    },
+    {
+      "id": "reg-p1-4384",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "disinformation-surveillance-4.1"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.1"
+      }
+    },
+    {
+      "id": "reg-p1-4385",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "disinformation-surveillance-4.1"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.2"
+      }
+    },
+    {
+      "id": "reg-p2-4386",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "disinformation-surveillance-4.1"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.6"
+      }
+    },
+    {
+      "id": "reg-p2-4387",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "disinformation-surveillance-4.1"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "820.30.g"
+      }
+    },
+    {
+      "id": "reg-p3-4388",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "disinformation-surveillance-4.1"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.7"
+      }
+    },
+    {
+      "id": "reg-p3-4389",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "disinformation-surveillance-4.1"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "820.100"
+      }
+    },
+    {
+      "id": "reg-p1-4390",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "cyberattacks-mass-harm-4.2"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.2"
+      }
+    },
+    {
+      "id": "reg-p2-4391",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "cyberattacks-mass-harm-4.2"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.6"
+      }
+    },
+    {
+      "id": "reg-p3-4392",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "cyberattacks-mass-harm-4.2"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.7"
+      }
+    },
+    {
+      "id": "reg-p3-4393",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "cyberattacks-mass-harm-4.2"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.116.a"
+      }
+    },
+    {
+      "id": "reg-p1-4394",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "fraud-manipulation-4.3"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.1"
+      }
+    },
+    {
+      "id": "reg-p1-4395",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "fraud-manipulation-4.3"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.2"
+      }
+    },
+    {
+      "id": "reg-p2-4396",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "fraud-manipulation-4.3"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.6"
+      }
+    },
+    {
+      "id": "reg-p2-4397",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "fraud-manipulation-4.3"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "820.30.g"
+      }
+    },
+    {
+      "id": "reg-p3-4398",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "fraud-manipulation-4.3"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.7"
+      }
+    },
+    {
+      "id": "reg-p3-4399",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "fraud-manipulation-4.3"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "820.100"
+      }
+    },
+    {
+      "id": "reg-p1-4400",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "overreliance-5.1"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.2"
+      }
+    },
+    {
+      "id": "reg-p2-4401",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "overreliance-5.1"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.6"
+      }
+    },
+    {
+      "id": "reg-p2-4402",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "overreliance-5.1"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "820.30.g"
+      }
+    },
+    {
+      "id": "reg-p3-4403",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "overreliance-5.1"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.7"
+      }
+    },
+    {
+      "id": "reg-p3-4404",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "overreliance-5.1"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "820.100"
+      }
+    },
+    {
+      "id": "reg-p3-4405",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "overreliance-5.1"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.116.a"
+      }
+    },
+    {
+      "id": "reg-p1-4406",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "loss-of-agency-5.2"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.1"
+      }
+    },
+    {
+      "id": "reg-p1-4407",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "loss-of-agency-5.2"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.2"
+      }
+    },
+    {
+      "id": "reg-p2-4408",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "loss-of-agency-5.2"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.6"
+      }
+    },
+    {
+      "id": "reg-p2-4409",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "loss-of-agency-5.2"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "820.30.g"
+      }
+    },
+    {
+      "id": "reg-p3-4410",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "loss-of-agency-5.2"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.7"
+      }
+    },
+    {
+      "id": "reg-p3-4411",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "loss-of-agency-5.2"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "820.100"
+      }
+    },
+    {
+      "id": "reg-p1-4412",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "power-centralization-6.1"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.1"
+      }
+    },
+    {
+      "id": "reg-p1-4413",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "power-centralization-6.1"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.2"
+      }
+    },
+    {
+      "id": "reg-p2-4414",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "power-centralization-6.1"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.6"
+      }
+    },
+    {
+      "id": "reg-p2-4415",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "power-centralization-6.1"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "820.30.g"
+      }
+    },
+    {
+      "id": "reg-p3-4416",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "power-centralization-6.1"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.7"
+      }
+    },
+    {
+      "id": "reg-p3-4417",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "power-centralization-6.1"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "820.100"
+      }
+    },
+    {
+      "id": "reg-p3-4418",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "power-centralization-6.1"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.116.a"
+      }
+    },
+    {
+      "id": "reg-p1-4419",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "inequality-employment-6.2"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.1"
+      }
+    },
+    {
+      "id": "reg-p1-4420",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "inequality-employment-6.2"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.2"
+      }
+    },
+    {
+      "id": "reg-p2-4421",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "inequality-employment-6.2"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.6"
+      }
+    },
+    {
+      "id": "reg-p2-4422",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "inequality-employment-6.2"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "820.30.g"
+      }
+    },
+    {
+      "id": "reg-p3-4423",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "inequality-employment-6.2"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.7"
+      }
+    },
+    {
+      "id": "reg-p3-4424",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "inequality-employment-6.2"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "820.100"
+      }
+    },
+    {
+      "id": "reg-p3-4425",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "inequality-employment-6.2"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.116.a"
+      }
+    },
+    {
+      "id": "reg-p1-4426",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "devaluation-human-effort-6.3"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.1"
+      }
+    },
+    {
+      "id": "reg-p1-4427",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "devaluation-human-effort-6.3"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.2"
+      }
+    },
+    {
+      "id": "reg-p2-4428",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "devaluation-human-effort-6.3"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.6"
+      }
+    },
+    {
+      "id": "reg-p2-4429",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "devaluation-human-effort-6.3"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "820.30.g"
+      }
+    },
+    {
+      "id": "reg-p3-4430",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "devaluation-human-effort-6.3"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.7"
+      }
+    },
+    {
+      "id": "reg-p3-4431",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "devaluation-human-effort-6.3"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "820.100"
+      }
+    },
+    {
+      "id": "reg-p3-4432",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "devaluation-human-effort-6.3"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.116.a"
+      }
+    },
+    {
+      "id": "reg-p1-4433",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "competitive-dynamics-6.4"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.1"
+      }
+    },
+    {
+      "id": "reg-p1-4434",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "competitive-dynamics-6.4"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.2"
+      }
+    },
+    {
+      "id": "reg-p2-4435",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "competitive-dynamics-6.4"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.6"
+      }
+    },
+    {
+      "id": "reg-p2-4436",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "competitive-dynamics-6.4"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "820.30.g"
+      }
+    },
+    {
+      "id": "reg-p3-4437",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "competitive-dynamics-6.4"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.7"
+      }
+    },
+    {
+      "id": "reg-p3-4438",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "competitive-dynamics-6.4"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "820.100"
+      }
+    },
+    {
+      "id": "reg-p3-4439",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "competitive-dynamics-6.4"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.116.a"
+      }
+    },
+    {
+      "id": "reg-p1-4440",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "governance-failure-6.5"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.2"
+      }
+    },
+    {
+      "id": "reg-p2-4441",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "governance-failure-6.5"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.6"
+      }
+    },
+    {
+      "id": "reg-p2-4442",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "governance-failure-6.5"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "820.30.g"
+      }
+    },
+    {
+      "id": "reg-p3-4443",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "governance-failure-6.5"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.7"
+      }
+    },
+    {
+      "id": "reg-p3-4444",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "governance-failure-6.5"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "820.100"
+      }
+    },
+    {
+      "id": "reg-p3-4445",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "governance-failure-6.5"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.116.a"
+      }
+    },
+    {
+      "id": "reg-p1-4446",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "environmental-harm-6.6"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.1"
+      }
+    },
+    {
+      "id": "reg-p1-4447",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "environmental-harm-6.6"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.2"
+      }
+    },
+    {
+      "id": "reg-p2-4448",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "environmental-harm-6.6"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.6"
+      }
+    },
+    {
+      "id": "reg-p2-4449",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "environmental-harm-6.6"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "820.30.g"
+      }
+    },
+    {
+      "id": "reg-p3-4450",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "environmental-harm-6.6"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.7"
+      }
+    },
+    {
+      "id": "reg-p3-4451",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "environmental-harm-6.6"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "820.100"
+      }
+    },
+    {
+      "id": "reg-p3-4452",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "environmental-harm-6.6"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.116.a"
+      }
+    },
+    {
+      "id": "reg-p2-4453",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "misaligned-goals-7.1"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.6"
+      }
+    },
+    {
+      "id": "reg-p2-4454",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "misaligned-goals-7.1"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "820.30.g"
+      }
+    },
+    {
+      "id": "reg-p3-4455",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "misaligned-goals-7.1"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.7"
+      }
+    },
+    {
+      "id": "reg-p3-4456",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "misaligned-goals-7.1"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "820.100"
+      }
+    },
+    {
+      "id": "reg-p3-4457",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "misaligned-goals-7.1"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.116.a"
+      }
+    },
+    {
+      "id": "reg-p2-4458",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "dangerous-capabilities-7.2"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.6"
+      }
+    },
+    {
+      "id": "reg-p2-4459",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "dangerous-capabilities-7.2"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "820.30.g"
+      }
+    },
+    {
+      "id": "reg-p3-4460",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "dangerous-capabilities-7.2"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.7"
+      }
+    },
+    {
+      "id": "reg-p3-4461",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "dangerous-capabilities-7.2"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "820.100"
+      }
+    },
+    {
+      "id": "reg-p3-4462",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "dangerous-capabilities-7.2"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.116.a"
+      }
+    },
+    {
+      "id": "reg-p1-4463",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "lack-robustness-7.3"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.2"
+      }
+    },
+    {
+      "id": "reg-p2-4464",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "lack-robustness-7.3"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.6"
+      }
+    },
+    {
+      "id": "reg-p2-4465",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "lack-robustness-7.3"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "820.30.g"
+      }
+    },
+    {
+      "id": "reg-p3-4466",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "lack-robustness-7.3"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.7"
+      }
+    },
+    {
+      "id": "reg-p3-4467",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "lack-robustness-7.3"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "820.100"
+      }
+    },
+    {
+      "id": "reg-p3-4468",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "lack-robustness-7.3"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.116.a"
+      }
+    },
+    {
+      "id": "reg-p1-4469",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "lack-transparency-7.4"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.1"
+      }
+    },
+    {
+      "id": "reg-p1-4470",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "lack-transparency-7.4"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.2"
+      }
+    },
+    {
+      "id": "reg-p2-4471",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "lack-transparency-7.4"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.6"
+      }
+    },
+    {
+      "id": "reg-p2-4472",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "lack-transparency-7.4"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "820.30.g"
+      }
+    },
+    {
+      "id": "reg-p3-4473",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "lack-transparency-7.4"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.7"
+      }
+    },
+    {
+      "id": "reg-p3-4474",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "lack-transparency-7.4"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "820.100"
+      }
+    },
+    {
+      "id": "reg-p1-4475",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "ai-welfare-7.5"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.1"
+      }
+    },
+    {
+      "id": "reg-p1-4476",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "ai-welfare-7.5"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.2"
+      }
+    },
+    {
+      "id": "reg-p2-4477",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "ai-welfare-7.5"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.6"
+      }
+    },
+    {
+      "id": "reg-p2-4478",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "ai-welfare-7.5"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "820.30.g"
+      }
+    },
+    {
+      "id": "reg-p3-4479",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "ai-welfare-7.5"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.7"
+      }
+    },
+    {
+      "id": "reg-p3-4480",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "ai-welfare-7.5"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "820.100"
+      }
+    },
+    {
+      "id": "reg-p3-4481",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "ai-welfare-7.5"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.116.a"
+      }
+    },
+    {
+      "id": "reg-p1-4482",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "multi-agent-risks-7.6"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.2"
+      }
+    },
+    {
+      "id": "reg-p2-4483",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "multi-agent-risks-7.6"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "820.30.g"
+      }
+    },
+    {
+      "id": "reg-p3-4484",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "multi-agent-risks-7.6"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.111.a.7"
+      }
+    },
+    {
+      "id": "reg-p3-4485",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "multi-agent-risks-7.6"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "820.100"
+      }
+    },
+    {
+      "id": "reg-p3-4486",
+      "type": "regulation",
+      "from": {
+        "entity": "risk",
+        "id": "multi-agent-risks-7.6"
+      },
+      "to": {
+        "entity": "regulation",
+        "id": "46.116.a"
+      }
+    },
+    {
+      "id": "control-1",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "unfair-discrimination-1.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0707_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-2",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "unfair-discrimination-1.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0709_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-3",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "unfair-discrimination-1.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0788_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-4",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "unfair-discrimination-1.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0989_Gipi\u0161kis2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-5",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "unfair-discrimination-1.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0944_Gipi\u0161kis2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-6",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "unfair-discrimination-1.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0055_Eisenberg2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-7",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "unfair-discrimination-1.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0137_Future of Life Institute2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-8",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "unfair-discrimination-1.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0485_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-9",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "unfair-discrimination-1.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0718_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-10",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "unfair-discrimination-1.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0796_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-11",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "toxic-content-1.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0059_Eisenberg2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-12",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "toxic-content-1.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0060_Eisenberg2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-13",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "toxic-content-1.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0920_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-14",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "toxic-content-1.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0899_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-15",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "toxic-content-1.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0058_Eisenberg2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-16",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "toxic-content-1.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0709_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-17",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "toxic-content-1.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0728_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-18",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "toxic-content-1.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0731_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-19",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "toxic-content-1.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0732_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-20",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "toxic-content-1.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0735_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-21",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "unequal-performance-1.3"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0707_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-22",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "unequal-performance-1.3"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0055_Eisenberg2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-23",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "unequal-performance-1.3"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0056_Eisenberg2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-24",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "unequal-performance-1.3"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0002_Bengio2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-25",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "unequal-performance-1.3"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0010_Bengio2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-26",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "unequal-performance-1.3"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0485_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-27",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "unequal-performance-1.3"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0499_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-28",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "unequal-performance-1.3"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0709_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-29",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "unequal-performance-1.3"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0796_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-30",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "unequal-performance-1.3"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0837_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-31",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "privacy-breach-2.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0067_Eisenberg2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-32",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "privacy-breach-2.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0496_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-33",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "privacy-breach-2.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0068_Eisenberg2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-34",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "privacy-breach-2.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0439_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-35",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "privacy-breach-2.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0465_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-36",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "privacy-breach-2.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0498_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-37",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "privacy-breach-2.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0762_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-38",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "privacy-breach-2.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0811_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-39",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "privacy-breach-2.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0884_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-40",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "privacy-breach-2.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0042_Eisenberg2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-41",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "security-vulnerabilities-2.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0516_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-42",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "security-vulnerabilities-2.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0984_Gipi\u0161kis2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-43",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "security-vulnerabilities-2.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0044_Eisenberg2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-44",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "security-vulnerabilities-2.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0821_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-45",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "security-vulnerabilities-2.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0045_Eisenberg2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-46",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "security-vulnerabilities-2.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0046_Eisenberg2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-47",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "security-vulnerabilities-2.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0147_Future of Life Institute2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-48",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "security-vulnerabilities-2.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0148_Future of Life Institute2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-49",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "security-vulnerabilities-2.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0209_Schuett2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-50",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "security-vulnerabilities-2.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0252_Wiener2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-51",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "false-information-3.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0061_Eisenberg2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-52",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "false-information-3.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0973_Gipi\u0161kis2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-53",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "false-information-3.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0391_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-54",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "false-information-3.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0456_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-55",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "false-information-3.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A1011_Gipi\u0161kis2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-56",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "false-information-3.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0053_Eisenberg2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-57",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "false-information-3.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0402_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-58",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "false-information-3.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0487_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-59",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "false-information-3.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0707_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-60",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "false-information-3.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0953_Gipi\u0161kis2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-61",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "information-pollution-3.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0811_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-62",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "information-pollution-3.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0051_Eisenberg2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-63",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "information-pollution-3.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0056_Eisenberg2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-64",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "information-pollution-3.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0505_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-65",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "information-pollution-3.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0916_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-66",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "information-pollution-3.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0078_Eisenberg2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-67",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "information-pollution-3.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0435_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-68",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "information-pollution-3.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0513_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-69",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "information-pollution-3.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0729_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-70",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "information-pollution-3.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0769_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-71",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "disinformation-surveillance-4.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0111_Future of Life Institute2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-72",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "disinformation-surveillance-4.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0458_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-73",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "disinformation-surveillance-4.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0626_Barrett2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-74",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "disinformation-surveillance-4.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0786_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-75",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "disinformation-surveillance-4.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0065_Eisenberg2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-76",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "disinformation-surveillance-4.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0476_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-77",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "disinformation-surveillance-4.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0484_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-78",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "disinformation-surveillance-4.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0811_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-79",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "disinformation-surveillance-4.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0812_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-80",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "disinformation-surveillance-4.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0890_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-81",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "overreliance-5.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0071_Eisenberg2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-82",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "overreliance-5.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0724_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-83",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "overreliance-5.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0793_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-84",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "overreliance-5.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0986_Gipi\u0161kis2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-85",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "overreliance-5.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0069_Eisenberg2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-86",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "overreliance-5.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0719_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-87",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "overreliance-5.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0725_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-88",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "overreliance-5.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0938_Gipi\u0161kis2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-89",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "overreliance-5.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0159_Future of Life Institute2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-90",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "overreliance-5.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0179_Schuett2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-91",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "loss-of-agency-5.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0071_Eisenberg2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-92",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "loss-of-agency-5.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0632_Barrett2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-93",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "loss-of-agency-5.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0497_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-94",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "loss-of-agency-5.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0722_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-95",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "loss-of-agency-5.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0727_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-96",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "loss-of-agency-5.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0787_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-97",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "loss-of-agency-5.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0861_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-98",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "loss-of-agency-5.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0873_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-99",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "loss-of-agency-5.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0890_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-100",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "loss-of-agency-5.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0950_Gipi\u0161kis2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-101",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "misaligned-goals-7.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0078_Eisenberg2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-102",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "misaligned-goals-7.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0873_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-103",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "misaligned-goals-7.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0980_Gipi\u0161kis2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-104",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "misaligned-goals-7.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0952_Gipi\u0161kis2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-105",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "misaligned-goals-7.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0954_Gipi\u0161kis2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-106",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "misaligned-goals-7.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0035_Casper2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-107",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "misaligned-goals-7.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0629_Barrett2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-108",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "misaligned-goals-7.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0063_Eisenberg2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-109",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "misaligned-goals-7.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0171_Schuett2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-110",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "misaligned-goals-7.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0178_Schuett2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-111",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "dangerous-capabilities-7.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0964_Gipi\u0161kis2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-112",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "dangerous-capabilities-7.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0062_Eisenberg2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-113",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "dangerous-capabilities-7.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0117_Future of Life Institute2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-114",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "dangerous-capabilities-7.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0783_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-115",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "dangerous-capabilities-7.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0058_Eisenberg2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-116",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "dangerous-capabilities-7.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0790_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-117",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "dangerous-capabilities-7.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0892_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-118",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "dangerous-capabilities-7.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0968_Gipi\u0161kis2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-119",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "dangerous-capabilities-7.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A1027_Uuk2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-120",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "dangerous-capabilities-7.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0063_Eisenberg2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-121",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "lack-robustness-7.3"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0054_Eisenberg2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-122",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "lack-robustness-7.3"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A1009_Gipi\u0161kis2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-123",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "lack-robustness-7.3"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0053_Eisenberg2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-124",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "lack-robustness-7.3"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0678_Barrett2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-125",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "lack-robustness-7.3"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0727_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-126",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "lack-robustness-7.3"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0391_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-127",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "lack-robustness-7.3"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0513_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-128",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "lack-robustness-7.3"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0627_Barrett2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-129",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "lack-robustness-7.3"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0957_Gipi\u0161kis2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-130",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "lack-robustness-7.3"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0002_Bengio2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-131",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "lack-transparency-7.4"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0811_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-132",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "lack-transparency-7.4"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0418_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-133",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "lack-transparency-7.4"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0870_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-134",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "lack-transparency-7.4"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0269_EU AI Office2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-135",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "lack-transparency-7.4"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0402_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-136",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "lack-transparency-7.4"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0813_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-137",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "lack-transparency-7.4"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0933_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-138",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "lack-transparency-7.4"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0074_Eisenberg2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-139",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "lack-transparency-7.4"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0389_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-140",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "lack-transparency-7.4"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0527_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-141",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "cyberattacks-mass-harm-4.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0117_Future of Life Institute2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-142",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "cyberattacks-mass-harm-4.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0209_Schuett2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-143",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "cyberattacks-mass-harm-4.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0984_Gipi\u0161kis2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-144",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "cyberattacks-mass-harm-4.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0009_Bengio2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-145",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "cyberattacks-mass-harm-4.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0111_Future of Life Institute2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-146",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "cyberattacks-mass-harm-4.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0514_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-147",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "cyberattacks-mass-harm-4.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0786_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-148",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "cyberattacks-mass-harm-4.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0980_Gipi\u0161kis2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-149",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "cyberattacks-mass-harm-4.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A1036_Uuk2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-150",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "cyberattacks-mass-harm-4.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A1037_Uuk2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-151",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "fraud-manipulation-4.3"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0786_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-152",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "fraud-manipulation-4.3"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0111_Future of Life Institute2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-153",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "fraud-manipulation-4.3"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0458_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-154",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "fraud-manipulation-4.3"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0484_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-155",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "fraud-manipulation-4.3"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0899_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-156",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "fraud-manipulation-4.3"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0902_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-157",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "fraud-manipulation-4.3"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0975_Gipi\u0161kis2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-158",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "fraud-manipulation-4.3"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0986_Gipi\u0161kis2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-159",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "fraud-manipulation-4.3"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A1029_Uuk2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-160",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "fraud-manipulation-4.3"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0063_Eisenberg2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-161",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "power-centralization-6.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0906_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-162",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "power-centralization-6.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0405_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-163",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "power-centralization-6.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0728_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-164",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "power-centralization-6.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0729_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-165",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "power-centralization-6.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0730_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-166",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "power-centralization-6.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0731_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-167",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "power-centralization-6.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0732_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-168",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "power-centralization-6.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0733_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-169",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "power-centralization-6.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0734_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-170",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "power-centralization-6.1"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0735_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-171",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "inequality-employment-6.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0076_Eisenberg2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-172",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "inequality-employment-6.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0716_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-173",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "inequality-employment-6.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0886_UK Government2023"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-174",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "inequality-employment-6.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0006_Bengio2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-175",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "inequality-employment-6.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0008_Bengio2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-176",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "inequality-employment-6.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0072_Eisenberg2025"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-177",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "inequality-employment-6.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0115_Future of Life Institute2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-178",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "inequality-employment-6.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0445_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-179",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "inequality-employment-6.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0509_NIST2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-180",
+      "type": "control",
+      "from": {
+        "entity": "risk",
+        "id": "inequality-employment-6.2"
+      },
+      "to": {
+        "entity": "control",
+        "id": "A0626_Barrett2024"
+      },
+      "phases": [
+        "phase-1",
+        "phase-2",
+        "phase-3"
+      ]
+    },
+    {
+      "id": "control-cat-1",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "unfair-discrimination-1.1"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "testing-auditing-3.1"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-2",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "unfair-discrimination-1.1"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "data-governance-3.2"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-3",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "unfair-discrimination-1.1"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "societal-impact-1.7"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-4",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "unfair-discrimination-1.1"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "documentation-4.1"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-5",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "unfair-discrimination-1.1"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "post-deployment-3.5"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-6",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "toxic-content-1.2"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "content-safety-2.4"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-7",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "toxic-content-1.2"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "model-alignment-2.2"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-8",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "toxic-content-1.2"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "testing-auditing-3.1"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-9",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "toxic-content-1.2"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "data-governance-3.2"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-10",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "toxic-content-1.2"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "incident-response-3.6"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-11",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "unequal-performance-1.3"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "testing-auditing-3.1"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-12",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "unequal-performance-1.3"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "data-governance-3.2"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-13",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "unequal-performance-1.3"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "post-deployment-3.5"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-14",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "unequal-performance-1.3"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "documentation-4.1"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-15",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "unequal-performance-1.3"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "risk-disclosure-4.2"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-16",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "privacy-breach-2.1"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "data-governance-3.2"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-17",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "privacy-breach-2.1"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "infrastructure-security-2.1"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-18",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "privacy-breach-2.1"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "access-management-3.3"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-19",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "privacy-breach-2.1"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "testing-auditing-3.1"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-20",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "privacy-breach-2.1"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "incident-reporting-4.3"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-21",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "security-vulnerabilities-2.2"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "infrastructure-security-2.1"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-22",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "security-vulnerabilities-2.2"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "testing-auditing-3.1"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-23",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "security-vulnerabilities-2.2"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "incident-response-3.6"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-24",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "security-vulnerabilities-2.2"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "access-management-3.3"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-25",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "security-vulnerabilities-2.2"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "post-deployment-3.5"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-26",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "false-information-3.1"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "testing-auditing-3.1"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-27",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "false-information-3.1"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "content-safety-2.4"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-28",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "false-information-3.1"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "documentation-4.1"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-29",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "false-information-3.1"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "risk-disclosure-4.2"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-30",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "false-information-3.1"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "post-deployment-3.5"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-31",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "information-pollution-3.2"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "data-governance-3.2"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-32",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "information-pollution-3.2"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "content-safety-2.4"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-33",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "information-pollution-3.2"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "testing-auditing-3.1"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-34",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "information-pollution-3.2"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "access-management-3.3"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-35",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "disinformation-surveillance-4.1"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "content-safety-2.4"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-36",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "disinformation-surveillance-4.1"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "access-management-3.3"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-37",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "disinformation-surveillance-4.1"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "data-governance-3.2"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-38",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "disinformation-surveillance-4.1"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "testing-auditing-3.1"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-39",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "disinformation-surveillance-4.1"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "incident-reporting-4.3"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-40",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "cyberattacks-mass-harm-4.2"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "infrastructure-security-2.1"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-41",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "cyberattacks-mass-harm-4.2"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "content-safety-2.4"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-42",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "cyberattacks-mass-harm-4.2"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "access-management-3.3"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-43",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "cyberattacks-mass-harm-4.2"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "data-governance-3.2"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-44",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "cyberattacks-mass-harm-4.2"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "incident-response-3.6"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-45",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "fraud-manipulation-4.3"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "content-safety-2.4"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-46",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "fraud-manipulation-4.3"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "testing-auditing-3.1"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-47",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "fraud-manipulation-4.3"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "access-management-3.3"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-48",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "fraud-manipulation-4.3"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "documentation-4.1"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-49",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "overreliance-5.1"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "documentation-4.1"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-50",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "overreliance-5.1"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "risk-disclosure-4.2"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-51",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "overreliance-5.1"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "user-rights-4.6"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-52",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "overreliance-5.1"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "safety-frameworks-1.5"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-53",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "overreliance-5.1"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "post-deployment-3.5"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-54",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "loss-of-agency-5.2"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "user-rights-4.6"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-55",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "loss-of-agency-5.2"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "documentation-4.1"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-56",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "loss-of-agency-5.2"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "risk-disclosure-4.2"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-57",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "loss-of-agency-5.2"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "societal-impact-1.7"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-58",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "power-centralization-6.1"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "societal-impact-1.7"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-59",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "power-centralization-6.1"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "governance-disclosure-4.4"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-60",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "power-centralization-6.1"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "third-party-access-4.5"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-61",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "power-centralization-6.1"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "board-oversight-1.1"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-62",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "inequality-employment-6.2"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "societal-impact-1.7"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-63",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "inequality-employment-6.2"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "documentation-4.1"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-64",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "inequality-employment-6.2"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "risk-disclosure-4.2"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-65",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "devaluation-human-effort-6.3"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "societal-impact-1.7"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-66",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "devaluation-human-effort-6.3"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "documentation-4.1"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-67",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "devaluation-human-effort-6.3"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "post-deployment-3.5"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-68",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "competitive-dynamics-6.4"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "safety-frameworks-1.5"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-69",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "competitive-dynamics-6.4"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "board-oversight-1.1"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-70",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "competitive-dynamics-6.4"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "risk-management-1.2"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-71",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "governance-failure-6.5"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "board-oversight-1.1"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-72",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "governance-failure-6.5"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "governance-disclosure-4.4"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-73",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "governance-failure-6.5"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "third-party-access-4.5"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-74",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "governance-failure-6.5"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "incident-reporting-4.3"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-75",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "environmental-harm-6.6"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "environmental-1.6"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-76",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "environmental-harm-6.6"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "documentation-4.1"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-77",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "environmental-harm-6.6"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "testing-auditing-3.1"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-78",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "misaligned-goals-7.1"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "model-alignment-2.2"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-79",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "misaligned-goals-7.1"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "testing-auditing-3.1"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-80",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "misaligned-goals-7.1"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "safety-engineering-2.3"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-81",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "misaligned-goals-7.1"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "post-deployment-3.5"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-82",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "dangerous-capabilities-7.2"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "safety-engineering-2.3"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-83",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "dangerous-capabilities-7.2"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "access-management-3.3"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-84",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "dangerous-capabilities-7.2"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "content-safety-2.4"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-85",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "dangerous-capabilities-7.2"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "testing-auditing-3.1"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-86",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "dangerous-capabilities-7.2"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "data-governance-3.2"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-87",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "lack-robustness-7.3"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "testing-auditing-3.1"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-88",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "lack-robustness-7.3"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "safety-engineering-2.3"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-89",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "lack-robustness-7.3"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "data-governance-3.2"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-90",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "lack-robustness-7.3"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "incident-response-3.6"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-91",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "lack-robustness-7.3"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "post-deployment-3.5"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-92",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "lack-transparency-7.4"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "documentation-4.1"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-93",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "lack-transparency-7.4"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "risk-disclosure-4.2"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-94",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "lack-transparency-7.4"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "governance-disclosure-4.4"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-95",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "lack-transparency-7.4"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "user-rights-4.6"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-96",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "ai-welfare-7.5"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "documentation-4.1"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-97",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "ai-welfare-7.5"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "board-oversight-1.1"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-98",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "multi-agent-risks-7.6"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "testing-auditing-3.1"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-99",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "multi-agent-risks-7.6"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "safety-engineering-2.3"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-100",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "multi-agent-risks-7.6"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "post-deployment-3.5"
+      },
+      "reasoning": "AIHSR-based mapping"
+    },
+    {
+      "id": "control-cat-101",
+      "type": "mitigation",
+      "from": {
+        "entity": "risk",
+        "id": "multi-agent-risks-7.6"
+      },
+      "to": {
+        "entity": "mitigation",
+        "id": "incident-response-3.6"
+      },
+      "reasoning": "AIHSR-based mapping"
+    }
+  ]
+}

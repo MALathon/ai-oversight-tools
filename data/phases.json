@@ -1,0 +1,72 @@
+{
+  "$schema": "../schemas/phases.schema.json",
+  "version": "1.0.0",
+  "source": "AIHSR Risk Reference Tool v1.5 (Tamiko Eto)",
+  "lastUpdated": "2025-09-02",
+  "phases": [
+    {
+      "id": "phase-1",
+      "number": 1,
+      "name": "Discovery & Algorithm Development",
+      "shortName": "Discovery",
+      "description": "Initial model development using retrospective or synthetic data. No direct patient interaction. Focus on proof-of-concept and feasibility.",
+      "characteristics": [
+        "Retrospective or synthetic data use",
+        "No clinical deployment",
+        "Algorithm training and initial testing",
+        "De-identification of training data",
+        "Bias analysis on retrospective datasets"
+      ],
+      "typicalOversight": "Minimal to Standard IRB review",
+      "keyFocus": [
+        "Data governance",
+        "Privacy protections",
+        "Bias identification",
+        "Documentation of limitations"
+      ]
+    },
+    {
+      "id": "phase-2",
+      "number": 2,
+      "name": "Validation (Prospective or Synthetic Validation)",
+      "shortName": "Validation",
+      "description": "Prospective testing with real or synthetic validation data. May involve limited clinician interaction but no clinical reliance. Focus on performance validation.",
+      "characteristics": [
+        "Prospective data collection possible",
+        "Clinician review of outputs (not for decisions)",
+        "Formal testing and auditing protocols",
+        "Shadow mode or parallel testing",
+        "Subgroup performance evaluation"
+      ],
+      "typicalOversight": "Standard to Enhanced IRB review",
+      "keyFocus": [
+        "Performance validation",
+        "Fairness testing across subgroups",
+        "Human oversight protocols",
+        "User feedback collection"
+      ]
+    },
+    {
+      "id": "phase-3",
+      "number": 3,
+      "name": "Clinical Investigation or Deployment",
+      "shortName": "Clinical/Deployment",
+      "description": "Active clinical use or deployment. AI outputs may inform or support clinical decisions. Ongoing monitoring required.",
+      "characteristics": [
+        "Integration into clinical workflows",
+        "Clinician training on AI use",
+        "Staged rollout with monitoring",
+        "Real-time safety monitoring",
+        "Incident reporting systems"
+      ],
+      "typicalOversight": "Enhanced to Full IRB review",
+      "keyFocus": [
+        "Patient safety",
+        "Human-in-the-loop requirements",
+        "Ongoing performance monitoring",
+        "Adverse event reporting",
+        "Regulatory compliance"
+      ]
+    }
+  ]
+}

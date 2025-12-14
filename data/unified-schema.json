@@ -1,0 +1,119 @@
+{
+  "$schema": "./schemas/unified.schema.json",
+  "version": "1.0.0",
+  "lastUpdated": "2025-12-13",
+  "source": "AIHSR Risk Reference Tool v1.5 (Tamiko Eto) - SME reviewed",
+  "description": "Unified data model for AI Oversight Tools - purely AIHSR-based",
+
+  "_designNotes": {
+    "philosophy": "Risk Subdomains are the PRIMARY organizing principle. All three tools work with the same AIHSR data, viewed through different lenses.",
+    "dataSource": "All content derives from SME-reviewed AIHSR Risk Reference Tool, NOT the slide techCharacteristics (which were made up)",
+    "toolUsage": {
+      "riskMatrix": "Visual 3x3 grid showing risk subdomains mapped by Phase × Patient Impact. Click cell to see applicable subdomains, prompts, and mitigations.",
+      "reviewerChecklist": "Reviewer selects phase and model type(s). System shows applicable reviewer prompts per subdomain with CFR references. Reviewer checks each item.",
+      "innovatorChecklist": "Innovator answers assessment questions. System identifies triggered risk subdomains. Shows relevant mitigations and calculates oversight level."
+    }
+  },
+
+  "coreDataFiles": {
+    "_note": "These files contain all SME-reviewed data. phaseGuidance is now embedded in riskSubdomains.",
+    "riskDomains": "data/risk-domains.json",
+    "riskSubdomains": "data/risk-subdomains.json (includes phaseGuidance per risk)",
+    "modelTypes": "data/model-types.json",
+    "populationVulnerabilities": "data/population-vulnerabilities.json",
+    "phases": "data/phases.json",
+    "mitigationStrategies": "data/mitigation-strategies.json",
+    "reviewerPrompts": "data/reviewer-prompts.json",
+    "cfrRegulations": "data/cfr-regulations.json",
+    "traceability": "data/traceability.json",
+    "useCases": "data/use-cases.json"
+  },
+
+  "riskMatrix": {
+    "_note": "Configuration for the Risk Matrix tool (Slide 18 equivalent)",
+    "xAxis": {
+      "id": "phase",
+      "label": "Development Phase",
+      "description": "What stage of AI development is your project in?",
+      "values": [
+        {"id": "phase-1", "label": "Discovery", "position": 1},
+        {"id": "phase-2", "label": "Validation", "position": 2},
+        {"id": "phase-3", "label": "Clinical/Deployment", "position": 3}
+      ]
+    },
+    "yAxis": {
+      "id": "patient-impact",
+      "label": "Patient Impact",
+      "description": "How directly does this AI affect patient care?",
+      "values": [
+        {"id": "no-impact", "label": "No Direct Impact", "position": 1, "description": "Pure research, no patient contact"},
+        {"id": "indirect", "label": "Indirect Impact", "position": 2, "description": "May inform care but not direct decisions"},
+        {"id": "direct-care", "label": "Direct Care Decisions", "position": 3, "description": "Directly influences treatment or diagnosis"}
+      ]
+    },
+    "cells": [
+      {"phase": "phase-1", "impact": "no-impact", "riskLevel": "low", "oversightLevel": "minimal", "color": "#22c55e"},
+      {"phase": "phase-1", "impact": "indirect", "riskLevel": "low", "oversightLevel": "standard", "color": "#84cc16"},
+      {"phase": "phase-1", "impact": "direct-care", "riskLevel": "medium", "oversightLevel": "standard", "color": "#eab308"},
+      {"phase": "phase-2", "impact": "no-impact", "riskLevel": "low", "oversightLevel": "standard", "color": "#84cc16"},
+      {"phase": "phase-2", "impact": "indirect", "riskLevel": "medium", "oversightLevel": "standard", "color": "#eab308"},
+      {"phase": "phase-2", "impact": "direct-care", "riskLevel": "high", "oversightLevel": "enhanced", "color": "#f97316"},
+      {"phase": "phase-3", "impact": "no-impact", "riskLevel": "medium", "oversightLevel": "standard", "color": "#eab308"},
+      {"phase": "phase-3", "impact": "indirect", "riskLevel": "high", "oversightLevel": "enhanced", "color": "#f97316"},
+      {"phase": "phase-3", "impact": "direct-care", "riskLevel": "high", "oversightLevel": "full", "color": "#ef4444"}
+    ]
+  },
+
+  "oversightLevels": [
+    {"id": "minimal", "name": "Minimal Review", "description": "Expedited administrative review", "criteria": "Low risk, Phase 1, no vulnerable populations"},
+    {"id": "standard", "name": "Standard Review", "description": "Standard IRB review process", "criteria": "Moderate risk or Phase 2 activities"},
+    {"id": "enhanced", "name": "Enhanced Review", "description": "Additional safeguards and monitoring required", "criteria": "High risk, vulnerable populations, or Phase 3"},
+    {"id": "full", "name": "Full Committee Review", "description": "Comprehensive committee review with ongoing oversight", "criteria": "Direct care decisions in clinical deployment"}
+  ],
+
+  "riskTypes": [
+    {"id": "distributional", "code": "D", "name": "Distributional", "description": "Affects how benefits and harms are distributed across groups"},
+    {"id": "interactional", "code": "I", "name": "Interactional", "description": "Arises from human-AI interaction"},
+    {"id": "systemic", "code": "S", "name": "Systemic", "description": "Affects broader systems and structures"}
+  ],
+
+  "assessmentQuestionCategories": {
+    "_note": "Categories of questions for the Innovator Checklist to identify applicable risks",
+    "categories": [
+      {"id": "project-basics", "name": "Project Basics", "order": 1},
+      {"id": "ai-technology", "name": "AI Technology", "order": 2},
+      {"id": "data-handling", "name": "Data Handling", "order": 3},
+      {"id": "population", "name": "Study Population", "order": 4},
+      {"id": "clinical-impact", "name": "Clinical Impact", "order": 5},
+      {"id": "deployment", "name": "Deployment Context", "order": 6}
+    ]
+  },
+
+  "modelTypeToSubdomainRelevance": {
+    "_note": "Which risk subdomains are MOST relevant for each model type (all may apply, but these are primary)",
+    "predictive": ["unfair-discrimination-1.1", "unequal-performance-1.3", "privacy-breach-2.1", "false-information-3.1", "lack-robustness-7.3"],
+    "llm": ["unfair-discrimination-1.1", "toxic-content-1.2", "privacy-breach-2.1", "false-information-3.1", "information-pollution-3.2", "overreliance-5.1", "lack-transparency-7.4"],
+    "generative-non-llm": ["toxic-content-1.2", "false-information-3.1", "fraud-manipulation-4.3"],
+    "classification": ["unfair-discrimination-1.1", "unequal-performance-1.3", "false-information-3.1"],
+    "recommendation": ["unfair-discrimination-1.1", "disinformation-surveillance-4.1", "overreliance-5.1", "loss-of-agency-5.2"],
+    "supervised-ml": ["unfair-discrimination-1.1", "unequal-performance-1.3", "lack-robustness-7.3"],
+    "computer-vision": ["unfair-discrimination-1.1", "unequal-performance-1.3", "false-information-3.1", "overreliance-5.1"],
+    "unsupervised-ml": ["privacy-breach-2.1", "lack-transparency-7.4"],
+    "speech-audio": ["privacy-breach-2.1", "toxic-content-1.2", "unfair-discrimination-1.1"],
+    "reinforcement-learning": ["misaligned-goals-7.1", "dangerous-capabilities-7.2", "lack-robustness-7.3"],
+    "multi-modal": ["toxic-content-1.2", "false-information-3.1", "privacy-breach-2.1", "lack-transparency-7.4"],
+    "foundation": ["unfair-discrimination-1.1", "toxic-content-1.2", "false-information-3.1", "dangerous-capabilities-7.2", "lack-transparency-7.4"]
+  },
+
+  "vulnerabilityMultipliers": {
+    "_note": "Population vulnerabilities increase oversight requirements",
+    "children": {"additionalProtections": true, "oversightIncrease": 1, "triggersSubdomains": ["toxic-content-1.2", "loss-of-agency-5.2"]},
+    "older-adults": {"additionalProtections": true, "oversightIncrease": 1, "triggersSubdomains": ["overreliance-5.1", "loss-of-agency-5.2"]},
+    "cognitively-impaired": {"additionalProtections": true, "oversightIncrease": 2, "triggersSubdomains": ["loss-of-agency-5.2", "overreliance-5.1"]},
+    "racial-ethnic-minorities": {"additionalProtections": false, "oversightIncrease": 0, "triggersSubdomains": ["unfair-discrimination-1.1", "unequal-performance-1.3"]},
+    "non-english-speaking": {"additionalProtections": false, "oversightIncrease": 0, "triggersSubdomains": ["unequal-performance-1.3", "lack-transparency-7.4"]},
+    "economically-disadvantaged": {"additionalProtections": false, "oversightIncrease": 0, "triggersSubdomains": ["power-centralization-6.1", "inequality-employment-6.2"]},
+    "pregnant-women": {"additionalProtections": true, "oversightIncrease": 1, "triggersSubdomains": []},
+    "prisoners": {"additionalProtections": true, "oversightIncrease": 2, "triggersSubdomains": ["loss-of-agency-5.2", "disinformation-surveillance-4.1"]}
+  }
+}

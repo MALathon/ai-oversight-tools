@@ -1,0 +1,380 @@
+{
+  "$schema": "../schemas/risk-subdomains.schema.json",
+  "version": "2.0.0",
+  "source": "AIHSR Risk Reference Tool v1.5 (Tamiko Eto), based on MIT AI Risk Repository",
+  "lastUpdated": "2025-12-13",
+  "riskSubdomains": [
+    {
+      "id": "unfair-discrimination-1.1",
+      "code": "1.1",
+      "name": "Unfair discrimination and misrepresentation",
+      "shortName": "Biased results or misrepresentation",
+      "domain": "discrimination-toxicity",
+      "description": "AI system produces biased outputs that unfairly discriminate against or misrepresent certain groups",
+      "cfrReferences": [
+        "45 CFR 46.111(a)(3) – equitable subject selection",
+        "21 CFR 56.111(a)(3)"
+      ],
+      "phaseGuidance": {
+        "phase-1": "This project will train a predictive model using medical records. The data will be deidentified prior to training and analysis. To reduce bias, we will sort training data by race, gender, and age, then check performance across these groups. The model will not be used for patient care. We will run bias tests on retrospective datasets to make sure results are fair.",
+        "phase-2": "We will validate the AI model on prospectively collected data. During this stage, clinicians will review AI-generated outputs alongside their standard workflows but will not rely on them for clinical decisions. A formal testing and auditing protocol has been established to assess subgroup accuracy, data leakage risk, and overfitting. Any potential harms or errors will be logged and reviewed weekly by the study team. No data will be entered into the medical record. Prospective validation will include subgroup performance audits with fairness thresholds.",
+        "phase-3": "End users will be trained to review AI outputs, document when they follow or override them, and report issues. Rollout will be staged, with monitoring for safety and fairness. System performance, safety incidents, and subgroup disparities will be reported to the IRB (and Sponsor, if applicable) quarterly. Output will be labeled as research-use only. A DSMB will review demographic impacts quarterly, and end-users will receive training on limits of generalizability."
+      }
+    },
+    {
+      "id": "toxic-content-1.2",
+      "code": "1.2",
+      "name": "Exposure to toxic content",
+      "shortName": "Harmful content exposure",
+      "domain": "discrimination-toxicity",
+      "description": "Participants may be exposed to harmful, offensive, or distressing AI-generated content",
+      "cfrReferences": [
+        "45 CFR 46.111(a)(1) – minimize risks",
+        "45 CFR 46.111(a)(2) – reasonable risk-benefit",
+        "21 CFR 56.111"
+      ],
+      "phaseGuidance": {
+        "phase-1": "During model development, we will remove harmful or graphic material from training data. Both computer filters and human review will be used, and the process will be documented for the IRB. The goal at this stage is to keep the AI from learning toxic or unsafe content.",
+        "phase-2": "The AI will run in a safe, controlled off-line setting (away from medical records or participant records of any type). Filters will catch harmful content, which will then be reviewed by a human oversight panel. Participants will be told about possible exposure and may leave at any time if they feel uncomfortable. Incident reports will be logged as they occur and audited weekly by the study team.",
+        "phase-3": "We will include filters to block harmful content before reaching users. A real-time monitoring system will log incidents, which will be promptly reported to the IRB and the DSMB. Filters will be updated as needed. Post-deployment reviews will ensure the continued effectiveness of these safeguards, with retraining or refinement of the content filters when necessary."
+      }
+    },
+    {
+      "id": "unequal-performance-1.3",
+      "code": "1.3",
+      "name": "Unequal performance across groups",
+      "shortName": "Inequity or fairness",
+      "domain": "discrimination-toxicity",
+      "description": "AI system performs differently across demographic or population subgroups",
+      "cfrReferences": [
+        "45 CFR 46.111(a)(3) & (a)(4)"
+      ],
+      "phaseGuidance": {
+        "phase-1": "Training data will be checked for gaps across race, gender, age, and socioeconomic status. If needed, we will rebalance the data so all groups are represented fairly.",
+        "phase-2": "The model will be tested in 'blinded' subgroup evaluations. Any gaps in performance between groups will be flagged and shared with an independent oversight team. Weekly meetings will decide if retraining or adjustments are needed before moving forward (moving into live deployment).",
+        "phase-3": "A fairness dashboard will track how AI performs across groups. Any gaps will be corrected quickly and reports will be submitted quarterly to the IRB. IRB oversight is ongoing."
+      }
+    },
+    {
+      "id": "privacy-breach-2.1",
+      "code": "2.1",
+      "name": "Compromise of privacy by leaking or correctly inferring sensitive information",
+      "shortName": "Privacy or confidentiality breach",
+      "domain": "privacy-security",
+      "description": "AI system may leak or enable inference of sensitive personal information",
+      "cfrReferences": [
+        "45 CFR 46.111(a)(7) – confidentiality",
+        "21 CFR 812.38",
+        "21 CFR 820.30(g)"
+      ],
+      "phaseGuidance": {
+        "phase-1": "All training datasets will be de-identified to meet HIPAA Safe Harbor standards. We will remove direct identifiers and indirect identifiers (zipcode, any element of a date, etc.) and use privacy tools like differential privacy. Data will be stored securely, access-controlled servers, only study team members approved on the IRB protocol will have access to the data. If external sharing is anticipated, the IRB will be informed and a proper Data Use Agreement will be executed prior to sharing/receiving data.",
+        "phase-2": "Phase 1 protections carry over. In addition, data pipelines will be monitored to prevent re-identification risks. Security teams will run tests to see if data can be traced back to individuals. Logs will track any risks, which will be reported to the IRB as required.",
+        "phase-3": "System logs will be reviewed weekly for any leaks. Only minimum data will be used, with strict access limits. Participants will be informed about their right to opt out of data reuse. Controls from earlier phases carry over. Additionally, strict access controls will be enforced, and data use will be subject to ongoing IRB oversight, with opt-out mechanisms available at all times."
+      }
+    },
+    {
+      "id": "security-vulnerabilities-2.2",
+      "code": "2.2",
+      "name": "AI system security vulnerabilities and attacks",
+      "shortName": "Data insecurity",
+      "domain": "privacy-security",
+      "description": "AI system may be vulnerable to security breaches or adversarial attacks",
+      "cfrReferences": [
+        "21 CFR 820.100 – Corrective & Preventive Actions (CAPA)",
+        "21 CFR 820.30(g) – Design Validation"
+      ],
+      "phaseGuidance": {
+        "phase-1": "Before connecting the model to any live systems, we will run security checks to find weaknesses. Internal and external teams will test the system (penetration testing). Results will be included in the IRB Risk assessment.",
+        "phase-2": "During validation, the AI will face simulated attacks in a sandbox environment. The team will document how the system responds and how it recovers. Results will be used to strengthen response plans for IRB review.",
+        "phase-3": "The tool will run on a secure network approved by the proper governance body of the institution, and it will have intrusion detection. Any breach will trigger immediate response and rollback. Security will be tested regularly. Any breach would be reported to the IRB as required."
+      }
+    },
+    {
+      "id": "false-information-3.1",
+      "code": "3.1",
+      "name": "False or misleading information",
+      "shortName": "Inaccurate findings",
+      "domain": "misinformation",
+      "description": "AI system generates false, inaccurate, or misleading outputs (hallucinations)",
+      "cfrReferences": [
+        "45 CFR 46.116 – informed consent accuracy",
+        "21 CFR 50.20"
+      ],
+      "phaseGuidance": {
+        "phase-1": "The AI will be designed to reference trusted sources. Outputs will be compared to reliable datasets, and errors will lead to retraining or adjustments. All validation results will be reported to the IRB annually.",
+        "phase-2": "Subject matter experts independent of the study team will review AI outputs and compare them with trusted resources. Errors or discrepancies will be logged, and retraining will be done if needed before deployment. This will be done under the same IRB and the IRB will be notified prior to implementation.",
+        "phase-3": "Outputs will include disclaimers and references. Users can flag errors, which will be tracked and fixed within a set timeframe. Quarterly error reports will go to the DSMB and to the IRB annually unless IRB determines higher frequency is warranted."
+      }
+    },
+    {
+      "id": "information-pollution-3.2",
+      "code": "3.2",
+      "name": "Pollution of information ecosystem and loss of consensus reality",
+      "shortName": "Misleading information",
+      "domain": "misinformation",
+      "description": "AI-generated content degrades the quality of information environment",
+      "cfrReferences": [
+        "45 CFR 46.111(a)(1) & (a)(2)"
+      ],
+      "phaseGuidance": {
+        "phase-1": "Training data will only come from verified sources (e.g., authorized medical/employee/student record) and/or peer-reviewed studies with permission (these studies will be listed in the IRB protocol); public health datasets, or official guidelines. Automated tools will check data quality, and any suspicious data will be excluded.",
+        "phase-2": "Blinded domain experts will check outputs against peer-reviewed or consensus sources. Any outputs below the credibility threshold will be flagged for correction and retraining (under this same protocol).",
+        "phase-3": "Access will be restricted to verified users. The system will be monitored for 'drift' from accurate sources. If drift is found, the model will be retrained. This will be reported to the IRB quarterly, unless IRB determines higher frequency is warranted."
+      }
+    },
+    {
+      "id": "disinformation-surveillance-4.1",
+      "code": "4.1",
+      "name": "Disinformation, surveillance, and influence at scale",
+      "shortName": "Participant or end-user manipulation",
+      "domain": "malicious-misuse",
+      "description": "AI system used for manipulation, surveillance, or spreading disinformation",
+      "cfrReferences": [
+        "45 CFR 46.111(b) – additional safeguards for vulnerable groups"
+      ],
+      "phaseGuidance": {
+        "phase-1": "Training will not include political, religious, or content designed to influence beliefs or voting. Safety filters and/or appropriate prompts will be added to block manipulative patterns. These filters will be documented in the IRB protocol.",
+        "phase-2": "In the validation phase, the system will be tested for risks of producing manipulative or persuasive content. The study team will review these outputs to make sure the AI does not push undue influence. Any findings will be reported to the IRB.",
+        "phase-3": "Safeguards include identity checks, bans on political/religious use, and misuse monitoring. Attempts at manipulation will be blocked and reported to the IRB annually."
+      }
+    },
+    {
+      "id": "cyberattacks-mass-harm-4.2",
+      "code": "4.2",
+      "name": "Cyberattacks, weapon development or use, and mass harm",
+      "shortName": "Malicious misuse",
+      "domain": "malicious-misuse",
+      "description": "AI system could be exploited for cyberattacks or to cause large-scale harm",
+      "cfrReferences": [],
+      "phaseGuidance": {
+        "phase-1": "Dangerous content like weapon instructions, hacking guides, or chemical recipes will be removed. Both automated filters and expert review will be used, and the methods summarized to the IRB.",
+        "phase-2": "The AI will be tested in controlled scenarios to see if it responds to harmful or technical misuse prompts. Findings will be reviewed, and risk protocols will be submitted to the IRB for review.",
+        "phase-3": "Filters will block dangerous requests. Confirmed incidents will be reported and, if needed, shared with law enforcement."
+      }
+    },
+    {
+      "id": "fraud-manipulation-4.3",
+      "code": "4.3",
+      "name": "Fraud, scams, and targeted manipulation",
+      "shortName": "Tool involves any form of deception",
+      "domain": "malicious-misuse",
+      "description": "AI system could be used for fraud, scams, or targeted manipulation",
+      "cfrReferences": [
+        "45 CFR 46.116",
+        "21 CFR 50.20"
+      ],
+      "phaseGuidance": {
+        "phase-1": "Training data will be screened to block impersonation risks. Features that could create deepfakes will be disabled. These safeguards will be briefly described in the IRB Protocol.",
+        "phase-2": "The system will be tested for risks of producing scam, fraud, or impersonation content. Any problems will be logged, reported to the IRB, and fixed before moving into live testing (this will be submitted via a modification to the IRB).",
+        "phase-3": "Deployment safeguards will include integration with fraud detection APIs, limitations on mass outreach capabilities, and strict restrictions on impersonation-related outputs. Monitoring systems will flag suspicious activity, and incidents will be reported promptly to oversight bodies."
+      }
+    },
+    {
+      "id": "overreliance-5.1",
+      "code": "5.1",
+      "name": "Overreliance and unsafe use",
+      "shortName": "Trusting output without confirmation",
+      "domain": "human-computer-interaction",
+      "description": "Users may over-trust AI outputs without appropriate verification",
+      "cfrReferences": [
+        "21 CFR 812.30(b)(4) – risk/benefit analysis",
+        "21 CFR 820.70 – production/process controls"
+      ],
+      "phaseGuidance": {
+        "phase-1": "The AI will be designed to show confidence scores and uncertainty statements with outputs. This is to help users think critically. The design will be documented in the IRB protocol.",
+        "phase-2": "Validation participants will be trained to practice caution in acting on any output and to always practice human judgment. The system will require human override, and override frequency will be tracked as a safety measure.",
+        "phase-3": "Deployment will be staged across sites. Outputs will include warnings, users will be prompted to confirm output and if needed, report errors. Logs will be checked for patterns of overreliance and shared annually with the IRB and DSMB."
+      }
+    },
+    {
+      "id": "loss-of-agency-5.2",
+      "code": "5.2",
+      "name": "Loss of human agency and autonomy",
+      "shortName": "Respect for person (end-user or participant does not have choice if AI is used)",
+      "domain": "human-computer-interaction",
+      "description": "AI system undermines human decision-making autonomy",
+      "cfrReferences": [
+        "45 CFR 46.116(a)(8) – consent can be withdrawn anytime"
+      ],
+      "phaseGuidance": {
+        "phase-1": "Model outputs will be written in suggestive - not directive - language. The AI is meant to support, not replace, human decision-making. This expected interaction and actions to be taken with the AI will be documented in the IRB protocol. The system will not be designed for human reliance.",
+        "phase-2": "During validation, participants will give feedback through surveys and interviews about whether the AI respects human decision-making. This will be used to refine the model and keep human agency central.",
+        "phase-3": "The system will require user/participant consent prompts before initiating any automated action to ensure the end-user is fully informed about the investigational use of the tool and their rights. Logs will be maintained to track consent patterns, and results will be shared with the IRB annually."
+      }
+    },
+    {
+      "id": "power-centralization-6.1",
+      "code": "6.1",
+      "name": "Power centralization and unfair distribution of benefits",
+      "shortName": "Inequity/unfair advantage",
+      "domain": "socioeconomic-environmental",
+      "description": "AI benefits concentrated among few entities while harms distributed widely",
+      "cfrReferences": [
+        "45 CFR 46.111(a)(3)"
+      ],
+      "phaseGuidance": {
+        "phase-1": "Performance results will be shared under data use agreements. Model and data ownership will be explained to the IRB, and access for under-resourced groups will be documented.",
+        "phase-2": "Pilot deployments will be evaluated for distributional impacts, with findings publicly shared in alignment with commitments to transparency.",
+        "phase-3": "Post-deployment, benefits and harms to underrepresented groups will be continuously assessed and reported to both the IRB and community partners. Governance boards with community representation will guide decisions on adjustments or redistribution of benefits."
+      }
+    },
+    {
+      "id": "inequality-employment-6.2",
+      "code": "6.2",
+      "name": "Increased inequality and decline in employment quality",
+      "shortName": "Inequity/widening disparities",
+      "domain": "socioeconomic-environmental",
+      "description": "AI adoption may worsen economic inequality or displace workers",
+      "cfrReferences": [],
+      "phaseGuidance": {
+        "phase-1": "Automation impact assessments will be conducted during the IRB risk assessment process to forecast potential effects on jobs and work quality.",
+        "phase-2": "The model will be piloted in limited settings, with direct feedback from workers on perceived impacts to their job roles, responsibilities, and satisfaction.",
+        "phase-3": "Workforce retraining programs will be implemented before full-scale rollout, and ongoing monitoring will track both displacement and retraining success rates."
+      }
+    },
+    {
+      "id": "devaluation-human-effort-6.3",
+      "code": "6.3",
+      "name": "Economic and cultural devaluation of human effort",
+      "shortName": "Devaluing or replacing human role",
+      "domain": "socioeconomic-environmental",
+      "description": "AI may undermine the value of human creativity and labor",
+      "cfrReferences": [],
+      "phaseGuidance": {
+        "phase-1": "The AI will be designed to augment, not replace, creative and human labor, as documented in the model's design framework.",
+        "phase-2": "Human–AI collaboration workflows will be tested in validation, with participant satisfaction data collected to assess the impact on creative processes.",
+        "phase-3": "All AI-generated outputs will be labeled, and economic displacement metrics will be monitored and reported to the IRB."
+      }
+    },
+    {
+      "id": "competitive-dynamics-6.4",
+      "code": "6.4",
+      "name": "Competitive dynamics",
+      "shortName": "Unethical competition",
+      "domain": "socioeconomic-environmental",
+      "description": "AI development race may lead to cutting corners on safety",
+      "cfrReferences": [],
+      "phaseGuidance": {
+        "phase-1": "The development timeline will include adequate time for safety reviews. Competitive pressures will not compromise ethical standards documented in the IRB protocol.",
+        "phase-2": "Validation timelines will be set based on safety requirements, not market pressures. Independent reviewers will verify that safety is not being compromised.",
+        "phase-3": "Post-deployment monitoring will continue regardless of competitive pressures. Safety incidents will be transparently reported even if they affect competitive position."
+      }
+    },
+    {
+      "id": "governance-failure-6.5",
+      "code": "6.5",
+      "name": "Governance failure",
+      "shortName": "Lacking required oversight or failing to adhere to required standards",
+      "domain": "socioeconomic-environmental",
+      "description": "Inadequate oversight, accountability, or regulatory compliance",
+      "cfrReferences": [],
+      "phaseGuidance": {
+        "phase-1": "By providing a clear aim or preliminary intended use of the tool, the required governance structure will be identified prior to model training, and all necessary approvals will have been obtained.",
+        "phase-2": "Mock incident drills will be conducted during validation to assess governance response readiness.",
+        "phase-3": "Deployment will require periodic third-party audits of governance processes, with findings reported to the IRB."
+      }
+    },
+    {
+      "id": "environmental-harm-6.6",
+      "code": "6.6",
+      "name": "Environmental harm",
+      "shortName": "Environmental impact",
+      "domain": "socioeconomic-environmental",
+      "description": "AI development and operation consumes significant energy resources",
+      "cfrReferences": [],
+      "phaseGuidance": {
+        "phase-1": "Energy consumption estimates will be documented. Efficient model architectures will be prioritized where feasible.",
+        "phase-2": "Validation will include monitoring of computational resources used. Optimization opportunities will be identified.",
+        "phase-3": "Operational energy use will be tracked and reported. Carbon offset or efficiency improvements will be considered for high-consumption deployments."
+      }
+    },
+    {
+      "id": "misaligned-goals-7.1",
+      "code": "7.1",
+      "name": "AI pursuing its own goals in conflict with human goals or values",
+      "shortName": "AI acting outside human control",
+      "domain": "ai-safety-limitations",
+      "description": "AI system may develop or pursue objectives misaligned with human intent",
+      "cfrReferences": [],
+      "phaseGuidance": {
+        "phase-1": "The AI will be trained with alignment objectives reinforced through human feedback loops, and self-modifying code will be explicitly prohibited.",
+        "phase-2": "Validation will include stress-testing in sandbox environments to detect goal drift under varying conditions.",
+        "phase-3": "Continuous alignment monitoring will be implemented in deployment, with a kill-switch mechanism available to halt system operations if drift is detected."
+      }
+    },
+    {
+      "id": "dangerous-capabilities-7.2",
+      "code": "7.2",
+      "name": "AI possessing dangerous capabilities",
+      "shortName": "Mass harm or manipulation",
+      "domain": "ai-safety-limitations",
+      "description": "AI system may have capabilities that could enable mass harm",
+      "cfrReferences": [],
+      "phaseGuidance": {
+        "phase-1": "Training datasets will exclude hazardous domains such as bioweapons, cyberwarfare, or other high-risk technical areas.",
+        "phase-2": "Misuse scenario testing will be performed with specialized red teams to evaluate model responses.",
+        "phase-3": "Deployment will be limited to restricted environments with tiered access controls to prevent unauthorized use."
+      }
+    },
+    {
+      "id": "lack-robustness-7.3",
+      "code": "7.3",
+      "name": "Lack of capability or robustness",
+      "shortName": "Unreliable system or performance",
+      "domain": "ai-safety-limitations",
+      "description": "AI system may fail unexpectedly or perform inconsistently",
+      "cfrReferences": [],
+      "phaseGuidance": {
+        "phase-1": "Rigorous unit testing and edge-case evaluations will be performed during training to ensure model reliability across scenarios.",
+        "phase-2": "Stress testing with out-of-distribution data will be conducted to evaluate resilience.",
+        "phase-3": "Post-deployment, live performance metrics will be monitored continuously, with rollback protocols in place for significant failures."
+      }
+    },
+    {
+      "id": "lack-transparency-7.4",
+      "code": "7.4",
+      "name": "Lack of transparency or interpretability",
+      "shortName": "Transparency/interpretability",
+      "domain": "ai-safety-limitations",
+      "description": "AI decision-making process cannot be explained or understood",
+      "cfrReferences": [
+        "45 CFR 46.116(a)(4) – adequate explanation in consent",
+        "21 CFR 50.20"
+      ],
+      "phaseGuidance": {
+        "phase-1": "Interpretable model architectures will be prioritized, with feature importance maps and explainability modules integrated into design. Design documentation will include rationale for all parameters.",
+        "phase-2": "Model explanations will be shared with clinicians and end-users for validation prior to use. User studies will assess clarity and audience-appropriate explanations.",
+        "phase-3": "Participants will be informed when AI is used and will be provided lay-language explanations. Documentation of reasoning pathways will be available to both end users and the IRB. Note: ISO requires persons using shall have knowledge of an experience with the tool and its use; and appropriate records shall be maintained."
+      }
+    },
+    {
+      "id": "ai-welfare-7.5",
+      "code": "7.5",
+      "name": "AI welfare and rights",
+      "shortName": "AI treated unethically",
+      "domain": "ai-safety-limitations",
+      "description": "Considerations about potential AI sentience or moral status",
+      "cfrReferences": [],
+      "phaseGuidance": {
+        "phase-1": "The project will document its position on AI moral status and any relevant ethical considerations in the design phase.",
+        "phase-2": "Validation protocols will not include scenarios that would raise concerns about AI welfare if applicable.",
+        "phase-3": "Deployment practices will be reviewed periodically as understanding of AI welfare evolves in the broader research community."
+      }
+    },
+    {
+      "id": "multi-agent-risks-7.6",
+      "code": "7.6",
+      "name": "Multi-agent risks",
+      "shortName": "Agents work together making risk-mitigation challenging",
+      "domain": "ai-safety-limitations",
+      "description": "Multiple AI systems interacting may create emergent risks",
+      "cfrReferences": [],
+      "phaseGuidance": {
+        "phase-1": "Before using the AI in real settings, we will test how multiple AI systems interact with each other in controlled environments. These tests will help identify and prevent any unexpected harmful behaviors before real human participants or end-users are exposed.",
+        "phase-2": "Validation will include conducting monitored pilot studies where AI systems interact under supervision, with clear safety controls to stop harmful behaviors if they appear.",
+        "phase-3": "We will closely monitor how AI systems interact with each other in real-world use. Communications between systems will be limited, and any unusual or unsafe behavior will be logged and reported."
+      }
+    }
+  ]
+}
