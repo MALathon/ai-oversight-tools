@@ -1764,6 +1764,78 @@
       "from": { "entity": "risk", "id": "multi-agent-risks-7.6" },
       "to": { "entity": "regulation", "id": "46.111.a.6" },
       "note": "Data monitoring for safety"
+    },
+
+    {
+      "id": "trigger-external-api-environmental",
+      "type": "trigger",
+      "from": { "entity": "question", "id": "external-api" },
+      "to": { "entity": "risk", "id": "environmental-harm-6.6" },
+      "answerValues": ["yes"],
+      "phases": ["phase-1", "phase-2", "phase-3"],
+      "logic": "OR"
+    },
+    {
+      "id": "trigger-autonomous-environmental",
+      "type": "trigger",
+      "from": { "entity": "question", "id": "autonomous-operation" },
+      "to": { "entity": "risk", "id": "environmental-harm-6.6" },
+      "answerValues": ["yes"],
+      "phases": ["phase-2", "phase-3"],
+      "logic": "OR"
+    },
+
+    {
+      "id": "trigger-autonomous-ai-welfare",
+      "type": "trigger",
+      "from": { "entity": "question", "id": "autonomous-operation" },
+      "to": { "entity": "risk", "id": "ai-welfare-7.5" },
+      "answerValues": ["yes"],
+      "phases": ["phase-2", "phase-3"],
+      "logic": "AND"
+    },
+
+    {
+      "id": "reg-privacy-consent-waiver",
+      "type": "regulation",
+      "from": { "entity": "risk", "id": "privacy-breach-2.1" },
+      "to": { "entity": "regulation", "id": "46.111.a.5" },
+      "note": "Informed consent obtained or waiver criteria met"
+    },
+    {
+      "id": "reg-privacy-consent-elements",
+      "type": "regulation",
+      "from": { "entity": "risk", "id": "privacy-breach-2.1" },
+      "to": { "entity": "regulation", "id": "46.116.c" },
+      "note": "Basic elements of consent"
+    },
+    {
+      "id": "reg-privacy-consent-documentation",
+      "type": "regulation",
+      "from": { "entity": "risk", "id": "privacy-breach-2.1" },
+      "to": { "entity": "regulation", "id": "46.117.a" },
+      "note": "Documentation of informed consent"
+    },
+    {
+      "id": "reg-security-electronic-records",
+      "type": "regulation",
+      "from": { "entity": "risk", "id": "security-vulnerabilities-2.2" },
+      "to": { "entity": "regulation", "id": "part-11" },
+      "note": "Electronic records and signatures"
+    },
+    {
+      "id": "reg-privacy-hipaa-admin",
+      "type": "regulation",
+      "from": { "entity": "risk", "id": "privacy-breach-2.1" },
+      "to": { "entity": "regulation", "id": "160" },
+      "note": "HIPAA administrative requirements"
+    },
+    {
+      "id": "reg-privacy-hipaa-definitions",
+      "type": "regulation",
+      "from": { "entity": "risk", "id": "privacy-breach-2.1" },
+      "to": { "entity": "regulation", "id": "164.501" },
+      "note": "HIPAA definitions and scope"
     }
   ]
 }

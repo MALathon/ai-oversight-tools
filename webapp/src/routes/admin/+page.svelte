@@ -954,12 +954,10 @@
 						<tr>
 							<th class="row-header">Question</th>
 							{#each filteredRisks as risk}
-								{@const riskLinkCount = linkCounts.riskTriggers.get(risk.id) || 0}
 								<th
 									class="col-header"
 									class:highlighted={matrixHoverCol === risk.id}
-									class:orphan={riskLinkCount === 0}
-									title={`${risk.name} (${riskLinkCount} triggers)`}
+									title={risk.name}
 									onmouseenter={() => matrixHoverCol = risk.id}
 								>
 									{#if matrixVerbose}
@@ -967,20 +965,17 @@
 									{:else}
 										{risk.code}
 									{/if}
-									<span class="link-count" class:zero={riskLinkCount === 0}>{riskLinkCount}</span>
 								</th>
 							{/each}
 						</tr>
 					</thead>
 					<tbody>
 						{#each filteredQuestions as question}
-							{@const qLinkCount = linkCounts.questionTriggers.get(question.id) || 0}
 							<tr class:row-highlighted={matrixHoverRow === question.id}>
 								<td
 									class="row-label"
 									class:highlighted={matrixHoverRow === question.id}
-									class:orphan={qLinkCount === 0}
-									title={`${question.text} (${qLinkCount} risks)`}
+									title={question.text}
 									onmouseenter={() => matrixHoverRow = question.id}
 								>
 									{#if matrixVerbose}
@@ -988,7 +983,6 @@
 									{:else}
 										{question.id}
 									{/if}
-									<span class="link-count" class:zero={qLinkCount === 0}>{qLinkCount}</span>
 								</td>
 								{#each filteredRisks as risk}
 									{@const link = getTriggerLink(question.id, risk.id)}
@@ -1018,12 +1012,10 @@
 						<tr>
 							<th class="row-header">Risk</th>
 							{#each filteredMitigations as mit}
-								{@const mitLinkCount = linkCounts.mitigationRisks.get(mit.id) || 0}
 								<th
 									class="col-header"
 									class:highlighted={matrixHoverCol === mit.id}
-									class:orphan={mitLinkCount === 0}
-									title={`${mit.name} (${mitLinkCount} risks)`}
+									title={mit.name}
 									onmouseenter={() => matrixHoverCol = mit.id}
 								>
 									{#if matrixVerbose}
@@ -1031,20 +1023,17 @@
 									{:else}
 										{mit.code}
 									{/if}
-									<span class="link-count" class:zero={mitLinkCount === 0}>{mitLinkCount}</span>
 								</th>
 							{/each}
 						</tr>
 					</thead>
 					<tbody>
 						{#each filteredRisks as risk}
-							{@const riskLinkCount = linkCounts.riskMitigations.get(risk.id) || 0}
 							<tr class:row-highlighted={matrixHoverRow === risk.id}>
 								<td
 									class="row-label"
 									class:highlighted={matrixHoverRow === risk.id}
-									class:orphan={riskLinkCount === 0}
-									title={`${risk.name} (${riskLinkCount} mitigations)`}
+									title={risk.name}
 									onmouseenter={() => matrixHoverRow = risk.id}
 								>
 									{#if matrixVerbose}
@@ -1052,7 +1041,6 @@
 									{:else}
 										{risk.code}
 									{/if}
-									<span class="link-count" class:zero={riskLinkCount === 0}>{riskLinkCount}</span>
 								</td>
 								{#each filteredMitigations as mit}
 									{@const link = getMitigationLink(risk.id, mit.id)}
@@ -1082,12 +1070,10 @@
 						<tr>
 							<th class="row-header">Risk</th>
 							{#each filteredRegulations as reg}
-								{@const regLinkCount = linkCounts.regulationRisks.get(reg.id) || 0}
 								<th
 									class="col-header"
 									class:highlighted={matrixHoverCol === reg.id}
-									class:orphan={regLinkCount === 0}
-									title={`${reg.description} (${regLinkCount} risks)`}
+									title={reg.description}
 									onmouseenter={() => matrixHoverCol = reg.id}
 								>
 									{#if matrixVerbose}
@@ -1095,20 +1081,17 @@
 									{:else}
 										{reg.citation.split('(')[0].trim()}
 									{/if}
-									<span class="link-count" class:zero={regLinkCount === 0}>{regLinkCount}</span>
 								</th>
 							{/each}
 						</tr>
 					</thead>
 					<tbody>
 						{#each filteredRisks as risk}
-							{@const riskLinkCount = linkCounts.riskRegulations.get(risk.id) || 0}
 							<tr class:row-highlighted={matrixHoverRow === risk.id}>
 								<td
 									class="row-label"
 									class:highlighted={matrixHoverRow === risk.id}
-									class:orphan={riskLinkCount === 0}
-									title={`${risk.name} (${riskLinkCount} regulations)`}
+									title={risk.name}
 									onmouseenter={() => matrixHoverRow = risk.id}
 								>
 									{#if matrixVerbose}
@@ -1116,7 +1099,6 @@
 									{:else}
 										{risk.code}
 									{/if}
-									<span class="link-count" class:zero={riskLinkCount === 0}>{riskLinkCount}</span>
 								</td>
 								{#each filteredRegulations as reg}
 									{@const link = getRegulationLink(risk.id, reg.id)}
@@ -2158,24 +2140,15 @@
 		margin-left: 0.25rem;
 	}
 
-	/* Link count badges */
+	/* Link count badges - hidden by default, shown when filtering unlinked */
 	.link-count {
-		display: block;
-		font-size: 0.6rem;
-		color: #64748b;
-		margin-top: 0.15rem;
+		display: none;
 	}
 
-	.link-count.zero {
-		color: #ef4444;
-		font-weight: 600;
-	}
-
-	/* Orphan highlighting */
+	/* Orphan highlighting - subtle, only when filtering */
 	.col-header.orphan,
 	.row-label.orphan {
-		background: rgba(239, 68, 68, 0.15);
-		border-left: 2px solid #ef4444;
+		/* No styling by default - only styled when showUnlinkedOnly is true */
 	}
 
 	/* Matrix hover info bar */
