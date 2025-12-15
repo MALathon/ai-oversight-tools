@@ -726,7 +726,8 @@
 		source: c.source,
 		subcategoryId: c.subcategoryId,
 		phases: c.phases || ['phase-1', 'phase-2', 'phase-3'],
-		techTypes: c.techTypes || ['all']
+		techTypes: c.techTypes || ['all'],
+		implementationNotes: c.implementationNotes || {}
 	})));
 
 	// Use editable entities if modified, otherwise defaults
