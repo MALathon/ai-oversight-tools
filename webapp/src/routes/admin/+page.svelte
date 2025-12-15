@@ -2327,6 +2327,7 @@
 											if (connectingFrom) {
 												handleNodeClick(node.type, node.id);
 											} else {
+												console.log('[DEBUG] Clicking trace node:', node.type, node.id);
 												traceSelectedNode = { type: node.type, id: node.id };
 											}
 										}}
@@ -2367,6 +2368,7 @@
 
 					<!-- Selected node details panel -->
 					{#if traceSelectedNode}
+						{@const _debug = console.log('[DEBUG] Rendering detail panel for:', traceSelectedNode)}
 						{@const selectedItem = (() => {
 							const t = traceSelectedNode.type;
 							const id = traceSelectedNode.id;
@@ -2486,6 +2488,7 @@
 								</div>
 
 								<!-- Accumulated Guidance from Graph Traversal -->
+								{@const _ = console.log('[DEBUG] selectedNodeGuidance:', selectedNodeGuidance)}
 								{#if selectedNodeGuidance}
 									{@const guidanceWithContent = selectedNodeGuidance.guidance.filter(g => g.guidance)}
 									{@const essentialItems = guidanceWithContent.filter(g => g.appropriateness === 'essential')}
