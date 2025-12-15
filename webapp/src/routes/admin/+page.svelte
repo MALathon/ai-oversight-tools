@@ -100,7 +100,8 @@
 	let focusMode = $state(false);
 
 	// Matrix view state - configurable row and column types
-	type EntityType = 'question' | 'risk' | 'mitigation' | 'regulation' | 'control';
+	// Simplified schema: controls ARE mitigations (no separate mitigation entity)
+	type EntityType = 'question' | 'risk' | 'regulation' | 'control';
 	let matrixRowType = $state<EntityType>('question');
 	let matrixColType = $state<EntityType>('risk');
 	let matrixVerbose = $state(false);
@@ -109,13 +110,12 @@
 	let showUnlinkedOnly = $state(false);
 
 	// Determine link type for entity pair
+	// Simplified: trigger (Q→R), control (R→C), regulation (R→Reg), dependency (Q→Q)
 	function getLinkTypeForPair(fromType: EntityType, toType: EntityType): string | null {
 		const pairs: Record<string, string> = {
 			'question-risk': 'trigger',
-			'risk-mitigation': 'mitigation',
 			'risk-regulation': 'regulation',
 			'risk-control': 'control',
-			'mitigation-control': 'implementation',
 			'question-question': 'dependency' // For showIf
 		};
 		return pairs[`${fromType}-${toType}`] || pairs[`${toType}-${fromType}`] || null;
@@ -125,10 +125,8 @@
 	function isPairReversed(fromType: EntityType, toType: EntityType): boolean {
 		const canonical: Record<string, [EntityType, EntityType]> = {
 			'trigger': ['question', 'risk'],
-			'mitigation': ['risk', 'mitigation'],
 			'regulation': ['risk', 'regulation'],
 			'control': ['risk', 'control'],
-			'implementation': ['mitigation', 'control'],
 			'dependency': ['question', 'question']
 		};
 		const linkType = getLinkTypeForPair(fromType, toType);
@@ -336,8 +334,8 @@
 		if (linkType === 'trigger') {
 			newLink.answerValues = [];
 			newLink.logic = 'OR';
-		} else if (linkType === 'mitigation') {
-			newLink.guidance = {};
+		} else if (linkType === 'control') {
+			newLink.guidance = {}; // Phase-specific guidance for this control
 		}
 
 		editingLink = newLink;
@@ -360,9 +358,9 @@
 		traceCollapsed = newSet;
 	}
 
-	// Trace node type for tree structure
+	// Trace node type for tree structure (simplified: no separate mitigation)
 	interface TraceNode {
-		type: 'question' | 'risk' | 'mitigation' | 'control' | 'regulation' | 'more';
+		type: 'question' | 'risk' | 'control' | 'regulation' | 'more';
 		id: string;
 		label: string;
 		shortLabel: string;
@@ -391,12 +389,12 @@
 				.filter(r => r.risk);
 		}
 
-		// Helper to get mitigations for a risk
-		function getMitigationsForRisk(rId: string): Array<{ mitigation: any; link: any }> {
+		// Helper to get controls for a risk (controls ARE mitigations)
+		function getControlsForRisk(rId: string): Array<{ control: any; link: any }> {
 			return filteredLinks
-				.filter((l: any) => l.type === 'mitigation' && l.from.entity === 'risk' && l.from.id === rId)
-				.map((l: any) => ({ mitigation: allMitigations.find(m => m.id === l.to.id), link: l }))
-				.filter(m => m.mitigation);
+				.filter((l: any) => l.type === 'control' && l.from.entity === 'risk' && l.from.id === rId)
+				.map((l: any) => ({ control: allControls.find(c => c.id === l.to.id), link: l }))
+				.filter(c => c.control);
 		}
 
 		// Helper to get regulations for a risk
@@ -405,11 +403,6 @@
 				.filter((l: any) => l.type === 'regulation' && l.from.entity === 'risk' && l.from.id === rId)
 				.map((l: any) => ({ regulation: allRegulations.find(r => r.id === l.to.id), link: l }))
 				.filter(r => r.regulation);
-		}
-
-		// Helper to get controls for a mitigation (subcategory)
-		function getControlsForMitigation(mId: string): any[] {
-			return allControls.filter(c => c.subcategoryId === mId).slice(0, 5); // Limit for display
 		}
 
 		// Build question subtree (recursive for showIf dependencies)
@@ -445,7 +438,7 @@
 			return node;
 		}
 
-		// Build risk subtree
+		// Build risk subtree (controls are directly linked to risks now)
 		function buildRiskNode(risk: any, link: any, depth: number): TraceNode {
 			const node: TraceNode = {
 				type: 'risk',
@@ -457,10 +450,18 @@
 				depth
 			};
 
-			// Add mitigations
-			const mitigations = getMitigationsForRisk(risk.id);
-			for (const { mitigation, link: mLink } of mitigations) {
-				node.children.push(buildMitigationNode(mitigation, mLink, depth + 1));
+			// Add controls (controls ARE mitigations)
+			const controls = getControlsForRisk(risk.id);
+			for (const { control, link: cLink } of controls) {
+				node.children.push({
+					type: 'control',
+					id: control.id,
+					label: control.name,
+					shortLabel: control.id.split('_')[0],
+					children: [],
+					link: cLink,
+					depth: depth + 1
+				});
 			}
 
 			// Add regulations
@@ -480,48 +481,6 @@
 			return node;
 		}
 
-		// Build mitigation subtree
-		function buildMitigationNode(mit: any, link: any, depth: number): TraceNode {
-			const node: TraceNode = {
-				type: 'mitigation',
-				id: mit.id,
-				label: mit.name,
-				shortLabel: mit.code,
-				children: [],
-				link,
-				depth
-			};
-
-			// Add controls (limited)
-			const controls = getControlsForMitigation(mit.id);
-			for (const ctrl of controls) {
-				node.children.push({
-					type: 'control',
-					id: ctrl.id,
-					label: ctrl.name,
-					shortLabel: ctrl.id.split('_')[0],
-					children: [],
-					depth: depth + 1
-				});
-			}
-
-			// Show more indicator if there are more controls
-			const totalControls = allControls.filter(c => c.subcategoryId === mit.id).length;
-			if (totalControls > 5) {
-				node.children.push({
-					type: 'more',  // Special type, not 'control'
-					id: `more-${mit.id}`,
-					label: `+${totalControls - 5} more controls`,
-					shortLabel: `+${totalControls - 5}`,
-					children: [],
-					depth: depth + 1,
-					isPlaceholder: true
-				});
-			}
-
-			return node;
-		}
-
 		// Start building tree based on start type
 		if (traceStartType === 'question') {
 			return buildQuestionNode(traceStartId, 0, new Set());
@@ -529,7 +488,7 @@
 			const risk = allRisks.find(r => r.id === traceStartId);
 			if (!risk) return null;
 
-			// For risk start, also show triggering questions
+			// For risk start, show controls and regulations
 			const node: TraceNode = {
 				type: 'risk',
 				id: risk.id,
@@ -539,10 +498,18 @@
 				depth: 0
 			};
 
-			// Add mitigations and regulations
-			const mitigations = getMitigationsForRisk(risk.id);
-			for (const { mitigation, link: mLink } of mitigations) {
-				node.children.push(buildMitigationNode(mitigation, mLink, 1));
+			// Add controls (controls ARE mitigations)
+			const controls = getControlsForRisk(risk.id);
+			for (const { control, link: cLink } of controls) {
+				node.children.push({
+					type: 'control',
+					id: control.id,
+					label: control.name,
+					shortLabel: control.id.split('_')[0],
+					children: [],
+					link: cLink,
+					depth: 1
+				});
 			}
 
 			const regulations = getRegulationsForRisk(risk.id);
@@ -560,11 +527,9 @@
 
 			return node;
 		} else {
-			// Control start - show its subcategory and linked risks
+			// Control start - show linked risks
 			const ctrl = allControls.find(c => c.id === traceStartId);
 			if (!ctrl) return null;
-
-			const mit = allMitigations.find(m => m.id === ctrl.subcategoryId);
 
 			const node: TraceNode = {
 				type: 'control',
@@ -575,23 +540,22 @@
 				depth: 0
 			};
 
-			if (mit) {
-				// Find risks linked to this mitigation
-				const risksLinked = filteredLinks
-					.filter((l: any) => l.type === 'mitigation' && l.to.id === mit.id)
-					.map((l: any) => ({ risk: allRisks.find(r => r.id === l.from.id), link: l }))
-					.filter(r => r.risk);
+			// Find risks linked to this control
+			const risksLinked = filteredLinks
+				.filter((l: any) => l.type === 'control' && l.to.id === ctrl.id)
+				.map((l: any) => ({ risk: allRisks.find(r => r.id === l.from.id), link: l }))
+				.filter(r => r.risk);
 
-				for (const { risk } of risksLinked.slice(0, 5)) {
-					node.children.push({
-						type: 'risk',
-						id: risk.id,
-						label: risk.shortName,
-						shortLabel: risk.code,
-						children: [],
-						depth: 1
-					});
-				}
+			for (const { risk, link } of risksLinked.slice(0, 10)) {
+				node.children.push({
+					type: 'risk',
+					id: risk.id,
+					label: risk.shortName,
+					shortLabel: risk.code,
+					children: [],
+					link,
+					depth: 1
+				});
 			}
 
 			return node;
@@ -702,8 +666,7 @@
 		phaseGuidance: s.phaseGuidance || { 'phase-1': '', 'phase-2': '', 'phase-3': '' }
 	})));
 
-	// Control categories = AIHSR mitigation strategies = MIT subcategories
-	// These are derived from control subcategories, not separately editable
+	// Control categories - used for organizing/filtering controls (not linkable entities)
 	let controlCategories = $derived.by(() => {
 		const items: Array<{ id: string; code: string; name: string; category: string }> = [];
 		for (const subcat of data.controlSubcategories) {
@@ -742,11 +705,11 @@
 	// Use editable entities if modified, otherwise defaults
 	let allQuestions = $derived(editableEntities.questions ?? defaultQuestions);
 	let allRisks = $derived(editableEntities.risks ?? defaultRisks);
-	let allMitigations = $derived(controlCategories); // Alias: mitigations = control categories
 	let allRegulations = $derived(editableEntities.regulations ?? defaultRegulations);
 	let allControls = $derived(editableEntities.controls ?? defaultControls);
 
-	// Entity type configuration for Matrix (must be after allQuestions, allRisks, etc. are defined)
+	// Entity type configuration for Matrix
+	// Simplified schema: controls ARE mitigations (no separate mitigation entity)
 	const entityConfig: Record<EntityType, {
 		label: string;
 		shortLabel: string;
@@ -770,14 +733,6 @@
 			getLabel: (r) => r.shortName,
 			getShortLabel: (r) => r.code,
 			searchText: (r) => r.shortName + ' ' + r.name + ' ' + r.code
-		},
-		mitigation: {
-			label: 'Control Categories',
-			shortLabel: 'Mit',
-			getAll: () => allMitigations,
-			getLabel: (m) => m.name,
-			getShortLabel: (m) => m.code,
-			searchText: (m) => m.name + ' ' + m.code
 		},
 		regulation: {
 			label: 'Regulations',
@@ -896,16 +851,6 @@
 		}).length;
 	});
 
-	let visibleMitigationCount = $derived.by(() => {
-		const filtered = filterBySearch(allMitigations, (m: any) => m.name, 'mitigation');
-		if (!focusMode || !selectedNode) return filtered.length;
-		return filtered.filter((m: any) => {
-			const isSelected = selectedNode?.type === 'mitigation' && selectedNode?.id === m.id;
-			const connected = transitiveConnections.has(`mitigation:${m.id}`);
-			return isSelected || connected;
-		}).length;
-	});
-
 	let visibleRegulationCount = $derived.by(() => {
 		const filtered = filterBySearch(allRegulations, (r: any) => r.citation + ' ' + r.description, 'regulation');
 		if (!focusMode || !selectedNode) return filtered.length;
@@ -926,13 +871,11 @@
 		}).length;
 	});
 
-	// Get control link count (via its subcategory's risk links)
+	// Get control link count (direct risk→control links)
 	function getControlLinkCount(controlId: string): number {
-		const ctrl = allControls.find(c => c.id === controlId);
-		if (!ctrl) return 0;
-		// Count risks linked to this control's subcategory
+		// Count risks directly linked to this control
 		return filteredLinks.filter((l: any) =>
-			l.type === 'mitigation' && l.to.entity === 'mitigation' && l.to.id === ctrl.subcategoryId
+			l.type === 'control' && l.to.entity === 'control' && l.to.id === controlId
 		).length;
 	}
 
@@ -969,7 +912,7 @@
 	}
 
 	// Get all transitively connected nodes from selected node
-	// Full chain: Question → Risk → Control Category → Controls + Regulation
+	// Full chain: Question → Risk → Control + Regulation
 	let transitiveConnections = $derived.by(() => {
 		if (!selectedNode) return new Set<string>();
 
@@ -1019,33 +962,21 @@
 			(l.to.entity === selectedNode.type && l.to.id === selectedNode.id)
 		);
 
-		// Track connected entities by type for transitive expansion
+		// Track connected risks for transitive expansion
 		const connectedRisks: string[] = [];
-		const connectedMitigations: string[] = [];
-
-		// If selected is a control, add its subcategory (mitigation)
-		if (selectedNode.type === 'control') {
-			const ctrl = allControls.find(c => c.id === selectedNode.id);
-			if (ctrl?.subcategoryId) {
-				addNode('mitigation', ctrl.subcategoryId);
-				connectedMitigations.push(ctrl.subcategoryId);
-			}
-		}
 
 		// First pass: direct connections from links
 		for (const link of directLinks) {
 			if (link.from.entity === selectedNode.type && link.from.id === selectedNode.id) {
 				addNode(link.to.entity, link.to.id);
 				if (link.to.entity === 'risk') connectedRisks.push(link.to.id);
-				if (link.to.entity === 'mitigation') connectedMitigations.push(link.to.id);
 			} else {
 				addNode(link.from.entity, link.from.id);
 				if (link.from.entity === 'risk') connectedRisks.push(link.from.id);
-				if (link.from.entity === 'mitigation') connectedMitigations.push(link.from.id);
 			}
 		}
 
-		// Second pass: expand from risks to their connections (skip same-type as selected)
+		// Second pass: expand from risks to their connections (controls, regulations)
 		for (const riskId of connectedRisks) {
 			const riskLinks = filteredLinks.filter((l: any) =>
 				(l.from.entity === 'risk' && l.from.id === riskId) ||
@@ -1054,36 +985,8 @@
 			for (const link of riskLinks) {
 				if (link.from.entity === 'risk' && link.from.id === riskId) {
 					addNode(link.to.entity, link.to.id);
-					if (link.to.entity === 'mitigation') connectedMitigations.push(link.to.id);
 				} else {
 					addNode(link.from.entity, link.from.id);
-				}
-			}
-		}
-
-		// Third pass: expand from mitigations to controls and regulations (skip same-type)
-		for (const mitId of connectedMitigations) {
-			// Add controls belonging to this mitigation/subcategory (unless selected is a control)
-			if (selectedType !== 'control') {
-				const subcatControls = allControls.filter(c => c.subcategoryId === mitId);
-				for (const ctrl of subcatControls) {
-					addNode('control', ctrl.id);
-				}
-			}
-
-			// Find risks linked to this mitigation
-			const mitLinks = filteredLinks.filter((l: any) =>
-				l.type === 'mitigation' && l.to.entity === 'mitigation' && l.to.id === mitId
-			);
-			for (const link of mitLinks) {
-				const riskId = link.from.id;
-				addNode('risk', riskId);
-				// Find regulations linked to these risks
-				const regLinks = filteredLinks.filter((l: any) =>
-					l.type === 'regulation' && l.from.entity === 'risk' && l.from.id === riskId
-				);
-				for (const regLink of regLinks) {
-					addNode(regLink.to.entity, regLink.to.id);
 				}
 			}
 		}
@@ -1130,15 +1033,13 @@
 					editingLink = JSON.parse(JSON.stringify(existing));
 					showLinkEditor = true;
 				} else {
-					// Determine link type based on node types
+					// Determine link type based on node types (simplified schema: no mitigation entity)
 					let linkType = 'custom';
 					if (connectingFrom.type === 'question' && type === 'risk') linkType = 'trigger';
 					else if (connectingFrom.type === 'risk' && type === 'question') linkType = 'trigger';
 					else if (connectingFrom.type === 'question' && type === 'question') linkType = 'dependency';
-					else if ((connectingFrom.type === 'risk' && type === 'mitigation') || (connectingFrom.type === 'mitigation' && type === 'risk')) linkType = 'mitigation';
 					else if ((connectingFrom.type === 'risk' && type === 'regulation') || (connectingFrom.type === 'regulation' && type === 'risk')) linkType = 'regulation';
 					else if ((connectingFrom.type === 'risk' && type === 'control') || (connectingFrom.type === 'control' && type === 'risk')) linkType = 'control';
-					else if ((connectingFrom.type === 'mitigation' && type === 'control') || (connectingFrom.type === 'control' && type === 'mitigation')) linkType = 'implementation';
 
 					// Determine from/to order based on link type conventions
 					let fromNode, toNode;
@@ -1216,10 +1117,9 @@
 	// Get entity display info
 	function getQuestion(id: string) { return allQuestions.find(q => q.id === id); }
 	function getRisk(id: string) { return allRisks.find((r: any) => r.id === id); }
-	function getMitigation(id: string) { return allMitigations.find(m => m.id === id); }
 	function getRegulation(id: string) { return allRegulations.find(r => r.id === id); }
 	function getControl(id: string) { return allControls.find(c => c.id === id); }
-	function getControlSubcategory(id: string) { return data.controlSubcategories.find((s: any) => s.id === id); }
+	function getControlCategory(id: string) { return controlCategories.find((s: any) => s.id === id); }
 
 	// Get question dependencies (showIf relationships)
 	function getQuestionDependencies(questionId: string): { dependsOn: string[], dependedBy: string[] } {
@@ -1232,16 +1132,20 @@
 	}
 
 	// Get available entities for selector based on link type and position
+	// Simplified: trigger (Q→R), control (R→C), regulation (R→Reg), dependency (Q→Q)
 	function getSelectableEntities(position: 'from' | 'to', linkType: string) {
 		if (linkType === 'trigger') {
 			if (position === 'from') return allQuestions.map(q => ({ id: q.id, name: q.text, code: q.id, category: q.category, type: 'question' }));
 			else return allRisks.map(r => ({ id: r.id, name: r.shortName, code: r.code, category: r.domain, type: 'risk' }));
-		} else if (linkType === 'mitigation') {
+		} else if (linkType === 'control') {
 			if (position === 'from') return allRisks.map(r => ({ id: r.id, name: r.shortName, code: r.code, category: r.domain, type: 'risk' }));
-			else return allMitigations.map(m => ({ id: m.id, name: m.name, code: m.code, category: m.category, type: 'mitigation' }));
+			else return allControls.map(c => ({ id: c.id, name: c.name, code: c.id.split('_')[0], category: c.source || '', type: 'control' }));
 		} else if (linkType === 'regulation') {
 			if (position === 'from') return allRisks.map(r => ({ id: r.id, name: r.shortName, code: r.code, category: r.domain, type: 'risk' }));
 			else return allRegulations.map(r => ({ id: r.id, name: r.description, code: r.citation, category: r.framework, type: 'regulation' }));
+		} else if (linkType === 'dependency') {
+			// Question depends on question
+			return allQuestions.map(q => ({ id: q.id, name: q.text, code: q.id, category: q.category, type: 'question' }));
 		}
 		return [];
 	}
@@ -1370,8 +1274,8 @@
 	function getEntityName(entity: string, id: string): string {
 		if (entity === 'question') return getQuestion(id)?.text || id;
 		if (entity === 'risk') return getRisk(id)?.shortName || id;
-		if (entity === 'mitigation') return getMitigation(id)?.name || id;
 		if (entity === 'regulation') return getRegulation(id)?.citation || id;
+		if (entity === 'control') return getControl(id)?.name || id;
 		return id;
 	}
 
@@ -1427,9 +1331,6 @@
 		} else if (type === 'risk') {
 			const r = getRisk(id);
 			return { type, item: r, connections };
-		} else if (type === 'mitigation') {
-			const m = getMitigation(id);
-			return { type, item: m, connections };
 		} else if (type === 'regulation') {
 			const r = getRegulation(id);
 			return { type, item: r, connections };
@@ -1487,7 +1388,6 @@
 					<select bind:value={matrixRowType}>
 						<option value="question">Questions</option>
 						<option value="risk">Risks</option>
-						<option value="mitigation">Control Categories</option>
 						<option value="regulation">Regulations</option>
 						<option value="control">Controls</option>
 					</select>
@@ -1498,7 +1398,6 @@
 					<select bind:value={matrixColType}>
 						<option value="question">Questions</option>
 						<option value="risk">Risks</option>
-						<option value="mitigation">Control Categories</option>
 						<option value="regulation">Regulations</option>
 						<option value="control">Controls</option>
 					</select>
@@ -1557,7 +1456,7 @@
 									class:highlighted={matrixHoverCol === colItem.id}
 									title={`${colConfig.getLabel(colItem)} (click to edit)`}
 									onmouseenter={() => matrixHoverCol = colItem.id}
-									onclick={() => { entityType = matrixColType === 'question' ? 'questions' : matrixColType === 'risk' ? 'risks' : matrixColType === 'mitigation' ? 'mitigations' : matrixColType === 'regulation' ? 'regulations' : 'controls'; editEntity(colItem); }}
+									onclick={() => { entityType = matrixColType === 'question' ? 'questions' : matrixColType === 'risk' ? 'risks' : matrixColType === 'regulation' ? 'regulations' : 'controls'; editEntity(colItem); }}
 								>
 									{#if matrixVerbose}
 										<span class="verbose-label">{colConfig.getLabel(colItem)}</span>
@@ -1576,7 +1475,7 @@
 									class:highlighted={matrixHoverRow === rowItem.id}
 									title={`${rowConfig.getLabel(rowItem)} (click to edit)`}
 									onmouseenter={() => matrixHoverRow = rowItem.id}
-									onclick={() => { entityType = matrixRowType === 'question' ? 'questions' : matrixRowType === 'risk' ? 'risks' : matrixRowType === 'mitigation' ? 'mitigations' : matrixRowType === 'regulation' ? 'regulations' : 'controls'; editEntity(rowItem); }}
+									onclick={() => { entityType = matrixRowType === 'question' ? 'questions' : matrixRowType === 'risk' ? 'risks' : matrixRowType === 'regulation' ? 'regulations' : 'controls'; editEntity(rowItem); }}
 								>
 									{#if matrixVerbose}
 										<span class="verbose-label">{rowConfig.getLabel(rowItem)}</span>
@@ -1751,7 +1650,6 @@
 							const id = traceSelectedNode.id;
 							if (t === 'question') return allQuestions.find(q => q.id === id);
 							if (t === 'risk') return allRisks.find(r => r.id === id);
-							if (t === 'mitigation') return allMitigations.find(m => m.id === id);
 							if (t === 'control') return allControls.find(c => c.id === id);
 							if (t === 'regulation') return allRegulations.find(r => r.id === id);
 							return null;
@@ -1800,26 +1698,6 @@
 									<button class="btn edit-entity" onclick={() => { entityType = 'risks'; editEntity(selectedItem); }}>
 										Edit Risk
 									</button>
-								{:else if traceSelectedNode.type === 'mitigation'}
-									{@const subcategoryControls = allControls.filter(c => c.subcategoryId === selectedItem.id)}
-									<h3>{selectedItem.name}</h3>
-									<div class="detail-meta">
-										<span class="meta-item">Code: {selectedItem.code}</span>
-										<span class="meta-item">Category: {selectedItem.category}</span>
-									</div>
-									{#if subcategoryControls.length > 0}
-										<div class="detail-controls">
-											<strong>Controls ({subcategoryControls.length}):</strong>
-											<div class="controls-list">
-												{#each subcategoryControls.slice(0, 5) as ctrl}
-													<div class="control-item">{ctrl.name}</div>
-												{/each}
-												{#if subcategoryControls.length > 5}
-													<div class="control-item more">+{subcategoryControls.length - 5} more</div>
-												{/if}
-											</div>
-										</div>
-									{/if}
 								{:else if traceSelectedNode.type === 'regulation'}
 									<h3>{selectedItem.citation}</h3>
 									<div class="detail-meta">
@@ -2013,50 +1891,6 @@
 				</div>
 			</div>
 
-			<!-- Control Categories Column (AIHSR Mitigation Strategies) -->
-			<div class="column mitigations">
-				<div class="column-header">
-					<span class="column-icon">C</span>
-					<h2>Control Categories</h2>
-					<span class="count" title="{visibleMitigationCount} of {allMitigations.length}">{visibleMitigationCount}</span>
-				</div>
-				<div class="nodes">
-					{#each filterBySearch(allMitigations, m => m.name, 'mitigation') as m}
-						{@const linkCount = getLinkCount('mitigation', m.id)}
-						{@const controlCount = allControls.filter(c => c.subcategoryId === m.id).length}
-						{@const isSelected = selectedNode?.type === 'mitigation' && selectedNode?.id === m.id}
-						{@const connected = isConnected('mitigation', m.id)}
-						{@const connectionLink = getConnectionToSelected('mitigation', m.id)}
-						{@const shouldHide = focusMode && selectedNode && !isSelected && !connected}
-						{#if !shouldHide}
-						<div
-							class="node mitigation"
-							class:selected={isSelected}
-							class:connected
-							class:connecting={connectingFrom?.type === 'mitigation' && connectingFrom?.id === m.id}
-							role="button"
-							tabindex="0"
-							onclick={() => handleNodeClick('mitigation', m.id)}
-							onkeydown={(e) => e.key === 'Enter' && handleNodeClick('mitigation', m.id)}
-						>
-							<div class="node-header">
-								<span class="node-code">{m.code}</span>
-								<span class="link-count" title="Risk links">{linkCount}</span>
-							</div>
-							<div class="node-text">{m.name}</div>
-							<div class="node-meta">
-								<span class="control-count" title="Controls in this category">{controlCount} controls</span>
-							</div>
-							{#if connected && connectionLink}
-								<span class="conn-indicator">{connectionLink.type}</span>
-							{/if}
-							<button class="connect-btn" title="Connect to..." onclick={(e) => startConnect('mitigation', m.id, e)}>+</button>
-						</div>
-						{/if}
-					{/each}
-				</div>
-			</div>
-
 			<!-- Regulations Column -->
 			<div class="column regulations">
 				<div class="column-header">
@@ -2186,29 +2020,6 @@
 					<button class="btn edit-entity" onclick={() => { entityType = 'risks'; editEntity(selectedDetails.item); }}>
 						Edit Risk
 					</button>
-				{:else if selectedDetails.type === 'mitigation' && selectedDetails.item}
-					{@const subcategoryControls = allControls.filter(c => c.subcategoryId === selectedDetails.item?.id)}
-					<h3>{selectedDetails.item.name}</h3>
-					<div class="detail-meta">
-						<span class="meta-item">Code: {selectedDetails.item.code}</span>
-						<span class="meta-item">Category: {selectedDetails.item.category}</span>
-					</div>
-					{#if subcategoryControls.length > 0}
-						<div class="detail-controls">
-							<strong>Controls ({subcategoryControls.length}):</strong>
-							<div class="controls-list">
-								{#each subcategoryControls.slice(0, 10) as ctrl}
-									<div class="control-item">
-										<span class="control-name">{ctrl.name}</span>
-										<span class="control-phases">{ctrl.phases?.map((p: string) => p.replace('phase-', 'P')).join(', ')}</span>
-									</div>
-								{/each}
-								{#if subcategoryControls.length > 10}
-									<div class="control-item more">...and {subcategoryControls.length - 10} more</div>
-								{/if}
-							</div>
-						</div>
-					{/if}
 				{:else if selectedDetails.type === 'regulation' && selectedDetails.item}
 					<h3>{selectedDetails.item.citation}</h3>
 					<div class="detail-meta">
@@ -2657,27 +2468,18 @@
 						} else if (editingLink.type === 'dependency') {
 							editingLink.from = { entity: 'question', id: allQuestions[0]?.id || '' };
 							editingLink.to = { entity: 'question', id: allQuestions[1]?.id || allQuestions[0]?.id || '' };
-						} else if (editingLink.type === 'mitigation') {
-							editingLink.from = { entity: 'risk', id: allRisks[0]?.id || '' };
-							editingLink.to = { entity: 'mitigation', id: allMitigations[0]?.id || '' };
 						} else if (editingLink.type === 'regulation') {
 							editingLink.from = { entity: 'risk', id: allRisks[0]?.id || '' };
 							editingLink.to = { entity: 'regulation', id: allRegulations[0]?.id || '' };
 						} else if (editingLink.type === 'control') {
 							editingLink.from = { entity: 'risk', id: allRisks[0]?.id || '' };
 							editingLink.to = { entity: 'control', id: allControls[0]?.id || '' };
-						} else if (editingLink.type === 'implementation') {
-							editingLink.from = { entity: 'mitigation', id: allMitigations[0]?.id || '' };
-							editingLink.to = { entity: 'control', id: allControls[0]?.id || '' };
 						}
 					}}>
-						<option value="trigger">Trigger (Question triggers Risk)</option>
-						<option value="dependency">Dependency (Question depends on Question)</option>
-						<option value="mitigation">Control Category (Risk linked to Category)</option>
-						<option value="regulation">Regulation (Risk linked to Regulation)</option>
-						<option value="control">Control (Risk linked to Control)</option>
-						<option value="implementation">Implementation (Category implements Control)</option>
-						<option value="custom">Custom</option>
+						<option value="trigger">Trigger (Question → Risk)</option>
+						<option value="dependency">Dependency (Question → Question)</option>
+						<option value="control">Control (Risk → Control)</option>
+						<option value="regulation">Regulation (Risk → Regulation)</option>
 					</select>
 				</div>
 
@@ -2738,7 +2540,7 @@
 					{/if}
 				{/if}
 
-				{#if editingLink.type === 'mitigation'}
+				{#if editingLink.type === 'control'}
 					<div class="form-group">
 						<label>Phase-specific Guidance</label>
 						{#each phases as phase}
@@ -4249,7 +4051,7 @@
 		background: #1e293b;
 		border: 1px solid #334155;
 		border-radius: 0.5rem;
-		max-width: 500px;
+		max-width: 600px;
 		width: 90%;
 		max-height: 80vh;
 		display: flex;
@@ -4290,13 +4092,14 @@
 
 	.link-preview {
 		display: flex;
-		align-items: center;
+		align-items: stretch;
 		gap: 0.75rem;
 		padding: 1rem;
 		background: #0f172a;
 		border-radius: 0.375rem;
 		margin-bottom: 1rem;
 		justify-content: center;
+		flex-wrap: wrap;
 	}
 
 	.link-node {
@@ -4316,16 +4119,18 @@
 
 	.link-node-btn {
 		font-size: 0.75rem;
-		padding: 0.375rem 0.75rem;
+		padding: 0.5rem 0.75rem;
 		border-radius: 0.25rem;
-		max-width: 180px;
-		white-space: nowrap;
-		overflow: hidden;
-		text-overflow: ellipsis;
+		flex: 1;
+		min-width: 120px;
+		max-width: 250px;
+		white-space: normal;
+		line-height: 1.4;
+		text-align: left;
 		border: 1px solid transparent;
 		cursor: pointer;
 		display: flex;
-		align-items: center;
+		align-items: flex-start;
 		gap: 0.5rem;
 		transition: all 0.15s;
 	}

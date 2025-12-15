@@ -42,32 +42,39 @@
 
 	let selectedPhase = $derived(answers['phase'] as string || '');
 
-	// Calculate triggered subdomains
+	// Calculate triggered subdomains using links array (single source of truth)
 	let triggeredSubdomains = $derived.by(() => {
 		const triggered = new Set<string>();
 
-		for (const category of data.questionCategories) {
-			for (const question of category.questions) {
-				const answer = answers[question.id];
-				if (!answer) continue;
-				const triggers = question.triggers;
-				if (!triggers) continue;
+		// Get trigger links from traceability
+		const triggerLinks = data.links.filter((l: any) =>
+			l.type === 'trigger' && l.from.entity === 'question' && l.to.entity === 'risk'
+		);
 
-				if (Array.isArray(answer)) {
-					for (const val of answer) {
-						if (triggers[val]) {
-							for (const subdomain of triggers[val]) {
-								triggered.add(subdomain);
-							}
-						}
-					}
-				} else {
-					if (triggers[answer]) {
-						for (const subdomain of triggers[answer]) {
-							triggered.add(subdomain);
-						}
-					}
+		// Check each trigger link against current answers
+		for (const link of triggerLinks) {
+			const questionId = link.from.id;
+			const answer = answers[questionId];
+			if (!answer) continue;
+
+			// Check if the answer matches any of the trigger's answerValues
+			const answerValues = link.answerValues || [];
+			let matches = false;
+
+			if (Array.isArray(answer)) {
+				// Multi-select: check if any answer value matches
+				matches = answer.some(val => answerValues.includes(val));
+			} else {
+				// Single value: check direct match
+				matches = answerValues.includes(answer);
+			}
+
+			if (matches) {
+				// Check phase applicability if we have a selected phase
+				if (selectedPhase && link.phases && !link.phases.includes(selectedPhase)) {
+					continue; // Skip if link doesn't apply to current phase
 				}
+				triggered.add(link.to.id);
 			}
 		}
 

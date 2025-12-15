@@ -4,7 +4,6 @@
   "lastUpdated": "2025-12-13",
   "source": "Derived from AIHSR Risk Reference Tool v1.5",
   "description": "Assessment questions with conditional visibility based on previous answers",
-
   "questionCategories": [
     {
       "id": "essentials",
@@ -17,11 +16,22 @@
           "type": "single-select",
           "required": true,
           "options": [
-            {"value": "phase-1", "label": "Phase 1: Discovery", "description": "Retrospective data, algorithm development"},
-            {"value": "phase-2", "label": "Phase 2: Validation", "description": "Prospective testing, controlled settings"},
-            {"value": "phase-3", "label": "Phase 3: Deployment", "description": "Live use, influences decisions"}
-          ],
-          "triggers": {}
+            {
+              "value": "phase-1",
+              "label": "Phase 1: Discovery",
+              "description": "Retrospective data, algorithm development"
+            },
+            {
+              "value": "phase-2",
+              "label": "Phase 2: Validation",
+              "description": "Prospective testing, controlled settings"
+            },
+            {
+              "value": "phase-3",
+              "label": "Phase 3: Deployment",
+              "description": "Live use, influences decisions"
+            }
+          ]
         },
         {
           "id": "model-types",
@@ -29,32 +39,43 @@
           "type": "multi-select",
           "required": true,
           "options": [
-            {"value": "llm", "label": "Large Language Model (ChatGPT-like)"},
-            {"value": "predictive", "label": "Predictive/Risk Model"},
-            {"value": "computer-vision", "label": "Image/Video Analysis"},
-            {"value": "classification", "label": "Classification/Categorization"},
-            {"value": "generative-non-llm", "label": "Generative (images, audio)"},
-            {"value": "other", "label": "Other ML/AI"}
-          ],
-          "triggers": {}
+            {
+              "value": "llm",
+              "label": "Large Language Model (ChatGPT-like)"
+            },
+            {
+              "value": "predictive",
+              "label": "Predictive/Risk Model"
+            },
+            {
+              "value": "computer-vision",
+              "label": "Image/Video Analysis"
+            },
+            {
+              "value": "classification",
+              "label": "Classification/Categorization"
+            },
+            {
+              "value": "generative-non-llm",
+              "label": "Generative (images, audio)"
+            },
+            {
+              "value": "other",
+              "label": "Other ML/AI"
+            }
+          ]
         },
         {
           "id": "patient-data",
           "question": "Does the AI use patient health data (PHI)?",
           "type": "yes-no",
-          "required": true,
-          "triggers": {
-            "yes": ["privacy-breach-2.1", "security-vulnerabilities-2.2"]
-          }
+          "required": true
         },
         {
           "id": "clinical-decisions",
           "question": "Will AI outputs inform clinical decisions?",
           "type": "yes-no",
-          "required": true,
-          "triggers": {
-            "yes": ["overreliance-5.1", "false-information-3.1", "loss-of-agency-5.2"]
-          }
+          "required": true
         }
       ]
     },
@@ -62,16 +83,25 @@
       "id": "ai-characteristics",
       "name": "AI Characteristics",
       "order": 2,
-      "showIf": {"phase": ["phase-1", "phase-2", "phase-3"]},
+      "showIf": {
+        "phase": [
+          "phase-1",
+          "phase-2",
+          "phase-3"
+        ]
+      },
       "questions": [
         {
           "id": "generates-content",
           "question": "Does the AI generate text, images, or recommendations?",
           "type": "yes-no",
           "required": true,
-          "showIf": {"model-types": ["llm", "generative-non-llm", "predictive"]},
-          "triggers": {
-            "yes": ["false-information-3.1", "information-pollution-3.2", "toxic-content-1.2"]
+          "showIf": {
+            "model-types": [
+              "llm",
+              "generative-non-llm",
+              "predictive"
+            ]
           }
         },
         {
@@ -79,9 +109,11 @@
           "question": "Can the AI act without human approval?",
           "type": "yes-no",
           "required": true,
-          "showIf": {"phase": ["phase-2", "phase-3"]},
-          "triggers": {
-            "yes": ["overreliance-5.1", "loss-of-agency-5.2", "governance-failure-6.5", "misaligned-goals-7.1"]
+          "showIf": {
+            "phase": [
+              "phase-2",
+              "phase-3"
+            ]
           }
         },
         {
@@ -89,16 +121,23 @@
           "question": "Can users understand why the AI made a decision?",
           "type": "single-select",
           "required": true,
-          "showIf": {"clinical-decisions": "yes"},
+          "showIf": {
+            "clinical-decisions": "yes"
+          },
           "options": [
-            {"value": "yes", "label": "Yes - Clear explanations"},
-            {"value": "partial", "label": "Partially - Some insight"},
-            {"value": "no", "label": "No - Black box"}
-          ],
-          "triggers": {
-            "partial": ["lack-transparency-7.4"],
-            "no": ["lack-transparency-7.4", "overreliance-5.1"]
-          }
+            {
+              "value": "yes",
+              "label": "Yes - Clear explanations"
+            },
+            {
+              "value": "partial",
+              "label": "Partially - Some insight"
+            },
+            {
+              "value": "no",
+              "label": "No - Black box"
+            }
+          ]
         }
       ]
     },
@@ -106,7 +145,13 @@
       "id": "data-and-bias",
       "name": "Data & Bias",
       "order": 3,
-      "showIf": {"phase": ["phase-1", "phase-2", "phase-3"]},
+      "showIf": {
+        "phase": [
+          "phase-1",
+          "phase-2",
+          "phase-3"
+        ]
+      },
       "questions": [
         {
           "id": "training-data-diversity",
@@ -114,23 +159,27 @@
           "type": "single-select",
           "required": true,
           "options": [
-            {"value": "yes", "label": "Yes - Comprehensive diversity"},
-            {"value": "limited", "label": "Limited - Some gaps"},
-            {"value": "unknown", "label": "Unknown - Not assessed"}
-          ],
-          "triggers": {
-            "limited": ["unfair-discrimination-1.1", "unequal-performance-1.3"],
-            "unknown": ["unfair-discrimination-1.1", "unequal-performance-1.3", "governance-failure-6.5"]
-          }
+            {
+              "value": "yes",
+              "label": "Yes - Comprehensive diversity"
+            },
+            {
+              "value": "limited",
+              "label": "Limited - Some gaps"
+            },
+            {
+              "value": "unknown",
+              "label": "Unknown - Not assessed"
+            }
+          ]
         },
         {
           "id": "external-api",
           "question": "Does it use external/cloud APIs (e.g., OpenAI, AWS)?",
           "type": "yes-no",
           "required": true,
-          "showIf": {"patient-data": "yes"},
-          "triggers": {
-            "yes": ["privacy-breach-2.1", "security-vulnerabilities-2.2", "governance-failure-6.5"]
+          "showIf": {
+            "patient-data": "yes"
           }
         }
       ]
@@ -139,7 +188,9 @@
       "id": "populations",
       "name": "Populations",
       "order": 4,
-      "showIf": {"clinical-decisions": "yes"},
+      "showIf": {
+        "clinical-decisions": "yes"
+      },
       "questions": [
         {
           "id": "vulnerable-populations",
@@ -147,14 +198,31 @@
           "type": "multi-select",
           "required": true,
           "options": [
-            {"value": "none", "label": "None"},
-            {"value": "children", "label": "Children (<18)"},
-            {"value": "older-adults", "label": "Older Adults (65+)"},
-            {"value": "cognitively-impaired", "label": "Cognitively Impaired"},
-            {"value": "pregnant-women", "label": "Pregnant Women"},
-            {"value": "prisoners", "label": "Prisoners"}
-          ],
-          "triggers": {}
+            {
+              "value": "none",
+              "label": "None"
+            },
+            {
+              "value": "children",
+              "label": "Children (<18)"
+            },
+            {
+              "value": "older-adults",
+              "label": "Older Adults (65+)"
+            },
+            {
+              "value": "cognitively-impaired",
+              "label": "Cognitively Impaired"
+            },
+            {
+              "value": "pregnant-women",
+              "label": "Pregnant Women"
+            },
+            {
+              "value": "prisoners",
+              "label": "Prisoners"
+            }
+          ]
         }
       ]
     },
@@ -162,7 +230,12 @@
       "id": "deployment-details",
       "name": "Deployment Details",
       "order": 5,
-      "showIf": {"phase": ["phase-2", "phase-3"]},
+      "showIf": {
+        "phase": [
+          "phase-2",
+          "phase-3"
+        ]
+      },
       "questions": [
         {
           "id": "human-oversight",
@@ -170,23 +243,29 @@
           "type": "single-select",
           "required": true,
           "options": [
-            {"value": "always", "label": "Always required"},
-            {"value": "sometimes", "label": "Sometimes"},
-            {"value": "never", "label": "Never - AI acts alone"}
-          ],
-          "triggers": {
-            "sometimes": ["overreliance-5.1"],
-            "never": ["overreliance-5.1", "loss-of-agency-5.2", "governance-failure-6.5"]
-          }
+            {
+              "value": "always",
+              "label": "Always required"
+            },
+            {
+              "value": "sometimes",
+              "label": "Sometimes"
+            },
+            {
+              "value": "never",
+              "label": "Never - AI acts alone"
+            }
+          ]
         },
         {
           "id": "real-time",
           "question": "Does the AI operate in real-time during patient encounters?",
           "type": "yes-no",
           "required": false,
-          "showIf": {"phase": ["phase-3"]},
-          "triggers": {
-            "yes": ["overreliance-5.1", "lack-robustness-7.3"]
+          "showIf": {
+            "phase": [
+              "phase-3"
+            ]
           }
         },
         {
@@ -194,9 +273,10 @@
           "question": "Will it be deployed at multiple sites?",
           "type": "yes-no",
           "required": false,
-          "showIf": {"phase": ["phase-3"]},
-          "triggers": {
-            "yes": ["unequal-performance-1.3", "governance-failure-6.5"]
+          "showIf": {
+            "phase": [
+              "phase-3"
+            ]
           }
         }
       ]

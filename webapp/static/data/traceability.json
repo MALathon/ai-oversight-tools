@@ -2,12 +2,11 @@
   "$schema": "./schemas/traceability.schema.json",
   "version": "6.0.0",
   "lastUpdated": "2025-12-14",
-  "description": "Comprehensive traceability linking questions, risks, mitigations, and regulations based on AIHSR Risk Reference Tool",
+  "description": "Comprehensive traceability linking questions, risks, controls, and regulations based on AIHSR Risk Reference Tool",
   "source": "AIHSR Risk Reference Tool v1.5 (Tamiko Eto) - Map Risk-Mitigation-Prompt sheet",
   "nodes": {
     "questions": "assessment-questions.json",
     "risks": "risk-subdomains.json",
-    "mitigations": "mitigation-strategies.json",
     "regulations": "cfr-regulations.json",
     "controls": "technical-controls.json"
   },
