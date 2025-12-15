@@ -2391,6 +2391,68 @@
 						</div>
 					</div>
 				{/if}
+
+				<!-- Connections Section (for existing entities) -->
+				{#if !isNewEntity && editingEntity?.id}
+					{@const entityConnections = links.filter((l: any) =>
+						(l.from.entity === entityType.slice(0, -1) && l.from.id === editingEntity.id) ||
+						(l.to.entity === entityType.slice(0, -1) && l.to.id === editingEntity.id)
+					)}
+					<div class="connections-section-editor">
+						<div class="connections-header">
+							<h4>Connections ({entityConnections.length})</h4>
+							<button
+								class="btn small add-connection-btn"
+								onclick={() => {
+									// Create new link with this entity as source
+									const eType = entityType.slice(0, -1) as EntityType;
+									editingLink = {
+										id: `link-${Date.now()}`,
+										type: eType === 'question' ? 'trigger' : eType === 'risk' ? 'control' : 'control',
+										from: { entity: eType, id: editingEntity.id },
+										to: { entity: eType === 'question' ? 'risk' : 'control', id: '' },
+										phases: ['phase-1', 'phase-2', 'phase-3'],
+										answerValues: [],
+										logic: 'OR',
+										guidance: {}
+									};
+									showLinkEditor = true;
+								}}
+							>+ Add Connection</button>
+						</div>
+						{#if entityConnections.length === 0}
+							<p class="no-connections-msg">No connections yet. Add one to link this {entityType.slice(0, -1)} to other entities.</p>
+						{:else}
+							<div class="connections-list-editor">
+								{#each entityConnections as link}
+									{@const isFrom = link.from.entity === entityType.slice(0, -1) && link.from.id === editingEntity.id}
+									{@const otherEntity = isFrom ? link.to.entity : link.from.entity}
+									{@const otherId = isFrom ? link.to.id : link.from.id}
+									<div class="connection-row">
+										<span class="conn-type-badge {link.type}">{link.type}</span>
+										<span class="conn-direction">{isFrom ? '→' : '←'}</span>
+										<span class="conn-other {otherEntity}">{getEntityName(otherEntity, otherId)}</span>
+										{#if link.phases?.length}
+											<span class="conn-phases-small">{link.phases.map((p: string) => p.replace('phase-', 'P')).join(',')}</span>
+										{/if}
+										<div class="conn-actions">
+											<button
+												class="conn-edit-btn"
+												title="Edit connection"
+												onclick={() => { editingLink = JSON.parse(JSON.stringify(link)); showLinkEditor = true; }}
+											>Edit</button>
+											<button
+												class="conn-delete-btn"
+												title="Delete connection"
+												onclick={() => { links = links.filter((l: any) => l.id !== link.id); }}
+											>×</button>
+										</div>
+									</div>
+								{/each}
+							</div>
+						{/if}
+					</div>
+				{/if}
 			</div>
 
 			<div class="modal-footer">
@@ -4164,6 +4226,123 @@
 		flex: 1;
 		padding: 1rem;
 		overflow-y: auto;
+	}
+
+	/* Connections Section in Entity Editor */
+	.connections-section-editor {
+		margin-top: 1.5rem;
+		padding-top: 1rem;
+		border-top: 1px solid #334155;
+	}
+
+	.connections-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 0.75rem;
+	}
+
+	.connections-header h4 {
+		margin: 0;
+		font-size: 0.875rem;
+		color: #e2e8f0;
+	}
+
+	.add-connection-btn {
+		font-size: 0.75rem;
+		padding: 0.25rem 0.5rem;
+	}
+
+	.no-connections-msg {
+		color: #64748b;
+		font-size: 0.8125rem;
+		font-style: italic;
+	}
+
+	.connections-list-editor {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+		max-height: 200px;
+		overflow-y: auto;
+	}
+
+	.connection-row {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		padding: 0.5rem;
+		background: #1e293b;
+		border-radius: 0.375rem;
+		font-size: 0.8125rem;
+	}
+
+	.conn-type-badge {
+		padding: 0.125rem 0.375rem;
+		border-radius: 0.25rem;
+		font-size: 0.6875rem;
+		font-weight: 600;
+		text-transform: uppercase;
+	}
+
+	.conn-type-badge.trigger { background: rgba(96, 165, 250, 0.2); color: #60a5fa; }
+	.conn-type-badge.control { background: rgba(249, 115, 22, 0.2); color: #f97316; }
+	.conn-type-badge.regulation { background: rgba(168, 85, 247, 0.2); color: #a855f7; }
+	.conn-type-badge.dependency { background: rgba(148, 163, 184, 0.2); color: #94a3b8; }
+
+	.conn-direction {
+		color: #64748b;
+	}
+
+	.conn-other {
+		flex: 1;
+		color: #e2e8f0;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	.conn-other.question { color: #60a5fa; }
+	.conn-other.risk { color: #ef4444; }
+	.conn-other.regulation { color: #a855f7; }
+	.conn-other.control { color: #f97316; }
+
+	.conn-phases-small {
+		color: #64748b;
+		font-size: 0.6875rem;
+	}
+
+	.conn-actions {
+		display: flex;
+		gap: 0.25rem;
+	}
+
+	.conn-edit-btn {
+		padding: 0.125rem 0.375rem;
+		background: #334155;
+		border: none;
+		border-radius: 0.25rem;
+		color: #94a3b8;
+		font-size: 0.6875rem;
+		cursor: pointer;
+	}
+
+	.conn-edit-btn:hover {
+		background: #475569;
+		color: #e2e8f0;
+	}
+
+	.conn-delete-btn {
+		padding: 0.125rem 0.375rem;
+		background: transparent;
+		border: none;
+		color: #64748b;
+		font-size: 0.875rem;
+		cursor: pointer;
+	}
+
+	.conn-delete-btn:hover {
+		color: #ef4444;
 	}
 
 	.modal-footer {
