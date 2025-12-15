@@ -1244,6 +1244,8 @@
 	function saveEntity() {
 		if (!editingEntity) return;
 
+		const wasNew = isNewEntity;
+
 		// Generate ID if new
 		if (isNewEntity && !editingEntity.id) {
 			editingEntity.id = `${entityType.slice(0, -1)}-${Date.now()}`;
@@ -1260,8 +1262,15 @@
 		}
 
 		editableEntities = { ...editableEntities };
-		showEntityEditor = false;
-		editingEntity = null;
+
+		// If was new entity, stay open so user can add connections immediately
+		if (wasNew) {
+			isNewEntity = false; // Switch to edit mode - connections section will now show
+			// Keep modal open
+		} else {
+			showEntityEditor = false;
+			editingEntity = null;
+		}
 	}
 
 	// Delete entity
@@ -2463,7 +2472,7 @@
 				{/if}
 				<div class="footer-right">
 					<button class="btn" onclick={() => { showEntityEditor = false; editingEntity = null; }}>Cancel</button>
-					<button class="btn primary" onclick={saveEntity}>Save</button>
+					<button class="btn primary" onclick={saveEntity}>{isNewEntity ? 'Save' : 'Save & Close'}</button>
 				</div>
 			</div>
 		</div>
