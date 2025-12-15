@@ -104,14 +104,26 @@
 		return triggered;
 	});
 
-	// Get triggered risks with their suggested mitigations
+	// Get selected model types for filtering
+	let selectedModelTypes = $derived((answers['model-types'] as string[]) || []);
+
+	// Get triggered risks with their suggested mitigations, subcategories, and controls
 	let triggeredRisks = $derived.by(() => {
 		if (!selectedPhase) return [];
+
+		// Get mitigation links (risk → subcategory)
+		const mitigationLinks = data.links.filter((l: any) =>
+			l.type === 'mitigation' && l.from.entity === 'risk' && l.to.entity === 'subcategory'
+		);
 
 		const risks: Array<{
 			subdomain: any;
 			domain: any;
 			suggestedMitigation: string;
+			subcategories: Array<{
+				subcategory: any;
+				controls: any[];
+			}>;
 		}> = [];
 
 		for (const domain of data.domains) {
@@ -123,10 +135,36 @@
 
 				const mitigation = data.phaseMitigations[subId]?.[selectedPhase];
 				if (mitigation) {
+					// Find subcategories linked to this risk
+					const riskSubcategoryLinks = mitigationLinks.filter((l: any) => l.from.id === subId);
+					const subcategoriesWithControls = riskSubcategoryLinks.map((link: any) => {
+						const subcategory = data.subcategories.find((s: any) => s.id === link.to.id);
+						if (!subcategory) return null;
+
+						// Get controls for this subcategory, filtered by phase and tech type
+						let controls = data.controls.filter((c: any) => c.subcategoryId === subcategory.id);
+
+						// Filter by phase
+						controls = controls.filter((c: any) =>
+							!c.phases || c.phases.length === 0 || c.phases.includes(selectedPhase)
+						);
+
+						// Filter by tech type
+						if (selectedModelTypes.length > 0) {
+							controls = controls.filter((c: any) =>
+								!c.techTypes || c.techTypes.includes('all') ||
+								c.techTypes.some((t: string) => selectedModelTypes.includes(t))
+							);
+						}
+
+						return { subcategory, controls };
+					}).filter(Boolean);
+
 					risks.push({
 						subdomain,
 						domain,
-						suggestedMitigation: mitigation
+						suggestedMitigation: mitigation,
+						subcategories: subcategoriesWithControls
 					});
 				}
 			}
@@ -328,6 +366,37 @@
 								rows="2"
 							></textarea>
 						</div>
+					{/if}
+
+					{#if risk.subcategories.length > 0}
+						<details class="controls-section">
+							<summary>
+								<span class="controls-toggle">Technical Controls</span>
+								<span class="controls-count">{risk.subcategories.reduce((acc, s) => acc + s.controls.length, 0)} controls</span>
+							</summary>
+							<div class="subcategories-list">
+								{#each risk.subcategories as { subcategory, controls }}
+									<div class="subcategory-item">
+										<div class="subcategory-header">
+											<span class="subcategory-name">{subcategory.name}</span>
+											<span class="subcategory-count">{controls.length}</span>
+										</div>
+										{#if controls.length > 0}
+											<ul class="controls-list">
+												{#each controls as control}
+													<li class="control-item">
+														<span class="control-id">{control.id}</span>
+														<span class="control-name">{control.name}</span>
+													</li>
+												{/each}
+											</ul>
+										{:else}
+											<p class="no-controls">No controls match current filters</p>
+										{/if}
+									</div>
+								{/each}
+							</div>
+						</details>
 					{/if}
 				</div>
 			{/each}
@@ -582,6 +651,126 @@
 	.custom-input textarea:focus {
 		outline: none;
 		border-color: #60a5fa;
+	}
+
+	.controls-section {
+		margin-top: 0.5rem;
+		border: 1px solid #334155;
+		border-radius: 0.25rem;
+		background: #0f172a;
+	}
+
+	.controls-section summary {
+		padding: 0.5rem;
+		cursor: pointer;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		user-select: none;
+	}
+
+	.controls-section summary::-webkit-details-marker {
+		display: none;
+	}
+
+	.controls-section summary::before {
+		content: '▶';
+		font-size: 0.5rem;
+		margin-right: 0.375rem;
+		color: #64748b;
+		transition: transform 0.2s;
+	}
+
+	.controls-section[open] summary::before {
+		transform: rotate(90deg);
+	}
+
+	.controls-toggle {
+		font-size: 0.625rem;
+		font-weight: 500;
+		color: #94a3b8;
+	}
+
+	.controls-count {
+		font-size: 0.5625rem;
+		color: #64748b;
+		background: #1e293b;
+		padding: 0.125rem 0.375rem;
+		border-radius: 0.125rem;
+	}
+
+	.subcategories-list {
+		border-top: 1px solid #334155;
+		max-height: 300px;
+		overflow-y: auto;
+	}
+
+	.subcategory-item {
+		border-bottom: 1px solid #334155;
+	}
+
+	.subcategory-item:last-child {
+		border-bottom: none;
+	}
+
+	.subcategory-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 0.375rem 0.5rem;
+		background: #1e293b;
+	}
+
+	.subcategory-name {
+		font-size: 0.625rem;
+		font-weight: 500;
+		color: #a78bfa;
+	}
+
+	.subcategory-count {
+		font-size: 0.5rem;
+		color: #64748b;
+		background: #0f172a;
+		padding: 0.0625rem 0.25rem;
+		border-radius: 0.125rem;
+	}
+
+	.controls-list {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+	}
+
+	.control-item {
+		display: flex;
+		gap: 0.375rem;
+		padding: 0.25rem 0.5rem;
+		border-bottom: 1px solid #1e293b;
+	}
+
+	.control-item:last-child {
+		border-bottom: none;
+	}
+
+	.control-id {
+		font-family: monospace;
+		font-size: 0.5rem;
+		color: #64748b;
+		flex-shrink: 0;
+		min-width: 80px;
+	}
+
+	.control-name {
+		font-size: 0.5625rem;
+		color: #94a3b8;
+		line-height: 1.4;
+	}
+
+	.no-controls {
+		font-size: 0.5625rem;
+		color: #64748b;
+		padding: 0.375rem 0.5rem;
+		font-style: italic;
 	}
 
 	@media (max-width: 800px) {

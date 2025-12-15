@@ -100,8 +100,8 @@
 	let focusMode = $state(false);
 
 	// Matrix view state - configurable row and column types
-	// Simplified schema: controls ARE mitigations (no separate mitigation entity)
-	type EntityType = 'question' | 'risk' | 'regulation' | 'control';
+	// 5 entity types: questions, risks, subcategories (mitigation strategies), regulations, controls
+	type EntityType = 'question' | 'risk' | 'subcategory' | 'regulation' | 'control';
 	let matrixRowType = $state<EntityType>('question');
 	let matrixColType = $state<EntityType>('risk');
 	let matrixVerbose = $state(false);
@@ -110,10 +110,11 @@
 	let showUnlinkedOnly = $state(false);
 
 	// Determine link type for entity pair
-	// Simplified: trigger (Q→R), control (R→C), regulation (R→Reg), dependency (Q→Q)
+	// Link types: trigger (Q→R), mitigation (R→S), control (R→C), regulation (R→Reg), dependency (Q→Q)
 	function getLinkTypeForPair(fromType: EntityType, toType: EntityType): string | null {
 		const pairs: Record<string, string> = {
 			'question-risk': 'trigger',
+			'risk-subcategory': 'mitigation',
 			'risk-regulation': 'regulation',
 			'risk-control': 'control',
 			'question-question': 'dependency' // For showIf
@@ -125,6 +126,7 @@
 	function isPairReversed(fromType: EntityType, toType: EntityType): boolean {
 		const canonical: Record<string, [EntityType, EntityType]> = {
 			'trigger': ['question', 'risk'],
+			'mitigation': ['risk', 'subcategory'],
 			'regulation': ['risk', 'regulation'],
 			'control': ['risk', 'control'],
 			'dependency': ['question', 'question']
@@ -584,7 +586,7 @@
 	let entitySelectorSort = $state<'name' | 'code' | 'category'>('name');
 
 	// Entity management state
-	let entityType = $state<'questions' | 'risks' | 'regulations' | 'controls'>('risks');
+	let entityType = $state<'questions' | 'risks' | 'subcategories' | 'regulations' | 'controls'>('risks');
 	let entitySearch = $state('');
 	let showEntityEditor = $state(false);
 	let editingEntity = $state<any>(null);
@@ -713,6 +715,13 @@
 	let allRegulations = $derived(editableEntities.regulations ?? defaultRegulations);
 	let allControls = $derived(editableEntities.controls ?? defaultControls);
 
+	// Flatten subcategories from mitigation categories
+	let allSubcategories = $derived(
+		data.mitigationCategories.flatMap((cat: any) =>
+			cat.strategies.map((s: any) => ({ ...s, categoryId: cat.id, categoryName: cat.name }))
+		)
+	);
+
 	// Entity type configuration for Matrix
 	// Simplified schema: controls ARE mitigations (no separate mitigation entity)
 	const entityConfig: Record<EntityType, {
@@ -738,6 +747,14 @@
 			getLabel: (r) => r.shortName,
 			getShortLabel: (r) => r.code,
 			searchText: (r) => r.shortName + ' ' + r.name + ' ' + r.code
+		},
+		subcategory: {
+			label: 'Subcategories',
+			shortLabel: 'Sub',
+			getAll: () => allSubcategories,
+			getLabel: (s) => s.name,
+			getShortLabel: (s) => s.code,
+			searchText: (s) => s.name + ' ' + s.code + ' ' + s.description
 		},
 		regulation: {
 			label: 'Regulations',
@@ -852,6 +869,16 @@
 		return filtered.filter((r: any) => {
 			const isSelected = selectedNode?.type === 'risk' && selectedNode?.id === r.id;
 			const connected = transitiveConnections.has(`risk:${r.id}`);
+			return isSelected || connected;
+		}).length;
+	});
+
+	let visibleSubcategoryCount = $derived.by(() => {
+		const filtered = filterBySearch(allSubcategories, (s: any) => s.name + ' ' + s.code, 'subcategory');
+		if (!focusMode || !selectedNode) return filtered.length;
+		return filtered.filter((s: any) => {
+			const isSelected = selectedNode?.type === 'subcategory' && selectedNode?.id === s.id;
+			const connected = transitiveConnections.has(`subcategory:${s.id}`);
 			return isSelected || connected;
 		}).length;
 	});
@@ -1374,6 +1401,7 @@
 				<div class="add-dropdown-menu">
 					<button onclick={() => { entityType = 'questions'; createNewEntity(); }}>Question</button>
 					<button onclick={() => { entityType = 'risks'; createNewEntity(); }}>Risk</button>
+					<button onclick={() => { entityType = 'subcategories'; createNewEntity(); }}>Subcategory</button>
 					<button onclick={() => { entityType = 'regulations'; createNewEntity(); }}>Regulation</button>
 					<button onclick={() => { entityType = 'controls'; createNewEntity(); }}>Control</button>
 				</div>
@@ -1910,6 +1938,51 @@
 								<span class="conn-indicator">{connectionLink.type}</span>
 							{/if}
 							<button class="connect-btn" title="Connect to..." onclick={(e) => startConnect('risk', r.id, e)}>+</button>
+						</div>
+						{/if}
+					{/each}
+				</div>
+			</div>
+
+			<!-- Subcategories Column (Mitigation Strategies) -->
+			<div class="column subcategories">
+				<div class="column-header">
+					<span class="column-icon">▣</span>
+					<h2>Subcategories</h2>
+					<span class="count" title="{visibleSubcategoryCount} of {allSubcategories.length}">{visibleSubcategoryCount}</span>
+					<button class="add-btn" title="Add Subcategory" onclick={() => { entityType = 'subcategories'; createNewEntity(); }}>+</button>
+				</div>
+				<div class="nodes">
+					{#each filterBySearch(allSubcategories, s => s.name + ' ' + s.code, 'subcategory') as s}
+						{@const linkCount = getLinkCount('subcategory', s.id)}
+						{@const controlCount = allControls.filter((c: any) => c.subcategoryId === s.id).length}
+						{@const isSelected = selectedNode?.type === 'subcategory' && selectedNode?.id === s.id}
+						{@const connected = isConnected('subcategory', s.id)}
+						{@const connectionLink = getConnectionToSelected('subcategory', s.id)}
+						{@const shouldHide = focusMode && selectedNode && !isSelected && !connected}
+						{#if !shouldHide}
+						<div
+							class="node subcategory"
+							class:selected={isSelected}
+							class:connected
+							class:connecting={connectingFrom?.type === 'subcategory' && connectingFrom?.id === s.id}
+							role="button"
+							tabindex="0"
+							onclick={() => handleNodeClick('subcategory', s.id)}
+							onkeydown={(e) => e.key === 'Enter' && handleNodeClick('subcategory', s.id)}
+						>
+							<div class="node-header">
+								<span class="node-code">{s.code}</span>
+								<span class="link-count" title="Risk links: {linkCount}, Controls: {controlCount}">{linkCount}/{controlCount}</span>
+							</div>
+							<div class="node-text">{s.name}</div>
+							<div class="node-meta">
+								<span class="category-badge">{s.categoryName?.split(' ')[0]}</span>
+							</div>
+							{#if connected && connectionLink}
+								<span class="conn-indicator">{connectionLink.type}</span>
+							{/if}
+							<button class="connect-btn" title="Connect to..." onclick={(e) => startConnect('subcategory', s.id, e)}>+</button>
 						</div>
 						{/if}
 					{/each}
@@ -2558,6 +2631,9 @@
 						} else if (editingLink.type === 'dependency') {
 							editingLink.from = { entity: 'question', id: allQuestions[0]?.id || '' };
 							editingLink.to = { entity: 'question', id: allQuestions[1]?.id || allQuestions[0]?.id || '' };
+						} else if (editingLink.type === 'mitigation') {
+							editingLink.from = { entity: 'risk', id: allRisks[0]?.id || '' };
+							editingLink.to = { entity: 'subcategory', id: allSubcategories[0]?.id || '' };
 						} else if (editingLink.type === 'regulation') {
 							editingLink.from = { entity: 'risk', id: allRisks[0]?.id || '' };
 							editingLink.to = { entity: 'regulation', id: allRegulations[0]?.id || '' };
@@ -2568,6 +2644,7 @@
 					}}>
 						<option value="trigger">Trigger (Question → Risk)</option>
 						<option value="dependency">Dependency (Question → Question)</option>
+						<option value="mitigation">Mitigation (Risk → Subcategory)</option>
 						<option value="control">Control (Risk → Control)</option>
 						<option value="regulation">Regulation (Risk → Regulation)</option>
 					</select>
@@ -3636,7 +3713,7 @@
 
 	.questions .column-icon { background: rgba(96, 165, 250, 0.2); color: #60a5fa; }
 	.risks .column-icon { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
-	.mitigations .column-icon { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
+	.subcategories .column-icon { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
 	.regulations .column-icon { background: rgba(168, 85, 247, 0.2); color: #a855f7; }
 	.controls .column-icon { background: rgba(249, 115, 22, 0.2); color: #f97316; }
 
@@ -3788,12 +3865,21 @@
 
 	.node.question.selected { border-color: #60a5fa; background: rgba(96, 165, 250, 0.1); }
 	.node.risk.selected { border-color: #ef4444; background: rgba(239, 68, 68, 0.1); }
-	.node.mitigation.selected { border-color: #22c55e; background: rgba(34, 197, 94, 0.1); }
+	.node.subcategory.selected { border-color: #22c55e; background: rgba(34, 197, 94, 0.1); }
 	.node.regulation.selected { border-color: #a855f7; background: rgba(168, 85, 247, 0.1); }
 	.node.control.selected { border-color: #f97316; background: rgba(249, 115, 22, 0.1); }
 	.node.control.connected { border-color: #f97316; opacity: 0.8; }
+	.node.subcategory.connected { border-color: #22c55e; opacity: 0.8; }
 
 	.node.connected { opacity: 1; }
+
+	.category-badge {
+		font-size: 0.6rem;
+		padding: 0.125rem 0.25rem;
+		background: rgba(34, 197, 94, 0.2);
+		color: #22c55e;
+		border-radius: 0.25rem;
+	}
 	.node:not(.selected):not(.connected) {
 		opacity: 0.5;
 	}
