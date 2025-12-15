@@ -269,7 +269,12 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Design audits framework for training data and model design review",
+				"phase-2": "Execute audits on validation cohorts and model outputs",
+				"phase-3": "Perform scheduled audits on production system and outcomes"
+			}
 		},
 		{
 			"id": "A0002_Bengio2025",
@@ -282,7 +287,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Perform benchmarks on prospective validation data"
+			}
 		},
 		{
 			"id": "A0003_Bengio2025",
@@ -296,7 +304,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Validate bowtie method during prospective testing phase",
+				"phase-3": "Apply bowtie method in live clinical deployment"
+			}
 		},
 		{
 			"id": "A0004_Bengio2025",
@@ -310,7 +322,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Deploy defence in depth in validation environment",
+				"phase-3": "Maintain defence in depth in production environment"
+			}
 		},
 		{
 			"id": "A0006_Bengio2025",
@@ -328,7 +344,11 @@
 				"recommendation",
 				"computer-vision",
 				"supervised-ml"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Validate engagement with relevant experts and communities during prospective testing phase",
+				"phase-3": "Apply engagement with relevant experts and communities in live clinical deployment"
+			}
 		},
 		{
 			"id": "A0007_Bengio2025",
@@ -342,7 +362,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Validate if-then commitments with clinical stakeholders",
+				"phase-3": "Apply if-then commitments to clinical use cases"
+			}
 		},
 		{
 			"id": "A0008_Bengio2025",
@@ -360,7 +384,11 @@
 				"recommendation",
 				"computer-vision",
 				"supervised-ml"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Conduct impact assessment based on validation findings",
+				"phase-3": "Maintain regular impact assessment schedule for production"
+			}
 		},
 		{
 			"id": "A0009_Bengio2025",
@@ -373,7 +401,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Maintain current incident reporting reflecting operational changes"
+			}
 		},
 		{
 			"id": "A0010_Bengio2025",
@@ -386,7 +417,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Apply model evaluation to validation results"
+			}
 		},
 		{
 			"id": "A0011_Bengio2025",
@@ -400,7 +434,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Validate red teaming during prospective testing phase",
+				"phase-3": "Apply red teaming in live clinical deployment"
+			}
 		},
 		{
 			"id": "A0012_Bengio2025",
@@ -414,7 +452,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Execute risk management frameworks on validation cohorts and model outputs",
+				"phase-3": "Perform scheduled risk management frameworks on production system and outcomes"
+			}
 		},
 		{
 			"id": "A0013_Bengio2025",
@@ -429,7 +471,12 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Define risk register requirements for development environment",
+				"phase-2": "Test risk register in validation environment",
+				"phase-3": "Maintain risk register with continuous monitoring"
+			}
 		},
 		{
 			"id": "A0014_Bengio2025",
@@ -444,7 +491,12 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Plan risk taxonomy approach during project design phase",
+				"phase-2": "Validate risk taxonomy during prospective testing phase",
+				"phase-3": "Apply risk taxonomy in live clinical deployment"
+			}
 		},
 		{
 			"id": "A0015_Bengio2025",
@@ -458,7 +510,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Conduct risk thresholds based on validation findings",
+				"phase-3": "Maintain regular risk thresholds schedule for production"
+			}
 		},
 		{
 			"id": "A0016_Bengio2025",
@@ -472,7 +528,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Validate risk tolerance during prospective testing phase",
+				"phase-3": "Apply risk tolerance in live clinical deployment"
+			}
 		},
 		{
 			"id": "A0017_Bengio2025",
@@ -485,7 +545,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Apply safety analysis in live clinical deployment"
+			}
 		},
 		{
 			"id": "A0018_Bengio2025",
@@ -498,7 +561,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Enhance safety cases through continuous improvement"
+			}
 		},
 		{
 			"id": "A0019_Bengio2025",
@@ -512,7 +578,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Perform safety of the intended function on prospective validation data",
+				"phase-3": "Conduct ongoing safety of the intended function on live system performance"
+			}
 		},
 		{
 			"id": "A0020_Bengio2025",
@@ -525,7 +595,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Begin scenario analysis development"
+			}
 		},
 		{
 			"id": "A0021_Bengio2025",
@@ -538,7 +611,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Finalize threat modelling based on testing"
+			}
 		},
 		{
 			"id": "A0022_Bengio2025",
@@ -552,7 +628,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Exercise whistleblower protection for validation phase decisions",
+				"phase-3": "Maintain whistleblower protection with regular oversight reviews"
+			}
 		},
 		{
 			"id": "A0023_Bengio2025",
@@ -566,7 +646,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Validate delphi method during prospective testing phase",
+				"phase-3": "Apply delphi method in live clinical deployment"
+			}
 		},
 		{
 			"id": "A0025_Bengio2025",
@@ -579,7 +663,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Validate risk matrices during prospective testing phase"
+			}
 		},
 		{
 			"id": "A0026_Bengio2025",
@@ -597,7 +684,11 @@
 				"recommendation",
 				"computer-vision",
 				"supervised-ml"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Begin safety by design development",
+				"phase-3": "Enhance safety by design through continuous improvement"
+			}
 		},
 		{
 			"id": "A0028_Casper2025",
@@ -611,7 +702,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Update documentation availability with validation procedures and findings",
+				"phase-3": "Maintain current documentation availability reflecting operational changes"
+			}
 		},
 		{
 			"id": "A0033_Casper2025",
@@ -627,7 +722,10 @@
 				"generative-non-llm",
 				"multi-modal",
 				"foundation"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Apply labeling ai-generated content in live clinical deployment"
+			}
 		},
 		{
 			"id": "A0040_Casper2025",
@@ -641,7 +739,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Generate whistleblower protections summarizing validation outcomes",
+				"phase-3": "Produce regular whistleblower protections for stakeholders"
+			}
 		},
 		{
 			"id": "A0042_Eisenberg2025",
@@ -656,7 +758,10 @@
 				"llm",
 				"foundation",
 				"multi-modal"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Execute establish ai system access controls on validation cohorts and model outputs"
+			}
 		},
 		{
 			"id": "A0043_Eisenberg2025",
@@ -669,7 +774,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Operate within implement ai asset protection framework for deployed system"
+			}
 		},
 		{
 			"id": "A0044_Eisenberg2025",
@@ -684,7 +792,12 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Plan establish security validation framework methodology for retrospective data analysis",
+				"phase-2": "Perform establish security validation framework on prospective validation data",
+				"phase-3": "Conduct ongoing establish security validation framework on live system performance"
+			}
 		},
 		{
 			"id": "A0045_Eisenberg2025",
@@ -698,7 +811,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Perform implement continuous security testing system on prospective validation data",
+				"phase-3": "Conduct ongoing implement continuous security testing system on live system performance"
+			}
 		},
 		{
 			"id": "A0046_Eisenberg2025",
@@ -712,7 +829,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Implement implement ai security defense system in shadow mode alongside clinical workflows",
+				"phase-3": "Operate implement ai security defense system with real-time alerting"
+			}
 		},
 		{
 			"id": "A0050_Eisenberg2025",
@@ -725,7 +846,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Create initial establish ai system documentation framework capturing design decisions and data sources"
+			}
 		},
 		{
 			"id": "A0051_Eisenberg2025",
@@ -739,7 +863,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Continue implement ai system monitoring and logging infrastructure for validation activities",
+				"phase-3": "Operate implement ai system monitoring and logging infrastructure for clinical decision tracking"
+			}
 		},
 		{
 			"id": "A0052_Eisenberg2025",
@@ -753,7 +881,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Apply establish ai decision explanation framework to validation activities",
+				"phase-3": "Operate within establish ai decision explanation framework for deployed system"
+			}
 		},
 		{
 			"id": "A0053_Eisenberg2025",
@@ -767,7 +899,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Plan establish and apply performance testing and validation framework methodology for retrospective data analysis",
+				"phase-2": "Perform establish and apply performance testing and validation framework on prospective validation data"
+			}
 		},
 		{
 			"id": "A0054_Eisenberg2025",
@@ -781,7 +917,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Perform implement performance monitoring and robustness system on prospective validation data",
+				"phase-3": "Conduct ongoing implement performance monitoring and robustness system on live system performance"
+			}
 		},
 		{
 			"id": "A0055_Eisenberg2025",
@@ -796,7 +936,12 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Plan establish and apply fairness testing and validation framework methodology for retrospective data analysis",
+				"phase-2": "Perform establish and apply fairness testing and validation framework on prospective validation data",
+				"phase-3": "Conduct ongoing establish and apply fairness testing and validation framework on live system performance"
+			}
 		},
 		{
 			"id": "A0056_Eisenberg2025",
@@ -810,7 +955,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Implement implement fairness monitoring and remediation system in shadow mode alongside clinical workflows",
+				"phase-3": "Operate implement fairness monitoring and remediation system with real-time alerting"
+			}
 		},
 		{
 			"id": "A0057_Eisenberg2025",
@@ -825,7 +974,12 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Design establish universal access and performance design framework tailored to project scope",
+				"phase-2": "Apply establish universal access and performance design framework to validation activities",
+				"phase-3": "Operate within establish universal access and performance design framework for deployed system"
+			}
 		},
 		{
 			"id": "A0058_Eisenberg2025",
@@ -838,7 +992,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Maintain current establish content safety policy and boundaries reflecting operational changes"
+			}
 		},
 		{
 			"id": "A0059_Eisenberg2025",
@@ -854,7 +1011,10 @@
 				"generative-non-llm",
 				"multi-modal",
 				"foundation"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Run implement content moderation system continuously on live outputs"
+			}
 		},
 		{
 			"id": "A0060_Eisenberg2025",
@@ -870,7 +1030,10 @@
 				"generative-non-llm",
 				"multi-modal",
 				"foundation"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Maintain current implement content safety incident response reflecting operational changes"
+			}
 		},
 		{
 			"id": "A0061_Eisenberg2025",
@@ -883,7 +1046,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Test and refine establish information quality assurance framework during validation"
+			}
 		},
 		{
 			"id": "A0063_Eisenberg2025",
@@ -897,7 +1063,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Perform implement adversarial testing and red team program on prospective validation data",
+				"phase-3": "Conduct ongoing implement adversarial testing and red team program on live system performance"
+			}
 		},
 		{
 			"id": "A0064_Eisenberg2025",
@@ -910,7 +1080,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Operate implement system usage monitoring and prevention with real-time alerting"
+			}
 		},
 		{
 			"id": "A0065_Eisenberg2025",
@@ -925,7 +1098,10 @@
 				"llm",
 				"foundation",
 				"multi-modal"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Maintain current implement ai system usage verification program reflecting operational changes"
+			}
 		},
 		{
 			"id": "A0066_Eisenberg2025",
@@ -939,7 +1115,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Plan implement ai system disclosure requirements approach and resource requirements",
+				"phase-3": "Maintain implement ai system disclosure requirements in production environment"
+			}
 		},
 		{
 			"id": "A0067_Eisenberg2025",
@@ -952,7 +1132,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Develop implement a privacy protection framework for project governance"
+			}
 		},
 		{
 			"id": "A0068_Eisenberg2025",
@@ -965,7 +1148,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Operate implement a privacy incident detection and response with real-time alerting"
+			}
 		},
 		{
 			"id": "A0069_Eisenberg2025",
@@ -978,7 +1164,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Produce regular establish user rights and recourse framework for stakeholders"
+			}
 		},
 		{
 			"id": "A0071_Eisenberg2025",
@@ -992,7 +1181,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Design establish human-ai interaction safety framework tailored to project scope",
+				"phase-3": "Operate within establish human-ai interaction safety framework for deployed system"
+			}
 		},
 		{
 			"id": "A0072_Eisenberg2025",
@@ -1009,7 +1202,10 @@
 				"recommendation",
 				"computer-vision",
 				"supervised-ml"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Operate implement psychological impact management system for clinical decision tracking"
+			}
 		},
 		{
 			"id": "A0073_Eisenberg2025",
@@ -1024,7 +1220,10 @@
 				"llm",
 				"foundation",
 				"multi-modal"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Operate implement environmental impact management system with real-time alerting"
+			}
 		},
 		{
 			"id": "A0074_Eisenberg2025",
@@ -1037,7 +1236,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Conduct initial establish third-party assessment and management framework during project planning"
+			}
 		},
 		{
 			"id": "A0075_Eisenberg2025",
@@ -1050,7 +1252,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Conduct establish ai legal compliance process based on validation findings"
+			}
 		},
 		{
 			"id": "A0076_Eisenberg2025",
@@ -1067,7 +1272,10 @@
 				"recommendation",
 				"computer-vision",
 				"supervised-ml"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Conduct initial establish societal impact assessment framework during project planning"
+			}
 		},
 		{
 			"id": "A0077_Eisenberg2025",
@@ -1080,7 +1288,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Enforce establish responsible development and deployment policy in production operations"
+			}
 		},
 		{
 			"id": "A0078_Eisenberg2025",
@@ -1096,7 +1307,11 @@
 				"llm",
 				"reinforcement-learning",
 				"foundation"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Perform implement ai alignment validation system on prospective validation data",
+				"phase-3": "Conduct ongoing implement ai alignment validation system on live system performance"
+			}
 		},
 		{
 			"id": "A0079_Eisenberg2025",
@@ -1109,7 +1324,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Maintain regular establish ai risk management system schedule for production"
+			}
 		},
 		{
 			"id": "A0080_Eisenberg2025",
@@ -1124,7 +1342,12 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Create initial establish data governance and management practices capturing design decisions and data sources",
+				"phase-2": "Update establish data governance and management practices with validation procedures and findings",
+				"phase-3": "Maintain current establish data governance and management practices reflecting operational changes"
+			}
 		},
 		{
 			"id": "A0081_Eisenberg2025",
@@ -1137,7 +1360,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Maintain current establish documentation sharing mechanism reflecting operational changes"
+			}
 		},
 		{
 			"id": "A0082_Eisenberg2025",
@@ -1151,7 +1377,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Generate implement a risk reporting mechanism summarizing validation outcomes",
+				"phase-3": "Produce regular implement a risk reporting mechanism for stakeholders"
+			}
 		},
 		{
 			"id": "A0083_Eisenberg2025",
@@ -1165,7 +1395,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Define establish a general purpose incident response mechanism requirements and templates",
+				"phase-3": "Produce regular establish a general purpose incident response mechanism for stakeholders"
+			}
 		},
 		{
 			"id": "A0087_Future of Life Institute2024",
@@ -1181,7 +1415,10 @@
 				"generative-non-llm",
 				"multi-modal",
 				"foundation"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Apply ai-generated content watermarking in live clinical deployment"
+			}
 		},
 		{
 			"id": "A0105_Future of Life Institute2024",
@@ -1195,7 +1432,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Update control/alignment strategy with validation procedures and findings",
+				"phase-3": "Maintain current control/alignment strategy reflecting operational changes"
+			}
 		},
 		{
 			"id": "A0110_Future of Life Institute2024",
@@ -1209,7 +1450,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Perform emergency rollback plan on prospective validation data",
+				"phase-3": "Conduct ongoing emergency rollback plan on live system performance"
+			}
 		},
 		{
 			"id": "A0114_Future of Life Institute2024",
@@ -1224,7 +1469,10 @@
 				"llm",
 				"foundation",
 				"multi-modal"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Operate fine-tuning protections for live data"
+			}
 		},
 		{
 			"id": "A0117_Future of Life Institute2024",
@@ -1238,7 +1486,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Finalize harmful data removal from training sets based on testing",
+				"phase-3": "Enhance harmful data removal from training sets through continuous improvement"
+			}
 		},
 		{
 			"id": "A0125_Future of Life Institute2024",
@@ -1252,7 +1504,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Generate leadership communications on catastrophic risks summarizing validation outcomes",
+				"phase-3": "Produce regular leadership communications on catastrophic risks for stakeholders"
+			}
 		},
 		{
 			"id": "A0126_Future of Life Institute2024",
@@ -1265,7 +1521,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Operate mandatory security controls with real-time alerting"
+			}
 		},
 		{
 			"id": "A0132_Future of Life Institute2024",
@@ -1278,7 +1537,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Maintain regular ongoing model risk assessments schedule for production"
+			}
 		},
 		{
 			"id": "A0135_Future of Life Institute2024",
@@ -1291,7 +1553,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Operate post-deployment external researcher access for clinical decision tracking"
+			}
 		},
 		{
 			"id": "A0150_Future of Life Institute2024",
@@ -1304,7 +1569,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Produce regular safety research for stakeholders"
+			}
 		},
 		{
 			"id": "A0165_Future of Life Institute2024",
@@ -1318,7 +1586,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Perform dangerous capability evaluations on prospective validation data",
+				"phase-3": "Conduct ongoing dangerous capability evaluations on live system performance"
+			}
 		},
 		{
 			"id": "A0169_Future of Life Institute2024",
@@ -1331,7 +1603,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Validate terms of service during prospective testing phase"
+			}
 		},
 		{
 			"id": "A0179_Schuett2023",
@@ -1344,7 +1619,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Enhance dual control through continuous improvement"
+			}
 		},
 		{
 			"id": "A0250_Wiener2024",
@@ -1359,7 +1637,12 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Design annual third-party audit framework for training data and model design review",
+				"phase-2": "Execute annual third-party audit on validation cohorts and model outputs",
+				"phase-3": "Perform scheduled annual third-party audit on production system and outcomes"
+			}
 		},
 		{
 			"id": "A0251_Wiener2024",
@@ -1373,7 +1656,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Finalize capability to promptly enact a full shutdown based on testing",
+				"phase-3": "Enhance capability to promptly enact a full shutdown through continuous improvement"
+			}
 		},
 		{
 			"id": "A0252_Wiener2024",
@@ -1387,7 +1674,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Validate cybersecurity protocols to prevent the model from being unintentionally stolen with clinical stakeholders",
+				"phase-3": "Apply cybersecurity protocols to prevent the model from being unintentionally stolen to clinical use cases"
+			}
 		},
 		{
 			"id": "A0254_Wiener2024",
@@ -1402,7 +1693,12 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Plan implement a written safe and security plan (ssp) methodology for retrospective data analysis",
+				"phase-2": "Perform implement a written safe and security plan (ssp) on prospective validation data",
+				"phase-3": "Conduct ongoing implement a written safe and security plan (ssp) on live system performance"
+			}
 		},
 		{
 			"id": "A0260_EU AI Office2025",
@@ -1415,7 +1711,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Maintain regular safety and security framework schedule for production"
+			}
 		},
 		{
 			"id": "A0261_EU AI Office2025",
@@ -1429,7 +1728,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Deploy security mitigations in validation environment",
+				"phase-3": "Maintain security mitigations in production environment"
+			}
 		},
 		{
 			"id": "A0262_EU AI Office2025",
@@ -1442,7 +1745,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Apply independent external assessors to validation results"
+			}
 		},
 		{
 			"id": "A0263_EU AI Office2025",
@@ -1455,7 +1761,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Maintain current serious incident reporting reflecting operational changes"
+			}
 		},
 		{
 			"id": "A0264_EU AI Office2025",
@@ -1470,7 +1779,12 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Conduct initial documentation during project planning",
+				"phase-2": "Conduct documentation based on validation findings",
+				"phase-3": "Maintain regular documentation schedule for production"
+			}
 		},
 		{
 			"id": "A0265_EU AI Office2025",
@@ -1483,7 +1797,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Apply systemic risk analysis to validation results"
+			}
 		},
 		{
 			"id": "A0266_EU AI Office2025",
@@ -1497,7 +1814,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Conduct systemic risk assessment and mitigations based on validation findings",
+				"phase-3": "Maintain regular systemic risk assessment and mitigations schedule for production"
+			}
 		},
 		{
 			"id": "A0267_EU AI Office2025",
@@ -1511,7 +1832,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Verify non-retaliation protections effectiveness",
+				"phase-3": "Operate non-retaliation protections for live data"
+			}
 		},
 		{
 			"id": "A0268_EU AI Office2025",
@@ -1525,7 +1850,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Conduct systemic risk identification based on validation findings",
+				"phase-3": "Maintain regular systemic risk identification schedule for production"
+			}
 		},
 		{
 			"id": "A0269_EU AI Office2025",
@@ -1540,7 +1869,12 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Conduct initial public transparency during project planning",
+				"phase-2": "Conduct public transparency based on validation findings",
+				"phase-3": "Maintain regular public transparency schedule for production"
+			}
 		},
 		{
 			"id": "A0270_EU AI Office2025",
@@ -1553,7 +1887,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Maintain safety mitigations in production environment"
+			}
 		},
 		{
 			"id": "A0271_EU AI Office2025",
@@ -1567,7 +1904,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Continue copyright policy for validation activities",
+				"phase-3": "Operate copyright policy for clinical decision tracking"
+			}
 		},
 		{
 			"id": "A0272_EU AI Office2025",
@@ -1581,7 +1922,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Update systemic risk acceptance documentation with validation procedures and findings",
+				"phase-3": "Maintain current systemic risk acceptance documentation reflecting operational changes"
+			}
 		},
 		{
 			"id": "A0273_EU AI Office2025",
@@ -1594,7 +1939,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Maintain regular safety and security model reports schedule for production"
+			}
 		},
 		{
 			"id": "A0274_EU AI Office2025",
@@ -1607,7 +1955,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Maintain regular adequacy assessments schedule for production"
+			}
 		},
 		{
 			"id": "A0275_EU AI Office2025",
@@ -1621,7 +1972,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Validate systemic risk responsibility allocation during prospective testing phase",
+				"phase-3": "Apply systemic risk responsibility allocation in live clinical deployment"
+			}
 		},
 		{
 			"id": "A0276_Campos2025",
@@ -1635,7 +1990,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Conduct classification of applicable known risks based on validation findings",
+				"phase-3": "Maintain regular classification of applicable known risks schedule for production"
+			}
 		},
 		{
 			"id": "A0277_Campos2025",
@@ -1648,7 +2007,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Finalize identification of unknown risks based on testing"
+			}
 		},
 		{
 			"id": "A0278_Campos2025",
@@ -1662,7 +2024,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Validate non-interference with third-party risk findings during prospective testing phase",
+				"phase-3": "Apply non-interference with third-party risk findings in live clinical deployment"
+			}
 		},
 		{
 			"id": "A0279_Campos2025",
@@ -1675,7 +2041,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Complete modeling of the risks for validation use"
+			}
 		},
 		{
 			"id": "A0280_Campos2025",
@@ -1689,7 +2058,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Update stakeholder sharing of risk documentation with validation procedures and findings",
+				"phase-3": "Maintain current stakeholder sharing of risk documentation reflecting operational changes"
+			}
 		},
 		{
 			"id": "A0281_Campos2025",
@@ -1703,7 +2076,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Apply risk tolerance threshold to validation activities",
+				"phase-3": "Operate within risk tolerance threshold for deployed system"
+			}
 		},
 		{
 			"id": "A0282_Campos2025",
@@ -1717,7 +2094,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Finalize operationalizing risk tolerance based on testing",
+				"phase-3": "Enhance operationalizing risk tolerance through continuous improvement"
+			}
 		},
 		{
 			"id": "A0283_Campos2025",
@@ -1732,7 +2113,12 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Create initial risk register capturing design decisions and data sources",
+				"phase-2": "Update risk register with validation procedures and findings",
+				"phase-3": "Maintain current risk register reflecting operational changes"
+			}
 		},
 		{
 			"id": "A0284_Campos2025",
@@ -1746,7 +2132,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Apply continuous monitoring of risk controls to validation results",
+				"phase-3": "Execute continuous continuous monitoring of risk controls of deployed system"
+			}
 		},
 		{
 			"id": "A0285_Campos2025",
@@ -1759,7 +2149,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Apply independent third-party evaluations to validation results"
+			}
 		},
 		{
 			"id": "A0286_Campos2025",
@@ -1773,7 +2166,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Operationalize decision-making executives for testing",
+				"phase-3": "Sustain decision-making executives operations"
+			}
 		},
 		{
 			"id": "A0332_Campos2025",
@@ -1787,7 +2184,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Validate decision-making protocols with clinical stakeholders",
+				"phase-3": "Apply decision-making protocols to clinical use cases"
+			}
 		},
 		{
 			"id": "A0333_Campos2025",
@@ -1801,7 +2202,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Validate separate risk ownership and advisory roles during prospective testing phase",
+				"phase-3": "Apply separate risk ownership and advisory roles in live clinical deployment"
+			}
 		},
 		{
 			"id": "A0334_Campos2025",
@@ -1815,7 +2220,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Validate appoint chief risk officer during prospective testing phase",
+				"phase-3": "Apply appoint chief risk officer in live clinical deployment"
+			}
 		},
 		{
 			"id": "A0335_Campos2025",
@@ -1829,7 +2238,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Validate enterprise risk management function during prospective testing phase",
+				"phase-3": "Apply enterprise risk management function in live clinical deployment"
+			}
 		},
 		{
 			"id": "A0339_Campos2025",
@@ -1844,7 +2257,12 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Design audits framework for training data and model design review",
+				"phase-2": "Execute audits on validation cohorts and model outputs",
+				"phase-3": "Perform scheduled audits on production system and outcomes"
+			}
 		},
 		{
 			"id": "A0340_Campos2025",
@@ -1858,7 +2276,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Validate external disclosure during prospective testing phase",
+				"phase-3": "Apply external disclosure in live clinical deployment"
+			}
 		},
 		{
 			"id": "A0388_NIST2024",
@@ -1871,7 +2293,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Begin legal compliance alignment development"
+			}
 		},
 		{
 			"id": "A0389_NIST2024",
@@ -1886,7 +2311,12 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Create initial training data transparency capturing design decisions and data sources",
+				"phase-2": "Update training data transparency with validation procedures and findings",
+				"phase-3": "Maintain current training data transparency reflecting operational changes"
+			}
 		},
 		{
 			"id": "A0390_NIST2024",
@@ -1900,7 +2330,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Apply risk capability evaluation to validation results",
+				"phase-3": "Execute continuous risk capability evaluation of deployed system"
+			}
 		},
 		{
 			"id": "A0391_NIST2024",
@@ -1914,7 +2348,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Continue risk tier definition for validation activities",
+				"phase-3": "Operate risk tier definition for clinical decision tracking"
+			}
 		},
 		{
 			"id": "A0392_NIST2024",
@@ -1928,7 +2366,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Complete performance threshold standards of validation methodology and results",
+				"phase-3": "Conduct periodic performance threshold standards of operational performance"
+			}
 		},
 		{
 			"id": "A0393_NIST2024",
@@ -1941,7 +2383,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Perform cbrn testing protocol on prospective validation data"
+			}
 		},
 		{
 			"id": "A0394_NIST2024",
@@ -1959,7 +2404,11 @@
 				"recommendation",
 				"computer-vision",
 				"supervised-ml"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Validate stakeholder input collection during prospective testing phase",
+				"phase-3": "Apply stakeholder input collection in live clinical deployment"
+			}
 		},
 		{
 			"id": "A0395_NIST2024",
@@ -1973,7 +2422,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Validate risk hierarchy maintenance during prospective testing phase",
+				"phase-3": "Apply risk hierarchy maintenance in live clinical deployment"
+			}
 		},
 		{
 			"id": "A0396_NIST2024",
@@ -1988,7 +2441,12 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Conduct initial risk tolerance reassessment during project planning",
+				"phase-2": "Conduct risk tolerance reassessment based on validation findings",
+				"phase-3": "Maintain regular risk tolerance reassessment schedule for production"
+			}
 		},
 		{
 			"id": "A0397_NIST2024",
@@ -2001,7 +2459,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Enhance development halt plan through continuous improvement"
+			}
 		},
 		{
 			"id": "A0398_NIST2024",
@@ -2018,7 +2479,11 @@
 				"generative-non-llm",
 				"multi-modal",
 				"foundation"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Operationalize harmful content prevention for testing",
+				"phase-3": "Sustain harmful content prevention operations"
+			}
 		},
 		{
 			"id": "A0399_NIST2024",
@@ -2034,7 +2499,11 @@
 				"llm",
 				"foundation",
 				"multi-modal"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Finalize acceptable use policy based on validation learnings",
+				"phase-3": "Enforce acceptable use policy in production operations"
+			}
 		},
 		{
 			"id": "A0400_NIST2024",
@@ -2047,7 +2516,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Conduct periodic content provenance review of operational performance"
+			}
 		},
 		{
 			"id": "A0401_NIST2024",
@@ -2060,7 +2532,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Conduct periodic incident response process of operational performance"
+			}
 		},
 		{
 			"id": "A0402_NIST2024",
@@ -2073,7 +2548,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Perform documentation retention policy on prospective validation data"
+			}
 		},
 		{
 			"id": "A0403_NIST2024",
@@ -2086,7 +2564,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Plan system inventory enumeration approach during project design phase"
+			}
 		},
 		{
 			"id": "A0404_NIST2024",
@@ -2100,7 +2581,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Validate inventory exemption definition during prospective testing phase",
+				"phase-3": "Apply inventory exemption definition in live clinical deployment"
+			}
 		},
 		{
 			"id": "A0405_NIST2024",
@@ -2113,7 +2598,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Produce regular comprehensive inventory details for stakeholders"
+			}
 		},
 		{
 			"id": "A0406_NIST2024",
@@ -2127,7 +2615,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Validate deactivation protocol with clinical stakeholders",
+				"phase-3": "Apply deactivation protocol to clinical use cases"
+			}
 		},
 		{
 			"id": "A0407_NIST2024",
@@ -2140,7 +2632,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Establish decommissioning considerations for research team"
+			}
 		},
 		{
 			"id": "A0408_NIST2024",
@@ -2154,7 +2649,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Implement incident communication framework in shadow mode alongside clinical workflows",
+				"phase-3": "Operate incident communication framework with real-time alerting"
+			}
 		},
 		{
 			"id": "A0409_NIST2024",
@@ -2167,7 +2666,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Follow incident response teams for all operational activities"
+			}
 		},
 		{
 			"id": "A0410_NIST2024",
@@ -2180,7 +2682,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Sustain response team verification operations"
+			}
 		},
 		{
 			"id": "A0411_NIST2024",
@@ -2194,7 +2699,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Test national security involvement in validation environment",
+				"phase-3": "Maintain national security involvement with continuous monitoring"
+			}
 		},
 		{
 			"id": "A0412_NIST2024",
@@ -2207,7 +2716,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Produce regular whistleblower protection for stakeholders"
+			}
 		},
 		{
 			"id": "A0413_NIST2024",
@@ -2220,7 +2732,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Apply independent evaluation policy to validation results"
+			}
 		},
 		{
 			"id": "A0414_NIST2024",
@@ -2234,7 +2749,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Perform organizational role adjustment on prospective validation data",
+				"phase-3": "Conduct ongoing organizational role adjustment on live system performance"
+			}
 		},
 		{
 			"id": "A0415_NIST2024",
@@ -2250,7 +2769,11 @@
 				"llm",
 				"foundation",
 				"multi-modal"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Finalize interface use policy based on validation learnings",
+				"phase-3": "Enforce interface use policy in production operations"
+			}
 		},
 		{
 			"id": "A0416_NIST2024",
@@ -2263,7 +2786,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Sustain user feedback mechanism operations"
+			}
 		},
 		{
 			"id": "A0417_NIST2024",
@@ -2277,7 +2803,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Validate threat modeling process during prospective testing phase",
+				"phase-3": "Apply threat modeling process in live clinical deployment"
+			}
 		},
 		{
 			"id": "A0418_NIST2024",
@@ -2291,7 +2821,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Update risk measurement improvement with validation procedures and findings",
+				"phase-3": "Maintain current risk measurement improvement reflecting operational changes"
+			}
 		},
 		{
 			"id": "A0419_NIST2024",
@@ -2304,7 +2838,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Apply standardized measurement protocols to validation results"
+			}
 		},
 		{
 			"id": "A0420_NIST2024",
@@ -2317,7 +2854,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Apply lifecycle oversight functions to validation results"
+			}
 		},
 		{
 			"id": "A0421_NIST2024",
@@ -2333,7 +2873,11 @@
 				"llm",
 				"foundation",
 				"multi-modal"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Operationalize terms of service establishment for testing",
+				"phase-3": "Sustain terms of service establishment operations"
+			}
 		},
 		{
 			"id": "A0422_NIST2024",
@@ -2351,7 +2895,11 @@
 				"recommendation",
 				"computer-vision",
 				"supervised-ml"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Validate actor inclusion in risk id during prospective testing phase",
+				"phase-3": "Apply actor inclusion in risk id in live clinical deployment"
+			}
 		},
 		{
 			"id": "A0423_NIST2024",
@@ -2365,7 +2913,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Update downstream impact verification with validation procedures and findings",
+				"phase-3": "Maintain current downstream impact verification reflecting operational changes"
+			}
 		},
 		{
 			"id": "A0424_NIST2024",
@@ -2381,7 +2933,10 @@
 				"generative-non-llm",
 				"multi-modal",
 				"foundation"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Operate provenance method measurement for clinical decision tracking"
+			}
 		},
 		{
 			"id": "A0425_NIST2024",
@@ -2395,7 +2950,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Finalize feedback resource allocation based on testing",
+				"phase-3": "Enhance feedback resource allocation through continuous improvement"
+			}
 		},
 		{
 			"id": "A0426_NIST2024",
@@ -2408,7 +2967,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Maintain current user interaction documentation reflecting operational changes"
+			}
 		},
 		{
 			"id": "A0427_NIST2024",
@@ -2421,7 +2983,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Plan content rights categorization approach during project design phase"
+			}
 		},
 		{
 			"id": "A0428_NIST2024",
@@ -2439,7 +3004,11 @@
 				"recommendation",
 				"computer-vision",
 				"supervised-ml"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Deliver joint educational activities to clinical validators",
+				"phase-3": "Deliver refresher joint educational activities as needed"
+			}
 		},
 		{
 			"id": "A0429_NIST2024",
@@ -2452,7 +3021,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Test provenance success metrics capabilities on validation data"
+			}
 		},
 		{
 			"id": "A0430_NIST2024",
@@ -2465,7 +3037,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Define contract and sla standards requirements for development environment"
+			}
 		},
 		{
 			"id": "A0431_NIST2024",
@@ -2479,7 +3054,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Conduct supplier risk assessment based on validation findings",
+				"phase-3": "Maintain regular supplier risk assessment schedule for production"
+			}
 		},
 		{
 			"id": "A0432_NIST2024",
@@ -2492,7 +3071,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Apply contract evaluation clauses to validation results"
+			}
 		},
 		{
 			"id": "A0433_NIST2024",
@@ -2508,7 +3090,11 @@
 				"llm",
 				"foundation",
 				"multi-modal"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Continue third-party entity inventory for validation activities",
+				"phase-3": "Operate third-party entity inventory for clinical decision tracking"
+			}
 		},
 		{
 			"id": "A0434_NIST2024",
@@ -2522,7 +3108,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Maintain third-party change records throughout validation testing",
+				"phase-3": "Continue third-party change records for all production activities"
+			}
 		},
 		{
 			"id": "A0435_NIST2024",
@@ -2537,7 +3127,12 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Conduct initial due diligence process update during project planning",
+				"phase-2": "Conduct due diligence process update based on validation findings",
+				"phase-3": "Maintain regular due diligence process update schedule for production"
+			}
 		},
 		{
 			"id": "A0436_NIST2024",
@@ -2553,7 +3148,11 @@
 				"llm",
 				"foundation",
 				"multi-modal"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Continue third-party use policy update for validation activities",
+				"phase-3": "Operate third-party use policy update for clinical decision tracking"
+			}
 		},
 		{
 			"id": "A0437_NIST2024",
@@ -2567,7 +3166,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Update value chain risk documentation with validation procedures and findings",
+				"phase-3": "Maintain current value chain risk documentation reflecting operational changes"
+			}
 		},
 		{
 			"id": "A0438_NIST2024",
@@ -2580,7 +3183,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Maintain current third-party incident documentation reflecting operational changes"
+			}
 		},
 		{
 			"id": "A0439_NIST2024",
@@ -2594,7 +3200,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Perform third-party response plans of project design and data sources",
+				"phase-3": "Conduct periodic third-party response plans of operational performance"
+			}
 		},
 		{
 			"id": "A0440_NIST2024",
@@ -2607,7 +3217,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Operate third-party monitoring policy with real-time alerting"
+			}
 		},
 		{
 			"id": "A0441_NIST2024",
@@ -2621,7 +3234,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Finalize data redundancy policy based on validation learnings",
+				"phase-3": "Enforce data redundancy policy in production operations"
+			}
 		},
 		{
 			"id": "A0442_NIST2024",
@@ -2634,7 +3251,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Perform rollover and fallback management on prospective validation data"
+			}
 		},
 		{
 			"id": "A0443_NIST2024",
@@ -2648,7 +3268,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Perform vendor contract review of project design and data sources",
+				"phase-3": "Conduct periodic vendor contract review of operational performance"
+			}
 		},
 		{
 			"id": "A0444_NIST2024",
@@ -2666,7 +3290,11 @@
 				"recommendation",
 				"computer-vision",
 				"supervised-ml"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Validate purpose identification factors during prospective testing phase",
+				"phase-3": "Apply purpose identification factors in live clinical deployment"
+			}
 		},
 		{
 			"id": "A0445_NIST2024",
@@ -2683,7 +3311,10 @@
 				"recommendation",
 				"computer-vision",
 				"supervised-ml"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Maintain current context of use documentation reflecting operational changes"
+			}
 		},
 		{
 			"id": "A0446_NIST2024",
@@ -2696,7 +3327,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Create initial risk measurement planning capturing design decisions and data sources"
+			}
 		},
 		{
 			"id": "A0447_NIST2024",
@@ -2712,7 +3346,11 @@
 				"llm",
 				"foundation",
 				"multi-modal"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Update illegal use identification with validation procedures and findings",
+				"phase-3": "Maintain current illegal use identification reflecting operational changes"
+			}
 		},
 		{
 			"id": "A0448_NIST2024",
@@ -2726,7 +3364,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Operationalize interdisciplinary team formation for testing",
+				"phase-3": "Sustain interdisciplinary team formation operations"
+			}
 		},
 		{
 			"id": "A0449_NIST2024",
@@ -2740,7 +3382,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Validate representative data verification during prospective testing phase",
+				"phase-3": "Apply representative data verification in live clinical deployment"
+			}
 		},
 		{
 			"id": "A0450_NIST2024",
@@ -2753,7 +3399,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Apply data origin practices to validation results"
+			}
 		},
 		{
 			"id": "A0451_NIST2024",
@@ -2766,7 +3415,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Perform content flow testing on prospective validation data"
+			}
 		},
 		{
 			"id": "A0452_NIST2024",
@@ -2780,7 +3432,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Update upstream dependency documentation with validation procedures and findings",
+				"phase-3": "Maintain current upstream dependency documentation reflecting operational changes"
+			}
 		},
 		{
 			"id": "A0453_NIST2024",
@@ -2794,7 +3450,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Validate external network analysis during prospective testing phase",
+				"phase-3": "Apply external network analysis in live clinical deployment"
+			}
 		},
 		{
 			"id": "A0454_NIST2024",
@@ -2807,7 +3467,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Apply output accuracy assessment to validation results"
+			}
 		},
 		{
 			"id": "A0455_NIST2024",
@@ -2821,7 +3484,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Perform data quality review of project design and data sources",
+				"phase-2": "Complete data quality review of validation methodology and results"
+			}
 		},
 		{
 			"id": "A0456_NIST2024",
@@ -2838,7 +3505,11 @@
 				"generative-non-llm",
 				"multi-modal",
 				"foundation"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Update fact-checking deployment with validation procedures and findings",
+				"phase-3": "Maintain current fact-checking deployment reflecting operational changes"
+			}
 		},
 		{
 			"id": "A0457_NIST2024",
@@ -2854,7 +3525,10 @@
 				"generative-non-llm",
 				"multi-modal",
 				"foundation"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Perform synthetic content detection on prospective validation data"
+			}
 		},
 		{
 			"id": "A0458_NIST2024",
@@ -2867,7 +3541,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Perform adversarial testing plans on prospective validation data"
+			}
 		},
 		{
 			"id": "A0461_NIST2024",
@@ -2880,7 +3557,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Perform risk management certification on prospective validation data"
+			}
 		},
 		{
 			"id": "A0463_NIST2024",
@@ -2893,7 +3573,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Operate configuration outcome monitoring with real-time alerting"
+			}
 		},
 		{
 			"id": "A0464_NIST2024",
@@ -2906,7 +3589,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Perform stakeholder testing involvement on prospective validation data"
+			}
 		},
 		{
 			"id": "A0465_NIST2024",
@@ -2919,7 +3605,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Operate privacy risk monitoring with real-time alerting"
+			}
 		},
 		{
 			"id": "A0466_NIST2024",
@@ -2933,7 +3622,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Deploy ip infringement response in validation environment",
+				"phase-3": "Maintain ip infringement response in production environment"
+			}
 		},
 		{
 			"id": "A0467_NIST2024",
@@ -2948,7 +3641,12 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Develop governance connection for project governance",
+				"phase-2": "Test and refine governance connection during validation",
+				"phase-3": "Follow governance connection for all operational activities"
+			}
 		},
 		{
 			"id": "A0468_NIST2024",
@@ -2961,7 +3659,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Create initial training data curation capturing design decisions and data sources"
+			}
 		},
 		{
 			"id": "A0469_NIST2024",
@@ -2974,7 +3675,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Design data quality standards specifications"
+			}
 		},
 		{
 			"id": "A0470_NIST2024",
@@ -2987,7 +3691,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Plan third-party ip protection approach and resource requirements"
+			}
 		},
 		{
 			"id": "A0472_NIST2024",
@@ -3001,7 +3708,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Conduct domain adaptation risk assessment based on validation findings",
+				"phase-3": "Maintain regular domain adaptation risk assessment schedule for production"
+			}
 		},
 		{
 			"id": "A0473_NIST2024",
@@ -3018,7 +3729,11 @@
 				"generative-non-llm",
 				"multi-modal",
 				"foundation"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Test pii detection methods capabilities on validation data",
+				"phase-3": "Run pii detection methods continuously on live outputs"
+			}
 		},
 		{
 			"id": "A0474_NIST2024",
@@ -3031,7 +3746,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Develop training data diligence curriculum for research team"
+			}
 		},
 		{
 			"id": "A0475_NIST2024",
@@ -3044,7 +3762,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Perform provenance testing practices on prospective validation data"
+			}
 		},
 		{
 			"id": "A0476_NIST2024",
@@ -3061,7 +3782,11 @@
 				"generative-non-llm",
 				"multi-modal",
 				"foundation"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Validate provenance harm identification during prospective testing phase",
+				"phase-3": "Apply provenance harm identification in live clinical deployment"
+			}
 		},
 		{
 			"id": "A0477_NIST2024",
@@ -3075,7 +3800,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Validate use disclosure consideration during prospective testing phase",
+				"phase-3": "Apply use disclosure consideration in live clinical deployment"
+			}
 		},
 		{
 			"id": "A0479_NIST2024",
@@ -3088,7 +3817,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Perform adversarial role-playing on prospective validation data"
+			}
 		},
 		{
 			"id": "A0480_NIST2024",
@@ -3101,7 +3833,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Validate threat profiling during prospective testing phase"
+			}
 		},
 		{
 			"id": "A0481_NIST2024",
@@ -3115,7 +3850,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Validate context-based impact measures during prospective testing phase",
+				"phase-3": "Apply context-based impact measures in live clinical deployment"
+			}
 		},
 		{
 			"id": "A0482_NIST2024",
@@ -3128,7 +3867,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Complete input actor engagement of validation methodology and results"
+			}
 		},
 		{
 			"id": "A0484_NIST2024",
@@ -3144,7 +3886,10 @@
 				"generative-non-llm",
 				"multi-modal",
 				"foundation"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Run provenance analysis tools continuously on live outputs"
+			}
 		},
 		{
 			"id": "A0485_NIST2024",
@@ -3157,7 +3902,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Apply demographic metric disaggregation to validation results"
+			}
 		},
 		{
 			"id": "A0486_NIST2024",
@@ -3170,7 +3918,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Finalize feedback exercise metrics based on testing"
+			}
 		},
 		{
 			"id": "A0487_NIST2024",
@@ -3183,7 +3934,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Continue novel risk measurement methods for validation activities"
+			}
 		},
 		{
 			"id": "A0488_NIST2024",
@@ -3197,7 +3951,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Implement equitable output monitoring in shadow mode alongside clinical workflows",
+				"phase-3": "Operate equitable output monitoring with real-time alerting"
+			}
 		},
 		{
 			"id": "A0489_NIST2024",
@@ -3212,7 +3970,12 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Establish data quality evaluation criteria and baseline metrics",
+				"phase-2": "Apply data quality evaluation to validation results",
+				"phase-3": "Execute continuous data quality evaluation of deployed system"
+			}
 		},
 		{
 			"id": "A0490_NIST2024",
@@ -3225,7 +3988,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Validate feedback exercise use cases during prospective testing phase"
+			}
 		},
 		{
 			"id": "A0491_NIST2024",
@@ -3239,7 +4005,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Update unmeasurable risk tracking with validation procedures and findings",
+				"phase-3": "Maintain current unmeasurable risk tracking reflecting operational changes"
+			}
 		},
 		{
 			"id": "A0492_NIST2024",
@@ -3257,7 +4027,11 @@
 				"recommendation",
 				"computer-vision",
 				"supervised-ml"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Continue interest group definition for validation activities",
+				"phase-3": "Operate interest group definition for clinical decision tracking"
+			}
 		},
 		{
 			"id": "A0493_NIST2024",
@@ -3270,7 +4044,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Apply external evaluation engagement to validation results"
+			}
 		},
 		{
 			"id": "A0494_NIST2024",
@@ -3284,7 +4061,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Finalize feedback independence verification based on testing",
+				"phase-3": "Enhance feedback independence verification through continuous improvement"
+			}
 		},
 		{
 			"id": "A0495_NIST2024",
@@ -3297,7 +4078,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Conduct statistical bias management for validation team members"
+			}
 		},
 		{
 			"id": "A0496_NIST2024",
@@ -3310,7 +4094,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Create initial provenance privacy documentation capturing design decisions and data sources"
+			}
 		},
 		{
 			"id": "A0497_NIST2024",
@@ -3324,7 +4111,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Validate participation withdrawal options during prospective testing phase",
+				"phase-3": "Apply participation withdrawal options in live clinical deployment"
+			}
 		},
 		{
 			"id": "A0498_NIST2024",
@@ -3338,7 +4129,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Set up privacy-enhancing technologies system for development activities",
+				"phase-3": "Operate privacy-enhancing technologies for clinical decision tracking"
+			}
 		},
 		{
 			"id": "A0499_NIST2024",
@@ -3351,7 +4146,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Validate baseline model selection during prospective testing phase"
+			}
 		},
 		{
 			"id": "A0501_NIST2024",
@@ -3365,7 +4163,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Perform pre-deployment results sharing on prospective validation data",
+				"phase-3": "Conduct ongoing pre-deployment results sharing on live system performance"
+			}
 		},
 		{
 			"id": "A0502_NIST2024",
@@ -3378,7 +4180,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Perform purpose-built testing environment on prospective validation data"
+			}
 		},
 		{
 			"id": "A0503_NIST2024",
@@ -3391,7 +4196,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Conduct performance extrapolation avoidance based on validation findings"
+			}
 		},
 		{
 			"id": "A0504_NIST2024",
@@ -3405,7 +4213,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Update human domain knowledge documentation with validation procedures and findings",
+				"phase-3": "Maintain current human domain knowledge documentation reflecting operational changes"
+			}
 		},
 		{
 			"id": "A0505_NIST2024",
@@ -3418,7 +4230,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Conduct periodic source and citation review of operational performance"
+			}
 		},
 		{
 			"id": "A0506_NIST2024",
@@ -3432,7 +4247,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Update anthropomorphization tracking with validation procedures and findings",
+				"phase-3": "Maintain current anthropomorphization tracking reflecting operational changes"
+			}
 		},
 		{
 			"id": "A0507_NIST2024",
@@ -3445,7 +4264,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Develop data provenance verification curriculum for research team"
+			}
 		},
 		{
 			"id": "A0508_NIST2024",
@@ -3458,7 +4280,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Conduct periodic security guardrail review of operational performance"
+			}
 		},
 		{
 			"id": "A0509_NIST2024",
@@ -3475,7 +4300,10 @@
 				"recommendation",
 				"computer-vision",
 				"supervised-ml"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Maintain regular value chain wellbeing assessment schedule for production"
+			}
 		},
 		{
 			"id": "A0510_NIST2024",
@@ -3488,7 +4316,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Conduct initial training data harm assessment during project planning"
+			}
 		},
 		{
 			"id": "A0511_NIST2024",
@@ -3502,7 +4333,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Apply fine-tuned safety re-evaluation to validation results",
+				"phase-3": "Execute continuous fine-tuned safety re-evaluation of deployed system"
+			}
 		},
 		{
 			"id": "A0512_NIST2024",
@@ -3515,7 +4350,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Conduct periodic generated code review of operational performance"
+			}
 		},
 		{
 			"id": "A0513_NIST2024",
@@ -3529,7 +4367,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Implement architecture monitoring verification in shadow mode alongside clinical workflows",
+				"phase-3": "Operate architecture monitoring verification with real-time alerting"
+			}
 		},
 		{
 			"id": "A0514_NIST2024",
@@ -3543,7 +4385,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Validate inappropriate query handling during prospective testing phase",
+				"phase-3": "Apply inappropriate query handling in live clinical deployment"
+			}
 		},
 		{
 			"id": "A0515_NIST2024",
@@ -3557,7 +4403,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Apply safety circumvention evaluation to validation results",
+				"phase-3": "Execute continuous safety circumvention evaluation of deployed system"
+			}
 		},
 		{
 			"id": "A0516_NIST2024",
@@ -3570,7 +4420,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Conduct security vulnerability assessment based on validation findings"
+			}
 		},
 		{
 			"id": "A0517_NIST2024",
@@ -3583,7 +4436,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Test security benchmarking in validation environment"
+			}
 		},
 		{
 			"id": "A0518_NIST2024",
@@ -3596,7 +4452,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Apply user satisfaction survey in live clinical deployment"
+			}
 		},
 		{
 			"id": "A0519_NIST2024",
@@ -3610,7 +4469,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Test security effectiveness metrics in validation environment",
+				"phase-3": "Maintain security effectiveness metrics with continuous monitoring"
+			}
 		},
 		{
 			"id": "A0520_NIST2024",
@@ -3627,7 +4490,11 @@
 				"generative-non-llm",
 				"multi-modal",
 				"foundation"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Conduct authentication method reliability based on validation findings",
+				"phase-3": "Maintain regular authentication method reliability schedule for production"
+			}
 		},
 		{
 			"id": "A0521_NIST2024",
@@ -3641,7 +4508,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Deploy security implementation rate in validation environment",
+				"phase-3": "Maintain security implementation rate in production environment"
+			}
 		},
 		{
 			"id": "A0522_NIST2024",
@@ -3654,7 +4525,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Validate ai red-teaming resilience during prospective testing phase"
+			}
 		},
 		{
 			"id": "A0524_NIST2024",
@@ -3668,7 +4542,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Test security measure effectiveness in validation environment",
+				"phase-3": "Maintain security measure effectiveness with continuous monitoring"
+			}
 		},
 		{
 			"id": "A0525_NIST2024",
@@ -3682,7 +4560,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Generate policy violation statistics summarizing validation outcomes",
+				"phase-3": "Produce regular policy violation statistics for stakeholders"
+			}
 		},
 		{
 			"id": "A0527_NIST2024",
@@ -3700,7 +4582,12 @@
 				"generative-non-llm",
 				"multi-modal",
 				"foundation"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Create initial digital content transparency capturing design decisions and data sources",
+				"phase-2": "Update digital content transparency with validation procedures and findings",
+				"phase-3": "Maintain current digital content transparency reflecting operational changes"
+			}
 		},
 		{
 			"id": "A0528_NIST2024",
@@ -3714,7 +4601,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Perform user instruction adequacy on prospective validation data",
+				"phase-3": "Conduct ongoing user instruction adequacy on live system performance"
+			}
 		},
 		{
 			"id": "A0529_NIST2024",
@@ -3728,7 +4619,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Update ml explanation application with validation procedures and findings",
+				"phase-3": "Maintain current ml explanation application reflecting operational changes"
+			}
 		},
 		{
 			"id": "A0530_NIST2024",
@@ -3742,7 +4637,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Establish gai model documentation criteria and baseline metrics",
+				"phase-2": "Apply gai model documentation to validation results"
+			}
 		},
 		{
 			"id": "A0531_NIST2024",
@@ -3756,7 +4655,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Establish data exposure red-teaming mechanisms for development phase",
+				"phase-2": "Activate data exposure red-teaming during prospective testing"
+			}
 		},
 		{
 			"id": "A0532_NIST2024",
@@ -3774,7 +4677,11 @@
 				"recommendation",
 				"computer-vision",
 				"supervised-ml"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Establish end-user expectation engagement mechanisms for development phase",
+				"phase-3": "Maintain end-user expectation engagement for production metrics"
+			}
 		},
 		{
 			"id": "A0534_NIST2024",
@@ -3788,7 +4695,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Perform bias benchmark application on prospective validation data",
+				"phase-3": "Conduct ongoing bias benchmark application on live system performance"
+			}
 		},
 		{
 			"id": "A0624_Barrett2024",
@@ -3802,7 +4713,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Conduct risk ownership by capability based on validation findings",
+				"phase-3": "Maintain regular risk ownership by capability schedule for production"
+			}
 		},
 		{
 			"id": "A0626_Barrett2024",
@@ -3820,7 +4735,11 @@
 				"recommendation",
 				"computer-vision",
 				"supervised-ml"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Continue anticipate misuse & impact for validation activities",
+				"phase-3": "Operate anticipate misuse & impact for clinical decision tracking"
+			}
 		},
 		{
 			"id": "A0627_Barrett2024",
@@ -3834,7 +4753,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Validate assess catastrophic risk during prospective testing phase",
+				"phase-3": "Apply assess catastrophic risk in live clinical deployment"
+			}
 		},
 		{
 			"id": "A0628_Barrett2024",
@@ -3847,7 +4770,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Perform red-team for dangerous behaviors on prospective validation data"
+			}
 		},
 		{
 			"id": "A0629_Barrett2024",
@@ -3860,7 +4786,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Activate risk tracking during prospective testing"
+			}
 		},
 		{
 			"id": "A0631_Barrett2024",
@@ -3874,7 +4803,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Generate disclose risks to stakeholders summarizing validation outcomes",
+				"phase-3": "Produce regular disclose risks to stakeholders for stakeholders"
+			}
 		},
 		{
 			"id": "A0632_Barrett2024",
@@ -3888,7 +4821,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Update document mitigation rationale with validation procedures and findings",
+				"phase-3": "Maintain current document mitigation rationale reflecting operational changes"
+			}
 		},
 		{
 			"id": "A0633_Barrett2024",
@@ -3901,7 +4838,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Create initial ensure legal compliance capturing design decisions and data sources"
+			}
 		},
 		{
 			"id": "A0635_Barrett2024",
@@ -3915,7 +4855,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Test and refine align risk management to tolerance during validation",
+				"phase-3": "Follow align risk management to tolerance for all operational activities"
+			}
 		},
 		{
 			"id": "A0636_Barrett2024",
@@ -3929,7 +4873,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Test and refine transparent rm policies during validation",
+				"phase-3": "Follow transparent rm policies for all operational activities"
+			}
 		},
 		{
 			"id": "A0637_Barrett2024",
@@ -3942,7 +4890,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Conduct periodic monitoring of rm policies of operational performance"
+			}
 		},
 		{
 			"id": "A0638_Barrett2024",
@@ -3956,7 +4907,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Validate inventory ai systems during prospective testing phase",
+				"phase-3": "Apply inventory ai systems in live clinical deployment"
+			}
 		},
 		{
 			"id": "A0639_Barrett2024",
@@ -3970,7 +4925,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Test and refine decommission ai systems safely during validation",
+				"phase-3": "Follow decommission ai systems safely for all operational activities"
+			}
 		},
 		{
 			"id": "A0640_Barrett2024",
@@ -3984,7 +4943,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Update define ai risk roles with validation procedures and findings",
+				"phase-3": "Maintain current define ai risk roles reflecting operational changes"
+			}
 		},
 		{
 			"id": "A0641_Barrett2024",
@@ -3998,7 +4961,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Test and refine train on ai risk during validation",
+				"phase-3": "Follow train on ai risk for all operational activities"
+			}
 		},
 		{
 			"id": "A0642_Barrett2024",
@@ -4013,7 +4980,12 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Begin executive risk accountability development",
+				"phase-2": "Finalize executive risk accountability based on testing",
+				"phase-3": "Enhance executive risk accountability through continuous improvement"
+			}
 		},
 		{
 			"id": "A0643_Barrett2024",
@@ -4027,7 +4999,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Validate diverse risk voices during prospective testing phase",
+				"phase-3": "Apply diverse risk voices in live clinical deployment"
+			}
 		},
 		{
 			"id": "A0644_Barrett2024",
@@ -4041,7 +5017,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Test and refine human-ai oversight roles during validation",
+				"phase-3": "Follow human-ai oversight roles for all operational activities"
+			}
 		},
 		{
 			"id": "A0646_Barrett2024",
@@ -4056,7 +5036,12 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Create initial document & share ai risk impacts capturing design decisions and data sources",
+				"phase-2": "Update document & share ai risk impacts with validation procedures and findings",
+				"phase-3": "Maintain current document & share ai risk impacts reflecting operational changes"
+			}
 		},
 		{
 			"id": "A0647_Barrett2024",
@@ -4069,7 +5054,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Perform detect & share incidents on prospective validation data"
+			}
 		},
 		{
 			"id": "A0648_Barrett2024",
@@ -4086,7 +5074,10 @@
 				"recommendation",
 				"computer-vision",
 				"supervised-ml"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Enhance external feedback on impacts through continuous improvement"
+			}
 		},
 		{
 			"id": "A0649_Barrett2024",
@@ -4100,7 +5091,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Plan external feedback on system design approach and resource requirements",
+				"phase-3": "Maintain external feedback on system design in production environment"
+			}
 		},
 		{
 			"id": "A0650_Barrett2024",
@@ -4114,7 +5109,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Test and refine third-party risk during validation",
+				"phase-3": "Follow third-party risk for all operational activities"
+			}
 		},
 		{
 			"id": "A0651_Barrett2024",
@@ -4127,7 +5126,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Plan contingency planning for third-party failures approach during project design phase"
+			}
 		},
 		{
 			"id": "A0652_Barrett2024",
@@ -4140,7 +5142,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Maintain current document intended use & context reflecting operational changes"
+			}
 		},
 		{
 			"id": "A0655_Barrett2024",
@@ -4153,7 +5158,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Validate business use during prospective testing phase"
+			}
 		},
 		{
 			"id": "A0657_Barrett2024",
@@ -4166,7 +5174,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Plan elicit requirements & assess impacts approach during project design phase"
+			}
 		},
 		{
 			"id": "A0658_Barrett2024",
@@ -4180,7 +5191,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Deploy define tasks & methods in validation environment",
+				"phase-3": "Maintain define tasks & methods in production environment"
+			}
 		},
 		{
 			"id": "A0660_Barrett2024",
@@ -4194,7 +5209,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Create initial document tevv & integrity capturing design decisions and data sources",
+				"phase-2": "Update document tevv & integrity with validation procedures and findings"
+			}
 		},
 		{
 			"id": "A0661_Barrett2024",
@@ -4207,7 +5226,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Update document intended benefits with validation procedures and findings"
+			}
 		},
 		{
 			"id": "A0662_Barrett2024",
@@ -4221,7 +5243,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Update document ai error costs with validation procedures and findings",
+				"phase-3": "Maintain current document ai error costs reflecting operational changes"
+			}
 		},
 		{
 			"id": "A0663_Barrett2024",
@@ -4235,7 +5261,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Update document application scope with validation procedures and findings",
+				"phase-3": "Maintain current document application scope reflecting operational changes"
+			}
 		},
 		{
 			"id": "A0664_Barrett2024",
@@ -4248,7 +5278,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Update document operator proficiency with validation procedures and findings"
+			}
 		},
 		{
 			"id": "A0665_Barrett2024",
@@ -4262,7 +5295,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Update define human oversight protocols with validation procedures and findings",
+				"phase-3": "Maintain current define human oversight protocols reflecting operational changes"
+			}
 		},
 		{
 			"id": "A0666_Barrett2024",
@@ -4276,7 +5313,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Update document ai rm third party framework with validation procedures and findings",
+				"phase-3": "Maintain current document ai rm third party framework reflecting operational changes"
+			}
 		},
 		{
 			"id": "A0667_Barrett2024",
@@ -4290,7 +5331,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Update document internal & third-party controls with validation procedures and findings",
+				"phase-3": "Maintain current document internal & third-party controls reflecting operational changes"
+			}
 		},
 		{
 			"id": "A0668_Barrett2024",
@@ -4303,7 +5348,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Maintain current assess & document risk magnitude reflecting operational changes"
+			}
 		},
 		{
 			"id": "A0669_Barrett2024",
@@ -4316,7 +5364,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Maintain current establish feedback integration processes reflecting operational changes"
+			}
 		},
 		{
 			"id": "A0670_Barrett2024",
@@ -4330,7 +5381,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Update select & document risk metrics with validation procedures and findings",
+				"phase-3": "Maintain current select & document risk metrics reflecting operational changes"
+			}
 		},
 		{
 			"id": "A0671_Barrett2024",
@@ -4343,7 +5398,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Generate evaluate risk metrics & controls summarizing validation outcomes"
+			}
 		},
 		{
 			"id": "A0672_Barrett2024",
@@ -4356,7 +5414,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Maintain regular involve independent & external assessors schedule for production"
+			}
 		},
 		{
 			"id": "A0674_Barrett2024",
@@ -4370,7 +5431,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Establish ensure ethical human evaluation criteria and baseline metrics",
+				"phase-2": "Apply ensure ethical human evaluation to validation results"
+			}
 		},
 		{
 			"id": "A0675_Barrett2024",
@@ -4384,7 +5449,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Update measure & document deployment performance with validation procedures and findings",
+				"phase-3": "Maintain current measure & document deployment performance reflecting operational changes"
+			}
 		},
 		{
 			"id": "A0676_Barrett2024",
@@ -4397,7 +5466,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Operate monitor system in production with real-time alerting"
+			}
 		},
 		{
 			"id": "A0677_Barrett2024",
@@ -4410,7 +5482,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Maintain current demonstrate validity & generalization limits reflecting operational changes"
+			}
 		},
 		{
 			"id": "A0678_Barrett2024",
@@ -4424,7 +5499,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Implement evaluate safety & failure modes in shadow mode alongside clinical workflows",
+				"phase-3": "Operate evaluate safety & failure modes with real-time alerting"
+			}
 		},
 		{
 			"id": "A0679_Barrett2024",
@@ -4437,7 +5516,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Update evaluate security & resilience with validation procedures and findings"
+			}
 		},
 		{
 			"id": "A0680_Barrett2024",
@@ -4450,7 +5532,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Update explain & document model behavior with validation procedures and findings"
+			}
 		},
 		{
 			"id": "A0681_Barrett2024",
@@ -4464,7 +5549,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Update examine & document privacy risk with validation procedures and findings",
+				"phase-3": "Maintain current examine & document privacy risk reflecting operational changes"
+			}
 		},
 		{
 			"id": "A0683_Barrett2024",
@@ -4480,7 +5569,11 @@
 				"llm",
 				"foundation",
 				"multi-modal"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Update assess environmental impact with validation procedures and findings",
+				"phase-3": "Maintain current assess environmental impact reflecting operational changes"
+			}
 		},
 		{
 			"id": "A0684_Barrett2024",
@@ -4493,7 +5586,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Update evaluate tevv effectiveness with validation procedures and findings"
+			}
 		},
 		{
 			"id": "A0685_Barrett2024",
@@ -4507,7 +5603,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Update track emergent ai risks with validation procedures and findings",
+				"phase-3": "Maintain current track emergent ai risks reflecting operational changes"
+			}
 		},
 		{
 			"id": "A0686_Barrett2024",
@@ -4521,7 +5621,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Activate consider alternatives for hard-to-measure risks during prospective testing",
+				"phase-3": "Maintain consider alternatives for hard-to-measure risks for production metrics"
+			}
 		},
 		{
 			"id": "A0687_Barrett2024",
@@ -4535,7 +5639,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Apply enable user feedback & appeals to validation results",
+				"phase-3": "Execute continuous enable user feedback & appeals of deployed system"
+			}
 		},
 		{
 			"id": "A0688_Barrett2024",
@@ -4548,7 +5656,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Maintain current align risk metrics with context reflecting operational changes"
+			}
 		},
 		{
 			"id": "A0689_Barrett2024",
@@ -4562,7 +5673,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Update validate trustworthiness with expert input with validation procedures and findings",
+				"phase-3": "Maintain current validate trustworthiness with expert input reflecting operational changes"
+			}
 		},
 		{
 			"id": "A0690_Barrett2024",
@@ -4575,7 +5690,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Update document performance shifts from field data with validation procedures and findings"
+			}
 		},
 		{
 			"id": "A0691_Barrett2024",
@@ -4588,7 +5706,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Enhance determine deployment readiness through continuous improvement"
+			}
 		},
 		{
 			"id": "A0692_Barrett2024",
@@ -4602,7 +5723,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Update prioritize risk treatment with validation procedures and findings",
+				"phase-3": "Maintain current prioritize risk treatment reflecting operational changes"
+			}
 		},
 		{
 			"id": "A0693_Barrett2024",
@@ -4616,7 +5741,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Update plan & document risk responses with validation procedures and findings",
+				"phase-3": "Maintain current plan & document risk responses reflecting operational changes"
+			}
 		},
 		{
 			"id": "A0694_Barrett2024",
@@ -4630,7 +5759,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Update document residual risks with validation procedures and findings",
+				"phase-3": "Maintain current document residual risks reflecting operational changes"
+			}
 		},
 		{
 			"id": "A0695_Barrett2024",
@@ -4644,7 +5777,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Validate consider resources & alternatives during prospective testing phase",
+				"phase-3": "Apply consider resources & alternatives in live clinical deployment"
+			}
 		},
 		{
 			"id": "A0697_Barrett2024",
@@ -4658,7 +5795,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Test and refine respond to unknown risks during validation",
+				"phase-3": "Follow respond to unknown risks for all operational activities"
+			}
 		},
 		{
 			"id": "A0698_Barrett2024",
@@ -4671,7 +5812,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Validate deactivate misaligned systems during prospective testing phase"
+			}
 		},
 		{
 			"id": "A0699_Barrett2024",
@@ -4684,7 +5828,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Maintain current monitor third-party risks reflecting operational changes"
+			}
 		},
 		{
 			"id": "A0700_Barrett2024",
@@ -4697,7 +5844,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Operate monitor pre-trained models with real-time alerting"
+			}
 		},
 		{
 			"id": "A0701_Barrett2024",
@@ -4711,7 +5861,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Implement implement post-deployment monitoring plan in shadow mode alongside clinical workflows",
+				"phase-3": "Operate implement post-deployment monitoring plan with real-time alerting"
+			}
 		},
 		{
 			"id": "A0702_Barrett2024",
@@ -4724,7 +5878,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Apply integrate continuous improvement in live clinical deployment"
+			}
 		},
 		{
 			"id": "A0703_Barrett2024",
@@ -4738,7 +5895,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Update report & respond to incidents with validation procedures and findings",
+				"phase-3": "Maintain current report & respond to incidents reflecting operational changes"
+			}
 		},
 		{
 			"id": "A0707_NIST2024",
@@ -4752,7 +5913,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Perform harmful bias and homogenization assessment on prospective validation data",
+				"phase-3": "Conduct ongoing harmful bias and homogenization assessment on live system performance"
+			}
 		},
 		{
 			"id": "A0708_NIST2024",
@@ -4770,7 +5935,11 @@
 				"recommendation",
 				"computer-vision",
 				"supervised-ml"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Conduct assessments for environmental; harmful bias and homogenization based on validation findings",
+				"phase-3": "Maintain regular assessments for environmental; harmful bias and homogenization schedule for production"
+			}
 		},
 		{
 			"id": "A0709_NIST2024",
@@ -4784,7 +5953,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Perform harmful bias and homogenization data review of project design and data sources",
+				"phase-2": "Complete harmful bias and homogenization data review of validation methodology and results"
+			}
 		},
 		{
 			"id": "A0710_NIST2024",
@@ -4797,7 +5970,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Conduct initial harmful bias and homogenization assessment during project planning"
+			}
 		},
 		{
 			"id": "A0712_NIST2024",
@@ -4813,7 +5989,11 @@
 				"llm",
 				"foundation",
 				"multi-modal"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Create initial environmental degradation minimisation capturing design decisions and data sources",
+				"phase-3": "Maintain current environmental degradation minimisation reflecting operational changes"
+			}
 		},
 		{
 			"id": "A0713_NIST2024",
@@ -4828,7 +6008,10 @@
 				"llm",
 				"foundation",
 				"multi-modal"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Maintain regular environmental impact assessment schedule for production"
+			}
 		},
 		{
 			"id": "A0714_NIST2024",
@@ -4844,7 +6027,11 @@
 				"llm",
 				"foundation",
 				"multi-modal"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Conduct effectiveness of carbon capture for validation team members",
+				"phase-3": "Provide ongoing effectiveness of carbon capture for end users"
+			}
 		},
 		{
 			"id": "A0715_NIST2024",
@@ -4857,7 +6044,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Maintain current confabulation; information integrity; harmful bias and homogenization measurement error models reflecting operational changes"
+			}
 		},
 		{
 			"id": "A0716_NIST2024",
@@ -4874,7 +6064,10 @@
 				"recommendation",
 				"computer-vision",
 				"supervised-ml"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Maintain regular harmful bias and homogenization assessments schedule for production"
+			}
 		},
 		{
 			"id": "A0717_NIST2024",
@@ -4892,7 +6085,11 @@
 				"recommendation",
 				"computer-vision",
 				"supervised-ml"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Validate human-ai configuration; information integrity studies during prospective testing phase",
+				"phase-3": "Apply human-ai configuration; information integrity studies in live clinical deployment"
+			}
 		},
 		{
 			"id": "A0718_NIST2024",
@@ -4906,7 +6103,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Perform harmful bias and homogenization evaluation on prospective validation data",
+				"phase-3": "Conduct ongoing harmful bias and homogenization evaluation on live system performance"
+			}
 		},
 		{
 			"id": "A0719_NIST2024",
@@ -4919,7 +6120,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Operate human-ai configuration; information integrity; harmful bias and homogenization with real-time alerting"
+			}
 		},
 		{
 			"id": "A0720_NIST2024",
@@ -4932,7 +6136,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Continue human-ai configuration; information integrity; harmful bias and homogenization for all production activities"
+			}
 		},
 		{
 			"id": "A0721_NIST2024",
@@ -4946,7 +6153,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Perform information integrity; information security on prospective validation data",
+				"phase-3": "Conduct ongoing information integrity; information security on live system performance"
+			}
 		},
 		{
 			"id": "A0722_NIST2024",
@@ -4959,7 +6170,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Perform human-ai configuration; confabulation; information security on prospective validation data"
+			}
 		},
 		{
 			"id": "A0723_NIST2024",
@@ -4973,7 +6187,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Implement information integrity; harmful bias and homogenization in shadow mode alongside clinical workflows",
+				"phase-3": "Operate information integrity; harmful bias and homogenization with real-time alerting"
+			}
 		},
 		{
 			"id": "A0724_NIST2024",
@@ -4987,7 +6205,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Update information integrity with validation procedures and findings",
+				"phase-3": "Maintain current information integrity reflecting operational changes"
+			}
 		},
 		{
 			"id": "A0725_NIST2024",
@@ -5001,7 +6223,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Create initial human-ai configuration; information security capturing design decisions and data sources",
+				"phase-3": "Maintain current human-ai configuration; information security reflecting operational changes"
+			}
 		},
 		{
 			"id": "A0726_NIST2024",
@@ -5015,7 +6241,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Update information security with validation procedures and findings",
+				"phase-3": "Maintain current information security reflecting operational changes"
+			}
 		},
 		{
 			"id": "A0727_NIST2024",
@@ -5029,7 +6259,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Perform human-ai configuration on prospective validation data",
+				"phase-3": "Conduct ongoing human-ai configuration on live system performance"
+			}
 		},
 		{
 			"id": "A0728_NIST2024",
@@ -5043,7 +6277,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Perform cbrn information or capabilities; obscene, degrading, and/or abusive content; harmful bias and homogenization; dangerous, violent, or hateful content on prospective validation data",
+				"phase-3": "Conduct ongoing cbrn information or capabilities; obscene, degrading, and/or abusive content; harmful bias and homogenization; dangerous, violent, or hateful content on live system performance"
+			}
 		},
 		{
 			"id": "A0729_NIST2024",
@@ -5057,7 +6295,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Conduct initial information integrity during project planning",
+				"phase-3": "Maintain regular information integrity schedule for production"
+			}
 		},
 		{
 			"id": "A0730_NIST2024",
@@ -5071,7 +6313,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Conduct information integrity based on validation findings",
+				"phase-3": "Maintain regular information integrity schedule for production"
+			}
 		},
 		{
 			"id": "A0731_NIST2024",
@@ -5085,7 +6331,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Conduct information security; harmful bias and homogenization based on validation findings",
+				"phase-3": "Maintain regular information security; harmful bias and homogenization schedule for production"
+			}
 		},
 		{
 			"id": "A0732_NIST2024",
@@ -5098,7 +6348,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Maintain regular cbrn information or capabilities; obscene, degrading, and/or abusive content; harmful bias and homogenization; dangerous, violent, or hateful content schedule for production"
+			}
 		},
 		{
 			"id": "A0733_NIST2024",
@@ -5115,7 +6368,10 @@
 				"recommendation",
 				"computer-vision",
 				"supervised-ml"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Maintain regular human-ai configuration schedule for production"
+			}
 		},
 		{
 			"id": "A0734_NIST2024",
@@ -5129,7 +6385,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Execute information integrity on validation cohorts and model outputs",
+				"phase-3": "Perform scheduled information integrity on production system and outcomes"
+			}
 		},
 		{
 			"id": "A0735_NIST2024",
@@ -5142,7 +6402,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Maintain regular human-ai configuration; harmful bias and homogenization schedule for production"
+			}
 		},
 		{
 			"id": "A0736_NIST2024",
@@ -5155,7 +6418,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Begin data privacy; intellectual property; information integrity; confabulation; harmful bias and homogenization development"
+			}
 		},
 		{
 			"id": "A0737_NIST2024",
@@ -5168,7 +6434,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Conduct periodic value chain and component integration of operational performance"
+			}
 		},
 		{
 			"id": "A0738_NIST2024",
@@ -5181,7 +6450,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Sustain human-ai configuration operations"
+			}
 		},
 		{
 			"id": "A0739_NIST2024",
@@ -5194,7 +6466,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Follow information security for all operational activities"
+			}
 		},
 		{
 			"id": "A0740_NIST2024",
@@ -5207,7 +6482,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Follow information security for all operational activities"
+			}
 		},
 		{
 			"id": "A0741_NIST2024",
@@ -5221,7 +6499,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Complete information security of validation methodology and results",
+				"phase-3": "Conduct periodic information security of operational performance"
+			}
 		},
 		{
 			"id": "A0742_NIST2024",
@@ -5234,7 +6516,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Apply value chain and component integration; intellectual property in live clinical deployment"
+			}
 		},
 		{
 			"id": "A0743_NIST2024",
@@ -5249,7 +6534,12 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Plan data privacy; information security; value chain and component integration; harmful bias and homogenization methodology for retrospective data analysis",
+				"phase-2": "Perform data privacy; information security; value chain and component integration; harmful bias and homogenization on prospective validation data",
+				"phase-3": "Conduct ongoing data privacy; information security; value chain and component integration; harmful bias and homogenization on live system performance"
+			}
 		},
 		{
 			"id": "A0744_NIST2024",
@@ -5263,7 +6553,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Perform value chain and component integration on prospective validation data",
+				"phase-3": "Conduct ongoing value chain and component integration on live system performance"
+			}
 		},
 		{
 			"id": "A0745_NIST2024",
@@ -5276,7 +6570,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Perform intellectual property; cbrn information or capabilities of project design and data sources"
+			}
 		},
 		{
 			"id": "A0746_NIST2024",
@@ -5289,7 +6586,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Conduct periodic information integrity; information security; value chain and component integration of operational performance"
+			}
 		},
 		{
 			"id": "A0747_NIST2024",
@@ -5303,7 +6603,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Implement information integrity in shadow mode alongside clinical workflows",
+				"phase-3": "Operate information integrity with real-time alerting"
+			}
 		},
 		{
 			"id": "A0748_NIST2024",
@@ -5316,7 +6620,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Provide ongoing information integrity; value chain and component integration for end users"
+			}
 		},
 		{
 			"id": "A0749_NIST2024",
@@ -5330,7 +6637,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Complete human-ai configuration of validation methodology and results",
+				"phase-3": "Conduct periodic human-ai configuration of operational performance"
+			}
 		},
 		{
 			"id": "A0750_NIST2024",
@@ -5343,7 +6654,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Conduct cbrn information or capabilities; confabulation for validation team members"
+			}
 		},
 		{
 			"id": "A0751_NIST2024",
@@ -5357,7 +6671,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Continue information integrity; harmful bias and homogenization for validation activities",
+				"phase-3": "Operate information integrity; harmful bias and homogenization for clinical decision tracking"
+			}
 		},
 		{
 			"id": "A0752_NIST2024",
@@ -5371,7 +6689,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Implement cbrn information or capabilities; confabulation; information security in shadow mode alongside clinical workflows",
+				"phase-3": "Operate cbrn information or capabilities; confabulation; information security with real-time alerting"
+			}
 		},
 		{
 			"id": "A0753_NIST2024",
@@ -5389,7 +6711,11 @@
 				"recommendation",
 				"computer-vision",
 				"supervised-ml"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Validate human-ai configuration during prospective testing phase",
+				"phase-3": "Apply human-ai configuration in live clinical deployment"
+			}
 		},
 		{
 			"id": "A0754_NIST2024",
@@ -5403,7 +6729,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Deploy confabulation in validation environment",
+				"phase-3": "Maintain confabulation in production environment"
+			}
 		},
 		{
 			"id": "A0755_NIST2024",
@@ -5417,7 +6747,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Generate human-ai configuration; harmful bias and homogenization summarizing validation outcomes",
+				"phase-3": "Produce regular human-ai configuration; harmful bias and homogenization for stakeholders"
+			}
 		},
 		{
 			"id": "A0756_NIST2024",
@@ -5431,7 +6765,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Design information integrity framework and define key metrics",
+				"phase-3": "Operate information integrity with real-time alerting"
+			}
 		},
 		{
 			"id": "A0757_NIST2024",
@@ -5445,7 +6783,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Generate human-ai configuration; information integrity summarizing validation outcomes",
+				"phase-3": "Produce regular human-ai configuration; information integrity for stakeholders"
+			}
 		},
 		{
 			"id": "A0758_NIST2024",
@@ -5459,7 +6801,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Generate harmful bias and homogenization summarizing validation outcomes",
+				"phase-3": "Produce regular harmful bias and homogenization for stakeholders"
+			}
 		},
 		{
 			"id": "A0759_NIST2024",
@@ -5472,7 +6818,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Maintain human-ai configuration; dangerous, violent, or hateful content in production environment"
+			}
 		},
 		{
 			"id": "A0760_NIST2024",
@@ -5486,7 +6835,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Validate human-ai configuration during prospective testing phase",
+				"phase-3": "Apply human-ai configuration in live clinical deployment"
+			}
 		},
 		{
 			"id": "A0761_NIST2024",
@@ -5500,7 +6853,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Maintain confabulation; information integrity throughout validation testing",
+				"phase-3": "Continue confabulation; information integrity for all production activities"
+			}
 		},
 		{
 			"id": "A0762_NIST2024",
@@ -5513,7 +6870,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Define information security; data privacy requirements and templates"
+			}
 		},
 		{
 			"id": "A0765_UK Government2023",
@@ -5527,7 +6887,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Conduct initial pre-deployment risk assessments during project planning",
+				"phase-3": "Maintain regular pre-deployment risk assessments schedule for production"
+			}
 		},
 		{
 			"id": "A0766_UK Government2023",
@@ -5540,7 +6904,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Maintain regular development and post-deployment monitoring schedule for production"
+			}
 		},
 		{
 			"id": "A0767_UK Government2023",
@@ -5554,7 +6921,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Conduct risk thresholds for specific models based on validation findings",
+				"phase-3": "Maintain regular risk thresholds for specific models schedule for production"
+			}
 		},
 		{
 			"id": "A0770_UK Government2023",
@@ -5567,7 +6938,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Apply refinement of risk evaluation frameworks to validation results"
+			}
 		},
 		{
 			"id": "A0771_UK Government2023",
@@ -5581,7 +6955,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Deploy mitigation of overshooting risk thresholds in validation environment",
+				"phase-3": "Maintain mitigation of overshooting risk thresholds in production environment"
+			}
 		},
 		{
 			"id": "A0773_UK Government2023",
@@ -5594,7 +6972,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Maintain current development constrained by risk thresholds reflecting operational changes"
+			}
 		},
 		{
 			"id": "A0774_UK Government2023",
@@ -5607,7 +6988,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Apply reassessment of residual risk to validation results"
+			}
 		},
 		{
 			"id": "A0775_UK Government2023",
@@ -5620,7 +7004,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Maintain regular disclosure of risk threshold to government authorities schedule for production"
+			}
 		},
 		{
 			"id": "A0776_UK Government2023",
@@ -5634,7 +7021,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Begin adaptation of mitigations to development and deployment stages development",
+				"phase-3": "Enhance adaptation of mitigations to development and deployment stages through continuous improvement"
+			}
 		},
 		{
 			"id": "A0778_UK Government2023",
@@ -5647,7 +7038,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Apply recognition of dangerous model possession in live clinical deployment"
+			}
 		},
 		{
 			"id": "A0780_UK Government2023",
@@ -5660,7 +7054,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Enforce pause of training runs in production systems"
+			}
 		},
 		{
 			"id": "A0781_UK Government2023",
@@ -5673,7 +7070,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Apply risks of open-source models in live clinical deployment"
+			}
 		},
 		{
 			"id": "A0782_UK Government2023",
@@ -5687,7 +7087,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Perform risk assessment disclosure to third parties on prospective validation data",
+				"phase-3": "Conduct ongoing risk assessment disclosure to third parties on live system performance"
+			}
 		},
 		{
 			"id": "A0783_UK Government2023",
@@ -5702,7 +7106,12 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Draft robust and meaningful accountability mechanisms aligned with institutional requirements",
+				"phase-2": "Finalize robust and meaningful accountability mechanisms based on validation learnings",
+				"phase-3": "Enforce robust and meaningful accountability mechanisms in production operations"
+			}
 		},
 		{
 			"id": "A0784_UK Government2023",
@@ -5717,7 +7126,12 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Define effective risk governance requirements and templates",
+				"phase-2": "Generate effective risk governance summarizing validation outcomes",
+				"phase-3": "Produce regular effective risk governance for stakeholders"
+			}
 		},
 		{
 			"id": "A0785_UK Government2023",
@@ -5731,7 +7145,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Validate verification mechanisms during prospective testing phase",
+				"phase-3": "Apply verification mechanisms in live clinical deployment"
+			}
 		},
 		{
 			"id": "A0786_UK Government2023",
@@ -5744,7 +7162,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Apply model evaluation of dangerous capabilities to validation results"
+			}
 		},
 		{
 			"id": "A0787_UK Government2023",
@@ -5757,7 +7178,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Apply model evaluation of controllability to validation results"
+			}
 		},
 		{
 			"id": "A0788_UK Government2023",
@@ -5770,7 +7194,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Apply model evaluation of societal harm to validation results"
+			}
 		},
 		{
 			"id": "A0790_UK Government2023",
@@ -5783,7 +7210,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Apply response processes for evaluation results to validation results"
+			}
 		},
 		{
 			"id": "A0792_UK Government2023",
@@ -5796,7 +7226,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Apply pre-training and fine-tuning of models to validation results"
+			}
 		},
 		{
 			"id": "A0793_UK Government2023",
@@ -5810,7 +7243,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Apply pre-deployment evaluations to validation results",
+				"phase-3": "Execute continuous pre-deployment evaluations of deployed system"
+			}
 		},
 		{
 			"id": "A0794_UK Government2023",
@@ -5824,7 +7261,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Apply post-deployment evaluations to validation results",
+				"phase-3": "Execute continuous post-deployment evaluations of deployed system"
+			}
 		},
 		{
 			"id": "A0795_UK Government2023",
@@ -5838,7 +7279,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Apply context-specific model evaluations to validation results",
+				"phase-3": "Execute continuous context-specific model evaluations of deployed system"
+			}
 		},
 		{
 			"id": "A0797_UK Government2023",
@@ -5852,7 +7297,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Apply appropriate safeguards against external evaluations to validation results",
+				"phase-3": "Execute continuous appropriate safeguards against external evaluations of deployed system"
+			}
 		},
 		{
 			"id": "A0798_UK Government2023",
@@ -5865,7 +7314,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Apply sufficient time for external evaluators to validation results"
+			}
 		},
 		{
 			"id": "A0799_UK Government2023",
@@ -5878,7 +7330,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Perform fine-tuning by external evaluators on prospective validation data"
+			}
 		},
 		{
 			"id": "A0800_UK Government2023",
@@ -5892,7 +7347,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Apply external evaluation of model without safety regulations to validation results",
+				"phase-3": "Execute continuous external evaluation of model without safety regulations of deployed system"
+			}
 		},
 		{
 			"id": "A0802_UK Government2023",
@@ -5906,7 +7365,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Perform external evaluation of deployed system components on prospective validation data",
+				"phase-3": "Conduct ongoing external evaluation of deployed system components on live system performance"
+			}
 		},
 		{
 			"id": "A0806_UK Government2023",
@@ -5920,7 +7383,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Conduct disclosure of risk assessment processes based on validation findings",
+				"phase-3": "Maintain regular disclosure of risk assessment processes schedule for production"
+			}
 		},
 		{
 			"id": "A0807_UK Government2023",
@@ -5935,7 +7402,12 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Set up disclosure of information about internal governance processes structure for project oversight",
+				"phase-2": "Exercise disclosure of information about internal governance processes for validation phase decisions",
+				"phase-3": "Maintain disclosure of information about internal governance processes with regular oversight reviews"
+			}
 		},
 		{
 			"id": "A0808_UK Government2023",
@@ -5948,7 +7420,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Produce regular reporting security details to government authorities for stakeholders"
+			}
 		},
 		{
 			"id": "A0809_UK Government2023",
@@ -5963,7 +7438,12 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Establish pre-training disclosure of high-level model details to government authorities criteria and baseline metrics",
+				"phase-2": "Apply pre-training disclosure of high-level model details to government authorities to validation results",
+				"phase-3": "Execute continuous pre-training disclosure of high-level model details to government authorities of deployed system"
+			}
 		},
 		{
 			"id": "A0810_UK Government2023",
@@ -5976,7 +7456,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Apply updates to government authorities during training to validation results"
+			}
 		},
 		{
 			"id": "A0812_UK Government2023",
@@ -5990,7 +7473,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Continue adjucation around publicly sharing risks for validation activities",
+				"phase-3": "Operate adjucation around publicly sharing risks for clinical decision tracking"
+			}
 		},
 		{
 			"id": "A0813_UK Government2023",
@@ -6004,7 +7491,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Conduct principled policies for disclosure based on validation findings",
+				"phase-3": "Maintain regular principled policies for disclosure schedule for production"
+			}
 		},
 		{
 			"id": "A0814_UK Government2023",
@@ -6018,7 +7509,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Finalize disclosure of information with ai-focused government authorities based on testing",
+				"phase-3": "Enhance disclosure of information with ai-focused government authorities through continuous improvement"
+			}
 		},
 		{
 			"id": "A0815_UK Government2023",
@@ -6032,7 +7527,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Apply sharing of limited information to validation results",
+				"phase-3": "Execute continuous sharing of limited information of deployed system"
+			}
 		},
 		{
 			"id": "A0816_UK Government2023",
@@ -6045,7 +7544,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Execute sharing with independent third-parties on validation cohorts and model outputs"
+			}
 		},
 		{
 			"id": "A0817_UK Government2023",
@@ -6058,7 +7560,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Apply information sharing with downstream users in live clinical deployment"
+			}
 		},
 		{
 			"id": "A0818_UK Government2023",
@@ -6072,7 +7577,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Apply sharing general information with the public to validation results",
+				"phase-3": "Execute continuous sharing general information with the public of deployed system"
+			}
 		},
 		{
 			"id": "A0819_UK Government2023",
@@ -6085,7 +7594,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Plan application of infrastructure principles approach during project design phase"
+			}
 		},
 		{
 			"id": "A0820_UK Government2023",
@@ -6099,7 +7611,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Conduct regular assessment of supply chain security based on validation findings",
+				"phase-3": "Maintain regular regular assessment of supply chain security schedule for production"
+			}
 		},
 		{
 			"id": "A0821_UK Government2023",
@@ -6112,7 +7628,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Validate model robustness to adversarial attacks during prospective testing phase"
+			}
 		},
 		{
 			"id": "A0822_UK Government2023",
@@ -6126,7 +7645,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Update documentation of the cyber security threats with validation procedures and findings",
+				"phase-3": "Maintain current documentation of the cyber security threats reflecting operational changes"
+			}
 		},
 		{
 			"id": "A0823_UK Government2023",
@@ -6139,7 +7662,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Maintain regular value of ai-related assets schedule for production"
+			}
 		},
 		{
 			"id": "A0824_UK Government2023",
@@ -6152,7 +7678,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Operate security integration into business decisions for clinical decision tracking"
+			}
 		},
 		{
 			"id": "A0825_UK Government2023",
@@ -6166,7 +7695,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Activate tracking tools for security and version control assets during prospective testing",
+				"phase-3": "Maintain tracking tools for security and version control assets for production metrics"
+			}
 		},
 		{
 			"id": "A0826_UK Government2023",
@@ -6179,7 +7712,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Apply data documentation to validation results"
+			}
 		},
 		{
 			"id": "A0827_UK Government2023",
@@ -6193,7 +7729,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Operationalize training relevant actors in ai security for testing",
+				"phase-3": "Sustain training relevant actors in ai security operations"
+			}
 		},
 		{
 			"id": "A0828_UK Government2023",
@@ -6207,7 +7747,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Finalize awareness of security threats based on testing",
+				"phase-3": "Enhance awareness of security threats through continuous improvement"
+			}
 		},
 		{
 			"id": "A0829_UK Government2023",
@@ -6221,7 +7765,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Validate model of system threats in misuse scenarios during prospective testing phase",
+				"phase-3": "Apply model of system threats in misuse scenarios in live clinical deployment"
+			}
 		},
 		{
 			"id": "A0830_UK Government2023",
@@ -6235,7 +7783,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Begin incident response, escalation, and remeditation plans development",
+				"phase-3": "Enhance incident response, escalation, and remeditation plans through continuous improvement"
+			}
 		},
 		{
 			"id": "A0831_UK Government2023",
@@ -6248,7 +7800,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Conduct recurrent performance analysis of ai models for validation team members"
+			}
 		},
 		{
 			"id": "A0832_UK Government2023",
@@ -6262,7 +7817,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Execute monitoring inputs to ai systems for audit development on validation cohorts and model outputs",
+				"phase-3": "Perform scheduled monitoring inputs to ai systems for audit development on production system and outcomes"
+			}
 		},
 		{
 			"id": "A0833_UK Government2023",
@@ -6275,7 +7834,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Update mitigation actions for ai-related security incidents with validation procedures and findings"
+			}
 		},
 		{
 			"id": "A0834_UK Government2023",
@@ -6288,7 +7850,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Maintain security responsible user communication with continuous monitoring"
+			}
 		},
 		{
 			"id": "A0835_UK Government2023",
@@ -6301,7 +7866,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Apply default integration of secure settings in live clinical deployment"
+			}
 		},
 		{
 			"id": "A0836_UK Government2023",
@@ -6315,7 +7883,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Test and refine default necessary security updates during validation",
+				"phase-3": "Follow default necessary security updates for all operational activities"
+			}
 		},
 		{
 			"id": "A0837_UK Government2023",
@@ -6328,7 +7900,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Apply release after security evaluations to validation results"
+			}
 		},
 		{
 			"id": "A0838_UK Government2023",
@@ -6342,7 +7917,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Generate open lines of communication for product security feedback summarizing validation outcomes",
+				"phase-3": "Produce regular open lines of communication for product security feedback for stakeholders"
+			}
 		},
 		{
 			"id": "A0839_UK Government2023",
@@ -6356,7 +7935,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Validate identification of assets of organizational value during prospective testing phase",
+				"phase-3": "Apply identification of assets of organizational value in live clinical deployment"
+			}
 		},
 		{
 			"id": "A0840_UK Government2023",
@@ -6370,7 +7953,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Deploy categorization of assets in validation environment",
+				"phase-3": "Maintain categorization of assets in production environment"
+			}
 		},
 		{
 			"id": "A0841_UK Government2023",
@@ -6384,7 +7971,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Validate threat identification during prospective testing phase",
+				"phase-3": "Apply threat identification in live clinical deployment"
+			}
 		},
 		{
 			"id": "A0843_UK Government2023",
@@ -6399,7 +7990,12 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Establish protective security risk register procedures for project inception",
+				"phase-2": "Maintain protective security risk register throughout validation testing",
+				"phase-3": "Continue protective security risk register for all production activities"
+			}
 		},
 		{
 			"id": "A0844_UK Government2023",
@@ -6413,7 +8009,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Complete development of protective security strategy of validation methodology and results",
+				"phase-3": "Conduct periodic development of protective security strategy of operational performance"
+			}
 		},
 		{
 			"id": "A0845_UK Government2023",
@@ -6427,7 +8027,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Deploy development and implementation plans in validation environment",
+				"phase-3": "Maintain development and implementation plans in production environment"
+			}
 		},
 		{
 			"id": "A0846_UK Government2023",
@@ -6441,7 +8045,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Complete regular risk management review of validation methodology and results",
+				"phase-3": "Conduct periodic regular risk management review of operational performance"
+			}
 		},
 		{
 			"id": "A0848_UK Government2023",
@@ -6455,7 +8063,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Conduct suitable level of screening based on validation findings",
+				"phase-3": "Maintain regular suitable level of screening schedule for production"
+			}
 		},
 		{
 			"id": "A0849_UK Government2023",
@@ -6469,7 +8081,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Conduct role-based security risk assessment based on validation findings",
+				"phase-3": "Maintain regular role-based security risk assessment schedule for production"
+			}
 		},
 		{
 			"id": "A0850_UK Government2023",
@@ -6482,7 +8098,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Produce regular proportionate policies for stakeholders"
+			}
 		},
 		{
 			"id": "A0851_UK Government2023",
@@ -6496,7 +8115,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Test and refine appropriate security training during validation",
+				"phase-3": "Follow appropriate security training for all operational activities"
+			}
 		},
 		{
 			"id": "A0852_UK Government2023",
@@ -6509,7 +8132,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Conduct periodic program of monitoring for security issues of operational performance"
+			}
 		},
 		{
 			"id": "A0853_UK Government2023",
@@ -6523,7 +8149,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Operationalize use of established security guidance for testing",
+				"phase-3": "Sustain use of established security guidance operations"
+			}
 		},
 		{
 			"id": "A0863_UK Government2023",
@@ -6536,7 +8166,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Generate cost-benefit analysis of sharing vulnerability reports summarizing validation outcomes"
+			}
 		},
 		{
 			"id": "A0864_UK Government2023",
@@ -6549,7 +8182,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Validate development of protocols for disclosure of model vulnerability information with clinical stakeholders"
+			}
 		},
 		{
 			"id": "A0865_UK Government2023",
@@ -6562,7 +8198,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Generate mechanisms to disclose vulnerability reports to third parties summarizing validation outcomes"
+			}
 		},
 		{
 			"id": "A0866_UK Government2023",
@@ -6575,7 +8214,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Continue public sharing of model vulnerability reporting programs for validation activities"
+			}
 		},
 		{
 			"id": "A0867_UK Government2023",
@@ -6591,7 +8233,10 @@
 				"generative-non-llm",
 				"multi-modal",
 				"foundation"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Run identification of ai-generated content continuously on live outputs"
+			}
 		},
 		{
 			"id": "A0868_UK Government2023",
@@ -6608,7 +8253,11 @@
 				"generative-non-llm",
 				"multi-modal",
 				"foundation"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Implement robust watermarks for ai generated content in shadow mode alongside clinical workflows",
+				"phase-3": "Operate robust watermarks for ai generated content with real-time alerting"
+			}
 		},
 		{
 			"id": "A0871_UK Government2023",
@@ -6622,7 +8271,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Apply evaluation research to validation results",
+				"phase-3": "Execute continuous evaluation research of deployed system"
+			}
 		},
 		{
 			"id": "A0872_UK Government2023",
@@ -6636,7 +8289,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Validate robustness research during prospective testing phase",
+				"phase-3": "Apply robustness research in live clinical deployment"
+			}
 		},
 		{
 			"id": "A0873_UK Government2023",
@@ -6651,7 +8308,10 @@
 				"llm",
 				"reinforcement-learning",
 				"foundation"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Enhance reliability and controllability (or \u201calignment\u201d) research through continuous improvement"
+			}
 		},
 		{
 			"id": "A0876_UK Government2023",
@@ -6665,7 +8325,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Test cybersecurity research in validation environment",
+				"phase-3": "Maintain cybersecurity research with continuous monitoring"
+			}
 		},
 		{
 			"id": "A0877_UK Government2023",
@@ -6679,7 +8343,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Validate criminality research during prospective testing phase",
+				"phase-3": "Apply criminality research in live clinical deployment"
+			}
 		},
 		{
 			"id": "A0878_UK Government2023",
@@ -6693,7 +8361,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Continue research into other societal harms for validation activities",
+				"phase-3": "Operate research into other societal harms for clinical decision tracking"
+			}
 		},
 		{
 			"id": "A0881_UK Government2023",
@@ -6707,7 +8379,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Validate defense tool availability before system release during prospective testing phase",
+				"phase-3": "Apply defense tool availability before system release in live clinical deployment"
+			}
 		},
 		{
 			"id": "A0882_UK Government2023",
@@ -6721,7 +8397,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Validate discretion around sharing defense tools during prospective testing phase",
+				"phase-3": "Apply discretion around sharing defense tools in live clinical deployment"
+			}
 		},
 		{
 			"id": "A0883_UK Government2023",
@@ -6735,7 +8415,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Validate continuous updating of defensive tools during prospective testing phase",
+				"phase-3": "Apply continuous updating of defensive tools in live clinical deployment"
+			}
 		},
 		{
 			"id": "A0885_UK Government2023",
@@ -6753,7 +8437,11 @@
 				"recommendation",
 				"computer-vision",
 				"supervised-ml"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Conduct third party knowledge for ai systems' downstream societal impacts based on validation findings",
+				"phase-3": "Maintain regular third party knowledge for ai systems' downstream societal impacts schedule for production"
+			}
 		},
 		{
 			"id": "A0886_UK Government2023",
@@ -6771,7 +8459,11 @@
 				"recommendation",
 				"computer-vision",
 				"supervised-ml"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Conduct societal impact informed risk assessments based on validation findings",
+				"phase-3": "Maintain regular societal impact informed risk assessments schedule for production"
+			}
 		},
 		{
 			"id": "A0891_UK Government2023",
@@ -6784,7 +8476,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Operate appropriate retention schedules for usage logs for clinical decision tracking"
+			}
 		},
 		{
 			"id": "A0892_UK Government2023",
@@ -6797,7 +8492,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Apply content filters in live clinical deployment"
+			}
 		},
 		{
 			"id": "A0894_UK Government2023",
@@ -6811,7 +8509,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Finalize robust content filters based on testing",
+				"phase-3": "Enhance robust content filters through continuous improvement"
+			}
 		},
 		{
 			"id": "A0895_UK Government2023",
@@ -6824,7 +8526,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Complete discretion for development, storage, and sharing of content filters for validation use"
+			}
 		},
 		{
 			"id": "A0896_UK Government2023",
@@ -6839,7 +8544,10 @@
 				"llm",
 				"reinforcement-learning",
 				"foundation"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Apply fine-tuning models in live clinical deployment"
+			}
 		},
 		{
 			"id": "A0897_UK Government2023",
@@ -6853,7 +8561,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Validate model prompting during prospective testing phase",
+				"phase-3": "Apply model prompting in live clinical deployment"
+			}
 		},
 		{
 			"id": "A0898_UK Government2023",
@@ -6866,7 +8578,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Apply rejection sampling in live clinical deployment"
+			}
 		},
 		{
 			"id": "A0899_UK Government2023",
@@ -6881,7 +8596,10 @@
 				"llm",
 				"foundation",
 				"multi-modal"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Enforce user-based api access restrictions in production systems"
+			}
 		},
 		{
 			"id": "A0900_UK Government2023",
@@ -6895,7 +8613,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Implement communication of and appeal for api access reduction policies for validation systems",
+				"phase-3": "Enforce communication of and appeal for api access reduction policies in production systems"
+			}
 		},
 		{
 			"id": "A0901_UK Government2023",
@@ -6911,7 +8633,11 @@
 				"llm",
 				"foundation",
 				"multi-modal"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Deploy know your customer (kyc) checks in validation environment",
+				"phase-3": "Maintain know your customer (kyc) checks in production environment"
+			}
 		},
 		{
 			"id": "A0902_UK Government2023",
@@ -6927,7 +8653,11 @@
 				"llm",
 				"foundation",
 				"multi-modal"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Operationalize trusted categories api access for testing",
+				"phase-3": "Sustain trusted categories api access operations"
+			}
 		},
 		{
 			"id": "A0903_UK Government2023",
@@ -6940,7 +8670,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Apply protocols for sharing api users information with government authorities to clinical use cases"
+			}
 		},
 		{
 			"id": "A0904_UK Government2023",
@@ -6954,7 +8687,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Plan worst-case scenario response approach and resource requirements",
+				"phase-3": "Maintain worst-case scenario response in production environment"
+			}
 		},
 		{
 			"id": "A0905_UK Government2023",
@@ -6967,7 +8704,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Apply user informed rapid rollback of models in live clinical deployment"
+			}
 		},
 		{
 			"id": "A0906_UK Government2023",
@@ -6982,7 +8722,12 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Draft governance responses to worst-case of misuse scenarios aligned with institutional requirements",
+				"phase-2": "Finalize governance responses to worst-case of misuse scenarios based on validation learnings",
+				"phase-3": "Enforce governance responses to worst-case of misuse scenarios in production operations"
+			}
 		},
 		{
 			"id": "A0907_UK Government2023",
@@ -6996,7 +8741,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Execute monitoring and safeguard efficacy on validation cohorts and model outputs",
+				"phase-3": "Perform scheduled monitoring and safeguard efficacy on production system and outcomes"
+			}
 		},
 		{
 			"id": "A0908_UK Government2023",
@@ -7010,7 +8759,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Validate exploration of new safeguards during prospective testing phase",
+				"phase-3": "Apply exploration of new safeguards in live clinical deployment"
+			}
 		},
 		{
 			"id": "A0909_UK Government2023",
@@ -7023,7 +8776,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Conduct periodic diverse monitoring techniques of operational performance"
+			}
 		},
 		{
 			"id": "A0910_UK Government2023",
@@ -7040,7 +8796,10 @@
 				"recommendation",
 				"computer-vision",
 				"supervised-ml"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Maintain regular assessment of safeguard costs for users schedule for production"
+			}
 		},
 		{
 			"id": "A0911_UK Government2023",
@@ -7053,7 +8812,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Operate reduction of costs for users with real-time alerting"
+			}
 		},
 		{
 			"id": "A0912_UK Government2023",
@@ -7066,7 +8828,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Design accounting of applicable regulatory frameworks tailored to project scope"
+			}
 		},
 		{
 			"id": "A0914_UK Government2023",
@@ -7079,7 +8844,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Execute datatset auditing on validation cohorts and model outputs"
+			}
 		},
 		{
 			"id": "A0915_UK Government2023",
@@ -7092,7 +8860,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Execute technical tools for auditing on validation cohorts and model outputs"
+			}
 		},
 		{
 			"id": "A0916_UK Government2023",
@@ -7105,7 +8876,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Conduct initial assessment of training data during project planning"
+			}
 		},
 		{
 			"id": "A0918_UK Government2023",
@@ -7119,7 +8893,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Design audits for private or sensitive information framework for training data and model design review",
+				"phase-2": "Execute audits for private or sensitive information on validation cohorts and model outputs"
+			}
 		},
 		{
 			"id": "A0919_UK Government2023",
@@ -7133,7 +8911,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Design audits for biases in the data framework for training data and model design review",
+				"phase-2": "Execute audits for biases in the data on validation cohorts and model outputs"
+			}
 		},
 		{
 			"id": "A0920_UK Government2023",
@@ -7147,7 +8929,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Execute audits for harmful content on validation cohorts and model outputs",
+				"phase-3": "Perform scheduled audits for harmful content on production system and outcomes"
+			}
 		},
 		{
 			"id": "A0921_UK Government2023",
@@ -7160,7 +8946,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Execute audits for misinformation on validation cohorts and model outputs"
+			}
 		},
 		{
 			"id": "A0922_UK Government2023",
@@ -7175,7 +8964,12 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Design external expertise for input data audits framework for training data and model design review",
+				"phase-2": "Execute external expertise for input data audits on validation cohorts and model outputs",
+				"phase-3": "Perform scheduled external expertise for input data audits on production system and outcomes"
+			}
 		},
 		{
 			"id": "A0923_UK Government2023",
@@ -7189,7 +8983,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Design data audits for ai system behavior framework for training data and model design review",
+				"phase-2": "Execute data audits for ai system behavior on validation cohorts and model outputs"
+			}
 		},
 		{
 			"id": "A0927_UK Government2023",
@@ -7204,7 +9002,12 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Design input data audits for pre-development/deployment risk assessments framework for training data and model design review",
+				"phase-2": "Execute input data audits for pre-development/deployment risk assessments on validation cohorts and model outputs",
+				"phase-3": "Perform scheduled input data audits for pre-development/deployment risk assessments on production system and outcomes"
+			}
 		},
 		{
 			"id": "A0928_UK Government2023",
@@ -7218,7 +9021,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Validate removal of harmful input data during prospective testing phase",
+				"phase-3": "Apply removal of harmful input data in live clinical deployment"
+			}
 		},
 		{
 			"id": "A0929_UK Government2023",
@@ -7234,7 +9041,11 @@
 				"llm",
 				"reinforcement-learning",
 				"foundation"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Finalize harmful data for reduction of dangerous capabilities based on testing",
+				"phase-3": "Enhance harmful data for reduction of dangerous capabilities through continuous improvement"
+			}
 		},
 		{
 			"id": "A0930_UK Government2023",
@@ -7248,7 +9059,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Develop sourcing or generation of additional data for training dataset curriculum for research team",
+				"phase-2": "Conduct sourcing or generation of additional data for training dataset for validation team members"
+			}
 		},
 		{
 			"id": "A0931_UK Government2023",
@@ -7263,7 +9078,12 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Design limitations of input data audit framework for training data and model design review",
+				"phase-2": "Execute limitations of input data audit on validation cohorts and model outputs",
+				"phase-3": "Perform scheduled limitations of input data audit on production system and outcomes"
+			}
 		},
 		{
 			"id": "A0933_UK Government2023",
@@ -7277,7 +9097,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Design disclosure of input data audits with external stakeholders framework for training data and model design review",
+				"phase-2": "Execute disclosure of input data audits with external stakeholders on validation cohorts and model outputs"
+			}
 		},
 		{
 			"id": "A0935_Gipi\u0161kis2024",
@@ -7291,7 +9115,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Finalize restrict web access during ai training based on testing",
+				"phase-3": "Enhance restrict web access during ai training through continuous improvement"
+			}
 		},
 		{
 			"id": "A0938_Gipi\u0161kis2024",
@@ -7304,7 +9132,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Validate calibrated confidence measures for model pre- dictions during prospective testing phase"
+			}
 		},
 		{
 			"id": "A0939_Gipi\u0161kis2024",
@@ -7317,7 +9148,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Continue incorporating the estimation of atypical input samples or classes for better model reliability for validation activities"
+			}
 		},
 		{
 			"id": "A0940_Gipi\u0161kis2024",
@@ -7330,7 +9164,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Implement data cleaning capabilities for training data issues"
+			}
 		},
 		{
 			"id": "A0941_Gipi\u0161kis2024",
@@ -7344,7 +9181,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Apply internal data poisoning diagnosis to validation activities",
+				"phase-3": "Operate within internal data poisoning diagnosis for deployed system"
+			}
 		},
 		{
 			"id": "A0942_Gipi\u0161kis2024",
@@ -7358,7 +9199,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Validate scope red-teaming activities based on deploy- ment context during prospective testing phase",
+				"phase-3": "Apply scope red-teaming activities based on deploy- ment context in live clinical deployment"
+			}
 		},
 		{
 			"id": "A0943_Gipi\u0161kis2024",
@@ -7372,7 +9217,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Perform red teaming to test the resilience of open-weights models to fine-tuning on prospective validation data",
+				"phase-3": "Conduct ongoing red teaming to test the resilience of open-weights models to fine-tuning on live system performance"
+			}
 		},
 		{
 			"id": "A0944_Gipi\u0161kis2024",
@@ -7386,7 +9235,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Execute pre-deployment access by third-party auditors on validation cohorts and model outputs",
+				"phase-3": "Perform scheduled pre-deployment access by third-party auditors on production system and outcomes"
+			}
 		},
 		{
 			"id": "A0945_Gipi\u0161kis2024",
@@ -7399,7 +9252,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Execute audits with specific scoped goals on validation cohorts and model outputs"
+			}
 		},
 		{
 			"id": "A0946_Gipi\u0161kis2024",
@@ -7412,7 +9268,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Perform evaluating explainability method sensitivity to data inputs and model parameters on prospective validation data"
+			}
 		},
 		{
 			"id": "A0947_Gipi\u0161kis2024",
@@ -7426,7 +9285,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Conduct enforcing model output interpretability post-training for validation team members",
+				"phase-3": "Provide ongoing enforcing model output interpretability post-training for end users"
+			}
 		},
 		{
 			"id": "A0948_Gipi\u0161kis2024",
@@ -7440,7 +9303,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Validate paraphrasing to reduce hidden information during prospective testing phase",
+				"phase-3": "Apply paraphrasing to reduce hidden information in live clinical deployment"
+			}
 		},
 		{
 			"id": "A0949_Gipi\u0161kis2024",
@@ -7453,7 +9320,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Perform testing for erroneous or irrelevant features through concept learning on prospective validation data"
+			}
 		},
 		{
 			"id": "A0950_Gipi\u0161kis2024",
@@ -7468,7 +9338,12 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Specify dashboard of model properties requirements for data and systems",
+				"phase-2": "Implement dashboard of model properties for validation systems",
+				"phase-3": "Enforce dashboard of model properties in production systems"
+			}
 		},
 		{
 			"id": "A0951_Gipi\u0161kis2024",
@@ -7482,7 +9357,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Validate modification of model internal representation during prospective testing phase",
+				"phase-3": "Apply modification of model internal representation in live clinical deployment"
+			}
 		},
 		{
 			"id": "A0952_Gipi\u0161kis2024",
@@ -7496,7 +9375,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Validate incorporating goal uncertainty into ai systems to mitigate risky behaviors during prospective testing phase",
+				"phase-3": "Apply incorporating goal uncertainty into ai systems to mitigate risky behaviors in live clinical deployment"
+			}
 		},
 		{
 			"id": "A0953_Gipi\u0161kis2024",
@@ -7509,7 +9392,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Apply evaluations for truthful outputs to validation results"
+			}
 		},
 		{
 			"id": "A0954_Gipi\u0161kis2024",
@@ -7523,7 +9409,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Test interpretability techniques that target deception capabilities on validation data",
+				"phase-3": "Run interpretability techniques that target deception continuously on live outputs"
+			}
 		},
 		{
 			"id": "A0955_Gipi\u0161kis2024",
@@ -7537,7 +9427,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Perform benchmarks for situational awareness on prospective validation data",
+				"phase-3": "Conduct ongoing benchmarks for situational awareness on live system performance"
+			}
 		},
 		{
 			"id": "A0956_Gipi\u0161kis2024",
@@ -7551,7 +9445,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Perform evaluating ai systems\u2019 performance on self-proliferation-related tasks on prospective validation data",
+				"phase-3": "Conduct ongoing evaluating ai systems\u2019 performance on self-proliferation-related tasks on live system performance"
+			}
 		},
 		{
 			"id": "A0957_Gipi\u0161kis2024",
@@ -7565,7 +9463,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Activate demonstrating a \u201cmargin of safety\u201d for the worst plausible system failures during prospective testing",
+				"phase-3": "Maintain demonstrating a \u201cmargin of safety\u201d for the worst plausible system failures for production metrics"
+			}
 		},
 		{
 			"id": "A0958_Gipi\u0161kis2024",
@@ -7578,7 +9480,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Apply employing qualitative assessments in difficult- to-measure domains to validation results"
+			}
 		},
 		{
 			"id": "A0960_Gipi\u0161kis2024",
@@ -7592,7 +9497,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Complete fishbone diagram for validation use",
+				"phase-3": "Update fishbone diagram based on operational feedback"
+			}
 		},
 		{
 			"id": "A0962_Gipi\u0161kis2024",
@@ -7605,7 +9514,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Apply delphi technique to validation activities"
+			}
 		},
 		{
 			"id": "A0963_Gipi\u0161kis2024",
@@ -7619,7 +9531,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Continue cross-impact analysis for validation activities",
+				"phase-3": "Operate cross-impact analysis for clinical decision tracking"
+			}
 		},
 		{
 			"id": "A0964_Gipi\u0161kis2024",
@@ -7634,7 +9550,12 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Plan bow-tie analysis approach and resource requirements",
+				"phase-2": "Deploy bow-tie analysis in validation environment",
+				"phase-3": "Maintain bow-tie analysis in production environment"
+			}
 		},
 		{
 			"id": "A0965_Gipi\u0161kis2024",
@@ -7647,7 +9568,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Plan system-theoretic process analysis (stpa) approach and resource requirements"
+			}
 		},
 		{
 			"id": "A0966_Gipi\u0161kis2024",
@@ -7661,7 +9585,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Apply risk matrices to validation results",
+				"phase-3": "Execute continuous risk matrices of deployed system"
+			}
 		},
 		{
 			"id": "A0967_Gipi\u0161kis2024",
@@ -7675,7 +9603,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Validate pre-allocate sufficient resources for risk man- agement during prospective testing phase",
+				"phase-3": "Apply pre-allocate sufficient resources for risk man- agement in live clinical deployment"
+			}
 		},
 		{
 			"id": "A0968_Gipi\u0161kis2024",
@@ -7688,7 +9620,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Run staged release of model weights continuously on live outputs"
+			}
 		},
 		{
 			"id": "A0969_Gipi\u0161kis2024",
@@ -7702,7 +9637,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Implement gradual or incremental monitored release of model access in shadow mode alongside clinical workflows",
+				"phase-3": "Operate gradual or incremental monitored release of model access with real-time alerting"
+			}
 		},
 		{
 			"id": "A0970_Gipi\u0161kis2024",
@@ -7717,7 +9656,10 @@
 				"llm",
 				"foundation",
 				"multi-modal"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Conduct ongoing limit deployment scope on live system performance"
+			}
 		},
 		{
 			"id": "A0971_Gipi\u0161kis2024",
@@ -7733,7 +9675,11 @@
 				"llm",
 				"foundation",
 				"multi-modal"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Finalize restricted usage terms for open-source models based on testing",
+				"phase-3": "Enhance restricted usage terms for open-source models through continuous improvement"
+			}
 		},
 		{
 			"id": "A0972_Gipi\u0161kis2024",
@@ -7746,7 +9692,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Enhance release strategy disagreement between developers through continuous improvement"
+			}
 		},
 		{
 			"id": "A0973_Gipi\u0161kis2024",
@@ -7760,7 +9709,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Validate pop-up interventions in llms during prospective testing phase",
+				"phase-3": "Apply pop-up interventions in llms in live clinical deployment"
+			}
 		},
 		{
 			"id": "A0974_Gipi\u0161kis2024",
@@ -7776,7 +9729,10 @@
 				"generative-non-llm",
 				"multi-modal",
 				"foundation"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Enhance ai identification through continuous improvement"
+			}
 		},
 		{
 			"id": "A0975_Gipi\u0161kis2024",
@@ -7793,7 +9749,11 @@
 				"generative-non-llm",
 				"multi-modal",
 				"foundation"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Perform ai output watermaking on prospective validation data",
+				"phase-3": "Conduct ongoing ai output watermaking on live system performance"
+			}
 		},
 		{
 			"id": "A0976_Gipi\u0161kis2024",
@@ -7809,7 +9769,10 @@
 				"generative-non-llm",
 				"multi-modal",
 				"foundation"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Continue ai output metadata for all production activities"
+			}
 		},
 		{
 			"id": "A0977_Gipi\u0161kis2024",
@@ -7823,7 +9786,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Plan monitoring of model capabilities methodology for retrospective data analysis",
+				"phase-3": "Conduct ongoing monitoring of model capabilities on live system performance"
+			}
 		},
 		{
 			"id": "A0978_Gipi\u0161kis2024",
@@ -7839,7 +9806,11 @@
 				"llm",
 				"reinforcement-learning",
 				"foundation"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Perform ai model-assisted oversight of ai systems on prospective validation data",
+				"phase-3": "Conduct ongoing ai model-assisted oversight of ai systems on live system performance"
+			}
 		},
 		{
 			"id": "A0979_Gipi\u0161kis2024",
@@ -7853,7 +9824,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Implement post-deployment ongoing monitoring for unexpected use cases in shadow mode alongside clinical workflows",
+				"phase-3": "Operate post-deployment ongoing monitoring for unexpected use cases with real-time alerting"
+			}
 		},
 		{
 			"id": "A0981_Gipi\u0161kis2024",
@@ -7867,7 +9842,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Apply encouraging downstream provider to evaluate models for deployment-specific failure modes to validation results",
+				"phase-3": "Execute continuous encouraging downstream provider to evaluate models for deployment-specific failure modes of deployed system"
+			}
 		},
 		{
 			"id": "A0982_Gipi\u0161kis2024",
@@ -7881,7 +9860,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Generate encourage reporting of critical vulnerabilities to the upstream provider or other relevant stakeholders summarizing validation outcomes",
+				"phase-3": "Produce regular encourage reporting of critical vulnerabilities to the upstream provider or other relevant stakeholders for stakeholders"
+			}
 		},
 		{
 			"id": "A0983_Gipi\u0161kis2024",
@@ -7894,7 +9877,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Maintain least privilege access in production environment"
+			}
 		},
 		{
 			"id": "A0984_Gipi\u0161kis2024",
@@ -7908,7 +9894,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Test protect proprietary or unreleased ai model ar- chitecture and parameters capabilities on validation data",
+				"phase-3": "Run protect proprietary or unreleased ai model ar- chitecture and parameters continuously on live outputs"
+			}
 		},
 		{
 			"id": "A0985_Gipi\u0161kis2024",
@@ -7922,7 +9912,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Test hardware limitations on data center network connections capabilities on validation data",
+				"phase-3": "Run hardware limitations on data center network connections continuously on live outputs"
+			}
 		},
 		{
 			"id": "A0987_Gipi\u0161kis2024",
@@ -7935,7 +9929,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Perform sandboxing of ai systems on prospective validation data"
+			}
 		},
 		{
 			"id": "A0988_Gipi\u0161kis2024",
@@ -7948,7 +9945,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Apply redundant systems not reliant on gpai in live clinical deployment"
+			}
 		},
 		{
 			"id": "A0989_Gipi\u0161kis2024",
@@ -7963,7 +9963,12 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Design diverse data labeling and algorithm fairness audits framework for training data and model design review",
+				"phase-2": "Execute diverse data labeling and algorithm fairness audits on validation cohorts and model outputs",
+				"phase-3": "Perform scheduled diverse data labeling and algorithm fairness audits on production system and outcomes"
+			}
 		},
 		{
 			"id": "A0990_Gipi\u0161kis2024",
@@ -7977,7 +9982,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Continue debiasing methods for validation activities",
+				"phase-3": "Operate debiasing methods for clinical decision tracking"
+			}
 		},
 		{
 			"id": "A0991_Gipi\u0161kis2024",
@@ -7991,7 +10000,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Verify knowledge unlearning techniques effectiveness",
+				"phase-3": "Operate knowledge unlearning techniques for live data"
+			}
 		},
 		{
 			"id": "A0992_Gipi\u0161kis2024",
@@ -8004,7 +10017,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Plan differential privacy measures for sensitive data"
+			}
 		},
 		{
 			"id": "A0993_Gipi\u0161kis2024",
@@ -8018,7 +10034,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Establish quantifying privacy risks of ai models procedures for project inception",
+				"phase-3": "Continue quantifying privacy risks of ai models for all production activities"
+			}
 		},
 		{
 			"id": "A0994_Gipi\u0161kis2024",
@@ -8033,7 +10053,10 @@
 				"llm",
 				"foundation",
 				"multi-modal"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Maintain more energy-efficient models or techniques in production environment"
+			}
 		},
 		{
 			"id": "A0995_Gipi\u0161kis2024",
@@ -8049,7 +10072,11 @@
 				"llm",
 				"foundation",
 				"multi-modal"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Validate disclosure of energy consumption by ai systems to authorities during prospective testing phase",
+				"phase-3": "Apply disclosure of energy consumption by ai systems to authorities in live clinical deployment"
+			}
 		},
 		{
 			"id": "A0996_Gipi\u0161kis2024",
@@ -8065,7 +10092,11 @@
 				"llm",
 				"foundation",
 				"multi-modal"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Conduct using low carbon intensity energy grids for validation team members",
+				"phase-3": "Provide ongoing using low carbon intensity energy grids for end users"
+			}
 		},
 		{
 			"id": "A0997_Gipi\u0161kis2024",
@@ -8079,7 +10110,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Perform red team access to the final version of a model pre-deployment on prospective validation data",
+				"phase-3": "Conduct ongoing red team access to the final version of a model pre-deployment on live system performance"
+			}
 		},
 		{
 			"id": "A0999_Gipi\u0161kis2024",
@@ -8093,7 +10128,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Plan dynamic benchmarking approach during project design phase",
+				"phase-2": "Validate dynamic benchmarking during prospective testing phase"
+			}
 		},
 		{
 			"id": "A1000_Gipi\u0161kis2024",
@@ -8108,7 +10147,12 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Design benchmark dataset auditing framework for training data and model design review",
+				"phase-2": "Execute benchmark dataset auditing on validation cohorts and model outputs",
+				"phase-3": "Perform scheduled benchmark dataset auditing on production system and outcomes"
+			}
 		},
 		{
 			"id": "A1001_Gipi\u0161kis2024",
@@ -8121,7 +10165,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Execute informative and powerful benchmarks on validation cohorts and model outputs"
+			}
 		},
 		{
 			"id": "A1002_Gipi\u0161kis2024",
@@ -8135,7 +10182,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Define statistical data quality reports for benchmarks requirements and templates",
+				"phase-2": "Generate statistical data quality reports for benchmarks summarizing validation outcomes"
+			}
 		},
 		{
 			"id": "A1003_Gipi\u0161kis2024",
@@ -8149,7 +10200,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Develop avoiding benchmark data with publicly avail- able solutions and releasing contextual information for internet-derived data curriculum for research team",
+				"phase-2": "Conduct avoiding benchmark data with publicly avail- able solutions and releasing contextual information for internet-derived data for validation team members"
+			}
 		},
 		{
 			"id": "A1004_Gipi\u0161kis2024",
@@ -8163,7 +10218,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Define reporting data decontamination efforts requirements and templates",
+				"phase-2": "Generate reporting data decontamination efforts summarizing validation outcomes"
+			}
 		},
 		{
 			"id": "A1005_Gipi\u0161kis2024",
@@ -8177,7 +10236,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Update tracking benchmark leakage with validation procedures and findings",
+				"phase-3": "Maintain current tracking benchmark leakage reflecting operational changes"
+			}
 		},
 		{
 			"id": "A1006_Gipi\u0161kis2024",
@@ -8190,7 +10253,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Update preventing or mitigating data contamination and leakage with validation procedures and findings"
+			}
 		},
 		{
 			"id": "A1008_Gipi\u0161kis2024",
@@ -8204,7 +10270,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Complete frequent benchmarking to identify when red teaming is needed for validation use",
+				"phase-3": "Update frequent benchmarking to identify when red teaming is needed based on operational feedback"
+			}
 		},
 		{
 			"id": "A1009_Gipi\u0161kis2024",
@@ -8218,7 +10288,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Perform test robustness of gpai system on relevant benchmarks on prospective validation data",
+				"phase-3": "Conduct ongoing test robustness of gpai system on relevant benchmarks on live system performance"
+			}
 		},
 		{
 			"id": "A1012_Gipi\u0161kis2024",
@@ -8231,7 +10305,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Apply using an ai model to evaluate ai model outputs to validation results"
+			}
 		},
 		{
 			"id": "A1013_Gipi\u0161kis2024",
@@ -8245,7 +10322,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Plan frequent testing when scaling model or dataset methodology for retrospective data analysis",
+				"phase-2": "Perform frequent testing when scaling model or dataset on prospective validation data"
+			}
 		},
 		{
 			"id": "A1014_Gipi\u0161kis2024",
@@ -8258,7 +10339,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Maintain tamper-resistant safeguards for open-weight models in production environment"
+			}
 		},
 		{
 			"id": "A1015_Gipi\u0161kis2024",
@@ -8271,7 +10355,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Conduct robustness certificates for validation team members"
+			}
 		},
 		{
 			"id": "A1016_Gipi\u0161kis2024",
@@ -8284,7 +10371,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Create initial documentation of data collection, annotation, maintenance practices capturing design decisions and data sources"
+			}
 		},
 		{
 			"id": "A1018_Uuk2024",
@@ -8297,7 +10387,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Specify advanced model access for vetted external researchers requirements for data and systems"
+			}
 		},
 		{
 			"id": "A1019_Uuk2024",
@@ -8310,7 +10403,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Conduct adversarial robustness for validation team members"
+			}
 		},
 		{
 			"id": "A1020_Uuk2024",
@@ -8324,7 +10420,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Generate bug bounty programs summarizing validation outcomes",
+				"phase-3": "Produce regular bug bounty programs for stakeholders"
+			}
 		},
 		{
 			"id": "A1021_Uuk2024",
@@ -8337,7 +10437,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Apply capability restrictions in live clinical deployment"
+			}
 		},
 		{
 			"id": "A1022_Uuk2024",
@@ -8350,7 +10453,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Begin data curation development"
+			}
 		},
 		{
 			"id": "A1023_Uuk2024",
@@ -8363,7 +10469,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Operate deploying powerful models in stages with real-time alerting"
+			}
 		},
 		{
 			"id": "A1024_Uuk2024",
@@ -8377,7 +10486,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Perform external assessment of testing procedure on prospective validation data",
+				"phase-3": "Conduct ongoing external assessment of testing procedure on live system performance"
+			}
 		},
 		{
 			"id": "A1025_Uuk2024",
@@ -8392,7 +10505,10 @@
 				"llm",
 				"foundation",
 				"multi-modal"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Operate fine-tuning restrictions with real-time alerting"
+			}
 		},
 		{
 			"id": "A1026_Uuk2024",
@@ -8408,7 +10524,11 @@
 				"llm",
 				"reinforcement-learning",
 				"foundation"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Conduct harmlessness training for validation team members",
+				"phase-3": "Provide ongoing harmlessness training for end users"
+			}
 		},
 		{
 			"id": "A1027_Uuk2024",
@@ -8421,7 +10541,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Operate input and output filtering with real-time alerting"
+			}
 		},
 		{
 			"id": "A1028_Uuk2024",
@@ -8434,7 +10557,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Operate intolerable risk thresholds with real-time alerting"
+			}
 		},
 		{
 			"id": "A1029_Uuk2024",
@@ -8450,7 +10576,11 @@
 				"llm",
 				"foundation",
 				"multi-modal"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Implement kyc screenings for validation systems",
+				"phase-3": "Enforce kyc screenings in production systems"
+			}
 		},
 		{
 			"id": "A1030_Uuk2024",
@@ -8464,7 +10594,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Apply pre-deployment risk assessments to validation results",
+				"phase-3": "Execute continuous pre-deployment risk assessments of deployed system"
+			}
 		},
 		{
 			"id": "A1031_Uuk2024",
@@ -8477,7 +10611,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Conduct initial pre-development risk assessments during project planning"
+			}
 		},
 		{
 			"id": "A1032_Uuk2024",
@@ -8490,7 +10627,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Define pre-registration of large training runs requirements and templates"
+			}
 		},
 		{
 			"id": "A1033_Uuk2024",
@@ -8506,7 +10646,11 @@
 				"llm",
 				"foundation",
 				"multi-modal"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Test and refine prohibiting high-stakes applications during validation",
+				"phase-3": "Follow prohibiting high-stakes applications for all operational activities"
+			}
 		},
 		{
 			"id": "A1034_Uuk2024",
@@ -8521,7 +10665,12 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Design risk-focused governance structures framework for training data and model design review",
+				"phase-2": "Execute risk-focused governance structures on validation cohorts and model outputs",
+				"phase-3": "Perform scheduled risk-focused governance structures on production system and outcomes"
+			}
 		},
 		{
 			"id": "A1035_Uuk2024",
@@ -8535,7 +10684,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Perform safety drills on prospective validation data",
+				"phase-3": "Conduct ongoing safety drills on live system performance"
+			}
 		},
 		{
 			"id": "A1036_Uuk2024",
@@ -8548,7 +10701,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Produce regular safety incident reports and security information sharing for stakeholders"
+			}
 		},
 		{
 			"id": "A1038_Uuk2024",
@@ -8561,7 +10717,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Apply safety vs. capabilities investments in live clinical deployment"
+			}
 		},
 		{
 			"id": "A1039_Uuk2024",
@@ -8574,7 +10733,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-3": "Enhance sharing safety cases through continuous improvement"
+			}
 		},
 		{
 			"id": "A1040_Uuk2024",
@@ -8589,7 +10751,12 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Design third party pre-deployment model audits framework for training data and model design review",
+				"phase-2": "Execute third party pre-deployment model audits on validation cohorts and model outputs",
+				"phase-3": "Perform scheduled third party pre-deployment model audits on production system and outcomes"
+			}
 		},
 		{
 			"id": "A1042_Uuk2024",
@@ -8602,7 +10769,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-1": "Plan unlearning techniques approach during project design phase"
+			}
 		},
 		{
 			"id": "A1043_Uuk2024",
@@ -8615,7 +10785,10 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Apply vetted researcher access to validation results"
+			}
 		},
 		{
 			"id": "A1044_Uuk2024",
@@ -8629,7 +10802,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Generate whistleblower protections summarizing validation outcomes",
+				"phase-3": "Produce regular whistleblower protections for stakeholders"
+			}
 		},
 		{
 			"id": "A1045_Uuk2024",
@@ -8643,7 +10820,11 @@
 			],
 			"techTypes": [
 				"all"
-			]
+			],
+			"implementationNotes": {
+				"phase-2": "Deploy advanced information security in validation environment",
+				"phase-3": "Maintain advanced information security in production environment"
+			}
 		}
 	]
 }

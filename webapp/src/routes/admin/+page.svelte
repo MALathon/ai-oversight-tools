@@ -2578,6 +2578,30 @@
 							{/if}
 						</div>
 					</div>
+					<div class="form-group">
+						<label>Implementation Notes by Phase</label>
+						<span class="field-hint">Protocol-ready text for each applicable phase</span>
+						<div class="impl-notes-group">
+							{#each phases as phase}
+								{#if !editingEntity.phases?.length || editingEntity.phases?.includes(phase.id)}
+									<div class="impl-note-item">
+										<label class="impl-note-label">{phase.name}</label>
+										<textarea
+											rows="2"
+											placeholder="Implementation guidance for {phase.name}..."
+											value={editingEntity.implementationNotes?.[phase.id] || ''}
+											oninput={(e) => {
+												if (!editingEntity.implementationNotes) {
+													editingEntity.implementationNotes = {};
+												}
+												editingEntity.implementationNotes[phase.id] = e.currentTarget.value;
+											}}
+										></textarea>
+									</div>
+								{/if}
+							{/each}
+						</div>
+					</div>
 				{/if}
 
 				<!-- Connections Section (for existing entities) -->
@@ -4850,6 +4874,34 @@
 
 	.checkbox-label input {
 		width: auto;
+	}
+
+	.impl-notes-group {
+		display: flex;
+		flex-direction: column;
+		gap: 0.75rem;
+		margin-top: 0.5rem;
+	}
+
+	.impl-note-item {
+		display: flex;
+		flex-direction: column;
+		gap: 0.25rem;
+	}
+
+	.impl-note-label {
+		font-size: 0.75rem;
+		font-weight: 500;
+		color: #94a3b8;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+	}
+
+	.impl-notes-group textarea {
+		font-size: 0.8125rem;
+		line-height: 1.4;
+		resize: vertical;
+		min-height: 50px;
 	}
 
 	.guidance-input {
