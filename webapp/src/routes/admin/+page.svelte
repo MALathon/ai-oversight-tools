@@ -1360,6 +1360,15 @@
 				<button class:active={currentView === 'trace'} onclick={() => currentView = 'trace'}>Trace</button>
 				<button class:active={currentView === 'graph'} onclick={() => currentView = 'graph'}>Graph</button>
 			</div>
+			<div class="add-entity-dropdown">
+				<button class="btn add-entity-btn">+ Add</button>
+				<div class="add-dropdown-menu">
+					<button onclick={() => { entityType = 'questions'; createNewEntity(); }}>Question</button>
+					<button onclick={() => { entityType = 'risks'; createNewEntity(); }}>Risk</button>
+					<button onclick={() => { entityType = 'regulations'; createNewEntity(); }}>Regulation</button>
+					<button onclick={() => { entityType = 'controls'; createNewEntity(); }}>Control</button>
+				</div>
+			</div>
 		</div>
 		<div class="header-right">
 			{#if hasLocalChanges}
@@ -2669,6 +2678,55 @@
 
 	.view-tabs button:hover { color: #e2e8f0; }
 	.view-tabs button.active { background: #60a5fa; color: #0f172a; }
+
+	.add-entity-dropdown {
+		position: relative;
+	}
+
+	.add-entity-btn {
+		background: #22c55e !important;
+		color: white !important;
+	}
+
+	.add-entity-btn:hover {
+		background: #16a34a !important;
+	}
+
+	.add-dropdown-menu {
+		display: none;
+		position: absolute;
+		top: 100%;
+		left: 0;
+		background: #1e293b;
+		border: 1px solid #334155;
+		border-radius: 0.375rem;
+		padding: 0.25rem;
+		min-width: 120px;
+		z-index: 100;
+		box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+	}
+
+	.add-entity-dropdown:hover .add-dropdown-menu,
+	.add-entity-dropdown:focus-within .add-dropdown-menu {
+		display: block;
+	}
+
+	.add-dropdown-menu button {
+		display: block;
+		width: 100%;
+		padding: 0.5rem 0.75rem;
+		background: transparent;
+		border: none;
+		color: #e2e8f0;
+		text-align: left;
+		font-size: 0.8125rem;
+		cursor: pointer;
+		border-radius: 0.25rem;
+	}
+
+	.add-dropdown-menu button:hover {
+		background: #334155;
+	}
 
 	/* Matrix View */
 	.matrix-toolbar {
