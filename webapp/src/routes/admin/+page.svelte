@@ -4335,9 +4335,21 @@
 
 	.trace-canvas {
 		flex: 1;
+		overflow: hidden;
+		background: #0f172a;
+		display: flex;
+		flex-direction: row;
+	}
+
+	.trace-canvas > .trace-placeholder {
+		flex: 1;
+		padding: 1.5rem;
+	}
+
+	.trace-canvas > .trace-flow {
+		flex: 1;
 		overflow: auto;
 		padding: 1.5rem;
-		background: #0f172a;
 	}
 
 	.trace-placeholder {
