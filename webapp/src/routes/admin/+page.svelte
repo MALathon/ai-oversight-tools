@@ -841,13 +841,19 @@
 	});
 
 	// Filtered controls for graph view (by phase and tech type)
+	// Empty phases array = applies to all phases
+	// Empty techTypes or includes 'all' = applies to all tech types
 	let graphFilteredControls = $derived.by(() => {
 		let filtered = allControls;
 		if (selectedPhase !== 'all') {
-			filtered = filtered.filter(c => c.phases?.includes(selectedPhase));
+			filtered = filtered.filter(c =>
+				!c.phases || c.phases.length === 0 || c.phases.includes(selectedPhase)
+			);
 		}
 		if (selectedTechType !== 'all') {
-			filtered = filtered.filter(c => c.techTypes?.includes('all') || c.techTypes?.includes(selectedTechType));
+			filtered = filtered.filter(c =>
+				!c.techTypes || c.techTypes.length === 0 || c.techTypes.includes('all') || c.techTypes.includes(selectedTechType)
+			);
 		}
 		return filtered;
 	});
@@ -977,14 +983,25 @@
 			}
 		}
 
-		// For controls: add other controls in same subcategory
+		// For controls: add parent subcategory and sibling controls
 		if (selectedType === 'control') {
 			const selectedCtrl = allControls.find(c => c.id === selectedNode.id);
 			if (selectedCtrl?.subcategoryId) {
+				// Add parent subcategory
+				connected.add(`subcategory:${selectedCtrl.subcategoryId}`);
+				// Add sibling controls
 				const siblingControls = allControls.filter(c => c.subcategoryId === selectedCtrl.subcategoryId);
 				for (const ctrl of siblingControls) {
 					connected.add(`control:${ctrl.id}`);
 				}
+			}
+		}
+
+		// For subcategories: add all child controls
+		if (selectedType === 'subcategory') {
+			const childControls = allControls.filter(c => c.subcategoryId === selectedNode.id);
+			for (const ctrl of childControls) {
+				connected.add(`control:${ctrl.id}`);
 			}
 		}
 
