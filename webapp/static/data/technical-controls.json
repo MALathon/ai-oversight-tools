@@ -1377,19 +1377,6 @@
       ]
     },
     {
-      "id": "A0085_Future of Life Institute2024",
-      "name": "AI incident reporting",
-      "description": "Does your organization report AI incidents, adverse events, and near-misses related to frontier AI models to the appropriate government?",
-      "source": "Future of Life Institute2024",
-      "subcategoryId": "incident-reporting-4.3",
-      "phases": [
-        "phase-3"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
       "id": "A0086_Future of Life Institute2024",
       "name": "AI Safety Team",
       "description": "Does your organization have a safety team? If yes, please provide the team name, a URL to the team\u2019s website (if applicable), the team size (defined as FTE technical staff), and briefly describe its mission.",
@@ -1419,41 +1406,11 @@
       ]
     },
     {
-      "id": "A0088_Future of Life Institute2024",
-      "name": "Anonymous Reporting",
-      "description": "Does your company facilitate a verifiably anonymous process for current and former employees to raise risk-related concerns to the company\u2019s board, to regulators, and to an appropriate independent organization with relevant expertise?",
-      "source": "Future of Life Institute2024",
-      "subcategoryId": "whistleblower-1.4",
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
       "id": "A0089_Future of Life Institute2024",
       "name": "Board of directors",
       "description": "Information about board independence; any non-standard safety-related powers; whether it has a mandate to prioritize safety over profits.",
       "source": "Future of Life Institute2024",
       "subcategoryId": "board-oversight-1.1",
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
-      "id": "A0090_Future of Life Institute2024",
-      "name": "BOD Financial Stake in Company",
-      "description": "Do members of the board of directors hold a financial stake in the company?",
-      "source": "Future of Life Institute2024",
-      "subcategoryId": "conflict-interest-1.3",
       "phases": [
         "phase-1",
         "phase-2",
@@ -1479,107 +1436,6 @@
       ]
     },
     {
-      "id": "A0092_Future of Life Institute2024",
-      "name": "BOD regular crisis training",
-      "description": "Does the BOD engage in regular crisis response training?",
-      "source": "Future of Life Institute2024",
-      "subcategoryId": "board-oversight-1.1",
-      "phases": [
-        "phase-2",
-        "phase-3"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
-      "id": "A0093_Future of Life Institute2024",
-      "name": "Bug bounties for model vulnerabilities",
-      "description": "Any programs offering financial rewards for flagging model vulnerabilities or dangerous use-cases.",
-      "source": "Future of Life Institute2024",
-      "subcategoryId": "testing-auditing-3.1",
-      "phases": [
-        "phase-2",
-        "phase-3"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
-      "id": "A0094_Future of Life Institute2024",
-      "name": "Carbon emission analyses and offsets",
-      "description": "Information about carbon emission analyses and offsets.",
-      "source": "Future of Life Institute2024",
-      "subcategoryId": "environmental-1.6",
-      "phases": [
-        "phase-2",
-        "phase-3"
-      ],
-      "techTypes": [
-        "llm",
-        "foundation",
-        "multi-modal"
-      ]
-    },
-    {
-      "id": "A0095_Future of Life Institute2024",
-      "name": "Carbon footprint assessment",
-      "description": "The development and deployment of the largest AI models use vast amounts of energy and resources. Does your organization rigorously assess its carbon footprint?",
-      "source": "Future of Life Institute2024",
-      "subcategoryId": "environmental-1.6",
-      "phases": [
-        "phase-3"
-      ],
-      "techTypes": [
-        "llm",
-        "foundation",
-        "multi-modal"
-      ]
-    },
-    {
-      "id": "A0096_Future of Life Institute2024",
-      "name": "Chief Information Security Officer (CISO)",
-      "description": "Does your firm's leadership team feature a chief information security officer (CISO)?",
-      "source": "Future of Life Institute2024",
-      "subcategoryId": "board-oversight-1.1",
-      "phases": [
-        "phase-2",
-        "phase-3"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
-      "id": "A0097_Future of Life Institute2024",
-      "name": "Commitments related to internal governance mechanisms to ensure effective implementation of AI safety frameworks",
-      "description": "",
-      "source": "Future of Life Institute2024",
-      "subcategoryId": "governance-disclosure-4.4",
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
-      "id": "A0098_Future of Life Institute2024",
-      "name": "Commitments to involve external stakeholders in overseeing implementation of AI safety frameworks",
-      "description": "",
-      "source": "Future of Life Institute2024",
-      "subcategoryId": "governance-disclosure-4.4",
-      "phases": [
-        "phase-3"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
       "id": "A0099_Future of Life Institute2024",
       "name": "Company structure",
       "description": "Information that indicates whether the structure of the firm would allow it to prioritize safety in critical situations or whether shareholder pressure could drive it to deploy capable but dangerous systems.",
@@ -1587,47 +1443,6 @@
       "subcategoryId": "board-oversight-1.1",
       "phases": [
         "phase-3"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
-      "id": "A0100_Future of Life Institute2024",
-      "name": "Compliance certification with ISO, SOC, HIPAA",
-      "description": "",
-      "source": "Future of Life Institute2024",
-      "subcategoryId": "infrastructure-security-2.1",
-      "phases": [
-        "phase-2",
-        "phase-3"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
-      "id": "A0101_Future of Life Institute2024",
-      "name": "Compliance to public commitments",
-      "description": "Voluntary commitments given by firms and any evidence of noncompliance.",
-      "source": "Future of Life Institute2024",
-      "subcategoryId": "governance-disclosure-4.4",
-      "phases": [
-        "phase-2",
-        "phase-3"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
-      "id": "A0102_Future of Life Institute2024",
-      "name": "Compliance with Robots.txt Standards",
-      "description": "Does your organization abide by industry standards regarding robots.txt files, which allow websites to opt out of data collection?",
-      "source": "Future of Life Institute2024",
-      "subcategoryId": "data-governance-3.2",
-      "phases": [
-        "phase-1"
       ],
       "techTypes": [
         "all"
@@ -1676,51 +1491,6 @@
       ]
     },
     {
-      "id": "A0106_Future of Life Institute2024",
-      "name": "Cyber Threat Intelligence Sharing",
-      "description": "Does your organization share cyber threat intelligence information with the appropriate government(s) and other leading AI firms?",
-      "source": "Future of Life Institute2024",
-      "subcategoryId": "incident-reporting-4.3",
-      "phases": [
-        "phase-2",
-        "phase-3"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
-      "id": "A0107_Future of Life Institute2024",
-      "name": "Data crawling practices",
-      "description": "Public information related to crawling practices.",
-      "source": "Future of Life Institute2024",
-      "subcategoryId": "data-governance-3.2",
-      "phases": [
-        "phase-2",
-        "phase-3"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
-      "id": "A0108_Future of Life Institute2024",
-      "name": "Deepfake creation policy",
-      "description": "Can individuals use your firm\u2019s AI systems to create deepfakes (i.e., synthetic audio or visual representations) of a specific individual?",
-      "source": "Future of Life Institute2024",
-      "subcategoryId": "content-safety-2.4",
-      "phases": [
-        "phase-2",
-        "phase-3"
-      ],
-      "techTypes": [
-        "llm",
-        "generative-non-llm",
-        "multi-modal",
-        "foundation"
-      ]
-    },
-    {
       "id": "A0109_Future of Life Institute2024",
       "name": "Early Warning Evaluations for Catastrophic Risks",
       "description": "Does your organization evaluate models during training for early warning signs of capabilities related to catastrophic risks to ensure risk thresholds are not exceeded? Please describe the regularity and scope of these evaluations and specify whether models are specifically fine-tuned to elicit the capabilities in question.",
@@ -1766,19 +1536,6 @@
       ]
     },
     {
-      "id": "A0112_Future of Life Institute2024",
-      "name": "Financial incentives",
-      "description": "Financial incentives of leadership; whether it has a mandate to prioritize safety over profits.",
-      "source": "Future of Life Institute2024",
-      "subcategoryId": "conflict-interest-1.3",
-      "phases": [
-        "phase-3"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
       "id": "A0113_Future of Life Institute2024",
       "name": "Fine-Tuning Access Threshold",
       "description": "Has your firm set a risk or capabilities threshold beyond which access to model fine-tuning should be restricted to prevent harm to the public? If yes, please elaborate on the threshold.",
@@ -1808,38 +1565,6 @@
       ]
     },
     {
-      "id": "A0115_Future of Life Institute2024",
-      "name": "Fundamental Rights Impact Assessments",
-      "description": "Is your organization conducting fundamental rights impact assessments that seek input from a diverse group of external stakeholders who are impacted by your organization\u2019s AI systems?",
-      "source": "Future of Life Institute2024",
-      "subcategoryId": "societal-impact-1.7",
-      "phases": [
-        "phase-2",
-        "phase-3"
-      ],
-      "techTypes": [
-        "predictive",
-        "classification",
-        "recommendation",
-        "computer-vision",
-        "supervised-ml"
-      ]
-    },
-    {
-      "id": "A0116_Future of Life Institute2024",
-      "name": "Government access to AI systems",
-      "description": "Is the firm proactively granting government officials free access to its most capable systems so the government can better understand what the technology is capable of?",
-      "source": "Future of Life Institute2024",
-      "subcategoryId": "third-party-access-4.5",
-      "phases": [
-        "phase-2",
-        "phase-3"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
       "id": "A0117_Future of Life Institute2024",
       "name": "Harmful Data Removal from Training Sets",
       "description": "When training large models, does your organization remove data that contains information related to dangerous capabilities or harmful outcomes from the training set? If yes, please select the categories of data that are removed. Detailed information about the development, acquisition, or dispersion of CBRN weapons Instructional content for conducting cyberattacks Hateful or discriminatory content Advice or encouragement for self-harm Graphic violent content Graphic sexual content Personally Identifiable Information (PII) Detailed information about bomb-making or other terrorism-enabling tactics",
@@ -1854,19 +1579,6 @@
       ]
     },
     {
-      "id": "A0118_Future of Life Institute2024",
-      "name": "Hazardous Knowledge Unlearning",
-      "description": "Has your organization removed hazardous knowledge from its flagship model via unlearning techniques before deployment?",
-      "source": "Future of Life Institute2024",
-      "subcategoryId": "safety-engineering-2.3",
-      "phases": [
-        "phase-3"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
       "id": "A0119_Future of Life Institute2024",
       "name": "Implementation of cybersecurity frameworks",
       "description": "AGI labs should comply with information security standards (e.g. ISO/IEC 27001 or NIST Cybersecurity Framework). These standards need to be tailored to an AGI context.",
@@ -1874,19 +1586,6 @@
       "subcategoryId": "risk-management-1.2",
       "phases": [
         "phase-2",
-        "phase-3"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
-      "id": "A0120_Future of Life Institute2024",
-      "name": "Independent Delphi Risk Assessments",
-      "description": "Is your organization collaborating with independent experts to conduct full Delphi processes to more accurately assess the risks associated with large development or deployment decisions?",
-      "source": "Future of Life Institute2024",
-      "subcategoryId": "risk-management-1.2",
-      "phases": [
         "phase-3"
       ],
       "techTypes": [
@@ -1998,82 +1697,12 @@
       ]
     },
     {
-      "id": "A0128_Future of Life Institute2024",
-      "name": "Monitor user interactions and remove access",
-      "description": "Does your organization monitor user interactions with its most capable AI systems to ban accounts that use the system for harmful or illegal purposes?",
-      "source": "Future of Life Institute2024",
-      "subcategoryId": "post-deployment-3.5",
-      "phases": [
-        "phase-3"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
-      "id": "A0129_Future of Life Institute2024",
-      "name": "Multi-party authorisation for LLM deployment system changes",
-      "description": "Does your organization require multi-party authorization for all changes to systems directly involved in the deployment of large models?",
-      "source": "Future of Life Institute2024",
-      "subcategoryId": "board-oversight-1.1",
-      "phases": [
-        "phase-3"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
-      "id": "A0130_Future of Life Institute2024",
-      "name": "Notify government about large training runs",
-      "description": "Does your organization notify the appropriate government authorities about large upcoming training runs?",
-      "source": "Future of Life Institute2024",
-      "subcategoryId": "risk-disclosure-4.2",
-      "phases": [
-        "phase-2",
-        "phase-3"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
-      "id": "A0131_Future of Life Institute2024",
-      "name": "Offsetting of carbon footprint",
-      "description": "Does your organization fully offset its carbon footprint by donating to projects that capture or reduce carbon emissions?",
-      "source": "Future of Life Institute2024",
-      "subcategoryId": "environmental-1.6",
-      "phases": [
-        "phase-2",
-        "phase-3"
-      ],
-      "techTypes": [
-        "llm",
-        "foundation",
-        "multi-modal"
-      ]
-    },
-    {
       "id": "A0132_Future of Life Institute2024",
       "name": "Ongoing model risk assessments",
       "description": "Is your organization committed to regularly repeating risk assessments for its most capable models to account for progress in post-deployment model enhancements (e.g., scaffolding programs, tool use, prompt engineering)? If yes, please comment on the frequency and scope of these repeated model-specific risk assessments.",
       "source": "Future of Life Institute2024",
       "subcategoryId": "risk-management-1.2",
       "phases": [
-        "phase-3"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
-      "id": "A0133_Future of Life Institute2024",
-      "name": "Partnerships",
-      "description": "Any partnerships that can significantly shape company strategy.",
-      "source": "Future of Life Institute2024",
-      "subcategoryId": "board-oversight-1.1",
-      "phases": [
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -2177,33 +1806,6 @@
       ]
     },
     {
-      "id": "A0141_Future of Life Institute2024",
-      "name": "Pre-training risk disclosure",
-      "description": "Does your organization share the results of model-specific pre-training risk assessments with the appropriate government authorities before launching large training runs?",
-      "source": "Future of Life Institute2024",
-      "subcategoryId": "risk-disclosure-4.2",
-      "phases": [
-        "phase-2",
-        "phase-3"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
-      "id": "A0142_Future of Life Institute2024",
-      "name": "Privacy of user inputs",
-      "description": "We report whether firms use user-interaction data to improve their services.",
-      "source": "Future of Life Institute2024",
-      "subcategoryId": "data-governance-3.2",
-      "phases": [
-        "phase-3"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
       "id": "A0143_Future of Life Institute2024",
       "name": "Protections that guard critical decisions against stakeholder pressure",
       "description": "Is your firm's governance structure set up in a way that would allow its leadership to prioritize safety in critical situations even if such a decision runs counter to the profit incentive (e.g., choosing not to deploy very capable yet critically dangerous AI systems)? Are there any protections that guard such decisions against shareholder pressure (e.g., in the form of lawsuits)? Are shareholders briefed that such situations might arise in the future? Please describe how your firm prioritizes safety (e.g., relevant policies, legal structure, etc.).",
@@ -2291,69 +1893,12 @@
       ]
     },
     {
-      "id": "A0149_Future of Life Institute2024",
-      "name": "Safety evaluation transparency",
-      "description": "We highlight the main sources of information about content and results of the safety evaluations.",
-      "source": "Future of Life Institute2024",
-      "subcategoryId": "risk-disclosure-4.2",
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
       "id": "A0150_Future of Life Institute2024",
       "name": "Safety research",
       "description": "We report whether the company seriously engages in research dedicated to ensuring the safety and control/alignment of ever more advanced future AI models. We report the amount of publications and research directions.",
       "source": "Future of Life Institute2024",
       "subcategoryId": "safety-frameworks-1.5",
       "phases": [
-        "phase-3"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
-      "id": "A0151_Future of Life Institute2024",
-      "name": "Security breach disclosure",
-      "description": "Does your organization disclose security breaches to the appropriate government(s)? Does this policy include reporting of near-misses?",
-      "source": "Future of Life Institute2024",
-      "subcategoryId": "incident-reporting-4.3",
-      "phases": [
-        "phase-2",
-        "phase-3"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
-      "id": "A0152_Future of Life Institute2024",
-      "name": "Security breach disclosure",
-      "description": "Does your organization disclose security breaches to the appropriate government(s)? Does this policy include reporting of near-misses?",
-      "source": "Future of Life Institute2024",
-      "subcategoryId": "incident-reporting-4.3",
-      "phases": [
-        "phase-2",
-        "phase-3"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
-      "id": "A0153_Future of Life Institute2024",
-      "name": "Senior executive (c-level) financial stake in company",
-      "description": "Does any senior executive (c-level) within your firm hold a financial stake in the company?",
-      "source": "Future of Life Institute2024",
-      "subcategoryId": "conflict-interest-1.3",
-      "phases": [
-        "phase-2",
         "phase-3"
       ],
       "techTypes": [
@@ -2387,109 +1932,11 @@
       ]
     },
     {
-      "id": "A0157_Future of Life Institute2024",
-      "name": "Uplift trials",
-      "description": "Information about human-participant trials conducted to assess the marginal risks of model-access.",
-      "source": "Future of Life Institute2024",
-      "subcategoryId": "testing-auditing-3.1",
-      "phases": [
-        "phase-2",
-        "phase-3"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
-      "id": "A0158_Future of Life Institute2024",
-      "name": "Use of copyrighted data in training",
-      "description": "Many artists, writers, programmers, journalists, photographers, musicians, and filmmakers complain that AI models are trained on their copyrighted works without consent, compensation, or attribution, offering rival services that harm their ability to make a living. Does your organization engage in such practices?",
-      "source": "Future of Life Institute2024",
-      "subcategoryId": "data-governance-3.2",
-      "phases": [
-        "phase-2",
-        "phase-3"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
-      "id": "A0159_Future of Life Institute2024",
-      "name": "User data usage for training",
-      "description": "When using the default settings of your organization\u2019s most capable AI chatbot, is the data that users submit as input to the system used to train AI models?",
-      "source": "Future of Life Institute2024",
-      "subcategoryId": "data-governance-3.2",
-      "phases": [
-        "phase-3"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
-      "id": "A0160_Future of Life Institute2024",
-      "name": "User Interaction Monitoring & Response Restrictions",
-      "description": "Does your organization monitor user interactions with its most capable AI models and restrict answers to specific prompts to avoid model interactions that support harmful or criminal activities?",
-      "source": "Future of Life Institute2024",
-      "subcategoryId": "post-deployment-3.5",
-      "phases": [
-        "phase-3"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
-      "id": "A0161_Future of Life Institute2024",
-      "name": "Watermarking",
-      "description": "Information regarding integrated watermarking systems.",
-      "source": "Future of Life Institute2024",
-      "subcategoryId": "content-safety-2.4",
-      "phases": [
-        "phase-3"
-      ],
-      "techTypes": [
-        "llm",
-        "generative-non-llm",
-        "multi-modal",
-        "foundation"
-      ]
-    },
-    {
       "id": "A0162_Future of Life Institute2024",
       "name": "Whistle-blower protection and non-disparagement agreements",
       "description": "Public information about whistleblower protection policies and uses of strict non-disparagement agreements.",
       "source": "Future of Life Institute2024",
       "subcategoryId": "whistleblower-1.4",
-      "phases": [
-        "phase-2",
-        "phase-3"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
-      "id": "A0163_Future of Life Institute2024",
-      "name": "Windfall Plan",
-      "description": "Rapid advances in AI could lead to immense power concentration. Has your organization made any preparations for future scenarios in which the firm experiences extreme windfall profits? Has the organization developed a plan for redistributing vast resources to all of humanity?",
-      "source": "Future of Life Institute2024",
-      "subcategoryId": "conflict-interest-1.3",
-      "phases": [
-        "phase-2",
-        "phase-3"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
-      "id": "A0164_Future of Life Institute2024",
-      "name": "Chief Risk Officer (CRO)",
-      "description": "",
-      "source": "Future of Life Institute2024",
-      "subcategoryId": "board-oversight-1.1",
       "phases": [
         "phase-2",
         "phase-3"
@@ -2506,47 +1953,6 @@
       "subcategoryId": "testing-auditing-3.1",
       "phases": [
         "phase-2",
-        "phase-3"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
-      "id": "A0166_Future of Life Institute2024",
-      "name": "Internal red teaming exercises for cybersecurity infrastructure",
-      "description": "",
-      "source": "Future of Life Institute2024",
-      "subcategoryId": "testing-auditing-3.1",
-      "phases": [
-        "phase-2",
-        "phase-3"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
-      "id": "A0167_Future of Life Institute2024",
-      "name": "Military, warfare & intelligence applications:",
-      "description": "Any information related to engagements with militaries and intelligence agencies.",
-      "source": "Future of Life Institute2024",
-      "subcategoryId": "governance-disclosure-4.4",
-      "phases": [
-        "phase-2",
-        "phase-3"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
-      "id": "A0168_Future of Life Institute2024",
-      "name": "Mission statement",
-      "description": "Does the company\u2019s mission statement explicitly prioritizes safety?",
-      "source": "Future of Life Institute2024",
-      "subcategoryId": "governance-disclosure-4.4",
-      "phases": [
         "phase-3"
       ],
       "techTypes": [
@@ -2708,20 +2114,6 @@
       ]
     },
     {
-      "id": "A0182_Schuett2023",
-      "name": "Gradual scaling",
-      "description": "AGI labs should only gradually increase the amount of compute used for their largest training runs.",
-      "source": "Schuett2023",
-      "subcategoryId": "safety-frameworks-1.5",
-      "phases": [
-        "phase-2",
-        "phase-3"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
       "id": "A0183_Schuett2023",
       "name": "Increasing levels of external scrutiny",
       "description": "AGI labs should increase the level of external scrutiny in proportion to the capabilities of their models.",
@@ -2863,19 +2255,6 @@
       ]
     },
     {
-      "id": "A0193_Schuett2023",
-      "name": "Notify a state actor before deployment",
-      "description": "AGI labs should notify appropriate state actors before deploying powerful models.",
-      "source": "Schuett2023",
-      "subcategoryId": "risk-disclosure-4.2",
-      "phases": [
-        "phase-3"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
       "id": "A0194_Schuett2023",
       "name": "Notify affected parties",
       "description": "AGI labs should notify parties who will be negatively affected by a powerful model before deploying it.*",
@@ -2959,20 +2338,6 @@
       ]
     },
     {
-      "id": "A0200_Schuett2023",
-      "name": "Publish alignment strategy",
-      "description": "AGI labs should publish their strategies for ensuring that their systems are safe and aligned.*",
-      "source": "Schuett2023",
-      "subcategoryId": "governance-disclosure-4.4",
-      "phases": [
-        "phase-2",
-        "phase-3"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
       "id": "A0201_Schuett2023",
       "name": "Publish internal risk assessment results",
       "description": "AGI labs should publish the results or summaries of internal risk assessments, unless this would unduly reveal proprietary information or itself produce significant risk. This should include a justification of why the lab is willing to accept remaining risks.*",
@@ -3015,38 +2380,11 @@
       ]
     },
     {
-      "id": "A0204_Schuett2023",
-      "name": "Red teaming",
-      "description": "AGI labs should commission external red teams before deploying powerful models.",
-      "source": "Schuett2023",
-      "subcategoryId": "testing-auditing-3.1",
-      "phases": [
-        "phase-2",
-        "phase-3"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
       "id": "A0205_Schuett2023",
       "name": "Report safety incidents",
       "description": "AGI labs should report accidents and near misses to appropriate state actors and other AGI labs (e.g. via an AI incident database).",
       "source": "Schuett2023",
       "subcategoryId": "incident-reporting-4.3",
-      "phases": [
-        "phase-3"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
-      "id": "A0206_Schuett2023",
-      "name": "Researcher model access",
-      "description": "AGI labs should give independent researchers API access to deployed models.",
-      "source": "Schuett2023",
-      "subcategoryId": "third-party-access-4.5",
       "phases": [
         "phase-3"
       ],
@@ -3075,19 +2413,6 @@
       "description": "A significant fraction of employees of AGI labs should work on enhancing model safety and alignment rather than capabilities.",
       "source": "Schuett2023",
       "subcategoryId": "safety-frameworks-1.5",
-      "phases": [
-        "phase-3"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
-      "id": "A0209_Schuett2023",
-      "name": "Security incident response plan",
-      "description": "AGI labs should have a plan for how they respond to security incidents (e.g. cyberattacks).*",
-      "source": "Schuett2023",
-      "subcategoryId": "incident-response-3.6",
       "phases": [
         "phase-3"
       ],
@@ -3128,36 +2453,6 @@
       "description": "AGI labs should make public statements about how they make high-stakes decisions regarding model development and deployment.*",
       "source": "Schuett2023",
       "subcategoryId": "governance-disclosure-4.4",
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
-      "id": "A0213_Schuett2023",
-      "name": "Third-party governance audits",
-      "description": "AGI labs should commission third-party audits of their governance structures.*",
-      "source": "Schuett2023",
-      "subcategoryId": "testing-auditing-3.1",
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
-      "id": "A0214_Schuett2023",
-      "name": "Third-party model audits",
-      "description": "AGI labs should commission third-party model audits before deploying powerful models.",
-      "source": "Schuett2023",
-      "subcategoryId": "testing-auditing-3.1",
       "phases": [
         "phase-1",
         "phase-2",
@@ -3209,37 +2504,11 @@
       ]
     },
     {
-      "id": "A0218_Schuett2023",
-      "name": "Inter-lab scrutinies",
-      "description": "AGI labs should allow researchers from other labs to scrutinize powerful models before deployment.*",
-      "source": "Schuett2023",
-      "subcategoryId": "third-party-access-4.5",
-      "phases": [
-        "phase-3"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
       "id": "A0219_Schuett2023",
       "name": "Internal deployments = external deployments",
       "description": "AGI labs should treat internal deployments (e.g. using models for writing code) similarly to external deployments. In particular, they should perform a pre-deployment risk assessment.",
       "source": "Schuett2023",
       "subcategoryId": "staged-deployment-3.4",
-      "phases": [
-        "phase-3"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
-      "id": "A0220_Schuett2023",
-      "name": "Notify other labs",
-      "description": "AGI labs should notify other labs before deploying powerful models.*",
-      "source": "Schuett2023",
-      "subcategoryId": "risk-disclosure-4.2",
       "phases": [
         "phase-3"
       ],
@@ -3305,20 +2574,6 @@
       ]
     },
     {
-      "id": "A0253_Wiener2024",
-      "name": "Developers \u201cshall consider\u201d guidance from US AISI and NIST and other reputable standard-setting organizations",
-      "description": "",
-      "source": "Wiener2024",
-      "subcategoryId": "risk-management-1.2",
-      "phases": [
-        "phase-2",
-        "phase-3"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
       "id": "A0254_Wiener2024",
       "name": "Implement a written safe and security plan (SSP)",
       "description": "This bill would enact the Safe and Secure Innovation for Frontier Artificial Intelligence Models Act to, among other things, require that a developer, before beginning to initially train a covered model, as defined, comply with various requirements, including implementing the capability to promptly enact a full shutdown, as defined, and implement a written and separate safety and security protocol, as specified. (3) Implement a written and separate safety and security protocol that does all of the following: (A) Specifies protections and procedures that, if successfully implemented, would successfully comply with the developer\u2019s duty to take reasonable care to avoid producing a covered model or covered model derivative that poses an unreasonable risk of causing or materially enabling a critical harm. (B) States compliance requirements in an objective manner and with sufficient detail and specificity to allow the developer or a third party to readily ascertain whether the requirements of the safety and security protocol have been followed. (C) Identifies a testing procedure, which takes safeguards into account as appropriate, that takes reasonable care to evaluate if both of the following are true: (i) A covered model poses an unreasonable risk of causing or enabling a critical harm. (ii) Covered model derivatives pose an unreasonable risk of causing or enabling a critical harm. (D) Describes in detail how the testing procedure assesses the risks associated with post-training modifications.",
@@ -3326,75 +2581,6 @@
       "subcategoryId": "safety-frameworks-1.5",
       "phases": [
         "phase-1",
-        "phase-2",
-        "phase-3"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
-      "id": "A0255_Wiener2024",
-      "name": "Publish a redacted copy of SSP",
-      "description": "",
-      "source": "Wiener2024",
-      "subcategoryId": "governance-disclosure-4.4",
-      "phases": [
-        "phase-2",
-        "phase-3"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
-      "id": "A0256_Wiener2024",
-      "name": "Publish results of safety tests",
-      "description": "",
-      "source": "Wiener2024",
-      "subcategoryId": "documentation-4.1",
-      "phases": [
-        "phase-2",
-        "phase-3"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
-      "id": "A0257_Wiener2024",
-      "name": "Report new model deployments to the AG within 30 days",
-      "description": "",
-      "source": "Wiener2024",
-      "subcategoryId": "risk-disclosure-4.2",
-      "phases": [
-        "phase-3"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
-      "id": "A0258_Wiener2024",
-      "name": "Yearly re-evaluation of safety procedures",
-      "description": "",
-      "source": "Wiener2024",
-      "subcategoryId": "risk-management-1.2",
-      "phases": [
-        "phase-2",
-        "phase-3"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
-      "id": "A0259_Wiener2024",
-      "name": "Publish assessment of the risk of catastrophic harms from the model",
-      "description": "",
-      "source": "Wiener2024",
-      "subcategoryId": "risk-disclosure-4.2",
-      "phases": [
         "phase-2",
         "phase-3"
       ],
@@ -3822,35 +3008,6 @@
       "source": "Campos2025",
       "subcategoryId": "risk-management-1.2",
       "phases": [
-        "phase-2",
-        "phase-3"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
-      "id": "A0336_Campos2025",
-      "name": "Speak-Up Culture",
-      "description": "A key feature of a speak-up culture is whistleblowing - processes for anonymously reporting issues.",
-      "source": "Campos2025",
-      "subcategoryId": "whistleblower-1.4",
-      "phases": [
-        "phase-2",
-        "phase-3"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
-      "id": "A0338_Campos2025",
-      "name": "Board Level Oversight",
-      "description": "Board-level oversight is necessary to provide checks and balances to senior management.",
-      "source": "Campos2025",
-      "subcategoryId": "board-oversight-1.1",
-      "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -4897,52 +4054,11 @@
       ]
     },
     {
-      "id": "A0459_NIST2024",
-      "name": "Lineage Understanding Evaluation",
-      "description": "Evaluate whether GAI operators and end-users can accurately understand content lineage and origin.",
-      "source": "NIST2024",
-      "subcategoryId": "testing-auditing-3.1",
-      "phases": [
-        "phase-2"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
-      "id": "A0460_NIST2024",
-      "name": "Transparency Training Adaptation",
-      "description": "Adapt existing training programs to include modules on digital content transparency",
-      "source": "NIST2024",
-      "subcategoryId": "board-oversight-1.1",
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
       "id": "A0461_NIST2024",
       "name": "Risk Management Certification",
       "description": "Develop certification programs that test proficiency in managing GAI risks and interpreting content provenance, relevant to specific industry and context.",
       "source": "NIST2024",
       "subcategoryId": "board-oversight-1.1",
-      "phases": [
-        "phase-2"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
-      "id": "A0462_NIST2024",
-      "name": "Proficiency Test Delineation",
-      "description": "Delineate human proficiency tests from tests of GAI capabilities.",
-      "source": "NIST2024",
-      "subcategoryId": "testing-auditing-3.1",
       "phases": [
         "phase-2"
       ],
@@ -5058,19 +4174,6 @@
       ]
     },
     {
-      "id": "A0471_NIST2024",
-      "name": "Fine-Tuned Model Re-evaluation",
-      "description": "Re-evaluate models that were fine-tuned or enhanced on top of third-party models.",
-      "source": "NIST2024",
-      "subcategoryId": "testing-auditing-3.1",
-      "phases": [
-        "phase-2"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
       "id": "A0472_NIST2024",
       "name": "Domain Adaptation Risk Assessment",
       "description": "Re-evaluate risks when adapting GAI models to new domains. Additionally, establish warning systems to determine if a GAI system is being used in a new domain where previous assumptions (relating to context of use or mapped risks such as security, and safety) may no longer hold.",
@@ -5159,20 +4262,6 @@
       ]
     },
     {
-      "id": "A0478_NIST2024",
-      "name": "Risk-Based Feedback Prioritization",
-      "description": "Prioritize GAI structured public feedback processes based on risk assessment estimates.",
-      "source": "NIST2024",
-      "subcategoryId": "risk-management-1.2",
-      "phases": [
-        "phase-2",
-        "phase-3"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
       "id": "A0479_NIST2024",
       "name": "Adversarial Role-Playing",
       "description": "Conduct adversarial role-playing exercises, GAI red-teaming, or chaos testing to identify anomalous or unforeseen failure modes.",
@@ -5223,23 +4312,6 @@
       ],
       "techTypes": [
         "all"
-      ]
-    },
-    {
-      "id": "A0483_NIST2024",
-      "name": "Origin Tracing Methods",
-      "description": "Employ methods to trace the origin and modifications of digital content.",
-      "source": "NIST2024",
-      "subcategoryId": "content-safety-2.4",
-      "phases": [
-        "phase-2",
-        "phase-3"
-      ],
-      "techTypes": [
-        "llm",
-        "generative-non-llm",
-        "multi-modal",
-        "foundation"
       ]
     },
     {
@@ -5456,19 +4528,6 @@
       "id": "A0499_NIST2024",
       "name": "Baseline Model Selection",
       "description": "Consider baseline model performance on suites of benchmarks when selecting a model for fine tuning or enhancement with retrieval-augmented generation.",
-      "source": "NIST2024",
-      "subcategoryId": "testing-auditing-3.1",
-      "phases": [
-        "phase-2"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
-      "id": "A0500_NIST2024",
-      "name": "Capability Claims Evaluation",
-      "description": "Evaluate claims of model capabilities using empirically validated methods",
       "source": "NIST2024",
       "subcategoryId": "testing-auditing-3.1",
       "phases": [
@@ -5782,19 +4841,6 @@
       ]
     },
     {
-      "id": "A0523_NIST2024",
-      "name": "Fine-Tuning Security Verification",
-      "description": "Verify fine-tuning does not compromise safety and security controls.",
-      "source": "NIST2024",
-      "subcategoryId": "testing-auditing-3.1",
-      "phases": [
-        "phase-3"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
       "id": "A0524_NIST2024",
       "name": "Security Measure Effectiveness",
       "description": "Regularly assess and verify that security measures remain effective and have not been compromised.",
@@ -5817,19 +4863,6 @@
       "phases": [
         "phase-2",
         "phase-3"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
-      "id": "A0526_NIST2024",
-      "name": "Annotator Instruction Documentation",
-      "description": "Document the instructions given to data annotators or AI red-teamers.",
-      "source": "NIST2024",
-      "subcategoryId": "risk-disclosure-4.2",
-      "phases": [
-        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -5928,19 +4961,6 @@
       ]
     },
     {
-      "id": "A0533_NIST2024",
-      "name": "Data Deduplication Verification",
-      "description": "Verify deduplication of GAI training data samples, particularly regarding synthetic data",
-      "source": "NIST2024",
-      "subcategoryId": "data-governance-3.2",
-      "phases": [
-        "phase-1"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
       "id": "A0534_NIST2024",
       "name": "Bias Benchmark Application",
       "description": "Apply use-case appropriate benchmarks (e.g., Bias Benchmark Questions, Real Hateful or Harmful Prompts, Winogender Schemas15) to quantify systemic bias, stereotyping, denigration, and hateful content in GAI system outputs; Document assumptions and limitations of benchmarks, including any actual or possible training/test data cross contamination, relative to in-context deployment environment.",
@@ -5958,20 +4978,6 @@
       "id": "A0624_Barrett2024",
       "name": "Risk Ownership by Capability",
       "description": "Take responsibility for risk assessment and risk management tasks for which your organization has access to information, capability, or opportunity to develop capability sufficient for constructive action, or that is substantially greater than others in the value chain",
-      "source": "Barrett2024",
-      "subcategoryId": "risk-management-1.2",
-      "phases": [
-        "phase-2",
-        "phase-3"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
-      "id": "A0625_Barrett2024",
-      "name": "Risk-Tolerance Thresholds",
-      "description": "Set risk-tolerance thresholds to prevent unacceptable risks",
       "source": "Barrett2024",
       "subcategoryId": "risk-management-1.2",
       "phases": [
@@ -6321,20 +5327,6 @@
       ]
     },
     {
-      "id": "A0654_Barrett2024",
-      "name": "Document AI Mission & Goals",
-      "description": "The organization\u2019s mission and relevant goals for AI technology are understood and documented.",
-      "source": "Barrett2024",
-      "subcategoryId": "documentation-4.1",
-      "phases": [
-        "phase-2",
-        "phase-3"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
       "id": "A0655_Barrett2024",
       "name": "Business Use",
       "description": "The business value or context of business use has been clearly defined or \u2013 in the case of assessing existing AI systems \u2013 re-evaluated.",
@@ -6342,20 +5334,6 @@
       "subcategoryId": "documentation-4.1",
       "phases": [
         "phase-2"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
-      "id": "A0656_Barrett2024",
-      "name": "Risk Tolerance Thresholds",
-      "description": "Organizational risk tolerances are determined and documented.",
-      "source": "Barrett2024",
-      "subcategoryId": "risk-management-1.2",
-      "phases": [
-        "phase-2",
-        "phase-3"
       ],
       "techTypes": [
         "all"
@@ -6579,19 +5557,6 @@
       ]
     },
     {
-      "id": "A0673_Barrett2024",
-      "name": "Document TEVV Tools & Metrics",
-      "description": "Test sets, metrics, and details about the tools used during TEVV are documented.",
-      "source": "Barrett2024",
-      "subcategoryId": "documentation-4.1",
-      "phases": [
-        "phase-2"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
       "id": "A0674_Barrett2024",
       "name": "Ensure Ethical Human Evaluation",
       "description": "Evaluations involving human subjects meet applicable requirements (including human subject protection) and are representative of the relevant population.",
@@ -6694,19 +5659,6 @@
       "phases": [
         "phase-2",
         "phase-3"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
-      "id": "A0682_Barrett2024",
-      "name": "Evaluate & Document Fairness",
-      "description": "Fairness and bias \u2013 as identified in the Map function \u2013 are evaluated and results are documented.",
-      "source": "Barrett2024",
-      "subcategoryId": "risk-management-1.2",
-      "phases": [
-        "phase-2"
       ],
       "techTypes": [
         "all"
@@ -7043,23 +5995,6 @@
       ],
       "techTypes": [
         "all"
-      ]
-    },
-    {
-      "id": "A0711_NIST2024",
-      "name": "Dangerous, Violent, or Hateful Content Mitigation",
-      "description": "Assess safety to physical environments when deploying GAI systems",
-      "source": "NIST2024",
-      "subcategoryId": "societal-impact-1.7",
-      "phases": [
-        "phase-3"
-      ],
-      "techTypes": [
-        "predictive",
-        "classification",
-        "recommendation",
-        "computer-vision",
-        "supervised-ml"
       ]
     },
     {
@@ -8116,19 +7051,6 @@
       ]
     },
     {
-      "id": "A0789_UK Government2023",
-      "name": "Model Evaluation of System Security",
-      "description": "Evaluate models for system security",
-      "source": "UK Government2023",
-      "subcategoryId": "testing-auditing-3.1",
-      "phases": [
-        "phase-2"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
       "id": "A0790_UK Government2023",
       "name": "Response Processes for Evaluation Results",
       "description": "Ensure processes are in place to respond to evaluation results. Evaluations are a necessary input to a responsible capability scaling policy which, depending on the results of the evaluation, would probably require implementation of practices outlined in other sections of this document such as preventing model misuse, information sharing and other risk mitigation measures.",
@@ -8837,20 +7759,6 @@
       ]
     },
     {
-      "id": "A0842_UK Government2023",
-      "name": "Risk Assessment via Recognized Processes",
-      "description": "Assess risk using recognised processes.",
-      "source": "UK Government2023",
-      "subcategoryId": "risk-management-1.2",
-      "phases": [
-        "phase-2",
-        "phase-3"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
       "id": "A0843_UK Government2023",
       "name": "Protective Security Risk Register",
       "description": "Build a protective security risk register to record, in sufficient detail, all the data gathered during this risk management process, ensuring compatibility with existing organisational risk management registers and processes.",
@@ -9228,22 +8136,6 @@
       ]
     },
     {
-      "id": "A0870_UK Government2023",
-      "name": "Interpretability and Explainability Research",
-      "description": "Improving our ability to understand the inner functioning of AI systems and explain their behaviour",
-      "source": "UK Government2023",
-      "subcategoryId": "model-alignment-2.2",
-      "phases": [
-        "phase-2",
-        "phase-3"
-      ],
-      "techTypes": [
-        "llm",
-        "reinforcement-learning",
-        "foundation"
-      ]
-    },
-    {
       "id": "A0871_UK Government2023",
       "name": "Evaluation Research",
       "description": "Improving our ability to assess the capabilities, limitations, and safety- relevant features of AI systems",
@@ -9284,34 +8176,6 @@
         "llm",
         "reinforcement-learning",
         "foundation"
-      ]
-    },
-    {
-      "id": "A0874_UK Government2023",
-      "name": "Bias and discrimination Research",
-      "description": "Improving our ability to address bias and discrimination in AI systems",
-      "source": "UK Government2023",
-      "subcategoryId": "safety-engineering-2.3",
-      "phases": [
-        "phase-2",
-        "phase-3"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
-      "id": "A0875_UK Government2023",
-      "name": "Privacy Research",
-      "description": "Improving our ability to address the privacy risks associated with AI systems",
-      "source": "UK Government2023",
-      "subcategoryId": "infrastructure-security-2.1",
-      "phases": [
-        "phase-2",
-        "phase-3"
-      ],
-      "techTypes": [
-        "all"
       ]
     },
     {
