@@ -28,9 +28,14 @@ export const load: PageLoad = async ({ fetch }) => {
 		}
 	}
 
-	// Flatten subcategories from mitigation categories
-	const subcategories = mitigations.mitigationCategories.flatMap((cat: any) =>
-		cat.strategies.map((s: any) => ({ ...s, categoryId: cat.id, categoryName: cat.name }))
+	// Flatten strategies from mitigation categories (strategies = subcategories)
+	const strategies = mitigations.mitigationCategories.flatMap((cat: any) =>
+		cat.strategies.map((s: any) => ({
+			...s,
+			categoryId: cat.id,
+			categoryName: cat.name,
+			categoryDescription: cat.description
+		}))
 	);
 
 	return {
@@ -41,7 +46,9 @@ export const load: PageLoad = async ({ fetch }) => {
 		modelTypeRelevance: unified.modelTypeToSubdomainRelevance,
 		vulnerabilityMultipliers: unified.vulnerabilityMultipliers,
 		links: traceability.links,
-		subcategories,
+		strategies,
+		mitigationCategories: mitigations.mitigationCategories,
+		defenseLayerDescriptions: mitigations.defenseLayerDescriptions,
 		controls: controls.controls
 	};
 };

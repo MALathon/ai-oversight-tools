@@ -6,8 +6,8 @@
 	// State for answers
 	let answers = $state<Record<string, string | string[]>>({});
 
-	// State for selected controls per risk
-	let selectedControls = $state<Record<string, Set<string>>>({});
+	// State for selected strategies per risk
+	let selectedStrategies = $state<Record<string, Set<string>>>({});
 
 	// Expanded risk cards
 	let expandedRisks = $state<Set<string>>(new Set());
@@ -98,7 +98,7 @@
 		return triggered;
 	});
 
-	// Get triggered risks with available controls
+	// Get triggered risks with available strategies
 	let triggeredRisks = $derived.by(() => {
 		if (!selectedPhase) return [];
 
@@ -110,11 +110,7 @@
 			subdomain: any;
 			domain: any;
 			riskContext: string;
-			subcategories: Array<{
-				subcategory: any;
-				controls: any[];
-			}>;
-			allControls: any[];
+			linkedStrategies: any[];
 		}> = [];
 
 		for (const domain of data.domains) {
@@ -127,41 +123,18 @@
 				// Get risk context (phaseGuidance) - WHY/WHAT the risk is
 				const riskContext = subdomain.phaseGuidance?.[selectedPhase] || '';
 
-				// Find subcategories linked to this risk
-				const riskSubcategoryLinks = mitigationLinks.filter((l: any) => l.from.id === subId);
-				const subcategoriesWithControls = riskSubcategoryLinks.map((link: any) => {
-					const subcategory = data.subcategories.find((s: any) => s.id === link.to.id);
-					if (!subcategory) return null;
+				// Find strategies linked to this risk
+				const riskStrategyLinks = mitigationLinks.filter((l: any) => l.from.id === subId);
+				const linkedStrategies = riskStrategyLinks
+					.map((link: any) => data.strategies.find((s: any) => s.id === link.to.id))
+					.filter(Boolean);
 
-					// Get controls for this subcategory, filtered by phase and tech type
-					let controls = data.controls.filter((c: any) => c.subcategoryId === subcategory.id);
-
-					// Filter by phase
-					controls = controls.filter((c: any) =>
-						!c.phases || c.phases.length === 0 || c.phases.includes(selectedPhase)
-					);
-
-					// Filter by tech type
-					if (selectedModelTypes.length > 0) {
-						controls = controls.filter((c: any) =>
-							!c.techTypes || c.techTypes.includes('all') ||
-							c.techTypes.some((t: string) => selectedModelTypes.includes(t))
-						);
-					}
-
-					return { subcategory, controls };
-				}).filter(Boolean);
-
-				// Flatten all controls for this risk
-				const allControls = subcategoriesWithControls.flatMap((sc: any) => sc.controls);
-
-				if (riskContext || allControls.length > 0) {
+				if (riskContext || linkedStrategies.length > 0) {
 					risks.push({
 						subdomain,
 						domain,
 						riskContext,
-						subcategories: subcategoriesWithControls,
-						allControls
+						linkedStrategies
 					});
 				}
 			}
@@ -188,25 +161,17 @@
 		answers[questionId] = Array.from(newSet);
 	}
 
-	function toggleControl(riskId: string, controlId: string) {
-		if (!selectedControls[riskId]) {
-			selectedControls[riskId] = new Set();
+	function toggleStrategy(riskId: string, strategyId: string) {
+		if (!selectedStrategies[riskId]) {
+			selectedStrategies[riskId] = new Set();
 		}
-		const newSet = new Set(selectedControls[riskId]);
-		if (newSet.has(controlId)) {
-			newSet.delete(controlId);
+		const newSet = new Set(selectedStrategies[riskId]);
+		if (newSet.has(strategyId)) {
+			newSet.delete(strategyId);
 		} else {
-			newSet.add(controlId);
+			newSet.add(strategyId);
 		}
-		selectedControls[riskId] = newSet;
-	}
-
-	function selectAllControls(riskId: string, controls: any[]) {
-		selectedControls[riskId] = new Set(controls.map(c => c.id));
-	}
-
-	function clearAllControls(riskId: string) {
-		selectedControls[riskId] = new Set();
+		selectedStrategies[riskId] = newSet;
 	}
 
 	function toggleRiskExpanded(riskId: string) {
@@ -219,57 +184,91 @@
 		expandedRisks = newSet;
 	}
 
-	// Get selected control count for a risk
+	// Get selected strategy count for a risk
 	function getSelectedCount(riskId: string): number {
-		return selectedControls[riskId]?.size || 0;
+		return selectedStrategies[riskId]?.size || 0;
 	}
 
-	// Total selected controls
-	let totalSelectedControls = $derived(
-		Object.values(selectedControls).reduce((acc, set) => acc + set.size, 0)
+	// Get defense layer coverage for a risk
+	function getDefenseCoverage(riskId: string, linkedStrategies: any[]): { preventive: boolean; detective: boolean; corrective: boolean } {
+		const selected = selectedStrategies[riskId] || new Set();
+		const coverage = { preventive: false, detective: false, corrective: false };
+
+		for (const strategy of linkedStrategies) {
+			if (selected.has(strategy.id)) {
+				const layer = strategy.defenseLayer as keyof typeof coverage;
+				if (layer in coverage) {
+					coverage[layer] = true;
+				}
+			}
+		}
+		return coverage;
+	}
+
+	// Total selected strategies across all risks
+	let totalSelectedStrategies = $derived(
+		Object.values(selectedStrategies).reduce((acc, set) => acc + set.size, 0)
 	);
 
-	// Generate protocol from selected controls
-	function generateProtocol() {
+	// Risks with at least one strategy selected
+	let risksAddressed = $derived(
+		triggeredRisks.filter(r => getSelectedCount(r.subdomain.id) > 0).length
+	);
+
+	// All selected strategies with their risk context for protocol
+	let protocolItems = $derived.by(() => {
+		const items: Array<{
+			risk: any;
+			strategy: any;
+			guidance: string;
+		}> = [];
+
+		for (const risk of triggeredRisks) {
+			const riskSelected = selectedStrategies[risk.subdomain.id] || new Set();
+			for (const strategy of risk.linkedStrategies) {
+				if (riskSelected.has(strategy.id)) {
+					const guidance = strategy.phaseGuidance?.[selectedPhase] || strategy.description;
+					items.push({ risk, strategy, guidance });
+				}
+			}
+		}
+
+		return items;
+	});
+
+	// Group protocol items by category for display
+	let protocolByCategory = $derived.by(() => {
+		const byCategory: Record<string, typeof protocolItems> = {};
+		for (const item of protocolItems) {
+			const catId = item.strategy.categoryId;
+			if (!byCategory[catId]) {
+				byCategory[catId] = [];
+			}
+			byCategory[catId].push(item);
+		}
+		return byCategory;
+	});
+
+	function copyProtocol() {
 		const phaseName = selectedPhase.replace('phase-', 'Phase ');
 		let protocol = `# AI Research Protocol - Risk Mitigation Plan\n\n`;
 		protocol += `**Development Phase:** ${phaseName}\n`;
 		protocol += `**Model Types:** ${selectedModelTypes.join(', ') || 'Not specified'}\n\n`;
 		protocol += `---\n\n`;
 
-		for (const risk of triggeredRisks) {
-			const riskSelectedIds = selectedControls[risk.subdomain.id] || new Set();
-			if (riskSelectedIds.size === 0) continue;
+		for (const [catId, items] of Object.entries(protocolByCategory)) {
+			const catName = items[0]?.strategy.categoryName || catId;
+			protocol += `## ${catName}\n\n`;
 
-			protocol += `## ${risk.subdomain.code}: ${risk.subdomain.shortName}\n`;
-			protocol += `*Domain: ${risk.domain.name}*\n\n`;
-
-			// Risk context
-			if (risk.riskContext) {
-				protocol += `### Risk Context\n`;
-				protocol += `${risk.riskContext}\n\n`;
+			for (const item of items) {
+				protocol += `### ${item.strategy.code} ${item.strategy.name}\n`;
+				protocol += `*Addressing: ${item.risk.subdomain.shortName}*\n\n`;
+				protocol += `${item.guidance}\n\n`;
 			}
-
-			// Selected controls and their implementation notes
-			protocol += `### Mitigation Approach\n\n`;
-
-			const selectedControlObjects = risk.allControls.filter((c: any) => riskSelectedIds.has(c.id));
-
-			for (const control of selectedControlObjects) {
-				const implNote = control.implementationNotes?.[selectedPhase];
-				protocol += `**${control.name}**\n`;
-				if (implNote) {
-					protocol += `${implNote}\n\n`;
-				} else {
-					protocol += `${control.description || 'No implementation guidance available.'}\n\n`;
-				}
-			}
-
-			protocol += `---\n\n`;
 		}
 
-		if (totalSelectedControls === 0) {
-			alert('Please select at least one control measure to generate a protocol.');
+		if (protocolItems.length === 0) {
+			alert('Please select at least one mitigation strategy to generate a protocol.');
 			return;
 		}
 
@@ -279,10 +278,17 @@
 
 	let hasAnswers = $derived(selectedPhase !== '');
 
-	// Risks with at least one control selected
-	let risksAddressed = $derived(
-		triggeredRisks.filter(r => getSelectedCount(r.subdomain.id) > 0).length
-	);
+	// Get phase appropriateness badge
+	function getAppropriateness(strategy: any): string {
+		return strategy.phaseAppropriateness?.[selectedPhase] || 'optional';
+	}
+
+	// Defense layer colors
+	const layerColors: Record<string, string> = {
+		preventive: '#3b82f6',
+		detective: '#f59e0b',
+		corrective: '#ef4444'
+	};
 </script>
 
 <svelte:head>
@@ -303,7 +309,7 @@
 				{#each category.questions as question}
 					{#if checkShowIf(question.showIf)}
 						<div class="question">
-							<label>{question.question}</label>
+							<span class="question-text">{question.question}</span>
 
 							{#if question.type === 'single-select'}
 								<div class="options">
@@ -342,18 +348,15 @@
 		{/each}
 	</div>
 
-	<!-- Right: Identified Risks & Control Selection -->
+	<!-- Middle: Identified Risks & Strategy Selection -->
 	<div class="risks-panel">
 		<div class="panel-header">
 			<div>
 				<h2>Identified Risks</h2>
 				{#if triggeredRisks.length > 0}
-					<p class="progress">{risksAddressed} of {triggeredRisks.length} addressed ({totalSelectedControls} controls selected)</p>
+					<p class="progress">{risksAddressed} of {triggeredRisks.length} risks addressed</p>
 				{/if}
 			</div>
-			{#if triggeredRisks.length > 0}
-				<button class="generate-btn" onclick={generateProtocol}>Generate Protocol</button>
-			{/if}
 		</div>
 
 		{#if !hasAnswers}
@@ -364,18 +367,23 @@
 			{#each triggeredRisks as risk}
 				{@const isExpanded = expandedRisks.has(risk.subdomain.id)}
 				{@const selectedCount = getSelectedCount(risk.subdomain.id)}
+				{@const coverage = getDefenseCoverage(risk.subdomain.id, risk.linkedStrategies)}
 				<div class="risk-card" class:has-selections={selectedCount > 0}>
 					<button class="risk-header" onclick={() => toggleRiskExpanded(risk.subdomain.id)}>
 						<div class="risk-info">
 							<span class="code">{risk.subdomain.code}</span>
 							<span class="risk-name">{risk.subdomain.shortName}</span>
-							<span class="domain-tag">{risk.domain.name}</span>
 						</div>
 						<div class="risk-meta">
+							<!-- Swiss cheese indicator -->
+							<div class="defense-dots">
+								<span class="dot" class:filled={coverage.preventive} style="background-color: {coverage.preventive ? layerColors.preventive : 'transparent'}" title="Preventive">P</span>
+								<span class="dot" class:filled={coverage.detective} style="background-color: {coverage.detective ? layerColors.detective : 'transparent'}" title="Detective">D</span>
+								<span class="dot" class:filled={coverage.corrective} style="background-color: {coverage.corrective ? layerColors.corrective : 'transparent'}" title="Corrective">C</span>
+							</div>
 							{#if selectedCount > 0}
-								<span class="selected-badge">{selectedCount} selected</span>
+								<span class="selected-badge">{selectedCount}</span>
 							{/if}
-							<span class="controls-available">{risk.allControls.length} controls</span>
 							<span class="expand-icon">{isExpanded ? '▼' : '▶'}</span>
 						</div>
 					</button>
@@ -385,49 +393,51 @@
 							<!-- Risk Context -->
 							{#if risk.riskContext}
 								<div class="risk-context">
-									<h4>Why This Matters ({selectedPhase.replace('phase-', 'Phase ')})</h4>
 									<p>{risk.riskContext}</p>
 								</div>
 							{/if}
 
-							<!-- Control Selection -->
-							<div class="controls-section">
-								<div class="controls-header">
-									<h4>Select Controls to Implement</h4>
-									<div class="controls-actions">
-										<button class="action-btn" onclick={() => selectAllControls(risk.subdomain.id, risk.allControls)}>Select All</button>
-										<button class="action-btn" onclick={() => clearAllControls(risk.subdomain.id)}>Clear</button>
-									</div>
-								</div>
-
-								{#each risk.subcategories as { subcategory, controls }}
-									{#if controls.length > 0}
-										<div class="subcategory-group">
-											<div class="subcategory-label">{subcategory.name}</div>
-											<div class="controls-grid">
-												{#each controls as control}
-													{@const isSelected = selectedControls[risk.subdomain.id]?.has(control.id)}
-													<label class="control-checkbox" class:selected={isSelected}>
-														<input
-															type="checkbox"
-															checked={isSelected}
-															onchange={() => toggleControl(risk.subdomain.id, control.id)}
-														/>
-														<div class="control-content">
-															<span class="control-name">{control.name}</span>
-															{#if isSelected && control.implementationNotes?.[selectedPhase]}
-																<span class="impl-note">{control.implementationNotes[selectedPhase]}</span>
+							<!-- Strategy Selection grouped by category -->
+							<div class="strategies-section">
+								{#each data.mitigationCategories as category}
+									{@const categoryStrategies = risk.linkedStrategies.filter((s: any) => s.categoryId === category.id)}
+									{#if categoryStrategies.length > 0}
+										<div class="category-group">
+											<div class="category-label">{category.name}</div>
+											{#each categoryStrategies as strategy}
+												{@const isSelected = selectedStrategies[risk.subdomain.id]?.has(strategy.id)}
+												{@const appropriateness = getAppropriateness(strategy)}
+												<label class="strategy-checkbox" class:selected={isSelected} class:essential={appropriateness === 'essential'} class:overkill={appropriateness === 'overkill'}>
+													<input
+														type="checkbox"
+														checked={isSelected}
+														onchange={() => toggleStrategy(risk.subdomain.id, strategy.id)}
+													/>
+													<div class="strategy-content">
+														<div class="strategy-header">
+															<span class="strategy-code">{strategy.code}</span>
+															<span class="strategy-name">{strategy.name}</span>
+															<span class="defense-tag" style="background-color: {layerColors[strategy.defenseLayer]}">{strategy.defenseLayer.charAt(0).toUpperCase()}</span>
+															{#if appropriateness === 'essential'}
+																<span class="appropriateness essential">Essential</span>
+															{:else if appropriateness === 'overkill'}
+																<span class="appropriateness overkill">Overkill</span>
+															{:else if appropriateness === 'recommended'}
+																<span class="appropriateness recommended">Recommended</span>
 															{/if}
 														</div>
-													</label>
-												{/each}
-											</div>
+														{#if isSelected}
+															<span class="strategy-guidance">{strategy.phaseGuidance?.[selectedPhase] || strategy.description}</span>
+														{/if}
+													</div>
+												</label>
+											{/each}
 										</div>
 									{/if}
 								{/each}
 
-								{#if risk.allControls.length === 0}
-									<p class="no-controls">No controls match current phase and technology filters.</p>
+								{#if risk.linkedStrategies.length === 0}
+									<p class="no-strategies">No mitigation strategies linked to this risk.</p>
 								{/if}
 							</div>
 						</div>
@@ -436,17 +446,70 @@
 			{/each}
 		{/if}
 	</div>
+
+	<!-- Right: Protocol Preview -->
+	<div class="protocol-panel">
+		<div class="panel-header">
+			<div>
+				<h2>Protocol Preview</h2>
+				<p class="progress">{totalSelectedStrategies} strategies selected</p>
+			</div>
+			{#if protocolItems.length > 0}
+				<button class="copy-btn" onclick={copyProtocol}>Copy</button>
+			{/if}
+		</div>
+
+		{#if protocolItems.length === 0}
+			<div class="empty">
+				<p>Select mitigation strategies to build your protocol.</p>
+				<div class="legend">
+					<div class="legend-title">Defense Layers (Swiss Cheese Model)</div>
+					<div class="legend-item">
+						<span class="legend-dot" style="background-color: {layerColors.preventive}">P</span>
+						<span>Preventive - Stops problems before they occur</span>
+					</div>
+					<div class="legend-item">
+						<span class="legend-dot" style="background-color: {layerColors.detective}">D</span>
+						<span>Detective - Identifies problems when they occur</span>
+					</div>
+					<div class="legend-item">
+						<span class="legend-dot" style="background-color: {layerColors.corrective}">C</span>
+						<span>Corrective - Fixes problems after detection</span>
+					</div>
+					<p class="legend-hint">Aim for coverage across all three layers for robust risk mitigation.</p>
+				</div>
+			</div>
+		{:else}
+			<div class="protocol-content">
+				{#each Object.entries(protocolByCategory) as [catId, items]}
+					<div class="protocol-category">
+						<h3>{items[0]?.strategy.categoryName}</h3>
+						{#each items as item}
+							<div class="protocol-item">
+								<div class="protocol-item-header">
+									<span class="protocol-code">{item.strategy.code}</span>
+									<span class="protocol-name">{item.strategy.name}</span>
+									<span class="protocol-risk" title={item.risk.subdomain.name}>{item.risk.subdomain.shortName}</span>
+								</div>
+								<p class="protocol-guidance">{item.guidance}</p>
+							</div>
+						{/each}
+					</div>
+				{/each}
+			</div>
+		{/if}
+	</div>
 </div>
 
 <style>
 	.generator {
 		display: grid;
-		grid-template-columns: 340px 1fr;
-		gap: 1rem;
+		grid-template-columns: 280px 1fr 380px;
+		gap: 0.75rem;
 		height: calc(100vh - 140px);
 	}
 
-	.questions-panel, .risks-panel {
+	.questions-panel, .risks-panel, .protocol-panel {
 		background: #1e293b;
 		border: 1px solid #334155;
 		border-radius: 0.5rem;
@@ -468,7 +531,7 @@
 	}
 
 	.panel-header h2 {
-		font-size: 0.875rem;
+		font-size: 0.8125rem;
 		color: #f1f5f9;
 		margin: 0;
 	}
@@ -479,18 +542,18 @@
 		margin: 0.25rem 0 0 0;
 	}
 
-	.generate-btn {
-		padding: 0.5rem 1rem;
+	.copy-btn {
+		padding: 0.375rem 0.75rem;
 		background: #22c55e;
 		border: none;
 		border-radius: 0.375rem;
 		color: #0f172a;
-		font-size: 0.75rem;
+		font-size: 0.6875rem;
 		font-weight: 600;
 		cursor: pointer;
 	}
 
-	.generate-btn:hover {
+	.copy-btn:hover {
 		background: #16a34a;
 	}
 
@@ -508,24 +571,25 @@
 	}
 
 	.category h3 {
-		font-size: 0.625rem;
+		font-size: 0.5625rem;
 		font-weight: 600;
 		color: #60a5fa;
 		text-transform: uppercase;
 		margin: 0 0 0.5rem 0;
+		letter-spacing: 0.05em;
 	}
 
 	.question {
-		margin-bottom: 0.625rem;
+		margin-bottom: 0.5rem;
 	}
 
 	.question:last-child {
 		margin-bottom: 0;
 	}
 
-	.question label {
+	.question-text {
 		display: block;
-		font-size: 0.75rem;
+		font-size: 0.6875rem;
 		color: #e2e8f0;
 		margin-bottom: 0.375rem;
 	}
@@ -537,12 +601,12 @@
 	}
 
 	.option {
-		padding: 0.25rem 0.5rem;
+		padding: 0.1875rem 0.375rem;
 		background: #0f172a;
 		border: 1px solid #334155;
 		border-radius: 0.25rem;
 		color: #94a3b8;
-		font-size: 0.625rem;
+		font-size: 0.5625rem;
 		cursor: pointer;
 	}
 
@@ -562,7 +626,7 @@
 	}
 
 	.empty {
-		padding: 2rem;
+		padding: 1.5rem;
 		text-align: center;
 		color: #64748b;
 		font-size: 0.75rem;
@@ -574,7 +638,7 @@
 	}
 
 	.risk-card.has-selections {
-		background: rgba(34, 197, 94, 0.05);
+		background: rgba(34, 197, 94, 0.03);
 	}
 
 	.risk-header {
@@ -582,7 +646,7 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		padding: 0.75rem 1rem;
+		padding: 0.625rem 0.75rem;
 		background: transparent;
 		border: none;
 		cursor: pointer;
@@ -600,26 +664,18 @@
 	}
 
 	.code {
-		font-size: 0.625rem;
+		font-size: 0.5625rem;
 		font-weight: 700;
 		color: #60a5fa;
 		background: rgba(96, 165, 250, 0.1);
-		padding: 0.125rem 0.375rem;
-		border-radius: 0.25rem;
+		padding: 0.125rem 0.25rem;
+		border-radius: 0.125rem;
 	}
 
 	.risk-name {
-		font-size: 0.8125rem;
+		font-size: 0.75rem;
 		font-weight: 500;
 		color: #f1f5f9;
-	}
-
-	.domain-tag {
-		font-size: 0.5625rem;
-		color: #64748b;
-		background: #0f172a;
-		padding: 0.125rem 0.375rem;
-		border-radius: 0.25rem;
 	}
 
 	.risk-meta {
@@ -628,164 +684,315 @@
 		gap: 0.5rem;
 	}
 
+	.defense-dots {
+		display: flex;
+		gap: 0.125rem;
+	}
+
+	.dot {
+		width: 1rem;
+		height: 1rem;
+		border-radius: 0.125rem;
+		border: 1px solid #475569;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 0.5rem;
+		font-weight: 700;
+		color: #475569;
+	}
+
+	.dot.filled {
+		color: #0f172a;
+		border-color: transparent;
+	}
+
 	.selected-badge {
-		font-size: 0.625rem;
+		font-size: 0.5625rem;
 		color: #22c55e;
-		background: rgba(34, 197, 94, 0.1);
-		padding: 0.125rem 0.5rem;
+		background: rgba(34, 197, 94, 0.15);
+		padding: 0.125rem 0.375rem;
 		border-radius: 0.25rem;
 		font-weight: 600;
 	}
 
-	.controls-available {
-		font-size: 0.625rem;
-		color: #64748b;
-	}
-
 	.expand-icon {
-		font-size: 0.625rem;
+		font-size: 0.5625rem;
 		color: #64748b;
 	}
 
 	/* Risk Body (expanded) */
 	.risk-body {
-		padding: 0 1rem 1rem;
+		padding: 0 0.75rem 0.75rem;
 	}
 
 	.risk-context {
 		background: #0f172a;
-		border-radius: 0.375rem;
-		padding: 0.75rem;
-		margin-bottom: 0.75rem;
-		border-left: 3px solid #f59e0b;
-	}
-
-	.risk-context h4 {
-		font-size: 0.6875rem;
-		font-weight: 600;
-		color: #f59e0b;
-		margin: 0 0 0.5rem 0;
-		text-transform: uppercase;
+		border-radius: 0.25rem;
+		padding: 0.625rem;
+		margin-bottom: 0.625rem;
+		border-left: 2px solid #f59e0b;
 	}
 
 	.risk-context p {
-		font-size: 0.75rem;
+		font-size: 0.6875rem;
 		color: #cbd5e1;
 		line-height: 1.5;
 		margin: 0;
 	}
 
-	/* Controls Section */
-	.controls-section {
+	/* Strategies Section */
+	.strategies-section {
 		background: #0f172a;
-		border-radius: 0.375rem;
-		padding: 0.75rem;
-	}
-
-	.controls-header {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		margin-bottom: 0.75rem;
-	}
-
-	.controls-header h4 {
-		font-size: 0.6875rem;
-		font-weight: 600;
-		color: #22c55e;
-		margin: 0;
-		text-transform: uppercase;
-	}
-
-	.controls-actions {
-		display: flex;
-		gap: 0.5rem;
-	}
-
-	.action-btn {
-		font-size: 0.5625rem;
-		padding: 0.25rem 0.5rem;
-		background: transparent;
-		border: 1px solid #334155;
 		border-radius: 0.25rem;
-		color: #94a3b8;
-		cursor: pointer;
+		padding: 0.5rem;
 	}
 
-	.action-btn:hover {
-		border-color: #60a5fa;
-		color: #60a5fa;
+	.category-group {
+		margin-bottom: 0.5rem;
 	}
 
-	.subcategory-group {
-		margin-bottom: 0.75rem;
-	}
-
-	.subcategory-group:last-child {
+	.category-group:last-child {
 		margin-bottom: 0;
 	}
 
-	.subcategory-label {
-		font-size: 0.625rem;
+	.category-label {
+		font-size: 0.5625rem;
 		font-weight: 600;
 		color: #8b5cf6;
 		margin-bottom: 0.375rem;
 		text-transform: uppercase;
+		letter-spacing: 0.05em;
 	}
 
-	.controls-grid {
-		display: flex;
-		flex-direction: column;
-		gap: 0.375rem;
-	}
-
-	.control-checkbox {
+	.strategy-checkbox {
 		display: flex;
 		align-items: flex-start;
-		gap: 0.5rem;
-		padding: 0.5rem;
+		gap: 0.375rem;
+		padding: 0.375rem;
 		background: #1e293b;
 		border-radius: 0.25rem;
 		cursor: pointer;
 		border: 1px solid transparent;
+		margin-bottom: 0.25rem;
 	}
 
-	.control-checkbox:hover {
+	.strategy-checkbox:last-child {
+		margin-bottom: 0;
+	}
+
+	.strategy-checkbox:hover {
 		background: #334155;
 	}
 
-	.control-checkbox.selected {
+	.strategy-checkbox.selected {
 		border-color: #22c55e;
-		background: rgba(34, 197, 94, 0.1);
+		background: rgba(34, 197, 94, 0.08);
 	}
 
-	.control-checkbox input {
+	.strategy-checkbox.essential {
+		border-left: 2px solid #22c55e;
+	}
+
+	.strategy-checkbox.overkill {
+		opacity: 0.6;
+	}
+
+	.strategy-checkbox input {
 		margin-top: 0.125rem;
+		flex-shrink: 0;
 	}
 
-	.control-content {
+	.strategy-content {
 		flex: 1;
+		min-width: 0;
 	}
 
-	.control-name {
-		font-size: 0.75rem;
-		color: #e2e8f0;
-		display: block;
+	.strategy-header {
+		display: flex;
+		align-items: center;
+		gap: 0.375rem;
+		flex-wrap: wrap;
 	}
 
-	.impl-note {
+	.strategy-code {
+		font-size: 0.5625rem;
+		font-weight: 600;
+		color: #94a3b8;
+	}
+
+	.strategy-name {
 		font-size: 0.6875rem;
+		color: #e2e8f0;
+	}
+
+	.defense-tag {
+		font-size: 0.5rem;
+		font-weight: 700;
+		color: #0f172a;
+		padding: 0 0.25rem;
+		border-radius: 0.125rem;
+	}
+
+	.appropriateness {
+		font-size: 0.5rem;
+		padding: 0.0625rem 0.25rem;
+		border-radius: 0.125rem;
+		font-weight: 500;
+	}
+
+	.appropriateness.essential {
+		background: rgba(34, 197, 94, 0.2);
 		color: #22c55e;
+	}
+
+	.appropriateness.recommended {
+		background: rgba(96, 165, 250, 0.2);
+		color: #60a5fa;
+	}
+
+	.appropriateness.overkill {
+		background: rgba(239, 68, 68, 0.2);
+		color: #ef4444;
+	}
+
+	.strategy-guidance {
+		font-size: 0.625rem;
+		color: #94a3b8;
 		display: block;
 		margin-top: 0.25rem;
+		line-height: 1.4;
+	}
+
+	.no-strategies {
+		font-size: 0.6875rem;
+		color: #64748b;
+		text-align: center;
+		padding: 0.75rem;
+		margin: 0;
+	}
+
+	/* Protocol Panel */
+	.protocol-panel {
+		background: #0f172a;
+	}
+
+	.protocol-panel .panel-header {
+		background: #0f172a;
+		border-bottom-color: #1e293b;
+	}
+
+	.legend {
+		text-align: left;
+		margin-top: 1rem;
+		padding: 0.75rem;
+		background: #1e293b;
+		border-radius: 0.375rem;
+	}
+
+	.legend-title {
+		font-size: 0.625rem;
+		font-weight: 600;
+		color: #94a3b8;
+		margin-bottom: 0.5rem;
+		text-transform: uppercase;
+	}
+
+	.legend-item {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		margin-bottom: 0.375rem;
+		font-size: 0.625rem;
+		color: #cbd5e1;
+	}
+
+	.legend-dot {
+		width: 1rem;
+		height: 1rem;
+		border-radius: 0.125rem;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 0.5rem;
+		font-weight: 700;
+		color: #0f172a;
+		flex-shrink: 0;
+	}
+
+	.legend-hint {
+		font-size: 0.5625rem;
+		color: #64748b;
+		margin: 0.5rem 0 0 0;
 		font-style: italic;
 	}
 
-	.no-controls {
-		font-size: 0.75rem;
+	.protocol-content {
+		padding: 0.75rem;
+		flex: 1;
+	}
+
+	.protocol-category {
+		margin-bottom: 1rem;
+	}
+
+	.protocol-category:last-child {
+		margin-bottom: 0;
+	}
+
+	.protocol-category h3 {
+		font-size: 0.625rem;
+		font-weight: 600;
+		color: #8b5cf6;
+		text-transform: uppercase;
+		margin: 0 0 0.5rem 0;
+		padding-bottom: 0.25rem;
+		border-bottom: 1px solid #1e293b;
+	}
+
+	.protocol-item {
+		background: #1e293b;
+		border-radius: 0.25rem;
+		padding: 0.5rem;
+		margin-bottom: 0.375rem;
+	}
+
+	.protocol-item:last-child {
+		margin-bottom: 0;
+	}
+
+	.protocol-item-header {
+		display: flex;
+		align-items: center;
+		gap: 0.375rem;
+		margin-bottom: 0.25rem;
+	}
+
+	.protocol-code {
+		font-size: 0.5625rem;
+		font-weight: 700;
+		color: #60a5fa;
+	}
+
+	.protocol-name {
+		font-size: 0.6875rem;
+		font-weight: 500;
+		color: #f1f5f9;
+	}
+
+	.protocol-risk {
+		font-size: 0.5rem;
 		color: #64748b;
-		text-align: center;
-		padding: 1rem;
+		margin-left: auto;
+		background: #0f172a;
+		padding: 0.125rem 0.25rem;
+		border-radius: 0.125rem;
+	}
+
+	.protocol-guidance {
+		font-size: 0.625rem;
+		color: #94a3b8;
+		line-height: 1.5;
 		margin: 0;
 	}
 </style>

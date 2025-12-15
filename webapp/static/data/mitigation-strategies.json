@@ -1,168 +1,425 @@
 {
   "$schema": "../schemas/mitigation-strategies.schema.json",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "source": "AIHSR Risk Reference Tool v1.5 (Tamiko Eto)",
-  "lastUpdated": "2025-09-02",
+  "lastUpdated": "2025-12-14",
   "mitigationCategories": [
     {
       "id": "governance-oversight",
-      "name": "Governance & Oversight Controls",
+      "name": "Governance & Oversight",
+      "description": "Organizational structures and processes for AI accountability",
       "strategies": [
         {
           "id": "board-oversight-1.1",
           "code": "1.1",
           "name": "Board Structure & Oversight",
-          "description": "Establish appropriate governance boards and oversight committees"
+          "description": "Establish appropriate governance boards and oversight committees",
+          "defenseLayer": "preventive",
+          "phaseAppropriateness": {
+            "phase-1": "optional",
+            "phase-2": "recommended",
+            "phase-3": "essential"
+          },
+          "phaseGuidance": {
+            "phase-1": "Identify stakeholders who should have oversight of AI development. Document reporting relationships and decision authority for the research team.",
+            "phase-2": "Establish a review committee or advisory board to evaluate validation results and approve progression to deployment. Define escalation paths for safety concerns.",
+            "phase-3": "Implement formal governance board with regular review cycles, documented meeting minutes, and authority to pause or modify deployed systems based on performance data."
+          }
         },
         {
           "id": "risk-management-1.2",
           "code": "1.2",
           "name": "Risk Management",
-          "description": "Pre-deployment risk assessments, independent risk assessment"
+          "description": "Pre-deployment risk assessments, independent risk assessment",
+          "defenseLayer": "preventive",
+          "phaseAppropriateness": {
+            "phase-1": "essential",
+            "phase-2": "essential",
+            "phase-3": "essential"
+          },
+          "phaseGuidance": {
+            "phase-1": "Conduct initial risk assessment identifying potential harms from the AI system. Document assumptions, limitations, and failure modes. Create risk register with likelihood and impact ratings.",
+            "phase-2": "Update risk assessment based on validation findings. Conduct independent review of risk documentation. Test identified failure modes and document mitigation effectiveness.",
+            "phase-3": "Maintain living risk register with regular reviews. Conduct periodic independent risk assessments. Track risk indicators and trigger reassessment when thresholds are exceeded."
+          }
         },
         {
           "id": "conflict-interest-1.3",
           "code": "1.3",
           "name": "Conflict of Interest Protections",
-          "description": "Identify and manage conflicts of interest in AI development and deployment"
+          "description": "Identify and manage conflicts of interest in AI development and deployment",
+          "defenseLayer": "preventive",
+          "phaseAppropriateness": {
+            "phase-1": "recommended",
+            "phase-2": "recommended",
+            "phase-3": "essential"
+          },
+          "phaseGuidance": {
+            "phase-1": "Document team members' financial interests, institutional pressures, and career incentives that could influence AI development decisions. Establish disclosure requirements.",
+            "phase-2": "Ensure validation is conducted by individuals without vested interest in positive outcomes. Document any conflicts and how they are managed during evaluation.",
+            "phase-3": "Implement formal conflict of interest policies covering all personnel involved in deployment decisions. Require annual disclosures and recusal procedures for conflicted parties."
+          }
         },
         {
           "id": "whistleblower-1.4",
           "code": "1.4",
           "name": "Whistleblower Reporting & Protection",
-          "description": "Establish channels for reporting concerns with protection for reporters"
+          "description": "Establish channels for reporting concerns with protection for reporters",
+          "defenseLayer": "detective",
+          "phaseAppropriateness": {
+            "phase-1": "optional",
+            "phase-2": "recommended",
+            "phase-3": "essential"
+          },
+          "phaseGuidance": {
+            "phase-1": "Communicate to team members that safety concerns should be raised and will be taken seriously. Document the process for escalating concerns during development.",
+            "phase-2": "Establish clear channels for validation team members to report concerns about results or pressure to approve. Ensure reporters face no retaliation.",
+            "phase-3": "Implement formal whistleblower policy with anonymous reporting options, investigation procedures, and documented protections. Train all staff on reporting procedures."
+          }
         },
         {
           "id": "safety-frameworks-1.5",
           "code": "1.5",
           "name": "Safety Decision Frameworks",
-          "description": "Structured frameworks for making safety-related decisions"
+          "description": "Structured frameworks for making safety-related decisions",
+          "defenseLayer": "preventive",
+          "phaseAppropriateness": {
+            "phase-1": "recommended",
+            "phase-2": "essential",
+            "phase-3": "essential"
+          },
+          "phaseGuidance": {
+            "phase-1": "Define criteria for what constitutes acceptable vs. unacceptable AI behavior. Document decision rules for common safety scenarios encountered during development.",
+            "phase-2": "Apply safety framework to validation results. Document go/no-go criteria for deployment. Establish thresholds for performance, fairness, and safety metrics.",
+            "phase-3": "Maintain documented decision framework for operational safety decisions. Define automatic triggers for system pause, human review requirements, and escalation procedures."
+          }
         },
         {
           "id": "environmental-1.6",
           "code": "1.6",
           "name": "Environmental Impact Management",
-          "description": "Assess and mitigate environmental impacts of AI systems"
+          "description": "Assess and mitigate environmental impacts of AI systems",
+          "defenseLayer": "preventive",
+          "phaseAppropriateness": {
+            "phase-1": "optional",
+            "phase-2": "optional",
+            "phase-3": "recommended"
+          },
+          "phaseGuidance": {
+            "phase-1": "Estimate computational resources required for model training. Consider energy-efficient architectures where feasible without compromising research goals.",
+            "phase-2": "Document energy consumption during validation. Evaluate trade-offs between model complexity and environmental impact.",
+            "phase-3": "Monitor and report ongoing energy consumption. Implement efficiency optimizations for inference. Consider carbon offset or renewable energy for sustained operations."
+          }
         },
         {
           "id": "societal-impact-1.7",
           "code": "1.7",
           "name": "Societal Impact Assessment",
-          "description": "Evaluate broader societal implications of AI deployment"
+          "description": "Evaluate broader societal implications of AI deployment",
+          "defenseLayer": "preventive",
+          "phaseAppropriateness": {
+            "phase-1": "recommended",
+            "phase-2": "essential",
+            "phase-3": "essential"
+          },
+          "phaseGuidance": {
+            "phase-1": "Consider how the AI system might affect different populations, employment, or social structures. Document intended benefits and potential unintended consequences.",
+            "phase-2": "Conduct structured assessment of societal implications based on validation findings. Engage community stakeholders or patient advocates in evaluation where appropriate.",
+            "phase-3": "Monitor societal effects of deployment. Establish feedback mechanisms for affected communities. Conduct periodic reassessment of broader impacts and adjust deployment as needed."
+          }
         }
       ]
     },
     {
       "id": "technical-security",
-      "name": "Technical & Security Controls",
+      "name": "Technical & Security",
+      "description": "Technical safeguards built into the AI system",
       "strategies": [
         {
           "id": "infrastructure-security-2.1",
           "code": "2.1",
           "name": "Model & Infrastructure Security",
-          "description": "Secure model storage, access controls, and infrastructure protection"
+          "description": "Secure model storage, access controls, and infrastructure protection",
+          "defenseLayer": "preventive",
+          "phaseAppropriateness": {
+            "phase-1": "recommended",
+            "phase-2": "essential",
+            "phase-3": "essential"
+          },
+          "phaseGuidance": {
+            "phase-1": "Implement basic security for development environment. Secure training data storage. Use version control with access logging for model artifacts.",
+            "phase-2": "Apply security controls to validation environment. Protect test data. Ensure model weights and configurations are securely stored with access controls.",
+            "phase-3": "Implement production-grade security including encryption at rest and in transit, network segmentation, intrusion detection, and regular security assessments."
+          }
         },
         {
           "id": "model-alignment-2.2",
           "code": "2.2",
           "name": "Model Alignment",
-          "description": "Ensure model behavior aligns with intended objectives and values"
+          "description": "Ensure model behavior aligns with intended objectives and values",
+          "defenseLayer": "preventive",
+          "phaseAppropriateness": {
+            "phase-1": "essential",
+            "phase-2": "essential",
+            "phase-3": "recommended"
+          },
+          "phaseGuidance": {
+            "phase-1": "Define intended model behavior and values explicitly. Design training objectives that capture desired outcomes. Consider potential misalignment between optimization target and true goals.",
+            "phase-2": "Test model behavior against intended objectives across diverse scenarios. Evaluate for goal drift or unexpected optimization. Document alignment with original design intent.",
+            "phase-3": "Monitor for alignment drift in production. Implement checks that model continues to optimize for intended outcomes. Retrain or adjust as needed when misalignment is detected."
+          }
         },
         {
           "id": "safety-engineering-2.3",
           "code": "2.3",
           "name": "Model Safety Engineering",
-          "description": "Design and implement safety features in model architecture"
+          "description": "Design and implement safety features in model architecture",
+          "defenseLayer": "preventive",
+          "phaseAppropriateness": {
+            "phase-1": "essential",
+            "phase-2": "recommended",
+            "phase-3": "recommended"
+          },
+          "phaseGuidance": {
+            "phase-1": "Incorporate safety considerations into model architecture. Design for graceful degradation. Build in uncertainty quantification where appropriate for the model type.",
+            "phase-2": "Validate safety features function as designed. Test failure modes and recovery mechanisms. Evaluate robustness to adversarial or out-of-distribution inputs.",
+            "phase-3": "Maintain safety features through model updates. Monitor safety mechanism effectiveness. Update safety engineering as new risks or attack vectors emerge."
+          }
         },
         {
           "id": "content-safety-2.4",
           "code": "2.4",
           "name": "Content Safety Controls",
-          "description": "Filters and controls to prevent harmful content generation"
+          "description": "Filters and controls to prevent harmful content generation",
+          "defenseLayer": "corrective",
+          "phaseAppropriateness": {
+            "phase-1": "recommended",
+            "phase-2": "essential",
+            "phase-3": "essential"
+          },
+          "phaseGuidance": {
+            "phase-1": "For generative models, design output filtering mechanisms. Define categories of harmful content relevant to the use case. Plan validation approach for content safety.",
+            "phase-2": "Test content filters against known harmful patterns. Red-team the system to identify filter bypasses. Validate filters don't inappropriately block legitimate content.",
+            "phase-3": "Deploy content safety with real-time monitoring. Maintain and update filter rules as new patterns emerge. Log filtered content for analysis and filter improvement."
+          }
         }
       ]
     },
     {
       "id": "operational-process",
-      "name": "Operational Process Controls",
+      "name": "Operational Process",
+      "description": "Procedures for safe development and deployment",
       "strategies": [
         {
           "id": "testing-auditing-3.1",
           "code": "3.1",
           "name": "Testing & Auditing",
-          "description": "Comprehensive testing and regular auditing of AI systems"
+          "description": "Comprehensive testing and regular auditing of AI systems",
+          "defenseLayer": "detective",
+          "phaseAppropriateness": {
+            "phase-1": "recommended",
+            "phase-2": "essential",
+            "phase-3": "essential"
+          },
+          "phaseGuidance": {
+            "phase-1": "Establish testing approach for model development. Define test cases covering expected use cases, edge cases, and failure scenarios. Plan for bias and fairness testing.",
+            "phase-2": "Execute comprehensive test suite on validation data. Conduct independent audit of model performance. Document all test results and identified issues.",
+            "phase-3": "Implement continuous testing in production. Conduct periodic independent audits. Maintain audit trail of all model changes and their test results."
+          }
         },
         {
           "id": "data-governance-3.2",
           "code": "3.2",
           "name": "Data Governance",
-          "description": "Policies and procedures for data management and quality"
+          "description": "Policies and procedures for data management and quality",
+          "defenseLayer": "preventive",
+          "phaseAppropriateness": {
+            "phase-1": "essential",
+            "phase-2": "essential",
+            "phase-3": "essential"
+          },
+          "phaseGuidance": {
+            "phase-1": "Document data sources, collection methods, and known limitations. Implement data quality checks. Ensure proper consent and authorization for data use.",
+            "phase-2": "Validate data quality for test datasets. Document data lineage for validation results. Ensure validation data is appropriately independent from training data.",
+            "phase-3": "Maintain data governance for production inputs. Monitor data quality in real-time. Implement data retention and deletion policies compliant with regulations."
+          }
         },
         {
           "id": "access-management-3.3",
           "code": "3.3",
           "name": "Access Management",
-          "description": "Control and monitor access to AI systems and data"
+          "description": "Control and monitor access to AI systems and data",
+          "defenseLayer": "preventive",
+          "phaseAppropriateness": {
+            "phase-1": "recommended",
+            "phase-2": "recommended",
+            "phase-3": "essential"
+          },
+          "phaseGuidance": {
+            "phase-1": "Implement role-based access to development resources. Limit access to training data to authorized personnel. Log access to sensitive resources.",
+            "phase-2": "Control access to validation environment and results. Ensure only authorized personnel can approve progression. Document access during validation period.",
+            "phase-3": "Implement production access controls with principle of least privilege. Monitor and audit all access. Implement automatic access revocation for departing personnel."
+          }
         },
         {
           "id": "staged-deployment-3.4",
           "code": "3.4",
           "name": "Staged Deployment",
-          "description": "Gradual rollout with checkpoints and evaluation"
+          "description": "Gradual rollout with checkpoints and evaluation",
+          "defenseLayer": "detective",
+          "phaseAppropriateness": {
+            "phase-1": "optional",
+            "phase-2": "recommended",
+            "phase-3": "essential"
+          },
+          "phaseGuidance": {
+            "phase-1": "Plan deployment stages and criteria for progression between stages. Identify pilot populations or use cases for initial deployment.",
+            "phase-2": "Define go/no-go criteria for each deployment stage. Establish monitoring approach for staged rollout. Plan rollback procedures if issues arise.",
+            "phase-3": "Execute staged deployment starting with limited scope. Monitor closely at each stage before expanding. Document lessons learned and adjust approach for subsequent stages."
+          }
         },
         {
           "id": "post-deployment-3.5",
           "code": "3.5",
           "name": "Post-Deployment Monitoring",
-          "description": "Ongoing monitoring of AI performance after deployment"
+          "description": "Ongoing monitoring of AI performance after deployment",
+          "defenseLayer": "detective",
+          "phaseAppropriateness": {
+            "phase-1": "optional",
+            "phase-2": "recommended",
+            "phase-3": "essential"
+          },
+          "phaseGuidance": {
+            "phase-1": "Define key metrics to monitor in production. Plan monitoring infrastructure and alerting thresholds.",
+            "phase-2": "Pilot monitoring approach during validation. Test alerting mechanisms. Establish baseline metrics for comparison during deployment.",
+            "phase-3": "Implement continuous monitoring of model performance, fairness metrics, and safety indicators. Set up automated alerts for anomalies. Conduct regular performance reviews."
+          }
         },
         {
           "id": "incident-response-3.6",
           "code": "3.6",
           "name": "Incident Response & Recovery",
-          "description": "Procedures for responding to and recovering from incidents"
+          "description": "Procedures for responding to and recovering from incidents",
+          "defenseLayer": "corrective",
+          "phaseAppropriateness": {
+            "phase-1": "optional",
+            "phase-2": "recommended",
+            "phase-3": "essential"
+          },
+          "phaseGuidance": {
+            "phase-1": "Document known failure modes and planned responses. Establish communication plan for issues discovered during development.",
+            "phase-2": "Develop incident response procedures based on validation findings. Test rollback and recovery mechanisms. Train team on incident procedures.",
+            "phase-3": "Implement formal incident response with defined roles, communication protocols, and escalation paths. Maintain ability to rapidly pause or rollback system. Conduct post-incident reviews."
+          }
         }
       ]
     },
     {
       "id": "transparency-accountability",
-      "name": "Transparency & Accountability Controls",
+      "name": "Transparency & Accountability",
+      "description": "Documentation and disclosure for oversight",
       "strategies": [
         {
           "id": "documentation-4.1",
           "code": "4.1",
           "name": "System Documentation",
-          "description": "Comprehensive documentation of AI system design and behavior"
+          "description": "Comprehensive documentation of AI system design and behavior",
+          "defenseLayer": "preventive",
+          "phaseAppropriateness": {
+            "phase-1": "essential",
+            "phase-2": "essential",
+            "phase-3": "essential"
+          },
+          "phaseGuidance": {
+            "phase-1": "Document model architecture, training data, intended use cases, and known limitations. Create model card or similar documentation artifact.",
+            "phase-2": "Document validation methodology, results, and conclusions. Update system documentation based on validation findings.",
+            "phase-3": "Maintain up-to-date documentation for deployed system. Document all changes, their rationale, and validation. Ensure documentation is accessible to relevant stakeholders."
+          }
         },
         {
           "id": "risk-disclosure-4.2",
           "code": "4.2",
           "name": "Risk Disclosure",
-          "description": "Clear communication of risks to stakeholders"
+          "description": "Clear communication of risks to stakeholders",
+          "defenseLayer": "preventive",
+          "phaseAppropriateness": {
+            "phase-1": "recommended",
+            "phase-2": "essential",
+            "phase-3": "essential"
+          },
+          "phaseGuidance": {
+            "phase-1": "Document known risks and limitations for internal stakeholders. Prepare risk communication appropriate to audience.",
+            "phase-2": "Disclose validation results including limitations and residual risks to decision-makers. Ensure informed consent documents reflect AI use and associated risks.",
+            "phase-3": "Provide clear risk disclosure to users and affected parties. Update disclosures as new risks are identified. Ensure disclosures are understandable to intended audience."
+          }
         },
         {
           "id": "incident-reporting-4.3",
           "code": "4.3",
           "name": "Incident Reporting",
-          "description": "Systems for reporting and tracking incidents"
+          "description": "Systems for reporting and tracking incidents",
+          "defenseLayer": "detective",
+          "phaseAppropriateness": {
+            "phase-1": "optional",
+            "phase-2": "recommended",
+            "phase-3": "essential"
+          },
+          "phaseGuidance": {
+            "phase-1": "Establish tracking for issues discovered during development. Document resolution of identified problems.",
+            "phase-2": "Implement incident tracking for validation phase. Categorize and prioritize issues. Track resolution status.",
+            "phase-3": "Deploy formal incident reporting system with categorization, prioritization, and tracking. Report to relevant authorities as required. Analyze trends for systemic improvements."
+          }
         },
         {
           "id": "governance-disclosure-4.4",
           "code": "4.4",
           "name": "Governance Disclosure",
-          "description": "Transparency about governance structures and decisions"
+          "description": "Transparency about governance structures and decisions",
+          "defenseLayer": "preventive",
+          "phaseAppropriateness": {
+            "phase-1": "optional",
+            "phase-2": "recommended",
+            "phase-3": "essential"
+          },
+          "phaseGuidance": {
+            "phase-1": "Document decision-making authority and accountability for AI development within the research team.",
+            "phase-2": "Disclose governance structure to IRB and relevant oversight bodies. Document how decisions are made about progression to deployment.",
+            "phase-3": "Publicly document governance structure for deployed AI. Disclose how oversight is conducted and decisions are made. Provide accountability information."
+          }
         },
         {
           "id": "third-party-access-4.5",
           "code": "4.5",
           "name": "Third-Party System Access",
-          "description": "Controls for third-party access and integration"
+          "description": "Controls for third-party access and integration",
+          "defenseLayer": "detective",
+          "phaseAppropriateness": {
+            "phase-1": "optional",
+            "phase-2": "recommended",
+            "phase-3": "recommended"
+          },
+          "phaseGuidance": {
+            "phase-1": "Consider whether third-party audit or review would be valuable. Plan for external evaluation if appropriate.",
+            "phase-2": "Enable independent validation by qualified third parties if feasible. Document any third-party access and findings.",
+            "phase-3": "Provide structured access for qualified researchers or auditors. Define access procedures and requirements. Track and document all third-party evaluations."
+          }
         },
         {
           "id": "user-rights-4.6",
           "code": "4.6",
           "name": "User Rights & Recourse",
-          "description": "Mechanisms for users to understand and contest AI decisions"
+          "description": "Mechanisms for users to understand and contest AI decisions",
+          "defenseLayer": "corrective",
+          "phaseAppropriateness": {
+            "phase-1": "optional",
+            "phase-2": "recommended",
+            "phase-3": "essential"
+          },
+          "phaseGuidance": {
+            "phase-1": "Consider what rights users should have regarding AI decisions. Plan explanation and recourse mechanisms appropriate to use case.",
+            "phase-2": "Test explanation mechanisms with representative users. Validate that recourse processes are functional and accessible.",
+            "phase-3": "Implement clear procedures for users to request explanations of AI decisions and to contest decisions they believe are incorrect. Ensure timely response to user concerns."
+          }
         }
       ]
     }
@@ -186,5 +443,22 @@
       "name": "Systemic",
       "description": "Risks that affect broader systems and structures"
     }
-  ]
+  ],
+  "defenseLayerDescriptions": {
+    "preventive": {
+      "name": "Preventive",
+      "description": "Stops problems before they occur through design, policy, or access controls",
+      "color": "#3b82f6"
+    },
+    "detective": {
+      "name": "Detective",
+      "description": "Identifies problems when they occur through monitoring, testing, or auditing",
+      "color": "#f59e0b"
+    },
+    "corrective": {
+      "name": "Corrective",
+      "description": "Fixes problems after detection through response procedures, rollback, or remediation",
+      "color": "#ef4444"
+    }
+  }
 }
