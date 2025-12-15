@@ -165,39 +165,24 @@
 		return entities;
 	});
 
-	// Build directed graph from filtered links using Graphology
-	// Nodes are "type:id" strings, edges follow the link direction
-	let traceGraph = $derived.by(() => {
-		const graph = new Graph({ type: 'directed', multi: false, allowSelfLoops: false });
+	// traceGraph is defined after entity arrays (see below) to include all relationships
 
-		for (const link of filteredLinks) {
-			const fromKey = `${link.from.entity}:${link.from.id}`;
-			const toKey = `${link.to.entity}:${link.to.id}`;
-
-			// Add nodes if they don't exist
-			if (!graph.hasNode(fromKey)) {
-				graph.addNode(fromKey, { type: link.from.entity, id: link.from.id });
-			}
-			if (!graph.hasNode(toKey)) {
-				graph.addNode(toKey, { type: link.to.entity, id: link.to.id });
-			}
-
-			// Add directed edge (from → to)
-			const edgeKey = `${fromKey}->${toKey}`;
-			if (!graph.hasEdge(edgeKey)) {
-				graph.addEdgeWithKey(edgeKey, fromKey, toKey, { link });
-			}
-		}
-
-		return graph;
-	});
-
-	// Get direct link between two entities (if exists)
+	// Get direct link between two entities using graph edge lookup (O(1))
 	function getDirectLink(type1: EntityType, id1: string, type2: EntityType, id2: string): any {
-		return filteredLinks.find((l: any) =>
-			(l.from.entity === type1 && l.from.id === id1 && l.to.entity === type2 && l.to.id === id2) ||
-			(l.from.entity === type2 && l.from.id === id2 && l.to.entity === type1 && l.to.id === id1)
-		);
+		const key1 = `${type1}:${id1}`;
+		const key2 = `${type2}:${id2}`;
+
+		// Check edge in both directions
+		const edgeKey1 = `${key1}->${key2}`;
+		const edgeKey2 = `${key2}->${key1}`;
+
+		if (traceGraph.hasEdge(edgeKey1)) {
+			return traceGraph.getEdgeAttribute(edgeKey1, 'link');
+		}
+		if (traceGraph.hasEdge(edgeKey2)) {
+			return traceGraph.getEdgeAttribute(edgeKey2, 'link');
+		}
+		return null;
 	}
 
 	// Check if target is reachable from source following directed edges (downstream only)
@@ -249,8 +234,8 @@
 
 		// Special handling for question-to-question showIf dependencies
 		if (rowType === 'question' && colType === 'question' && rowId !== colId) {
-			const rowQuestion = allQuestions.find(q => q.id === rowId);
-			const colQuestion = allQuestions.find(q => q.id === colId);
+			const rowQuestion = questionsById.get(rowId);
+			const colQuestion = questionsById.get(colId);
 
 			// Row question depends on col question (row.showIf contains col)
 			if (rowQuestion?.showIf && colId in rowQuestion.showIf) {
@@ -306,7 +291,7 @@
 
 		if (existing?.isShowIf) {
 			// showIf dependency - open the dependent question for editing
-			const dependentQ = allQuestions.find(q => q.id === existing.dependentQuestion);
+			const dependentQ = questionsById.get(existing.dependentQuestion);
 			if (dependentQ) {
 				entityType = 'questions';
 				editEntity(dependentQ);
@@ -323,7 +308,7 @@
 			}
 		} else if (rowType === 'question' && colType === 'question') {
 			// Question vs Question with no existing dependency - offer to create showIf
-			const rowQ = allQuestions.find(q => q.id === rowId);
+			const rowQ = questionsById.get(rowId);
 			if (rowQ) {
 				// Open row question for editing to add showIf condition
 				entityType = 'questions';
@@ -397,34 +382,51 @@
 	let traceTree = $derived.by((): TraceNode | null => {
 		if (!traceStartId) return null;
 
-		// Helper to get question dependencies (showIf)
+		// Helper to get question dependencies (showIf) - not in graph, uses showIf property
 		function getQuestionDependents(qId: string): string[] {
-			return allQuestions
-				.filter(q => q.showIf && Object.keys(q.showIf).includes(qId))
-				.map(q => q.id);
+			const dependents: string[] = [];
+			for (const [id, q] of questionsById) {
+				if (q.showIf && qId in q.showIf) {
+					dependents.push(id);
+				}
+			}
+			return dependents;
 		}
 
-		// Helper to get risks triggered by a question
+		// Helper to get outgoing edges of a specific type from a node (uses graph)
+		function getOutgoingByType(nodeKey: string, linkType: string): Array<{ targetId: string; link: any }> {
+			if (!traceGraph.hasNode(nodeKey)) return [];
+			const results: Array<{ targetId: string; link: any }> = [];
+			traceGraph.forEachOutEdge(nodeKey, (edge, attrs, source, target) => {
+				const link = attrs.link;
+				if (link.type === linkType) {
+					results.push({ targetId: link.to.id, link });
+				}
+			});
+			return results;
+		}
+
+		// Helper to get risks triggered by a question (uses graph)
 		function getRisksForQuestion(qId: string): Array<{ risk: any; link: any }> {
-			return filteredLinks
-				.filter((l: any) => l.type === 'trigger' && l.from.entity === 'question' && l.from.id === qId)
-				.map((l: any) => ({ risk: allRisks.find(r => r.id === l.to.id), link: l }))
+			const nodeKey = `question:${qId}`;
+			return getOutgoingByType(nodeKey, 'trigger')
+				.map(({ targetId, link }) => ({ risk: risksById.get(targetId), link }))
 				.filter(r => r.risk);
 		}
 
-		// Helper to get controls for a risk (controls ARE mitigations)
+		// Helper to get controls for a risk (uses graph)
 		function getControlsForRisk(rId: string): Array<{ control: any; link: any }> {
-			return filteredLinks
-				.filter((l: any) => l.type === 'control' && l.from.entity === 'risk' && l.from.id === rId)
-				.map((l: any) => ({ control: allControls.find(c => c.id === l.to.id), link: l }))
+			const nodeKey = `risk:${rId}`;
+			return getOutgoingByType(nodeKey, 'control')
+				.map(({ targetId, link }) => ({ control: controlsById.get(targetId), link }))
 				.filter(c => c.control);
 		}
 
-		// Helper to get regulations for a risk
+		// Helper to get regulations for a risk (uses graph)
 		function getRegulationsForRisk(rId: string): Array<{ regulation: any; link: any }> {
-			return filteredLinks
-				.filter((l: any) => l.type === 'regulation' && l.from.entity === 'risk' && l.from.id === rId)
-				.map((l: any) => ({ regulation: allRegulations.find(r => r.id === l.to.id), link: l }))
+			const nodeKey = `risk:${rId}`;
+			return getOutgoingByType(nodeKey, 'regulation')
+				.map(({ targetId, link }) => ({ regulation: regulationsById.get(targetId), link }))
 				.filter(r => r.regulation);
 		}
 
@@ -433,7 +435,7 @@
 			if (visited.has(qId)) return null;
 			visited.add(qId);
 
-			const q = allQuestions.find(q => q.id === qId);
+			const q = questionsById.get(qId);
 			if (!q) return null;
 
 			const node: TraceNode = {
@@ -504,11 +506,24 @@
 			return node;
 		}
 
+		// Helper to get incoming edges of a specific type to a node (uses graph)
+		function getIncomingByType(nodeKey: string, linkType: string): Array<{ sourceId: string; link: any }> {
+			if (!traceGraph.hasNode(nodeKey)) return [];
+			const results: Array<{ sourceId: string; link: any }> = [];
+			traceGraph.forEachInEdge(nodeKey, (edge, attrs, source, target) => {
+				const link = attrs.link;
+				if (link.type === linkType) {
+					results.push({ sourceId: link.from.id, link });
+				}
+			});
+			return results;
+		}
+
 		// Start building tree based on start type
 		if (traceStartType === 'question') {
 			return buildQuestionNode(traceStartId, 0, new Set());
 		} else if (traceStartType === 'risk') {
-			const risk = allRisks.find(r => r.id === traceStartId);
+			const risk = risksById.get(traceStartId);
 			if (!risk) return null;
 
 			// For risk start, show controls and regulations
@@ -551,7 +566,7 @@
 			return node;
 		} else {
 			// Control start - show linked risks
-			const ctrl = allControls.find(c => c.id === traceStartId);
+			const ctrl = controlsById.get(traceStartId);
 			if (!ctrl) return null;
 
 			const node: TraceNode = {
@@ -563,10 +578,10 @@
 				depth: 0
 			};
 
-			// Find risks linked to this control
-			const risksLinked = filteredLinks
-				.filter((l: any) => l.type === 'control' && l.to.id === ctrl.id)
-				.map((l: any) => ({ risk: allRisks.find(r => r.id === l.from.id), link: l }))
+			// Find risks linked to this control (using graph incoming edges)
+			const nodeKey = `control:${ctrl.id}`;
+			const risksLinked = getIncomingByType(nodeKey, 'control')
+				.map(({ sourceId, link }) => ({ risk: risksById.get(sourceId), link }))
 				.filter(r => r.risk);
 
 			for (const { risk, link } of risksLinked.slice(0, 10)) {
@@ -743,6 +758,155 @@
 			cat.strategies.map((s: any) => ({ ...s, categoryId: cat.id, categoryName: cat.name }))
 		)
 	);
+
+	// Entity lookup Maps for O(1) access (replaces .find() calls)
+	let questionsById = $derived(new Map(allQuestions.map(q => [q.id, q])));
+	let risksById = $derived(new Map(allRisks.map(r => [r.id, r])));
+	let regulationsById = $derived(new Map(allRegulations.map(r => [r.id, r])));
+	let controlsById = $derived(new Map(allControls.map(c => [c.id, c])));
+	let subcategoriesById = $derived(new Map(allSubcategories.map(s => [s.id, s])));
+
+	// Build directed graph from ALL relationships using Graphology
+	// Includes: explicit links + question dependencies (showIf) + control-subcategory relationships
+	let traceGraph = $derived.by(() => {
+		const graph = new Graph({ type: 'directed', multi: false, allowSelfLoops: false });
+
+		// Helper to ensure node exists
+		const ensureNode = (type: string, id: string) => {
+			const key = `${type}:${id}`;
+			if (!graph.hasNode(key)) {
+				graph.addNode(key, { type, id });
+			}
+			return key;
+		};
+
+		// Helper to add edge if not exists
+		const addEdge = (fromKey: string, toKey: string, link: any) => {
+			const edgeKey = `${fromKey}->${toKey}`;
+			if (!graph.hasEdge(edgeKey)) {
+				graph.addEdgeWithKey(edgeKey, fromKey, toKey, { link });
+			}
+		};
+
+		// 1. Add all explicit links from traceability data
+		for (const link of filteredLinks) {
+			const fromKey = ensureNode(link.from.entity, link.from.id);
+			const toKey = ensureNode(link.to.entity, link.to.id);
+			addEdge(fromKey, toKey, link);
+		}
+
+		// 2. Add question dependency edges (from showIf property)
+		for (const question of allQuestions) {
+			const questionKey = ensureNode('question', question.id);
+			if (question.showIf) {
+				for (const depId of Object.keys(question.showIf)) {
+					const depKey = ensureNode('question', depId);
+					// Edge: dependency → dependent (depId → question.id)
+					addEdge(depKey, questionKey, {
+						type: 'dependency',
+						from: { entity: 'question', id: depId },
+						to: { entity: 'question', id: question.id },
+						_implicit: true
+					});
+				}
+			}
+		}
+
+		// 3. Add control-subcategory edges (from subcategoryId property)
+		for (const control of allControls) {
+			if (control.subcategoryId) {
+				const controlKey = ensureNode('control', control.id);
+				const subcatKey = ensureNode('subcategory', control.subcategoryId);
+				// Edge: subcategory → control (contains relationship)
+				addEdge(subcatKey, controlKey, {
+					type: 'contains',
+					from: { entity: 'subcategory', id: control.subcategoryId },
+					to: { entity: 'control', id: control.id },
+					_implicit: true
+				});
+			}
+		}
+
+		return graph;
+	});
+
+	// CACHED GRAPH QUERIES - all derived from traceGraph, auto-update when graph changes
+
+	// Link counts by entity (graph degree)
+	let linkCountByEntity = $derived.by(() => {
+		const counts = new Map<string, number>();
+		traceGraph.forEachNode((nodeKey) => {
+			counts.set(nodeKey, traceGraph.degree(nodeKey));
+		});
+		return counts;
+	});
+
+	// Controls by subcategory (from 'contains' edges: subcategory → control)
+	let controlsBySubcategory = $derived.by(() => {
+		const bySubcat = new Map<string, any[]>();
+		// Query graph for all subcategory → control edges
+		traceGraph.forEachNode((nodeKey) => {
+			if (!nodeKey.startsWith('subcategory:')) return;
+			const subcatId = nodeKey.split(':')[1];
+			const controls: any[] = [];
+			traceGraph.forEachOutEdge(nodeKey, (edge, attrs, source, target) => {
+				if (target.startsWith('control:') && attrs.link?.type === 'contains') {
+					const controlId = target.split(':')[1];
+					const control = controlsById.get(controlId);
+					if (control) controls.push(control);
+				}
+			});
+			if (controls.length > 0) {
+				bySubcat.set(subcatId, controls);
+			}
+		});
+		return bySubcat;
+	});
+
+	// Question dependencies (from 'dependency' edges: question → question)
+	let questionDependencies = $derived.by(() => {
+		const deps = new Map<string, { dependsOn: string[], dependedBy: string[] }>();
+		// Initialize all question nodes in graph
+		traceGraph.forEachNode((nodeKey) => {
+			if (!nodeKey.startsWith('question:')) return;
+			const questionId = nodeKey.split(':')[1];
+			const dependsOn: string[] = [];
+			const dependedBy: string[] = [];
+
+			// Incoming dependency edges = questions this one depends on
+			traceGraph.forEachInEdge(nodeKey, (edge, attrs, source) => {
+				if (source.startsWith('question:') && attrs.link?.type === 'dependency') {
+					dependsOn.push(source.split(':')[1]);
+				}
+			});
+
+			// Outgoing dependency edges = questions that depend on this one
+			traceGraph.forEachOutEdge(nodeKey, (edge, attrs, source, target) => {
+				if (target.startsWith('question:') && attrs.link?.type === 'dependency') {
+					dependedBy.push(target.split(':')[1]);
+				}
+			});
+
+			deps.set(questionId, { dependsOn, dependedBy });
+		});
+		return deps;
+	});
+
+	// Connections from selected node (recomputes when selectedNode changes)
+	let connectionsToSelected = $derived.by(() => {
+		const connections = new Map<string, any>();
+		if (!selectedNode) return connections;
+		const selectedKey = `${selectedNode.type}:${selectedNode.id}`;
+		if (!traceGraph.hasNode(selectedKey)) return connections;
+
+		traceGraph.forEachOutEdge(selectedKey, (edge, attrs, source, target) => {
+			connections.set(target, attrs.link);
+		});
+		traceGraph.forEachInEdge(selectedKey, (edge, attrs, source, target) => {
+			connections.set(source, attrs.link);
+		});
+		return connections;
+	});
 
 	// Entity type configuration for Matrix
 	// Simplified schema: controls ARE mitigations (no separate mitigation entity)
@@ -961,12 +1125,16 @@
 		}).length;
 	});
 
-	// Get control link count (direct risk→control links)
+	// Get control link count (direct risk→control links) using GRAPH
 	function getControlLinkCount(controlId: string): number {
-		// Count risks directly linked to this control
-		return filteredLinks.filter((l: any) =>
-			l.type === 'control' && l.to.entity === 'control' && l.to.id === controlId
-		).length;
+		const nodeKey = `control:${controlId}`;
+		if (!traceGraph.hasNode(nodeKey)) return 0;
+		// Count incoming edges from risks (risk → control)
+		let count = 0;
+		traceGraph.forEachInEdge(nodeKey, (edge, attrs, source) => {
+			if (source.startsWith('risk:')) count++;
+		});
+		return count;
 	}
 
 	// Get orphan counts for display (generic for any row/col type)
@@ -993,141 +1161,62 @@
 		return stats;
 	});
 
-	// Get connections for a node
+	// Get connections for a node using GRAPH (all relationships now in graph)
 	function getConnections(type: string, id: string) {
-		const linkConnections = filteredLinks.filter((l: any) =>
-			(l.from.entity === type && l.from.id === id) ||
-			(l.to.entity === type && l.to.id === id)
-		);
+		const nodeKey = `${type}:${id}`;
+		const linkConnections: any[] = [];
 
-		// For controls, add virtual connection to parent subcategory via subcategoryId
-		if (type === 'control') {
-			const control = allControls.find(c => c.id === id);
-			if (control?.subcategoryId) {
-				const virtualLink = {
-					type: 'subcategory',
-					from: { entity: 'control', id: id },
-					to: { entity: 'subcategory', id: control.subcategoryId },
-					_virtual: true
-				};
-				return [...linkConnections, virtualLink];
-			}
-		}
-
-		// For subcategories, add virtual connections to child controls
-		if (type === 'subcategory') {
-			const childControls = allControls.filter(c => c.subcategoryId === id);
-			const virtualLinks = childControls.slice(0, 10).map(c => ({
-				type: 'subcategory',
-				from: { entity: 'subcategory', id: id },
-				to: { entity: 'control', id: c.id },
-				_virtual: true
-			}));
-			// Add indicator if there are more
-			if (childControls.length > 10) {
-				virtualLinks.push({
-					type: 'subcategory',
-					from: { entity: 'subcategory', id: id },
-					to: { entity: 'control', id: `+${childControls.length - 10} more` },
-					_virtual: true,
-					_overflow: true
-				});
-			}
-			return [...linkConnections, ...virtualLinks];
+		if (traceGraph.hasNode(nodeKey)) {
+			// Outgoing edges
+			traceGraph.forEachOutEdge(nodeKey, (edge, attrs) => {
+				linkConnections.push(attrs.link);
+			});
+			// Incoming edges
+			traceGraph.forEachInEdge(nodeKey, (edge, attrs) => {
+				linkConnections.push(attrs.link);
+			});
 		}
 
 		return linkConnections;
 	}
 
-	// Get all transitively connected nodes from selected node
-	// Full chain: Question → Risk → Control + Regulation
+	// Get all transitively connected nodes from selected node using GRAPH TRAVERSAL
+	// Graph now includes ALL relationships: explicit links + dependencies + control-subcategory
 	let transitiveConnections = $derived.by(() => {
 		if (!selectedNode) return new Set<string>();
 
 		const connected = new Set<string>();
+		const selectedKey = `${selectedNode.type}:${selectedNode.id}`;
 		const selectedType = selectedNode.type;
 
-		// Helper to add node, but skip same-type items (handled separately for dependencies)
-		const addNode = (type: string, id: string, allowSameType = false) => {
-			if (type === selectedType && !allowSameType) return; // Don't add same-column items
-			connected.add(`${type}:${id}`);
-		};
-
-		// Always add the selected node itself
-		connected.add(`${selectedNode.type}:${selectedNode.id}`);
-
-		// For questions: add dependent questions (via showIf)
-		if (selectedType === 'question') {
-			const selectedQ = allQuestions.find(q => q.id === selectedNode.id);
-			if (selectedQ?.showIf) {
-				// Find questions this one depends on
-				for (const depQId of Object.keys(selectedQ.showIf)) {
-					connected.add(`question:${depQId}`);
-				}
-			}
-			// Also find questions that depend on this one
-			for (const q of allQuestions) {
-				if (q.showIf && selectedNode.id in q.showIf) {
-					connected.add(`question:${q.id}`);
-				}
-			}
+		if (!traceGraph.hasNode(selectedKey)) {
+			connected.add(selectedKey);
+			return connected;
 		}
 
-		// For controls: add parent subcategory and sibling controls
-		if (selectedType === 'control') {
-			const selectedCtrl = allControls.find(c => c.id === selectedNode.id);
-			if (selectedCtrl?.subcategoryId) {
-				// Add parent subcategory
-				connected.add(`subcategory:${selectedCtrl.subcategoryId}`);
-				// Add sibling controls
-				const siblingControls = allControls.filter(c => c.subcategoryId === selectedCtrl.subcategoryId);
-				for (const ctrl of siblingControls) {
-					connected.add(`control:${ctrl.id}`);
+		// Use BFS to find all connected nodes (both directions)
+		const queue: string[] = [selectedKey];
+		const visited = new Set<string>([selectedKey]);
+
+		while (queue.length > 0) {
+			const nodeKey = queue.shift()!;
+			connected.add(nodeKey);
+
+			// Traverse outgoing edges
+			traceGraph.forEachOutEdge(nodeKey, (edge, attrs, source, target) => {
+				if (!visited.has(target)) {
+					visited.add(target);
+					queue.push(target);
 				}
-			}
-		}
+			});
 
-		// For subcategories: add all child controls
-		if (selectedType === 'subcategory') {
-			const childControls = allControls.filter(c => c.subcategoryId === selectedNode.id);
-			for (const ctrl of childControls) {
-				connected.add(`control:${ctrl.id}`);
-			}
-		}
-
-		// Get directly connected nodes (from links)
-		const directLinks = filteredLinks.filter((l: any) =>
-			(l.from.entity === selectedNode.type && l.from.id === selectedNode.id) ||
-			(l.to.entity === selectedNode.type && l.to.id === selectedNode.id)
-		);
-
-		// Track connected risks for transitive expansion
-		const connectedRisks: string[] = [];
-
-		// First pass: direct connections from links
-		for (const link of directLinks) {
-			if (link.from.entity === selectedNode.type && link.from.id === selectedNode.id) {
-				addNode(link.to.entity, link.to.id);
-				if (link.to.entity === 'risk') connectedRisks.push(link.to.id);
-			} else {
-				addNode(link.from.entity, link.from.id);
-				if (link.from.entity === 'risk') connectedRisks.push(link.from.id);
-			}
-		}
-
-		// Second pass: expand from risks to their connections (controls, regulations)
-		for (const riskId of connectedRisks) {
-			const riskLinks = filteredLinks.filter((l: any) =>
-				(l.from.entity === 'risk' && l.from.id === riskId) ||
-				(l.to.entity === 'risk' && l.to.id === riskId)
-			);
-			for (const link of riskLinks) {
-				if (link.from.entity === 'risk' && link.from.id === riskId) {
-					addNode(link.to.entity, link.to.id);
-				} else {
-					addNode(link.from.entity, link.from.id);
+			// Traverse incoming edges
+			traceGraph.forEachInEdge(nodeKey, (edge, attrs, source, target) => {
+				if (!visited.has(source)) {
+					visited.add(source);
+					queue.push(source);
 				}
-			}
+			});
 		}
 
 		return connected;
@@ -1139,15 +1228,11 @@
 		return transitiveConnections.has(`${type}:${id}`);
 	}
 
-	// Get the link between selected node and another node
+	// Get connection to selected node (uses pre-computed connectionsToSelected for O(1) lookup)
 	function getConnectionToSelected(type: string, id: string) {
 		if (!selectedNode) return null;
-		return filteredLinks.find((l: any) =>
-			(l.from.entity === selectedNode.type && l.from.id === selectedNode.id && l.to.entity === type && l.to.id === id) ||
-			(l.to.entity === selectedNode.type && l.to.id === selectedNode.id && l.from.entity === type && l.from.id === id) ||
-			(l.from.entity === type && l.from.id === id && l.to.entity === selectedNode.type && l.to.id === selectedNode.id) ||
-			(l.to.entity === type && l.to.id === id && l.from.entity === selectedNode.type && l.from.id === selectedNode.id)
-		);
+		const nodeKey = `${type}:${id}`;
+		return connectionsToSelected.get(nodeKey) ?? null;
 	}
 
 	// Get link between two nodes
@@ -1253,21 +1338,17 @@
 		editingLink = null;
 	}
 
-	// Get entity display info
-	function getQuestion(id: string) { return allQuestions.find(q => q.id === id); }
-	function getRisk(id: string) { return allRisks.find((r: any) => r.id === id); }
-	function getRegulation(id: string) { return allRegulations.find(r => r.id === id); }
-	function getControl(id: string) { return allControls.find(c => c.id === id); }
+	// Get entity display info (using Maps for O(1) lookup)
+	function getQuestion(id: string) { return questionsById.get(id); }
+	function getRisk(id: string) { return risksById.get(id); }
+	function getRegulation(id: string) { return regulationsById.get(id); }
+	function getControl(id: string) { return controlsById.get(id); }
+	function getSubcategory(id: string) { return subcategoriesById.get(id); }
 	function getControlCategory(id: string) { return controlCategories.find((s: any) => s.id === id); }
 
-	// Get question dependencies (showIf relationships)
+	// Get question dependencies (uses pre-computed questionDependencies for O(1) lookup)
 	function getQuestionDependencies(questionId: string): { dependsOn: string[], dependedBy: string[] } {
-		const q = getQuestion(questionId);
-		const dependsOn: string[] = q?.showIf ? Object.keys(q.showIf) : [];
-		const dependedBy: string[] = allQuestions
-			.filter(other => other.showIf && questionId in other.showIf)
-			.map(other => other.id);
-		return { dependsOn, dependedBy };
+		return questionDependencies.get(questionId) ?? { dependsOn: [], dependedBy: [] };
 	}
 
 	// Get available entities for selector based on link type and position
@@ -1459,12 +1540,10 @@
 		});
 	}
 
-	// Count links for a node
+	// Count links for a node (uses pre-computed linkCountByEntity for O(1) lookup)
 	function getLinkCount(type: string, id: string): number {
-		return filteredLinks.filter((l: any) =>
-			(l.from.entity === type && l.from.id === id) ||
-			(l.to.entity === type && l.to.id === id)
-		).length;
+		const nodeKey = `${type}:${id}`;
+		return linkCountByEntity.get(nodeKey) ?? 0;
 	}
 
 	// Get selected node details
@@ -1494,11 +1573,11 @@
 		if (!selectedIntersection) return null;
 		const { rowType, rowId, colType, colId } = selectedIntersection;
 
-		// Get both entities
+		// Get both entities (using Map lookups)
 		const getEntity = (type: EntityType, id: string) => {
 			if (type === 'question') return getQuestion(id);
 			if (type === 'risk') return getRisk(id);
-			if (type === 'subcategory') return allSubcategories.find((s: any) => s.id === id);
+			if (type === 'subcategory') return getSubcategory(id);
 			if (type === 'regulation') return getRegulation(id);
 			if (type === 'control') return getControl(id);
 			return null;
@@ -1515,32 +1594,45 @@
 		) : null;
 
 		// Get downstream entities for each
+		// Helper to get outgoing edges by type from graph
+		const getOutEdgesByType = (nodeKey: string, linkType: string): any[] => {
+			if (!traceGraph.hasNode(nodeKey)) return [];
+			const results: any[] = [];
+			traceGraph.forEachOutEdge(nodeKey, (edge, attrs) => {
+				if (attrs.link.type === linkType) {
+					results.push(attrs.link);
+				}
+			});
+			return results;
+		};
+
 		const getDownstream = (type: EntityType, id: string) => {
 			const downstream: Record<string, any[]> = {};
+			const nodeKey = `${type}:${id}`;
 
 			if (type === 'risk') {
-				// Risk → Subcategories
-				const subcatLinks = links.filter((l: any) => l.type === 'mitigation' && l.from.id === id);
-				downstream.subcategories = subcatLinks.map((l: any) => allSubcategories.find((s: any) => s.id === l.to.id)).filter(Boolean);
+				// Risk → Subcategories (using graph)
+				const subcatLinks = getOutEdgesByType(nodeKey, 'mitigation');
+				downstream.subcategories = subcatLinks.map((l: any) => subcategoriesById.get(l.to.id)).filter(Boolean);
 
-				// Risk → Controls (direct)
-				const controlLinks = links.filter((l: any) => l.type === 'control' && l.from.id === id);
-				downstream.controls = controlLinks.map((l: any) => getControl(l.to.id)).filter(Boolean);
+				// Risk → Controls (direct, using graph)
+				const controlLinks = getOutEdgesByType(nodeKey, 'control');
+				downstream.controls = controlLinks.map((l: any) => controlsById.get(l.to.id)).filter(Boolean);
 
-				// Risk → Regulations
-				const regLinks = links.filter((l: any) => l.type === 'regulation' && l.from.id === id);
-				downstream.regulations = regLinks.map((l: any) => getRegulation(l.to.id)).filter(Boolean);
+				// Risk → Regulations (using graph)
+				const regLinks = getOutEdgesByType(nodeKey, 'regulation');
+				downstream.regulations = regLinks.map((l: any) => regulationsById.get(l.to.id)).filter(Boolean);
 			}
 
 			if (type === 'subcategory') {
-				// Subcategory → Controls (via subcategoryId)
-				downstream.controls = allControls.filter((c: any) => c.subcategoryId === id);
+				// Subcategory → Controls (via subcategoryId index)
+				downstream.controls = controlsBySubcategory.get(id) || [];
 			}
 
 			if (type === 'question') {
-				// Question → Risks (triggers)
-				const triggerLinks = links.filter((l: any) => l.type === 'trigger' && l.from.id === id);
-				downstream.risks = triggerLinks.map((l: any) => getRisk(l.to.id)).filter(Boolean);
+				// Question → Risks (triggers, using graph)
+				const triggerLinks = getOutEdgesByType(nodeKey, 'trigger');
+				downstream.risks = triggerLinks.map((l: any) => risksById.get(l.to.id)).filter(Boolean);
 			}
 
 			return downstream;
@@ -2026,10 +2118,10 @@
 						{@const selectedItem = (() => {
 							const t = traceSelectedNode.type;
 							const id = traceSelectedNode.id;
-							if (t === 'question') return allQuestions.find(q => q.id === id);
-							if (t === 'risk') return allRisks.find(r => r.id === id);
-							if (t === 'control') return allControls.find(c => c.id === id);
-							if (t === 'regulation') return allRegulations.find(r => r.id === id);
+							if (t === 'question') return questionsById.get(id);
+							if (t === 'risk') return risksById.get(id);
+							if (t === 'control') return controlsById.get(id);
+							if (t === 'regulation') return regulationsById.get(id);
 							return null;
 						})()}
 						<aside class="detail-panel">
@@ -2282,7 +2374,7 @@
 				<div class="nodes">
 					{#each graphFilteredSubcategories as s}
 						{@const linkCount = getLinkCount('subcategory', s.id)}
-						{@const controlCount = allControls.filter((c: any) => c.subcategoryId === s.id).length}
+						{@const controlCount = controlsBySubcategory.get(s.id)?.length ?? 0}
 						{@const isSelected = selectedNode?.type === 'subcategory' && selectedNode?.id === s.id}
 						{@const connected = isConnected('subcategory', s.id)}
 						{@const connectionLink = getConnectionToSelected('subcategory', s.id)}
@@ -2618,18 +2710,18 @@
 						{:else}
 							<div class="conditions-list">
 								{#each Object.entries(editingEntity.showIf) as [questionId, values]}
-									{@const depQuestion = allQuestions.find(q => q.id === questionId)}
+									{@const depQuestion = questionsById.get(questionId)}
 									<div class="condition-item">
 										<span class="condition-question">{depQuestion?.text || questionId}</span>
 										<span class="condition-equals">=</span>
 										<span class="condition-values">
 											{#if Array.isArray(values)}
 												{values.map(v => {
-													const opt = depQuestion?.options?.find(o => o.value === v);
+													const opt = depQuestion?.options?.find((o: any) => o.value === v);
 													return opt?.label || v;
 												}).join(' OR ')}
 											{:else}
-												{@const opt = depQuestion?.options?.find(o => o.value === values)}
+												{@const opt = depQuestion?.options?.find((o: any) => o.value === values)}
 												{opt?.label || values}
 											{/if}
 										</span>
@@ -2662,7 +2754,7 @@
 							</select>
 
 							{#if newConditionQuestionId}
-								{@const selectedQ = allQuestions.find(q => q.id === newConditionQuestionId)}
+								{@const selectedQ = questionsById.get(newConditionQuestionId)}
 								{#if selectedQ?.options}
 									<div class="condition-values-select">
 										<span class="when-label">when answer is:</span>
@@ -2828,10 +2920,7 @@
 
 				<!-- Connections Section (for existing entities) -->
 				{#if !isNewEntity && editingEntity?.id}
-					{@const entityConnections = links.filter((l: any) =>
-						(l.from.entity === entityType.slice(0, -1) && l.from.id === editingEntity.id) ||
-						(l.to.entity === entityType.slice(0, -1) && l.to.id === editingEntity.id)
-					)}
+					{@const entityConnections = getConnections(entityType.slice(0, -1), editingEntity.id)}
 					<div class="connections-section-editor">
 						<div class="connections-header">
 							<h4>Connections ({entityConnections.length})</h4>
