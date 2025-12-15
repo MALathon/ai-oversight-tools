@@ -226,6 +226,38 @@
 		const direct = getDirectLink(rowType, rowId, colType, colId);
 		if (direct) return { ...direct, isDirect: true };
 
+		// Special handling for question-to-question showIf dependencies
+		if (rowType === 'question' && colType === 'question' && rowId !== colId) {
+			const rowQuestion = allQuestions.find(q => q.id === rowId);
+			const colQuestion = allQuestions.find(q => q.id === colId);
+
+			// Row question depends on col question (row.showIf contains col)
+			if (rowQuestion?.showIf && colId in rowQuestion.showIf) {
+				return {
+					isDirect: true,
+					isShowIf: true,
+					type: 'dependency',
+					direction: 'depends-on', // row depends on col
+					dependentQuestion: rowId,
+					requiredQuestion: colId,
+					requiredValues: rowQuestion.showIf[colId]
+				};
+			}
+
+			// Col question depends on row question (col.showIf contains row)
+			if (colQuestion?.showIf && rowId in colQuestion.showIf) {
+				return {
+					isDirect: true,
+					isShowIf: true,
+					type: 'dependency',
+					direction: 'depended-by', // row is depended on by col
+					dependentQuestion: colId,
+					requiredQuestion: rowId,
+					requiredValues: colQuestion.showIf[rowId]
+				};
+			}
+		}
+
 		const rowKey = `${rowType}:${rowId}`;
 		const colKey = `${colType}:${colId}`;
 
@@ -251,7 +283,14 @@
 	function toggleGenericMatrixLink(rowType: EntityType, rowId: string, colType: EntityType, colId: string) {
 		const existing = getMatrixLink(rowType, rowId, colType, colId);
 
-		if (existing?.isDirect) {
+		if (existing?.isShowIf) {
+			// showIf dependency - open the dependent question for editing
+			const dependentQ = allQuestions.find(q => q.id === existing.dependentQuestion);
+			if (dependentQ) {
+				entityType = 'questions';
+				editEntity(dependentQ);
+			}
+		} else if (existing?.isDirect) {
 			// Edit the direct link
 			const { isDirect, ...linkData } = existing;
 			editingLink = JSON.parse(JSON.stringify(linkData));
@@ -260,6 +299,14 @@
 			// Transitive connection exists - offer to create direct link
 			if (confirm(`These are transitively connected via the traceability chain.\n\nCreate a direct link between them?`)) {
 				createNewLink(rowType, rowId, colType, colId);
+			}
+		} else if (rowType === 'question' && colType === 'question') {
+			// Question vs Question with no existing dependency - offer to create showIf
+			const rowQ = allQuestions.find(q => q.id === rowId);
+			if (rowQ) {
+				// Open row question for editing to add showIf condition
+				entityType = 'questions';
+				editEntity(rowQ);
 			}
 		} else {
 			// No connection - create new link
@@ -301,6 +348,17 @@
 	let traceStartType = $state<'question' | 'risk' | 'control'>('question');
 	let traceStartId = $state<string>('');
 	let traceSelectedNode = $state<{ type: string; id: string } | null>(null);
+	let traceCollapsed = $state<Set<string>>(new Set()); // Track collapsed node IDs
+
+	function toggleTraceCollapse(nodeKey: string) {
+		const newSet = new Set(traceCollapsed);
+		if (newSet.has(nodeKey)) {
+			newSet.delete(nodeKey);
+		} else {
+			newSet.add(nodeKey);
+		}
+		traceCollapsed = newSet;
+	}
 
 	// Trace node type for tree structure
 	interface TraceNode {
@@ -1530,7 +1588,9 @@
 									{@const link = getMatrixLink(matrixRowType, rowItem.id, matrixColType, colItem.id)}
 									<td
 										class="matrix-cell"
-										class:linked={link?.isDirect}
+										class:linked={link?.isDirect && !link?.isShowIf}
+										class:showif-depends={link?.isShowIf && link?.direction === 'depends-on'}
+										class:showif-depended={link?.isShowIf && link?.direction === 'depended-by'}
 										class:transitive-downstream={link?.isTransitive && link?.direction === 'downstream'}
 										class:transitive-upstream={link?.isTransitive && link?.direction === 'upstream'}
 										class:transitive-sibling={link?.isTransitive && link?.direction === 'sibling'}
@@ -1538,9 +1598,11 @@
 										class:row-highlighted={matrixHoverRow === rowItem.id}
 										onclick={() => toggleGenericMatrixLink(matrixRowType, rowItem.id, matrixColType, colItem.id)}
 										onmouseenter={() => { matrixHoverRow = rowItem.id; matrixHoverCol = colItem.id; }}
-										title={link?.isDirect ? `Direct link (click to edit)` : link?.isTransitive ? `${link.direction === 'downstream' ? 'Downstream' : link.direction === 'upstream' ? 'Upstream' : 'Sibling'} connection (click to create direct)` : `No connection (click to create)`}
+										title={link?.isShowIf ? `${link.direction === 'depends-on' ? 'Row depends on column' : 'Column depends on row'} (click to edit showIf)` : link?.isDirect ? `Direct link (click to edit)` : link?.isTransitive ? `${link.direction === 'downstream' ? 'Downstream' : link.direction === 'upstream' ? 'Upstream' : 'Sibling'} connection (click to create direct)` : `No connection (click to create)`}
 									>
-										{#if link?.isDirect}
+										{#if link?.isShowIf}
+											<span class="cell-marker showif">{link.direction === 'depends-on' ? '→' : '←'}</span>
+										{:else if link?.isDirect}
 											<span class="cell-marker direct">✓</span>
 										{:else if link?.isTransitive}
 											<span class="cell-marker transitive-{link.direction}">{link.direction === 'downstream' ? '↓' : link.direction === 'upstream' ? '↑' : '~'}</span>
@@ -1609,22 +1671,24 @@
 					{@const renderNode = (node: TraceNode, parentId?: string): any => null}
 					<div class="trace-flow">
 						{#snippet traceNode(node: TraceNode, indent: number)}
+							{@const nodeKey = `${node.type}:${node.id}`}
+							{@const isCollapsed = traceCollapsed.has(nodeKey)}
 							<div class="trace-row" style="--indent: {indent}">
 								<div
 									class="trace-node {node.type}"
 									class:selected={traceSelectedNode?.type === node.type && traceSelectedNode?.id === node.id}
 									class:placeholder={node.isPlaceholder}
-									onclick={() => {
-										if (node.isPlaceholder) return;
-										if (connectingFrom) {
-											// We're in connection mode - use handleNodeClick to create/edit link
-											handleNodeClick(node.type, node.id);
-										} else {
-											// Normal selection
-											traceSelectedNode = { type: node.type, id: node.id };
-										}
-									}}
+									class:has-children={node.children.length > 0}
 								>
+									{#if node.children.length > 0}
+										<button
+											class="trace-collapse-btn"
+											title={isCollapsed ? 'Expand' : 'Collapse'}
+											onclick={(e) => { e.stopPropagation(); toggleTraceCollapse(nodeKey); }}
+										>{isCollapsed ? '▶' : '▼'}</button>
+									{:else}
+										<span class="trace-collapse-spacer"></span>
+									{/if}
 									{#if node.link}
 										<button
 											class="trace-link-btn"
@@ -1632,19 +1696,31 @@
 											onclick={(e) => { e.stopPropagation(); editingLink = JSON.parse(JSON.stringify(node.link)); showLinkEditor = true; }}
 										>⟿</button>
 									{/if}
-									<span class="trace-node-type">{node.type === 'more' ? '+' : node.type.charAt(0).toUpperCase()}</span>
-									<span class="trace-node-label" title={node.label}>
-										{#if node.isPlaceholder}
-											{node.label}
-										{:else}
-											<strong>{node.shortLabel}</strong>: {node.label}
-										{/if}
-									</span>
+									<button
+										class="trace-node-content"
+										onclick={() => {
+											if (node.isPlaceholder) return;
+											if (connectingFrom) {
+												handleNodeClick(node.type, node.id);
+											} else {
+												traceSelectedNode = { type: node.type, id: node.id };
+											}
+										}}
+									>
+										<span class="trace-node-type">{node.type === 'more' ? '+' : node.type.charAt(0).toUpperCase()}</span>
+										<span class="trace-node-label">
+											{#if node.isPlaceholder}
+												{node.label}
+											{:else}
+												<strong>{node.shortLabel}</strong>: {node.label}
+											{/if}
+										</span>
+									</button>
 									{#if node.children.length > 0}
 										<span class="trace-children-count">{node.children.length}</span>
 									{/if}
 								</div>
-								{#if node.children.length > 0}
+								{#if node.children.length > 0 && !isCollapsed}
 									<div class="trace-children">
 										{#each node.children as child}
 											{@render traceNode(child, indent + 1)}
@@ -3097,12 +3173,49 @@
 		background: rgba(245, 158, 11, 0.3);
 	}
 
+	/* showIf dependency (row depends on col) - cyan */
+	.matrix-cell.showif-depends {
+		background: rgba(6, 182, 212, 0.2);
+	}
+	.matrix-cell.showif-depends.col-highlighted,
+	.matrix-cell.showif-depends.row-highlighted {
+		background: rgba(6, 182, 212, 0.3);
+	}
+	.matrix-cell.showif-depends.col-highlighted.row-highlighted {
+		background: rgba(6, 182, 212, 0.4);
+		outline: 1px solid #06b6d4;
+	}
+	.matrix-cell.showif-depends:hover {
+		background: rgba(6, 182, 212, 0.35);
+	}
+
+	/* showIf dependency (col depends on row) - lighter cyan */
+	.matrix-cell.showif-depended {
+		background: rgba(34, 211, 238, 0.15);
+	}
+	.matrix-cell.showif-depended.col-highlighted,
+	.matrix-cell.showif-depended.row-highlighted {
+		background: rgba(34, 211, 238, 0.25);
+	}
+	.matrix-cell.showif-depended.col-highlighted.row-highlighted {
+		background: rgba(34, 211, 238, 0.35);
+		outline: 1px solid #22d3ee;
+	}
+	.matrix-cell.showif-depended:hover {
+		background: rgba(34, 211, 238, 0.3);
+	}
+
 	.cell-marker {
 		font-size: 0.75rem;
 	}
 
 	.cell-marker.direct {
 		color: #22c55e;
+	}
+
+	.cell-marker.showif {
+		color: #06b6d4;
+		font-weight: 600;
 	}
 
 	.cell-marker.transitive-downstream {
@@ -3216,20 +3329,52 @@
 	.trace-node {
 		display: inline-flex;
 		align-items: center;
-		gap: 0.5rem;
-		padding: 0.5rem 0.75rem;
+		gap: 0.375rem;
+		padding: 0.375rem 0.5rem;
 		background: #1e293b;
 		border: 1px solid #334155;
 		border-radius: 0.375rem;
-		cursor: pointer;
 		transition: all 0.15s ease;
-		max-width: fit-content;
 		margin: 0.125rem 0;
 	}
 
 	.trace-node:hover {
 		border-color: #475569;
-		background: #334155;
+	}
+
+	.trace-collapse-btn {
+		background: none;
+		border: none;
+		color: #64748b;
+		cursor: pointer;
+		padding: 0;
+		width: 1rem;
+		font-size: 0.625rem;
+		transition: color 0.15s ease;
+	}
+
+	.trace-collapse-btn:hover {
+		color: #94a3b8;
+	}
+
+	.trace-collapse-spacer {
+		width: 1rem;
+	}
+
+	.trace-node-content {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		background: none;
+		border: none;
+		cursor: pointer;
+		padding: 0.25rem;
+		border-radius: 0.25rem;
+		transition: background 0.15s ease;
+	}
+
+	.trace-node-content:hover {
+		background: rgba(255, 255, 255, 0.05);
 	}
 
 	.trace-node.selected {
@@ -3275,10 +3420,7 @@
 	.trace-node-label {
 		font-size: 0.8125rem;
 		color: #e2e8f0;
-		max-width: 200px;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
+		text-align: left;
 	}
 
 	.trace-children-count {
