@@ -6,12 +6,11 @@
 	// State for answers
 	let answers = $state<Record<string, string | string[]>>({});
 
-	// State for mitigation decisions per subdomain
-	let mitigationDecisions = $state<Record<string, {
-		status: 'pending' | 'accepted' | 'custom' | 'not-applicable';
-		customText?: string;
-		justification?: string;
-	}>>({});
+	// State for selected controls per risk
+	let selectedControls = $state<Record<string, Set<string>>>({});
+
+	// Expanded risk cards
+	let expandedRisks = $state<Set<string>>(new Set());
 
 	// Check showIf conditions
 	function checkShowIf(showIf: Record<string, string | string[]> | undefined): boolean {
@@ -41,38 +40,33 @@
 	);
 
 	let selectedPhase = $derived(answers['phase'] as string || '');
+	let selectedModelTypes = $derived((answers['model-types'] as string[]) || []);
 
-	// Calculate triggered subdomains using links array (single source of truth)
+	// Calculate triggered subdomains using links array
 	let triggeredSubdomains = $derived.by(() => {
 		const triggered = new Set<string>();
 
-		// Get trigger links from traceability
 		const triggerLinks = data.links.filter((l: any) =>
 			l.type === 'trigger' && l.from.entity === 'question' && l.to.entity === 'risk'
 		);
 
-		// Check each trigger link against current answers
 		for (const link of triggerLinks) {
 			const questionId = link.from.id;
 			const answer = answers[questionId];
 			if (!answer) continue;
 
-			// Check if the answer matches any of the trigger's answerValues
 			const answerValues = link.answerValues || [];
 			let matches = false;
 
 			if (Array.isArray(answer)) {
-				// Multi-select: check if any answer value matches
 				matches = answer.some(val => answerValues.includes(val));
 			} else {
-				// Single value: check direct match
 				matches = answerValues.includes(answer);
 			}
 
 			if (matches) {
-				// Check phase applicability if we have a selected phase
 				if (selectedPhase && link.phases && !link.phases.includes(selectedPhase)) {
-					continue; // Skip if link doesn't apply to current phase
+					continue;
 				}
 				triggered.add(link.to.id);
 			}
@@ -104,14 +98,10 @@
 		return triggered;
 	});
 
-	// Get selected model types for filtering
-	let selectedModelTypes = $derived((answers['model-types'] as string[]) || []);
-
-	// Get triggered risks with their suggested mitigations, subcategories, and controls
+	// Get triggered risks with available controls
 	let triggeredRisks = $derived.by(() => {
 		if (!selectedPhase) return [];
 
-		// Get mitigation links (risk → subcategory)
 		const mitigationLinks = data.links.filter((l: any) =>
 			l.type === 'mitigation' && l.from.entity === 'risk' && l.to.entity === 'subcategory'
 		);
@@ -119,11 +109,12 @@
 		const risks: Array<{
 			subdomain: any;
 			domain: any;
-			suggestedMitigation: string;
+			riskContext: string;
 			subcategories: Array<{
 				subcategory: any;
 				controls: any[];
 			}>;
+			allControls: any[];
 		}> = [];
 
 		for (const domain of data.domains) {
@@ -133,38 +124,44 @@
 				const subdomain = data.subdomains.find((s: any) => s.id === subId);
 				if (!subdomain) continue;
 
-				const mitigation = data.phaseMitigations[subId]?.[selectedPhase];
-				if (mitigation) {
-					// Find subcategories linked to this risk
-					const riskSubcategoryLinks = mitigationLinks.filter((l: any) => l.from.id === subId);
-					const subcategoriesWithControls = riskSubcategoryLinks.map((link: any) => {
-						const subcategory = data.subcategories.find((s: any) => s.id === link.to.id);
-						if (!subcategory) return null;
+				// Get risk context (phaseGuidance) - WHY/WHAT the risk is
+				const riskContext = subdomain.phaseGuidance?.[selectedPhase] || '';
 
-						// Get controls for this subcategory, filtered by phase and tech type
-						let controls = data.controls.filter((c: any) => c.subcategoryId === subcategory.id);
+				// Find subcategories linked to this risk
+				const riskSubcategoryLinks = mitigationLinks.filter((l: any) => l.from.id === subId);
+				const subcategoriesWithControls = riskSubcategoryLinks.map((link: any) => {
+					const subcategory = data.subcategories.find((s: any) => s.id === link.to.id);
+					if (!subcategory) return null;
 
-						// Filter by phase
+					// Get controls for this subcategory, filtered by phase and tech type
+					let controls = data.controls.filter((c: any) => c.subcategoryId === subcategory.id);
+
+					// Filter by phase
+					controls = controls.filter((c: any) =>
+						!c.phases || c.phases.length === 0 || c.phases.includes(selectedPhase)
+					);
+
+					// Filter by tech type
+					if (selectedModelTypes.length > 0) {
 						controls = controls.filter((c: any) =>
-							!c.phases || c.phases.length === 0 || c.phases.includes(selectedPhase)
+							!c.techTypes || c.techTypes.includes('all') ||
+							c.techTypes.some((t: string) => selectedModelTypes.includes(t))
 						);
+					}
 
-						// Filter by tech type
-						if (selectedModelTypes.length > 0) {
-							controls = controls.filter((c: any) =>
-								!c.techTypes || c.techTypes.includes('all') ||
-								c.techTypes.some((t: string) => selectedModelTypes.includes(t))
-							);
-						}
+					return { subcategory, controls };
+				}).filter(Boolean);
 
-						return { subcategory, controls };
-					}).filter(Boolean);
+				// Flatten all controls for this risk
+				const allControls = subcategoriesWithControls.flatMap((sc: any) => sc.controls);
 
+				if (riskContext || allControls.length > 0) {
 					risks.push({
 						subdomain,
 						domain,
-						suggestedMitigation: mitigation,
-						subcategories: subcategoriesWithControls
+						riskContext,
+						subcategories: subcategoriesWithControls,
+						allControls
 					});
 				}
 			}
@@ -191,47 +188,101 @@
 		answers[questionId] = Array.from(newSet);
 	}
 
-	function setDecision(subId: string, status: 'accepted' | 'custom' | 'not-applicable') {
-		if (!mitigationDecisions[subId]) {
-			mitigationDecisions[subId] = { status: 'pending' };
+	function toggleControl(riskId: string, controlId: string) {
+		if (!selectedControls[riskId]) {
+			selectedControls[riskId] = new Set();
 		}
-		mitigationDecisions[subId] = { ...mitigationDecisions[subId], status };
+		const newSet = new Set(selectedControls[riskId]);
+		if (newSet.has(controlId)) {
+			newSet.delete(controlId);
+		} else {
+			newSet.add(controlId);
+		}
+		selectedControls[riskId] = newSet;
 	}
 
+	function selectAllControls(riskId: string, controls: any[]) {
+		selectedControls[riskId] = new Set(controls.map(c => c.id));
+	}
+
+	function clearAllControls(riskId: string) {
+		selectedControls[riskId] = new Set();
+	}
+
+	function toggleRiskExpanded(riskId: string) {
+		const newSet = new Set(expandedRisks);
+		if (newSet.has(riskId)) {
+			newSet.delete(riskId);
+		} else {
+			newSet.add(riskId);
+		}
+		expandedRisks = newSet;
+	}
+
+	// Get selected control count for a risk
+	function getSelectedCount(riskId: string): number {
+		return selectedControls[riskId]?.size || 0;
+	}
+
+	// Total selected controls
+	let totalSelectedControls = $derived(
+		Object.values(selectedControls).reduce((acc, set) => acc + set.size, 0)
+	);
+
+	// Generate protocol from selected controls
 	function generateProtocol() {
+		const phaseName = selectedPhase.replace('phase-', 'Phase ');
 		let protocol = `# AI Research Protocol - Risk Mitigation Plan\n\n`;
-		protocol += `**Development Phase:** ${selectedPhase.replace('phase-', 'Phase ')}\n\n`;
+		protocol += `**Development Phase:** ${phaseName}\n`;
+		protocol += `**Model Types:** ${selectedModelTypes.join(', ') || 'Not specified'}\n\n`;
+		protocol += `---\n\n`;
 
 		for (const risk of triggeredRisks) {
-			const decision = mitigationDecisions[risk.subdomain.id];
-			protocol += `## ${risk.subdomain.code}: ${risk.subdomain.name}\n`;
-			protocol += `*${risk.domain.name}*\n\n`;
+			const riskSelectedIds = selectedControls[risk.subdomain.id] || new Set();
+			if (riskSelectedIds.size === 0) continue;
 
-			if (!decision || decision.status === 'pending') {
-				protocol += `**Status:** Pending review\n\n`;
-				protocol += `**Suggested Mitigation:**\n${risk.suggestedMitigation}\n\n`;
-			} else if (decision.status === 'accepted') {
-				protocol += `**Mitigation Plan:**\n${risk.suggestedMitigation}\n\n`;
-			} else if (decision.status === 'custom') {
-				protocol += `**Custom Mitigation Plan:**\n${decision.customText || '[No custom text provided]'}\n\n`;
-			} else if (decision.status === 'not-applicable') {
-				protocol += `**Status:** Not Applicable\n`;
-				protocol += `**Justification:** ${decision.justification || '[No justification provided]'}\n\n`;
+			protocol += `## ${risk.subdomain.code}: ${risk.subdomain.shortName}\n`;
+			protocol += `*Domain: ${risk.domain.name}*\n\n`;
+
+			// Risk context
+			if (risk.riskContext) {
+				protocol += `### Risk Context\n`;
+				protocol += `${risk.riskContext}\n\n`;
 			}
+
+			// Selected controls and their implementation notes
+			protocol += `### Mitigation Approach\n\n`;
+
+			const selectedControlObjects = risk.allControls.filter((c: any) => riskSelectedIds.has(c.id));
+
+			for (const control of selectedControlObjects) {
+				const implNote = control.implementationNotes?.[selectedPhase];
+				protocol += `**${control.name}**\n`;
+				if (implNote) {
+					protocol += `${implNote}\n\n`;
+				} else {
+					protocol += `${control.description || 'No implementation guidance available.'}\n\n`;
+				}
+			}
+
+			protocol += `---\n\n`;
+		}
+
+		if (totalSelectedControls === 0) {
+			alert('Please select at least one control measure to generate a protocol.');
+			return;
 		}
 
 		navigator.clipboard.writeText(protocol);
 		alert('Protocol copied to clipboard!');
 	}
 
-	let completedCount = $derived(
-		triggeredRisks.filter(r => {
-			const d = mitigationDecisions[r.subdomain.id];
-			return d && d.status !== 'pending';
-		}).length
-	);
-
 	let hasAnswers = $derived(selectedPhase !== '');
+
+	// Risks with at least one control selected
+	let risksAddressed = $derived(
+		triggeredRisks.filter(r => getSelectedCount(r.subdomain.id) > 0).length
+	);
 </script>
 
 <svelte:head>
@@ -291,17 +342,17 @@
 		{/each}
 	</div>
 
-	<!-- Right: Identified Risks & Mitigations -->
+	<!-- Right: Identified Risks & Control Selection -->
 	<div class="risks-panel">
 		<div class="panel-header">
 			<div>
 				<h2>Identified Risks</h2>
 				{#if triggeredRisks.length > 0}
-					<p class="progress">{completedCount} of {triggeredRisks.length} addressed</p>
+					<p class="progress">{risksAddressed} of {triggeredRisks.length} addressed ({totalSelectedControls} controls selected)</p>
 				{/if}
 			</div>
 			{#if triggeredRisks.length > 0}
-				<button class="generate-btn" onclick={generateProtocol}>Copy Protocol</button>
+				<button class="generate-btn" onclick={generateProtocol}>Generate Protocol</button>
 			{/if}
 		</div>
 
@@ -311,92 +362,75 @@
 			<div class="empty">Answer more questions to identify applicable risks.</div>
 		{:else}
 			{#each triggeredRisks as risk}
-				{@const decision = mitigationDecisions[risk.subdomain.id] || { status: 'pending' }}
-				<div class="risk-card" class:addressed={decision.status !== 'pending'}>
-					<div class="risk-header">
-						<span class="code">{risk.subdomain.code}</span>
-						<span class="risk-name">{risk.subdomain.shortName}</span>
-						<span class="domain-tag">{risk.domain.name}</span>
-					</div>
-
-					<div class="suggested-mitigation">
-						<h4>Suggested Mitigation</h4>
-						<p>{risk.suggestedMitigation}</p>
-					</div>
-
-					<div class="decision-buttons">
-						<button
-							class="decision-btn accept"
-							class:active={decision.status === 'accepted'}
-							onclick={() => setDecision(risk.subdomain.id, 'accepted')}
-						>
-							Accept
-						</button>
-						<button
-							class="decision-btn custom"
-							class:active={decision.status === 'custom'}
-							onclick={() => setDecision(risk.subdomain.id, 'custom')}
-						>
-							Custom
-						</button>
-						<button
-							class="decision-btn na"
-							class:active={decision.status === 'not-applicable'}
-							onclick={() => setDecision(risk.subdomain.id, 'not-applicable')}
-						>
-							N/A
-						</button>
-					</div>
-
-					{#if decision.status === 'custom'}
-						<div class="custom-input">
-							<textarea
-								placeholder="Enter your custom mitigation plan..."
-								bind:value={mitigationDecisions[risk.subdomain.id].customText}
-								rows="3"
-							></textarea>
+				{@const isExpanded = expandedRisks.has(risk.subdomain.id)}
+				{@const selectedCount = getSelectedCount(risk.subdomain.id)}
+				<div class="risk-card" class:has-selections={selectedCount > 0}>
+					<button class="risk-header" onclick={() => toggleRiskExpanded(risk.subdomain.id)}>
+						<div class="risk-info">
+							<span class="code">{risk.subdomain.code}</span>
+							<span class="risk-name">{risk.subdomain.shortName}</span>
+							<span class="domain-tag">{risk.domain.name}</span>
 						</div>
-					{/if}
-
-					{#if decision.status === 'not-applicable'}
-						<div class="custom-input">
-							<textarea
-								placeholder="Justify why this risk is not applicable..."
-								bind:value={mitigationDecisions[risk.subdomain.id].justification}
-								rows="2"
-							></textarea>
+						<div class="risk-meta">
+							{#if selectedCount > 0}
+								<span class="selected-badge">{selectedCount} selected</span>
+							{/if}
+							<span class="controls-available">{risk.allControls.length} controls</span>
+							<span class="expand-icon">{isExpanded ? '▼' : '▶'}</span>
 						</div>
-					{/if}
+					</button>
 
-					{#if risk.subcategories.length > 0}
-						<details class="controls-section">
-							<summary>
-								<span class="controls-toggle">Technical Controls</span>
-								<span class="controls-count">{risk.subcategories.reduce((acc, s) => acc + s.controls.length, 0)} controls</span>
-							</summary>
-							<div class="subcategories-list">
-								{#each risk.subcategories as { subcategory, controls }}
-									<div class="subcategory-item">
-										<div class="subcategory-header">
-											<span class="subcategory-name">{subcategory.name}</span>
-											<span class="subcategory-count">{controls.length}</span>
-										</div>
-										{#if controls.length > 0}
-											<ul class="controls-list">
-												{#each controls as control}
-													<li class="control-item">
-														<span class="control-id">{control.id}</span>
-														<span class="control-name">{control.name}</span>
-													</li>
-												{/each}
-											</ul>
-										{:else}
-											<p class="no-controls">No controls match current filters</p>
-										{/if}
+					{#if isExpanded}
+						<div class="risk-body">
+							<!-- Risk Context -->
+							{#if risk.riskContext}
+								<div class="risk-context">
+									<h4>Why This Matters ({selectedPhase.replace('phase-', 'Phase ')})</h4>
+									<p>{risk.riskContext}</p>
+								</div>
+							{/if}
+
+							<!-- Control Selection -->
+							<div class="controls-section">
+								<div class="controls-header">
+									<h4>Select Controls to Implement</h4>
+									<div class="controls-actions">
+										<button class="action-btn" onclick={() => selectAllControls(risk.subdomain.id, risk.allControls)}>Select All</button>
+										<button class="action-btn" onclick={() => clearAllControls(risk.subdomain.id)}>Clear</button>
 									</div>
+								</div>
+
+								{#each risk.subcategories as { subcategory, controls }}
+									{#if controls.length > 0}
+										<div class="subcategory-group">
+											<div class="subcategory-label">{subcategory.name}</div>
+											<div class="controls-grid">
+												{#each controls as control}
+													{@const isSelected = selectedControls[risk.subdomain.id]?.has(control.id)}
+													<label class="control-checkbox" class:selected={isSelected}>
+														<input
+															type="checkbox"
+															checked={isSelected}
+															onchange={() => toggleControl(risk.subdomain.id, control.id)}
+														/>
+														<div class="control-content">
+															<span class="control-name">{control.name}</span>
+															{#if isSelected && control.implementationNotes?.[selectedPhase]}
+																<span class="impl-note">{control.implementationNotes[selectedPhase]}</span>
+															{/if}
+														</div>
+													</label>
+												{/each}
+											</div>
+										</div>
+									{/if}
 								{/each}
+
+								{#if risk.allControls.length === 0}
+									<p class="no-controls">No controls match current phase and technology filters.</p>
+								{/if}
 							</div>
-						</details>
+						</div>
 					{/if}
 				</div>
 			{/each}
@@ -436,20 +470,22 @@
 	.panel-header h2 {
 		font-size: 0.875rem;
 		color: #f1f5f9;
+		margin: 0;
 	}
 
 	.panel-header .progress {
 		font-size: 0.625rem;
 		color: #64748b;
+		margin: 0.25rem 0 0 0;
 	}
 
 	.generate-btn {
-		padding: 0.375rem 0.75rem;
+		padding: 0.5rem 1rem;
 		background: #22c55e;
 		border: none;
-		border-radius: 0.25rem;
+		border-radius: 0.375rem;
 		color: #0f172a;
-		font-size: 0.6875rem;
+		font-size: 0.75rem;
 		font-weight: 600;
 		cursor: pointer;
 	}
@@ -476,7 +512,7 @@
 		font-weight: 600;
 		color: #60a5fa;
 		text-transform: uppercase;
-		margin-bottom: 0.5rem;
+		margin: 0 0 0.5rem 0;
 	}
 
 	.question {
@@ -532,255 +568,224 @@
 		font-size: 0.75rem;
 	}
 
+	/* Risk Cards */
 	.risk-card {
-		padding: 0.75rem 1rem;
 		border-bottom: 1px solid #334155;
 	}
 
-	.risk-card.addressed {
+	.risk-card.has-selections {
 		background: rgba(34, 197, 94, 0.05);
 	}
 
 	.risk-header {
+		width: 100%;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 0.75rem 1rem;
+		background: transparent;
+		border: none;
+		cursor: pointer;
+		text-align: left;
+	}
+
+	.risk-header:hover {
+		background: rgba(96, 165, 250, 0.05);
+	}
+
+	.risk-info {
 		display: flex;
 		align-items: center;
-		gap: 0.375rem;
-		margin-bottom: 0.5rem;
+		gap: 0.5rem;
 	}
 
-	.risk-header .code {
-		font-family: monospace;
-		font-size: 0.5625rem;
+	.code {
+		font-size: 0.625rem;
+		font-weight: 700;
 		color: #60a5fa;
-		background: rgba(96, 165, 250, 0.2);
-		padding: 0.0625rem 0.25rem;
-		border-radius: 0.125rem;
+		background: rgba(96, 165, 250, 0.1);
+		padding: 0.125rem 0.375rem;
+		border-radius: 0.25rem;
 	}
 
-	.risk-header .risk-name {
-		flex: 1;
-		font-size: 0.75rem;
+	.risk-name {
+		font-size: 0.8125rem;
 		font-weight: 500;
 		color: #f1f5f9;
 	}
 
-	.risk-header .domain-tag {
-		font-size: 0.5rem;
-		color: #64748b;
-		background: #0f172a;
-		padding: 0.0625rem 0.375rem;
-		border-radius: 0.125rem;
-	}
-
-	.suggested-mitigation {
-		background: #0f172a;
-		border-radius: 0.25rem;
-		padding: 0.5rem;
-		margin-bottom: 0.5rem;
-	}
-
-	.suggested-mitigation h4 {
-		font-size: 0.5625rem;
-		font-weight: 600;
-		color: #64748b;
-		text-transform: uppercase;
-		margin-bottom: 0.25rem;
-	}
-
-	.suggested-mitigation p {
-		font-size: 0.6875rem;
-		color: #94a3b8;
-		line-height: 1.5;
-	}
-
-	.decision-buttons {
-		display: flex;
-		gap: 0.375rem;
-	}
-
-	.decision-btn {
-		flex: 1;
-		padding: 0.375rem;
-		background: #0f172a;
-		border: 1px solid #334155;
-		border-radius: 0.25rem;
-		color: #94a3b8;
-		font-size: 0.625rem;
-		font-weight: 500;
-		cursor: pointer;
-	}
-
-	.decision-btn:hover {
-		border-color: #60a5fa;
-	}
-
-	.decision-btn.accept.active {
-		background: #22c55e;
-		border-color: #22c55e;
-		color: #0f172a;
-	}
-
-	.decision-btn.custom.active {
-		background: #60a5fa;
-		border-color: #60a5fa;
-		color: #0f172a;
-	}
-
-	.decision-btn.na.active {
-		background: #f59e0b;
-		border-color: #f59e0b;
-		color: #0f172a;
-	}
-
-	.custom-input {
-		margin-top: 0.5rem;
-	}
-
-	.custom-input textarea {
-		width: 100%;
-		padding: 0.5rem;
-		background: #0f172a;
-		border: 1px solid #334155;
-		border-radius: 0.25rem;
-		color: #e2e8f0;
-		font-size: 0.6875rem;
-		line-height: 1.4;
-		resize: vertical;
-	}
-
-	.custom-input textarea:focus {
-		outline: none;
-		border-color: #60a5fa;
-	}
-
-	.controls-section {
-		margin-top: 0.5rem;
-		border: 1px solid #334155;
-		border-radius: 0.25rem;
-		background: #0f172a;
-	}
-
-	.controls-section summary {
-		padding: 0.5rem;
-		cursor: pointer;
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		user-select: none;
-	}
-
-	.controls-section summary::-webkit-details-marker {
-		display: none;
-	}
-
-	.controls-section summary::before {
-		content: '▶';
-		font-size: 0.5rem;
-		margin-right: 0.375rem;
-		color: #64748b;
-		transition: transform 0.2s;
-	}
-
-	.controls-section[open] summary::before {
-		transform: rotate(90deg);
-	}
-
-	.controls-toggle {
-		font-size: 0.625rem;
-		font-weight: 500;
-		color: #94a3b8;
-	}
-
-	.controls-count {
+	.domain-tag {
 		font-size: 0.5625rem;
 		color: #64748b;
-		background: #1e293b;
+		background: #0f172a;
 		padding: 0.125rem 0.375rem;
-		border-radius: 0.125rem;
+		border-radius: 0.25rem;
 	}
 
-	.subcategories-list {
-		border-top: 1px solid #334155;
-		max-height: 300px;
-		overflow-y: auto;
-	}
-
-	.subcategory-item {
-		border-bottom: 1px solid #334155;
-	}
-
-	.subcategory-item:last-child {
-		border-bottom: none;
-	}
-
-	.subcategory-header {
+	.risk-meta {
 		display: flex;
-		justify-content: space-between;
 		align-items: center;
-		padding: 0.375rem 0.5rem;
-		background: #1e293b;
+		gap: 0.5rem;
 	}
 
-	.subcategory-name {
+	.selected-badge {
 		font-size: 0.625rem;
-		font-weight: 500;
-		color: #a78bfa;
+		color: #22c55e;
+		background: rgba(34, 197, 94, 0.1);
+		padding: 0.125rem 0.5rem;
+		border-radius: 0.25rem;
+		font-weight: 600;
 	}
 
-	.subcategory-count {
-		font-size: 0.5rem;
+	.controls-available {
+		font-size: 0.625rem;
 		color: #64748b;
-		background: #0f172a;
-		padding: 0.0625rem 0.25rem;
-		border-radius: 0.125rem;
 	}
 
-	.controls-list {
-		list-style: none;
-		padding: 0;
+	.expand-icon {
+		font-size: 0.625rem;
+		color: #64748b;
+	}
+
+	/* Risk Body (expanded) */
+	.risk-body {
+		padding: 0 1rem 1rem;
+	}
+
+	.risk-context {
+		background: #0f172a;
+		border-radius: 0.375rem;
+		padding: 0.75rem;
+		margin-bottom: 0.75rem;
+		border-left: 3px solid #f59e0b;
+	}
+
+	.risk-context h4 {
+		font-size: 0.6875rem;
+		font-weight: 600;
+		color: #f59e0b;
+		margin: 0 0 0.5rem 0;
+		text-transform: uppercase;
+	}
+
+	.risk-context p {
+		font-size: 0.75rem;
+		color: #cbd5e1;
+		line-height: 1.5;
 		margin: 0;
 	}
 
-	.control-item {
+	/* Controls Section */
+	.controls-section {
+		background: #0f172a;
+		border-radius: 0.375rem;
+		padding: 0.75rem;
+	}
+
+	.controls-header {
 		display: flex;
-		gap: 0.375rem;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 0.75rem;
+	}
+
+	.controls-header h4 {
+		font-size: 0.6875rem;
+		font-weight: 600;
+		color: #22c55e;
+		margin: 0;
+		text-transform: uppercase;
+	}
+
+	.controls-actions {
+		display: flex;
+		gap: 0.5rem;
+	}
+
+	.action-btn {
+		font-size: 0.5625rem;
 		padding: 0.25rem 0.5rem;
-		border-bottom: 1px solid #1e293b;
+		background: transparent;
+		border: 1px solid #334155;
+		border-radius: 0.25rem;
+		color: #94a3b8;
+		cursor: pointer;
 	}
 
-	.control-item:last-child {
-		border-bottom: none;
+	.action-btn:hover {
+		border-color: #60a5fa;
+		color: #60a5fa;
 	}
 
-	.control-id {
-		font-family: monospace;
-		font-size: 0.5rem;
-		color: #64748b;
-		flex-shrink: 0;
-		min-width: 80px;
+	.subcategory-group {
+		margin-bottom: 0.75rem;
+	}
+
+	.subcategory-group:last-child {
+		margin-bottom: 0;
+	}
+
+	.subcategory-label {
+		font-size: 0.625rem;
+		font-weight: 600;
+		color: #8b5cf6;
+		margin-bottom: 0.375rem;
+		text-transform: uppercase;
+	}
+
+	.controls-grid {
+		display: flex;
+		flex-direction: column;
+		gap: 0.375rem;
+	}
+
+	.control-checkbox {
+		display: flex;
+		align-items: flex-start;
+		gap: 0.5rem;
+		padding: 0.5rem;
+		background: #1e293b;
+		border-radius: 0.25rem;
+		cursor: pointer;
+		border: 1px solid transparent;
+	}
+
+	.control-checkbox:hover {
+		background: #334155;
+	}
+
+	.control-checkbox.selected {
+		border-color: #22c55e;
+		background: rgba(34, 197, 94, 0.1);
+	}
+
+	.control-checkbox input {
+		margin-top: 0.125rem;
+	}
+
+	.control-content {
+		flex: 1;
 	}
 
 	.control-name {
-		font-size: 0.5625rem;
-		color: #94a3b8;
-		line-height: 1.4;
+		font-size: 0.75rem;
+		color: #e2e8f0;
+		display: block;
 	}
 
-	.no-controls {
-		font-size: 0.5625rem;
-		color: #64748b;
-		padding: 0.375rem 0.5rem;
+	.impl-note {
+		font-size: 0.6875rem;
+		color: #22c55e;
+		display: block;
+		margin-top: 0.25rem;
 		font-style: italic;
 	}
 
-	@media (max-width: 800px) {
-		.generator {
-			grid-template-columns: 1fr;
-			height: auto;
-		}
-
-		.questions-panel, .risks-panel {
-			max-height: 50vh;
-		}
+	.no-controls {
+		font-size: 0.75rem;
+		color: #64748b;
+		text-align: center;
+		padding: 1rem;
+		margin: 0;
 	}
 </style>
