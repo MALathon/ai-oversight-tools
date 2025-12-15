@@ -141,8 +141,28 @@
 	let filteredLinks = $derived(
 		selectedPhase === 'all'
 			? links
-			: links.filter((l: any) => !l.phases || l.phases.includes(selectedPhase))
+			: links.filter((l: any) => !l.phases || l.phases.length === 0 || l.phases.includes(selectedPhase))
 	);
+
+	// Compute which entities appear in phase-filtered links (for graph filtering)
+	let linkedEntities = $derived.by(() => {
+		const entities: Record<string, Set<string>> = {
+			question: new Set(),
+			risk: new Set(),
+			subcategory: new Set(),
+			regulation: new Set(),
+			control: new Set()
+		};
+		for (const link of filteredLinks) {
+			if (link.from.entity in entities) {
+				entities[link.from.entity].add(link.from.id);
+			}
+			if (link.to.entity in entities) {
+				entities[link.to.entity].add(link.to.id);
+			}
+		}
+		return entities;
+	});
 
 	// Build directed graph from filtered links using Graphology
 	// Nodes are "type:id" strings, edges follow the link direction
@@ -858,11 +878,44 @@
 		return filtered;
 	});
 
-	// Visible counts for graph columns (accounting for search, focus mode, and transitive connections)
+	// Graph-filtered entities (by phase via links, and by search)
+	let graphFilteredQuestions = $derived.by(() => {
+		let filtered = filterBySearch(allQuestions, (q: any) => q.text, 'question');
+		// When phase selected, only show questions that appear in filtered links
+		if (selectedPhase !== 'all') {
+			filtered = filtered.filter(q => linkedEntities.question.has(q.id));
+		}
+		return filtered;
+	});
+
+	let graphFilteredRisks = $derived.by(() => {
+		let filtered = filterBySearch(allRisks, (r: any) => r.shortName + ' ' + r.name, 'risk');
+		if (selectedPhase !== 'all') {
+			filtered = filtered.filter(r => linkedEntities.risk.has(r.id));
+		}
+		return filtered;
+	});
+
+	let graphFilteredSubcategories = $derived.by(() => {
+		let filtered = filterBySearch(allSubcategories, (s: any) => s.name + ' ' + s.code, 'subcategory');
+		if (selectedPhase !== 'all') {
+			filtered = filtered.filter(s => linkedEntities.subcategory.has(s.id));
+		}
+		return filtered;
+	});
+
+	let graphFilteredRegulations = $derived.by(() => {
+		let filtered = filterBySearch(allRegulations, (r: any) => r.citation + ' ' + r.description, 'regulation');
+		if (selectedPhase !== 'all') {
+			filtered = filtered.filter(r => linkedEntities.regulation.has(r.id));
+		}
+		return filtered;
+	});
+
+	// Visible counts for graph columns (accounting for focus mode and transitive connections)
 	let visibleQuestionCount = $derived.by(() => {
-		const filtered = filterBySearch(allQuestions, (q: any) => q.text, 'question');
-		if (!focusMode || !selectedNode) return filtered.length;
-		return filtered.filter((q: any) => {
+		if (!focusMode || !selectedNode) return graphFilteredQuestions.length;
+		return graphFilteredQuestions.filter((q: any) => {
 			const isSelected = selectedNode?.type === 'question' && selectedNode?.id === q.id;
 			const connected = transitiveConnections.has(`question:${q.id}`);
 			return isSelected || connected;
@@ -870,9 +923,8 @@
 	});
 
 	let visibleRiskCount = $derived.by(() => {
-		const filtered = filterBySearch(allRisks, (r: any) => r.shortName + ' ' + r.name, 'risk');
-		if (!focusMode || !selectedNode) return filtered.length;
-		return filtered.filter((r: any) => {
+		if (!focusMode || !selectedNode) return graphFilteredRisks.length;
+		return graphFilteredRisks.filter((r: any) => {
 			const isSelected = selectedNode?.type === 'risk' && selectedNode?.id === r.id;
 			const connected = transitiveConnections.has(`risk:${r.id}`);
 			return isSelected || connected;
@@ -880,9 +932,8 @@
 	});
 
 	let visibleSubcategoryCount = $derived.by(() => {
-		const filtered = filterBySearch(allSubcategories, (s: any) => s.name + ' ' + s.code, 'subcategory');
-		if (!focusMode || !selectedNode) return filtered.length;
-		return filtered.filter((s: any) => {
+		if (!focusMode || !selectedNode) return graphFilteredSubcategories.length;
+		return graphFilteredSubcategories.filter((s: any) => {
 			const isSelected = selectedNode?.type === 'subcategory' && selectedNode?.id === s.id;
 			const connected = transitiveConnections.has(`subcategory:${s.id}`);
 			return isSelected || connected;
@@ -890,9 +941,8 @@
 	});
 
 	let visibleRegulationCount = $derived.by(() => {
-		const filtered = filterBySearch(allRegulations, (r: any) => r.citation + ' ' + r.description, 'regulation');
-		if (!focusMode || !selectedNode) return filtered.length;
-		return filtered.filter((r: any) => {
+		if (!focusMode || !selectedNode) return graphFilteredRegulations.length;
+		return graphFilteredRegulations.filter((r: any) => {
 			const isSelected = selectedNode?.type === 'regulation' && selectedNode?.id === r.id;
 			const connected = transitiveConnections.has(`regulation:${r.id}`);
 			return isSelected || connected;
@@ -1876,7 +1926,7 @@
 					<button class="add-btn" title="Add Question" onclick={() => { entityType = 'questions'; createNewEntity(); }}>+</button>
 				</div>
 				<div class="nodes">
-					{#each filterBySearch(allQuestions, q => q.text, 'question') as q}
+					{#each graphFilteredQuestions as q}
 						{@const linkCount = getLinkCount('question', q.id)}
 						{@const deps = getQuestionDependencies(q.id)}
 						{@const isSelected = selectedNode?.type === 'question' && selectedNode?.id === q.id}
@@ -1929,7 +1979,7 @@
 					<button class="add-btn" title="Add Risk" onclick={() => { entityType = 'risks'; createNewEntity(); }}>+</button>
 				</div>
 				<div class="nodes">
-					{#each filterBySearch(allRisks, r => r.shortName + ' ' + r.name, 'risk') as r}
+					{#each graphFilteredRisks as r}
 						{@const linkCount = getLinkCount('risk', r.id)}
 						{@const isSelected = selectedNode?.type === 'risk' && selectedNode?.id === r.id}
 						{@const connected = isConnected('risk', r.id)}
@@ -1970,7 +2020,7 @@
 					<button class="add-btn" title="Add Subcategory" onclick={() => { entityType = 'subcategories'; createNewEntity(); }}>+</button>
 				</div>
 				<div class="nodes">
-					{#each filterBySearch(allSubcategories, s => s.name + ' ' + s.code, 'subcategory') as s}
+					{#each graphFilteredSubcategories as s}
 						{@const linkCount = getLinkCount('subcategory', s.id)}
 						{@const controlCount = allControls.filter((c: any) => c.subcategoryId === s.id).length}
 						{@const isSelected = selectedNode?.type === 'subcategory' && selectedNode?.id === s.id}
@@ -2015,7 +2065,7 @@
 					<button class="add-btn" title="Add Regulation" onclick={() => { entityType = 'regulations'; createNewEntity(); }}>+</button>
 				</div>
 				<div class="nodes">
-					{#each filterBySearch(allRegulations, r => r.citation + ' ' + r.description, 'regulation') as r}
+					{#each graphFilteredRegulations as r}
 						{@const linkCount = getLinkCount('regulation', r.id)}
 						{@const isSelected = selectedNode?.type === 'regulation' && selectedNode?.id === r.id}
 						{@const connected = isConnected('regulation', r.id)}
