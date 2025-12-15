@@ -179,11 +179,8 @@
 		);
 	}
 
-	// Check if target is reachable from source following directed edges (using Graphology BFS)
-	function isReachable(sourceType: EntityType, sourceId: string, targetType: EntityType, targetId: string): boolean {
-		const sourceKey = `${sourceType}:${sourceId}`;
-		const targetKey = `${targetType}:${targetId}`;
-
+	// Check if target is reachable from source following directed edges (downstream only)
+	function isDownstreamReachable(sourceKey: string, targetKey: string): boolean {
 		if (!traceGraph.hasNode(sourceKey)) return false;
 		if (sourceKey === targetKey) return true;
 
@@ -194,20 +191,57 @@
 				return true; // Stop traversal
 			}
 			return false;
-		}, { mode: 'outbound' }); // Only follow outgoing edges
+		}, { mode: 'outbound' });
 
 		return found;
 	}
 
-	// Get matrix connection - returns direct link, transitive info, or null
+	// Check if two nodes share a common ancestor (both reachable from same node going inbound)
+	function shareCommonAncestor(key1: string, key2: string): boolean {
+		if (!traceGraph.hasNode(key1) || !traceGraph.hasNode(key2)) return false;
+
+		// Find all ancestors of key1 (nodes that can reach key1)
+		const ancestors1 = new Set<string>();
+		bfsFromNode(traceGraph, key1, (node) => {
+			ancestors1.add(node);
+			return false;
+		}, { mode: 'inbound' });
+
+		// Check if any ancestor of key1 can also reach key2
+		let found = false;
+		bfsFromNode(traceGraph, key2, (node) => {
+			if (ancestors1.has(node)) {
+				found = true;
+				return true;
+			}
+			return false;
+		}, { mode: 'inbound' });
+
+		return found;
+	}
+
+	// Get matrix connection - returns direct link, downstream transitive, or shared ancestor
 	function getMatrixLink(rowType: EntityType, rowId: string, colType: EntityType, colId: string): any {
 		// First check for direct link (fast)
 		const direct = getDirectLink(rowType, rowId, colType, colId);
 		if (direct) return { ...direct, isDirect: true };
 
-		// Check transitive reachability using graph
-		if (isReachable(rowType, rowId, colType, colId)) {
-			return { isDirect: false, isTransitive: true };
+		const rowKey = `${rowType}:${rowId}`;
+		const colKey = `${colType}:${colId}`;
+
+		// Check downstream reachability (row → col)
+		if (isDownstreamReachable(rowKey, colKey)) {
+			return { isDirect: false, isTransitive: true, direction: 'downstream' };
+		}
+
+		// Check upstream reachability (col → row, meaning row is downstream of col)
+		if (isDownstreamReachable(colKey, rowKey)) {
+			return { isDirect: false, isTransitive: true, direction: 'upstream' };
+		}
+
+		// Check shared ancestor (both connect to same risk, etc.)
+		if (shareCommonAncestor(rowKey, colKey)) {
+			return { isDirect: false, isTransitive: true, direction: 'sibling' };
 		}
 
 		return null;
@@ -270,13 +304,14 @@
 
 	// Trace node type for tree structure
 	interface TraceNode {
-		type: 'question' | 'risk' | 'mitigation' | 'control' | 'regulation';
+		type: 'question' | 'risk' | 'mitigation' | 'control' | 'regulation' | 'more';
 		id: string;
 		label: string;
 		shortLabel: string;
 		children: TraceNode[];
 		link?: any; // The link that connects to parent
 		depth: number;
+		isPlaceholder?: boolean;
 	}
 
 	// Build trace tree from starting point
@@ -416,12 +451,13 @@
 			const totalControls = allControls.filter(c => c.subcategoryId === mit.id).length;
 			if (totalControls > 5) {
 				node.children.push({
-					type: 'control',
+					type: 'more',  // Special type, not 'control'
 					id: `more-${mit.id}`,
 					label: `+${totalControls - 5} more controls`,
-					shortLabel: '...',
+					shortLabel: `+${totalControls - 5}`,
 					children: [],
-					depth: depth + 1
+					depth: depth + 1,
+					isPlaceholder: true
 				});
 			}
 
@@ -1459,10 +1495,11 @@
 							<th class="row-header">{rowConfig.label}</th>
 							{#each matrixColItems as colItem}
 								<th
-									class="col-header"
+									class="col-header clickable"
 									class:highlighted={matrixHoverCol === colItem.id}
-									title={colConfig.getLabel(colItem)}
+									title={`${colConfig.getLabel(colItem)} (click to edit)`}
 									onmouseenter={() => matrixHoverCol = colItem.id}
+									onclick={() => { entityType = matrixColType === 'question' ? 'questions' : matrixColType === 'risk' ? 'risks' : matrixColType === 'mitigation' ? 'mitigations' : matrixColType === 'regulation' ? 'regulations' : 'controls'; editEntity(colItem); }}
 								>
 									{#if matrixVerbose}
 										<span class="verbose-label">{colConfig.getLabel(colItem)}</span>
@@ -1477,10 +1514,11 @@
 						{#each matrixRowItems as rowItem}
 							<tr class:row-highlighted={matrixHoverRow === rowItem.id}>
 								<td
-									class="row-label"
+									class="row-label clickable"
 									class:highlighted={matrixHoverRow === rowItem.id}
-									title={rowConfig.getLabel(rowItem)}
+									title={`${rowConfig.getLabel(rowItem)} (click to edit)`}
 									onmouseenter={() => matrixHoverRow = rowItem.id}
+									onclick={() => { entityType = matrixRowType === 'question' ? 'questions' : matrixRowType === 'risk' ? 'risks' : matrixRowType === 'mitigation' ? 'mitigations' : matrixRowType === 'regulation' ? 'regulations' : 'controls'; editEntity(rowItem); }}
 								>
 									{#if matrixVerbose}
 										<span class="verbose-label">{rowConfig.getLabel(rowItem)}</span>
@@ -1493,17 +1531,19 @@
 									<td
 										class="matrix-cell"
 										class:linked={link?.isDirect}
-										class:transitive={link?.isTransitive}
+										class:transitive-downstream={link?.isTransitive && link?.direction === 'downstream'}
+										class:transitive-upstream={link?.isTransitive && link?.direction === 'upstream'}
+										class:transitive-sibling={link?.isTransitive && link?.direction === 'sibling'}
 										class:col-highlighted={matrixHoverCol === colItem.id}
 										class:row-highlighted={matrixHoverRow === rowItem.id}
 										onclick={() => toggleGenericMatrixLink(matrixRowType, rowItem.id, matrixColType, colItem.id)}
 										onmouseenter={() => { matrixHoverRow = rowItem.id; matrixHoverCol = colItem.id; }}
-										title={link?.isDirect ? `Direct link (click to edit)` : link?.isTransitive ? `Transitive connection (click to create direct)` : `No connection (click to create)`}
+										title={link?.isDirect ? `Direct link (click to edit)` : link?.isTransitive ? `${link.direction === 'downstream' ? 'Downstream' : link.direction === 'upstream' ? 'Upstream' : 'Sibling'} connection (click to create direct)` : `No connection (click to create)`}
 									>
 										{#if link?.isDirect}
 											<span class="cell-marker direct">✓</span>
 										{:else if link?.isTransitive}
-											<span class="cell-marker transitive">~</span>
+											<span class="cell-marker transitive-{link.direction}">{link.direction === 'downstream' ? '↓' : link.direction === 'upstream' ? '↑' : '~'}</span>
 										{/if}
 									</td>
 								{/each}
@@ -1516,6 +1556,12 @@
 
 	<!-- TRACE VIEW (placeholder - will build visual flow editor) -->
 	{:else if currentView === 'trace'}
+		{#if connectingFrom}
+			<div class="connection-banner">
+				Connecting from: <strong>{getEntityName(connectingFrom.type, connectingFrom.id)}</strong> — Click a node in the tree to link them
+				<button onclick={() => connectingFrom = null}>Cancel</button>
+			</div>
+		{/if}
 		<div class="trace-view">
 			<div class="trace-toolbar">
 				<div class="trace-start-selector">
@@ -1567,7 +1613,17 @@
 								<div
 									class="trace-node {node.type}"
 									class:selected={traceSelectedNode?.type === node.type && traceSelectedNode?.id === node.id}
-									onclick={() => traceSelectedNode = { type: node.type, id: node.id }}
+									class:placeholder={node.isPlaceholder}
+									onclick={() => {
+										if (node.isPlaceholder) return;
+										if (connectingFrom) {
+											// We're in connection mode - use handleNodeClick to create/edit link
+											handleNodeClick(node.type, node.id);
+										} else {
+											// Normal selection
+											traceSelectedNode = { type: node.type, id: node.id };
+										}
+									}}
 								>
 									{#if node.link}
 										<button
@@ -1576,8 +1632,14 @@
 											onclick={(e) => { e.stopPropagation(); editingLink = JSON.parse(JSON.stringify(node.link)); showLinkEditor = true; }}
 										>⟿</button>
 									{/if}
-									<span class="trace-node-type">{node.type.charAt(0).toUpperCase()}</span>
-									<span class="trace-node-label" title={node.label}>{node.shortLabel}</span>
+									<span class="trace-node-type">{node.type === 'more' ? '+' : node.type.charAt(0).toUpperCase()}</span>
+									<span class="trace-node-label" title={node.label}>
+										{#if node.isPlaceholder}
+											{node.label}
+										{:else}
+											<strong>{node.shortLabel}</strong>: {node.label}
+										{/if}
+									</span>
 									{#if node.children.length > 0}
 										<span class="trace-children-count">{node.children.length}</span>
 									{/if}
@@ -1656,6 +1718,35 @@
 										else if (traceSelectedNode?.type === 'control') { entityType = 'controls'; editEntity(selectedItem); }
 									}}
 								>Edit {traceSelectedNode.type}</button>
+
+								<!-- Connections section -->
+								{@const traceConnections = getConnections(traceSelectedNode.type, traceSelectedNode.id)}
+								<div class="connections-section">
+									<h4>Connections ({traceConnections.length})</h4>
+									{#if traceConnections.length === 0}
+										<p class="no-connections">No direct connections yet.</p>
+									{:else}
+										<div class="connection-list">
+											{#each traceConnections as link}
+												{@const isFrom = link.from.entity === traceSelectedNode.type && link.from.id === traceSelectedNode.id}
+												{@const otherEntity = isFrom ? link.to.entity : link.from.entity}
+												{@const otherId = isFrom ? link.to.id : link.from.id}
+												<button class="connection-item" onclick={() => { editingLink = link; showLinkEditor = true; }}>
+													<span class="conn-type {link.type}">{link.type}</span>
+													<span class="conn-direction">{isFrom ? '→' : '←'}</span>
+													<span class="conn-target {otherEntity}">{getEntityName(otherEntity, otherId)}</span>
+													{#if link.phases}
+														<span class="conn-phases">{link.phases.map((p: string) => p.replace('phase-', 'P')).join(', ')}</span>
+													{/if}
+												</button>
+											{/each}
+										</div>
+									{/if}
+								</div>
+
+								<button class="btn connect-action" onclick={() => startConnect(traceSelectedNode.type, traceSelectedNode.id, new Event('click'))}>
+									+ Create Connection
+								</button>
 							{:else}
 								<p class="no-data">Item not found</p>
 							{/if}
@@ -2886,6 +2977,17 @@
 		color: #60a5fa;
 	}
 
+	.matrix .row-label.clickable,
+	.matrix .col-header.clickable {
+		cursor: pointer;
+	}
+
+	.matrix .row-label.clickable:hover,
+	.matrix .col-header.clickable:hover {
+		background: rgba(96, 165, 250, 0.25);
+		color: #60a5fa;
+	}
+
 	.matrix .row-label .verbose-label {
 		font-family: inherit;
 		display: block;
@@ -2947,22 +3049,52 @@
 		background: rgba(34, 197, 94, 0.35);
 	}
 
-	.matrix-cell.transitive {
+	/* Downstream transitive (row traces down to col) - blue */
+	.matrix-cell.transitive-downstream {
 		background: rgba(59, 130, 246, 0.15);
 	}
-
-	.matrix-cell.transitive.col-highlighted,
-	.matrix-cell.transitive.row-highlighted {
+	.matrix-cell.transitive-downstream.col-highlighted,
+	.matrix-cell.transitive-downstream.row-highlighted {
 		background: rgba(59, 130, 246, 0.25);
 	}
-
-	.matrix-cell.transitive.col-highlighted.row-highlighted {
+	.matrix-cell.transitive-downstream.col-highlighted.row-highlighted {
 		background: rgba(59, 130, 246, 0.35);
 		outline: 1px solid #3b82f6;
 	}
-
-	.matrix-cell.transitive:hover {
+	.matrix-cell.transitive-downstream:hover {
 		background: rgba(59, 130, 246, 0.3);
+	}
+
+	/* Upstream transitive (col traces down to row) - purple */
+	.matrix-cell.transitive-upstream {
+		background: rgba(168, 85, 247, 0.15);
+	}
+	.matrix-cell.transitive-upstream.col-highlighted,
+	.matrix-cell.transitive-upstream.row-highlighted {
+		background: rgba(168, 85, 247, 0.25);
+	}
+	.matrix-cell.transitive-upstream.col-highlighted.row-highlighted {
+		background: rgba(168, 85, 247, 0.35);
+		outline: 1px solid #a855f7;
+	}
+	.matrix-cell.transitive-upstream:hover {
+		background: rgba(168, 85, 247, 0.3);
+	}
+
+	/* Sibling transitive (shared ancestor) - amber */
+	.matrix-cell.transitive-sibling {
+		background: rgba(245, 158, 11, 0.15);
+	}
+	.matrix-cell.transitive-sibling.col-highlighted,
+	.matrix-cell.transitive-sibling.row-highlighted {
+		background: rgba(245, 158, 11, 0.25);
+	}
+	.matrix-cell.transitive-sibling.col-highlighted.row-highlighted {
+		background: rgba(245, 158, 11, 0.35);
+		outline: 1px solid #f59e0b;
+	}
+	.matrix-cell.transitive-sibling:hover {
+		background: rgba(245, 158, 11, 0.3);
 	}
 
 	.cell-marker {
@@ -2973,8 +3105,18 @@
 		color: #22c55e;
 	}
 
-	.cell-marker.transitive {
+	.cell-marker.transitive-downstream {
 		color: #3b82f6;
+		font-weight: 300;
+	}
+
+	.cell-marker.transitive-upstream {
+		color: #a855f7;
+		font-weight: 300;
+	}
+
+	.cell-marker.transitive-sibling {
+		color: #f59e0b;
 		font-weight: 300;
 	}
 
@@ -3100,6 +3242,17 @@
 	.trace-node.mitigation { border-left: 3px solid #10b981; }
 	.trace-node.control { border-left: 3px solid #06b6d4; }
 	.trace-node.regulation { border-left: 3px solid #a78bfa; }
+	.trace-node.more { border-left: 3px solid #64748b; }
+
+	.trace-node.placeholder {
+		opacity: 0.6;
+		cursor: default;
+		font-style: italic;
+	}
+	.trace-node.placeholder:hover {
+		background: #1e293b;
+		border-color: #334155;
+	}
 
 	.trace-node-type {
 		font-size: 0.625rem;
@@ -3231,6 +3384,18 @@
 
 	.trace-detail-panel .edit-entity {
 		width: 100%;
+		margin-bottom: 1rem;
+	}
+
+	.trace-detail-panel .connections-section {
+		margin-top: 1rem;
+		padding-top: 1rem;
+		border-top: 1px solid #334155;
+	}
+
+	.trace-detail-panel .connect-action {
+		width: 100%;
+		margin-top: 1rem;
 	}
 
 	/* Graph View Toolbar */
