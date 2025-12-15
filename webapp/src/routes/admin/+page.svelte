@@ -681,6 +681,11 @@
 		return items;
 	});
 
+	// Helper to get control subcategory by ID
+	function getControlSubcategory(subcategoryId: string) {
+		return data.controlSubcategories.find((s: any) => s.id === subcategoryId);
+	}
+
 	let defaultRegulations = $derived.by(() => {
 		const items: Array<{ id: string; citation: string; description: string; framework: string }> = [];
 		for (const [key, reg] of Object.entries(data.regulations) as [string, any][]) {
