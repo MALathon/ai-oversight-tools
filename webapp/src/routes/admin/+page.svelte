@@ -1810,6 +1810,7 @@
 					<span class="column-icon">?</span>
 					<h2>Questions</h2>
 					<span class="count" title="{visibleQuestionCount} of {allQuestions.length}">{visibleQuestionCount}</span>
+					<button class="add-btn" title="Add Question" onclick={() => { entityType = 'questions'; createNewEntity(); }}>+</button>
 				</div>
 				<div class="nodes">
 					{#each filterBySearch(allQuestions, q => q.text, 'question') as q}
@@ -1862,6 +1863,7 @@
 					<span class="column-icon">!</span>
 					<h2>Risks</h2>
 					<span class="count" title="{visibleRiskCount} of {allRisks.length}">{visibleRiskCount}</span>
+					<button class="add-btn" title="Add Risk" onclick={() => { entityType = 'risks'; createNewEntity(); }}>+</button>
 				</div>
 				<div class="nodes">
 					{#each filterBySearch(allRisks, r => r.shortName + ' ' + r.name, 'risk') as r}
@@ -1902,6 +1904,7 @@
 					<span class="column-icon">R</span>
 					<h2>Regulations</h2>
 					<span class="count" title="{visibleRegulationCount} of {allRegulations.length}">{visibleRegulationCount}</span>
+					<button class="add-btn" title="Add Regulation" onclick={() => { entityType = 'regulations'; createNewEntity(); }}>+</button>
 				</div>
 				<div class="nodes">
 					{#each filterBySearch(allRegulations, r => r.citation + ' ' + r.description, 'regulation') as r}
@@ -1942,6 +1945,7 @@
 					<span class="column-icon">⚙</span>
 					<h2>Controls</h2>
 					<span class="count" title="{visibleControlCount} of {graphFilteredControls.length}">{visibleControlCount}</span>
+					<button class="add-btn" title="Add Control" onclick={() => { entityType = 'controls'; createNewEntity(); }}>+</button>
 				</div>
 				<div class="nodes">
 					{#each graphFilteredControls.slice(0, 50) as ctrl}
@@ -3520,6 +3524,28 @@
 		background: #334155;
 		padding: 0.1875rem 0.5rem;
 		border-radius: 0.25rem;
+	}
+
+	.add-btn {
+		width: 1.5rem;
+		height: 1.5rem;
+		border-radius: 50%;
+		background: #334155;
+		color: #94a3b8;
+		border: none;
+		font-size: 1rem;
+		font-weight: bold;
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		transition: all 0.15s;
+		margin-left: auto;
+	}
+
+	.add-btn:hover {
+		background: #3b82f6;
+		color: white;
 	}
 
 	.column-filters {
