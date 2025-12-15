@@ -2343,6 +2343,7 @@
 					</div>
 					<div class="form-group">
 						<label>Applicable Phases</label>
+						<span class="field-hint">No selection = applies to all phases</span>
 						<div class="checkbox-group">
 							{#each phases as phase}
 								<label class="checkbox-label">
@@ -2574,6 +2575,7 @@
 
 				<div class="form-group">
 					<label>Applicable Phases</label>
+					<span class="field-hint">No selection = applies to all phases</span>
 					<div class="phase-checkboxes">
 						{#each phases as phase}
 							<label class="checkbox-label">
@@ -4576,6 +4578,14 @@
 		display: block;
 		font-size: 0.75rem;
 		color: #94a3b8;
+		margin-bottom: 0.375rem;
+	}
+
+	.field-hint {
+		display: block;
+		font-size: 0.7rem;
+		color: #64748b;
+		font-style: italic;
 		margin-bottom: 0.375rem;
 	}
 
