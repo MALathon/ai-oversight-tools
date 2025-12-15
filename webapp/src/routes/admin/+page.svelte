@@ -108,6 +108,7 @@
 	let matrixHoverRow = $state<string | null>(null);
 	let matrixHoverCol = $state<string | null>(null);
 	let showUnlinkedOnly = $state(false);
+	let selectedIntersection = $state<{ rowType: EntityType; rowId: string; colType: EntityType; colId: string } | null>(null);
 
 	// Determine link type for entity pair
 	// Link types: trigger (Q→R), mitigation (R→S), control (R→C), regulation (R→Reg), dependency (Q→Q)
@@ -1487,6 +1488,74 @@
 		}
 		return null;
 	});
+
+	// Get intersection details for matrix view
+	let intersectionDetails = $derived.by(() => {
+		if (!selectedIntersection) return null;
+		const { rowType, rowId, colType, colId } = selectedIntersection;
+
+		// Get both entities
+		const getEntity = (type: EntityType, id: string) => {
+			if (type === 'question') return getQuestion(id);
+			if (type === 'risk') return getRisk(id);
+			if (type === 'subcategory') return allSubcategories.find((s: any) => s.id === id);
+			if (type === 'regulation') return getRegulation(id);
+			if (type === 'control') return getControl(id);
+			return null;
+		};
+
+		const rowEntity = getEntity(rowType, rowId);
+		const colEntity = getEntity(colType, colId);
+
+		// Get direct link between them
+		const linkType = getLinkTypeForPair(rowType, colType);
+		const directLink = linkType ? links.find((l: any) =>
+			(l.from.entity === rowType && l.from.id === rowId && l.to.entity === colType && l.to.id === colId) ||
+			(l.from.entity === colType && l.from.id === colId && l.to.entity === rowType && l.to.id === rowId)
+		) : null;
+
+		// Get downstream entities for each
+		const getDownstream = (type: EntityType, id: string) => {
+			const downstream: Record<string, any[]> = {};
+
+			if (type === 'risk') {
+				// Risk → Subcategories
+				const subcatLinks = links.filter((l: any) => l.type === 'mitigation' && l.from.id === id);
+				downstream.subcategories = subcatLinks.map((l: any) => allSubcategories.find((s: any) => s.id === l.to.id)).filter(Boolean);
+
+				// Risk → Controls (direct)
+				const controlLinks = links.filter((l: any) => l.type === 'control' && l.from.id === id);
+				downstream.controls = controlLinks.map((l: any) => getControl(l.to.id)).filter(Boolean);
+
+				// Risk → Regulations
+				const regLinks = links.filter((l: any) => l.type === 'regulation' && l.from.id === id);
+				downstream.regulations = regLinks.map((l: any) => getRegulation(l.to.id)).filter(Boolean);
+			}
+
+			if (type === 'subcategory') {
+				// Subcategory → Controls (via subcategoryId)
+				downstream.controls = allControls.filter((c: any) => c.subcategoryId === id);
+			}
+
+			if (type === 'question') {
+				// Question → Risks (triggers)
+				const triggerLinks = links.filter((l: any) => l.type === 'trigger' && l.from.id === id);
+				downstream.risks = triggerLinks.map((l: any) => getRisk(l.to.id)).filter(Boolean);
+			}
+
+			return downstream;
+		};
+
+		return {
+			rowType,
+			rowEntity,
+			colType,
+			colEntity,
+			directLink,
+			rowDownstream: getDownstream(rowType, rowId),
+			colDownstream: getDownstream(colType, colId)
+		};
+	});
 </script>
 
 <svelte:head>
@@ -1652,9 +1721,11 @@
 										class:transitive-sibling={link?.isTransitive && link?.direction === 'sibling'}
 										class:col-highlighted={matrixHoverCol === colItem.id}
 										class:row-highlighted={matrixHoverRow === rowItem.id}
-										onclick={() => toggleGenericMatrixLink(matrixRowType, rowItem.id, matrixColType, colItem.id)}
+										class:selected={selectedIntersection?.rowId === rowItem.id && selectedIntersection?.colId === colItem.id}
+										onclick={() => { selectedIntersection = { rowType: matrixRowType, rowId: rowItem.id, colType: matrixColType, colId: colItem.id }; }}
+										ondblclick={() => toggleGenericMatrixLink(matrixRowType, rowItem.id, matrixColType, colItem.id)}
 										onmouseenter={() => { matrixHoverRow = rowItem.id; matrixHoverCol = colItem.id; }}
-										title={link?.isShowIf ? `${link.direction === 'depends-on' ? 'Row depends on column' : 'Column depends on row'} (click to edit showIf)` : link?.isDirect ? `Direct link (click to edit)` : link?.isTransitive ? `${link.direction === 'downstream' ? 'Downstream' : link.direction === 'upstream' ? 'Upstream' : 'Sibling'} connection (click to create direct)` : `No connection (click to create)`}
+										title="Click to view details, double-click to toggle link"
 									>
 										{#if link?.isShowIf}
 											<span class="cell-marker showif">{link.direction === 'depends-on' ? '→' : '←'}</span>
@@ -1671,6 +1742,156 @@
 				</table>
 			{/if}
 		</div>
+
+		<!-- Intersection Details Panel -->
+		{#if intersectionDetails}
+			<div class="intersection-panel">
+				<div class="intersection-header">
+					<h3>Intersection Details</h3>
+					<button class="close-btn" onclick={() => selectedIntersection = null}>×</button>
+				</div>
+				<div class="intersection-content">
+					<!-- Row Entity -->
+					<div class="entity-section">
+						<div class="entity-header">
+							<span class="entity-type-badge {intersectionDetails.rowType}">{intersectionDetails.rowType}</span>
+							<span class="entity-name">{intersectionDetails.rowEntity?.name || intersectionDetails.rowEntity?.text || intersectionDetails.rowEntity?.shortName || 'Unknown'}</span>
+						</div>
+						{#if intersectionDetails.rowType === 'question' && intersectionDetails.rowEntity}
+							<p class="entity-detail">{intersectionDetails.rowEntity.text}</p>
+						{:else if intersectionDetails.rowType === 'risk' && intersectionDetails.rowEntity}
+							<p class="entity-detail">{intersectionDetails.rowEntity.name}</p>
+							{#if intersectionDetails.rowEntity.phaseGuidance}
+								<div class="phase-guidance">
+									<strong>Phase Guidance:</strong>
+									{#each Object.entries(intersectionDetails.rowEntity.phaseGuidance) as [phase, text]}
+										<div class="phase-item">
+											<span class="phase-label">{phase.replace('phase-', 'P')}</span>
+											<span class="phase-text">{text}</span>
+										</div>
+									{/each}
+								</div>
+							{/if}
+						{:else if intersectionDetails.rowType === 'control' && intersectionDetails.rowEntity}
+							<p class="entity-detail">{intersectionDetails.rowEntity.description}</p>
+							{#if intersectionDetails.rowEntity.implementationNotes}
+								<div class="impl-notes">
+									<strong>Implementation Notes:</strong>
+									{#each Object.entries(intersectionDetails.rowEntity.implementationNotes) as [phase, text]}
+										<div class="phase-item">
+											<span class="phase-label">{phase.replace('phase-', 'P')}</span>
+											<span class="phase-text">{text}</span>
+										</div>
+									{/each}
+								</div>
+							{/if}
+						{:else if intersectionDetails.rowEntity?.description}
+							<p class="entity-detail">{intersectionDetails.rowEntity.description}</p>
+						{/if}
+					</div>
+
+					<!-- Link Status -->
+					<div class="link-section">
+						<div class="link-indicator" class:linked={intersectionDetails.directLink}>
+							{#if intersectionDetails.directLink}
+								<span class="link-icon">✓</span> Linked ({intersectionDetails.directLink.type})
+								{#if intersectionDetails.directLink.phases?.length}
+									<span class="link-phases">Phases: {intersectionDetails.directLink.phases.map((p: string) => p.replace('phase-', 'P')).join(', ')}</span>
+								{/if}
+							{:else}
+								<span class="link-icon">○</span> Not directly linked
+							{/if}
+						</div>
+						<button class="btn small" onclick={() => toggleGenericMatrixLink(intersectionDetails.rowType, intersectionDetails.rowEntity?.id, intersectionDetails.colType, intersectionDetails.colEntity?.id)}>
+							{intersectionDetails.directLink ? 'Edit Link' : 'Create Link'}
+						</button>
+					</div>
+
+					<!-- Column Entity -->
+					<div class="entity-section">
+						<div class="entity-header">
+							<span class="entity-type-badge {intersectionDetails.colType}">{intersectionDetails.colType}</span>
+							<span class="entity-name">{intersectionDetails.colEntity?.name || intersectionDetails.colEntity?.text || intersectionDetails.colEntity?.shortName || 'Unknown'}</span>
+						</div>
+						{#if intersectionDetails.colType === 'question' && intersectionDetails.colEntity}
+							<p class="entity-detail">{intersectionDetails.colEntity.text}</p>
+						{:else if intersectionDetails.colType === 'risk' && intersectionDetails.colEntity}
+							<p class="entity-detail">{intersectionDetails.colEntity.name}</p>
+							{#if intersectionDetails.colEntity.phaseGuidance}
+								<div class="phase-guidance">
+									<strong>Phase Guidance:</strong>
+									{#each Object.entries(intersectionDetails.colEntity.phaseGuidance) as [phase, text]}
+										<div class="phase-item">
+											<span class="phase-label">{phase.replace('phase-', 'P')}</span>
+											<span class="phase-text">{text}</span>
+										</div>
+									{/each}
+								</div>
+							{/if}
+						{:else if intersectionDetails.colType === 'control' && intersectionDetails.colEntity}
+							<p class="entity-detail">{intersectionDetails.colEntity.description}</p>
+							{#if intersectionDetails.colEntity.implementationNotes}
+								<div class="impl-notes">
+									<strong>Implementation Notes:</strong>
+									{#each Object.entries(intersectionDetails.colEntity.implementationNotes) as [phase, text]}
+										<div class="phase-item">
+											<span class="phase-label">{phase.replace('phase-', 'P')}</span>
+											<span class="phase-text">{text}</span>
+										</div>
+									{/each}
+								</div>
+							{/if}
+						{:else if intersectionDetails.colEntity?.description}
+							<p class="entity-detail">{intersectionDetails.colEntity.description}</p>
+						{/if}
+					</div>
+
+					<!-- Downstream from Row -->
+					{#if Object.keys(intersectionDetails.rowDownstream).length > 0}
+						<div class="downstream-section">
+							<h4>From {intersectionDetails.rowType}:</h4>
+							{#each Object.entries(intersectionDetails.rowDownstream) as [type, items]}
+								{#if items.length > 0}
+									<div class="downstream-group">
+										<span class="downstream-type">{type} ({items.length})</span>
+										<ul class="downstream-list">
+											{#each items.slice(0, 5) as item}
+												<li>{item.name || item.shortName || item.text || item.citation || item.id}</li>
+											{/each}
+											{#if items.length > 5}
+												<li class="more">...and {items.length - 5} more</li>
+											{/if}
+										</ul>
+									</div>
+								{/if}
+							{/each}
+						</div>
+					{/if}
+
+					<!-- Downstream from Column -->
+					{#if Object.keys(intersectionDetails.colDownstream).length > 0}
+						<div class="downstream-section">
+							<h4>From {intersectionDetails.colType}:</h4>
+							{#each Object.entries(intersectionDetails.colDownstream) as [type, items]}
+								{#if items.length > 0}
+									<div class="downstream-group">
+										<span class="downstream-type">{type} ({items.length})</span>
+										<ul class="downstream-list">
+											{#each items.slice(0, 5) as item}
+												<li>{item.name || item.shortName || item.text || item.citation || item.id}</li>
+											{/each}
+											{#if items.length > 5}
+												<li class="more">...and {items.length - 5} more</li>
+											{/if}
+										</ul>
+									</div>
+								{/if}
+							{/each}
+						</div>
+					{/if}
+				</div>
+			</div>
+		{/if}
 
 	<!-- TRACE VIEW (placeholder - will build visual flow editor) -->
 	{:else if currentView === 'trace'}
@@ -3433,6 +3654,196 @@
 	}
 	.matrix-cell.showif-depended:hover {
 		background: rgba(34, 211, 238, 0.3);
+	}
+
+	.matrix-cell.selected {
+		outline: 2px solid #f59e0b;
+		outline-offset: -2px;
+		background: rgba(251, 191, 36, 0.3);
+	}
+
+	/* Intersection Details Panel */
+	.intersection-panel {
+		position: fixed;
+		right: 1rem;
+		top: 5rem;
+		width: 400px;
+		max-height: calc(100vh - 6rem);
+		background: #1e293b;
+		border: 1px solid #334155;
+		border-radius: 0.5rem;
+		box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+		z-index: 100;
+		overflow: hidden;
+		display: flex;
+		flex-direction: column;
+	}
+
+	.intersection-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 0.75rem 1rem;
+		background: #0f172a;
+		border-bottom: 1px solid #334155;
+	}
+
+	.intersection-header h3 {
+		margin: 0;
+		font-size: 0.875rem;
+		color: #f1f5f9;
+	}
+
+	.intersection-content {
+		padding: 1rem;
+		overflow-y: auto;
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+	}
+
+	.entity-section {
+		background: #0f172a;
+		border-radius: 0.375rem;
+		padding: 0.75rem;
+	}
+
+	.entity-header {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		margin-bottom: 0.5rem;
+	}
+
+	.entity-type-badge {
+		font-size: 0.625rem;
+		text-transform: uppercase;
+		padding: 0.125rem 0.375rem;
+		border-radius: 0.25rem;
+		font-weight: 600;
+	}
+
+	.entity-type-badge.question { background: #3b82f6; color: white; }
+	.entity-type-badge.risk { background: #ef4444; color: white; }
+	.entity-type-badge.subcategory { background: #8b5cf6; color: white; }
+	.entity-type-badge.regulation { background: #f59e0b; color: white; }
+	.entity-type-badge.control { background: #22c55e; color: white; }
+
+	.entity-name {
+		font-weight: 500;
+		color: #e2e8f0;
+		font-size: 0.8125rem;
+	}
+
+	.entity-detail {
+		font-size: 0.75rem;
+		color: #94a3b8;
+		margin: 0;
+		line-height: 1.4;
+	}
+
+	.phase-guidance, .impl-notes {
+		margin-top: 0.5rem;
+		font-size: 0.75rem;
+	}
+
+	.phase-guidance strong, .impl-notes strong {
+		color: #94a3b8;
+		display: block;
+		margin-bottom: 0.25rem;
+	}
+
+	.phase-item {
+		display: flex;
+		gap: 0.5rem;
+		margin-bottom: 0.25rem;
+		padding: 0.25rem;
+		background: rgba(0, 0, 0, 0.2);
+		border-radius: 0.25rem;
+	}
+
+	.phase-label {
+		font-weight: 600;
+		color: #60a5fa;
+		min-width: 1.5rem;
+	}
+
+	.phase-text {
+		color: #cbd5e1;
+		line-height: 1.3;
+	}
+
+	.link-section {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 0.5rem 0.75rem;
+		background: #0f172a;
+		border-radius: 0.375rem;
+		border: 1px dashed #334155;
+	}
+
+	.link-indicator {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		font-size: 0.75rem;
+		color: #94a3b8;
+	}
+
+	.link-indicator.linked {
+		color: #22c55e;
+	}
+
+	.link-icon {
+		font-size: 1rem;
+	}
+
+	.link-phases {
+		font-size: 0.625rem;
+		background: #334155;
+		padding: 0.125rem 0.375rem;
+		border-radius: 0.25rem;
+		margin-left: 0.5rem;
+	}
+
+	.downstream-section {
+		background: #0f172a;
+		border-radius: 0.375rem;
+		padding: 0.75rem;
+	}
+
+	.downstream-section h4 {
+		margin: 0 0 0.5rem 0;
+		font-size: 0.75rem;
+		color: #94a3b8;
+		text-transform: uppercase;
+	}
+
+	.downstream-group {
+		margin-bottom: 0.5rem;
+	}
+
+	.downstream-type {
+		font-size: 0.6875rem;
+		color: #60a5fa;
+		font-weight: 500;
+	}
+
+	.downstream-list {
+		margin: 0.25rem 0 0 1rem;
+		padding: 0;
+		font-size: 0.6875rem;
+		color: #cbd5e1;
+	}
+
+	.downstream-list li {
+		margin-bottom: 0.125rem;
+	}
+
+	.downstream-list li.more {
+		color: #64748b;
+		font-style: italic;
 	}
 
 	.cell-marker {
