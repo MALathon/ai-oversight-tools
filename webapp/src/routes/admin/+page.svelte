@@ -908,6 +908,258 @@
 		return connections;
 	});
 
+	// GUIDANCE ACCUMULATION - Traverse graph and collect metadata for LLM synthesis
+	// Each entity type has different guidance properties:
+	// - risks: phaseGuidance (risk context per phase)
+	// - subcategories: phaseGuidance + phaseAppropriateness (strategy guidance + importance)
+	// - controls: implementationNotes (implementation guidance per phase)
+	// - questions: text (the question itself, for context)
+
+	interface GuidanceNode {
+		type: string;
+		id: string;
+		name: string;
+		depth: number;
+		edgeType?: string;
+		// Phase-specific guidance
+		guidance?: string;
+		// Phase appropriateness (optional/recommended/essential)
+		appropriateness?: string;
+		// Source attribution
+		source?: string;
+		citation?: string;
+		// Risk severity
+		severity?: number;
+		// Full entity for reference
+		entity: any;
+	}
+
+	// Collect guidance along traversal paths from a starting node
+	function collectGuidance(startType: string, startId: string, phase: string): GuidanceNode[] {
+		const startKey = `${startType}:${startId}`;
+		if (!traceGraph.hasNode(startKey)) return [];
+
+		const accumulated: GuidanceNode[] = [];
+		const visited = new Set<string>([startKey]);
+		const queue: Array<{ nodeKey: string; depth: number; edgeType?: string }> = [
+			{ nodeKey: startKey, depth: 0 }
+		];
+
+		while (queue.length > 0) {
+			const { nodeKey, depth, edgeType } = queue.shift()!;
+			const [type, id] = nodeKey.split(':');
+
+			// Get entity data and extract guidance based on type
+			let entity: any = null;
+			let name = id;
+			let guidance: string | undefined;
+			let appropriateness: string | undefined;
+			let source: string | undefined;
+			let citation: string | undefined;
+			let severity: number | undefined;
+
+			if (type === 'risk') {
+				entity = risksById.get(id);
+				if (entity) {
+					name = entity.shortName || entity.name;
+					guidance = entity.phaseGuidance?.[phase];
+					severity = entity.severity;
+				}
+			} else if (type === 'subcategory') {
+				entity = subcategoriesById.get(id);
+				if (entity) {
+					name = entity.name;
+					guidance = entity.phaseGuidance?.[phase];
+					appropriateness = entity.phaseAppropriateness?.[phase];
+				}
+			} else if (type === 'control') {
+				entity = controlsById.get(id);
+				if (entity) {
+					name = entity.name;
+					guidance = entity.implementationNotes?.[phase];
+					source = entity.source;
+					citation = entity.citation;
+				}
+			} else if (type === 'question') {
+				entity = questionsById.get(id);
+				if (entity) {
+					name = entity.text;
+					// Questions don't have phase guidance, but their text provides context
+				}
+			} else if (type === 'regulation') {
+				// Regulations from allRegulations (defined later)
+				// For now, just use the ID as the name
+				name = id;
+			}
+
+			accumulated.push({
+				type,
+				id,
+				name,
+				depth,
+				edgeType,
+				guidance,
+				appropriateness,
+				source,
+				citation,
+				severity,
+				entity
+			});
+
+			// Traverse outbound edges
+			traceGraph.forEachOutEdge(nodeKey, (edge, attrs, src, target) => {
+				if (!visited.has(target)) {
+					visited.add(target);
+					queue.push({
+						nodeKey: target,
+						depth: depth + 1,
+						edgeType: attrs.link?.type
+					});
+				}
+			});
+
+			// Traverse inbound edges (for bidirectional discovery)
+			traceGraph.forEachInEdge(nodeKey, (edge, attrs, src, target) => {
+				if (!visited.has(src)) {
+					visited.add(src);
+					queue.push({
+						nodeKey: src,
+						depth: depth + 1,
+						edgeType: attrs.link?.type
+					});
+				}
+			});
+		}
+
+		return accumulated;
+	}
+
+	// Collect regulations along traversal paths
+	function collectRegulations(startType: string, startId: string): Array<{ id: string; citation: string; description: string; depth: number }> {
+		const startKey = `${startType}:${startId}`;
+		if (!traceGraph.hasNode(startKey)) return [];
+
+		const regulations: Array<{ id: string; citation: string; description: string; depth: number }> = [];
+		const visited = new Set<string>([startKey]);
+		const queue: Array<{ nodeKey: string; depth: number }> = [{ nodeKey: startKey, depth: 0 }];
+
+		while (queue.length > 0) {
+			const { nodeKey, depth } = queue.shift()!;
+
+			// Check outbound edges for regulation links
+			traceGraph.forEachOutEdge(nodeKey, (edge, attrs, src, target) => {
+				if (target.startsWith('regulation:')) {
+					const regId = target.split(':')[1];
+					// Find regulation in allRegulations (defined later in file)
+					const reg = data.traceability.regulations?.find((r: any) => r.id === regId);
+					if (reg && !regulations.some(r => r.id === regId)) {
+						regulations.push({
+							id: regId,
+							citation: reg.citation,
+							description: reg.description,
+							depth: depth + 1
+						});
+					}
+				}
+				if (!visited.has(target)) {
+					visited.add(target);
+					queue.push({ nodeKey: target, depth: depth + 1 });
+				}
+			});
+
+			traceGraph.forEachInEdge(nodeKey, (edge, attrs, src, target) => {
+				if (src.startsWith('regulation:')) {
+					const regId = src.split(':')[1];
+					const reg = data.traceability.regulations?.find((r: any) => r.id === regId);
+					if (reg && !regulations.some(r => r.id === regId)) {
+						regulations.push({
+							id: regId,
+							citation: reg.citation,
+							description: reg.description,
+							depth: depth + 1
+						});
+					}
+				}
+				if (!visited.has(src)) {
+					visited.add(src);
+					queue.push({ nodeKey: src, depth: depth + 1 });
+				}
+			});
+		}
+
+		return regulations;
+	}
+
+	// Collect citations/sources along traversal paths
+	function collectCitations(startType: string, startId: string): Array<{ controlId: string; controlName: string; source: string; citation: string; depth: number }> {
+		const startKey = `${startType}:${startId}`;
+		if (!traceGraph.hasNode(startKey)) return [];
+
+		const citations: Array<{ controlId: string; controlName: string; source: string; citation: string; depth: number }> = [];
+		const visited = new Set<string>([startKey]);
+		const queue: Array<{ nodeKey: string; depth: number }> = [{ nodeKey: startKey, depth: 0 }];
+
+		while (queue.length > 0) {
+			const { nodeKey, depth } = queue.shift()!;
+
+			// If this is a control node, extract its citation
+			if (nodeKey.startsWith('control:')) {
+				const controlId = nodeKey.split(':')[1];
+				const control = controlsById.get(controlId);
+				if (control?.source && !citations.some(c => c.controlId === controlId)) {
+					citations.push({
+						controlId,
+						controlName: control.name,
+						source: control.source,
+						citation: control.citation || '',
+						depth
+					});
+				}
+			}
+
+			traceGraph.forEachOutEdge(nodeKey, (edge, attrs, src, target) => {
+				if (!visited.has(target)) {
+					visited.add(target);
+					queue.push({ nodeKey: target, depth: depth + 1 });
+				}
+			});
+
+			traceGraph.forEachInEdge(nodeKey, (edge, attrs, src, target) => {
+				if (!visited.has(src)) {
+					visited.add(src);
+					queue.push({ nodeKey: src, depth: depth + 1 });
+				}
+			});
+		}
+
+		return citations;
+	}
+
+	// Combined guidance collection for a node - ready for LLM synthesis
+	function collectAllGuidanceForNode(type: string, id: string, phase: string) {
+		return {
+			phase,
+			startNode: { type, id },
+			guidance: collectGuidance(type, id, phase),
+			regulations: collectRegulations(type, id),
+			citations: collectCitations(type, id)
+		};
+	}
+
+	// Reactive guidance for selected node (for trace view)
+	let selectedNodeGuidance = $derived.by(() => {
+		if (!traceSelectedNode) return null;
+		const phase = selectedPhase === 'all' ? 'phase-1' : selectedPhase;
+		return collectAllGuidanceForNode(traceSelectedNode.type, traceSelectedNode.id, phase);
+	});
+
+	// Reactive guidance for graph view selected node
+	let graphSelectedNodeGuidance = $derived.by(() => {
+		if (!selectedNode) return null;
+		const phase = selectedPhase === 'all' ? 'phase-1' : selectedPhase;
+		return collectAllGuidanceForNode(selectedNode.type, selectedNode.id, phase);
+	});
+
 	// Entity type configuration for Matrix
 	// Simplified schema: controls ARE mitigations (no separate mitigation entity)
 	const entityConfig: Record<EntityType, {
@@ -2232,6 +2484,85 @@
 										</div>
 									{/if}
 								</div>
+
+								<!-- Accumulated Guidance from Graph Traversal -->
+								{#if selectedNodeGuidance}
+									{@const guidanceWithContent = selectedNodeGuidance.guidance.filter(g => g.guidance)}
+									{@const essentialItems = guidanceWithContent.filter(g => g.appropriateness === 'essential')}
+									{@const recommendedItems = guidanceWithContent.filter(g => g.appropriateness === 'recommended')}
+									<div class="guidance-section">
+										<h4>Guidance Trail ({selectedNodeGuidance.phase.replace('phase-', 'Phase ')})</h4>
+										<p class="guidance-hint">Collected from {selectedNodeGuidance.guidance.length} connected nodes</p>
+
+										{#if essentialItems.length > 0}
+											<div class="guidance-group essential">
+												<span class="guidance-label">Essential</span>
+												{#each essentialItems as item}
+													<div class="guidance-item">
+														<span class="guidance-type {item.type}">{item.type}</span>
+														<span class="guidance-name">{item.name}</span>
+														<p class="guidance-text">{item.guidance}</p>
+													</div>
+												{/each}
+											</div>
+										{/if}
+
+										{#if recommendedItems.length > 0}
+											<div class="guidance-group recommended">
+												<span class="guidance-label">Recommended</span>
+												{#each recommendedItems as item}
+													<div class="guidance-item">
+														<span class="guidance-type {item.type}">{item.type}</span>
+														<span class="guidance-name">{item.name}</span>
+														<p class="guidance-text">{item.guidance}</p>
+													</div>
+												{/each}
+											</div>
+										{/if}
+
+										{#if guidanceWithContent.filter(g => !g.appropriateness || g.appropriateness === 'optional').length > 0}
+											<details class="guidance-group optional">
+												<summary>Other Guidance ({guidanceWithContent.filter(g => !g.appropriateness || g.appropriateness === 'optional').length})</summary>
+												{#each guidanceWithContent.filter(g => !g.appropriateness || g.appropriateness === 'optional') as item}
+													<div class="guidance-item">
+														<span class="guidance-type {item.type}">{item.type}</span>
+														<span class="guidance-name">{item.name}</span>
+														<p class="guidance-text">{item.guidance}</p>
+														{#if item.source}
+															<span class="guidance-source">{item.source}</span>
+														{/if}
+													</div>
+												{/each}
+											</details>
+										{/if}
+
+										{#if selectedNodeGuidance.regulations.length > 0}
+											<details class="guidance-group regulations">
+												<summary>Regulations ({selectedNodeGuidance.regulations.length})</summary>
+												{#each selectedNodeGuidance.regulations as reg}
+													<div class="guidance-item">
+														<span class="guidance-citation">{reg.citation}</span>
+														<p class="guidance-text">{reg.description}</p>
+													</div>
+												{/each}
+											</details>
+										{/if}
+
+										{#if selectedNodeGuidance.citations.length > 0}
+											<details class="guidance-group citations">
+												<summary>Sources ({selectedNodeGuidance.citations.length})</summary>
+												{#each selectedNodeGuidance.citations as cit}
+													<div class="guidance-item">
+														<span class="guidance-source">{cit.source}</span>
+														{#if cit.citation}
+															<span class="guidance-citation">{cit.citation}</span>
+														{/if}
+													</div>
+												{/each}
+											</details>
+										{/if}
+									</div>
+								{/if}
 
 								<button class="btn connect-action" onclick={() => startConnect(traceSelectedNode.type, traceSelectedNode.id, new Event('click'))}>
 									+ Create Connection
@@ -4882,6 +5213,124 @@
 	.connect-action {
 		width: 100%;
 		margin-top: auto;
+	}
+
+	/* Guidance Section - accumulated from graph traversal */
+	.guidance-section {
+		margin-top: 1rem;
+		padding-top: 1rem;
+		border-top: 1px solid #334155;
+	}
+
+	.guidance-section h4 {
+		font-size: 0.75rem;
+		color: #94a3b8;
+		text-transform: uppercase;
+		margin-bottom: 0.25rem;
+	}
+
+	.guidance-hint {
+		font-size: 0.6875rem;
+		color: #64748b;
+		margin-bottom: 0.75rem;
+	}
+
+	.guidance-group {
+		margin-bottom: 0.75rem;
+		padding: 0.5rem;
+		border-radius: 0.375rem;
+		background: #0f172a;
+	}
+
+	.guidance-group.essential {
+		border-left: 3px solid #ef4444;
+	}
+
+	.guidance-group.recommended {
+		border-left: 3px solid #fbbf24;
+	}
+
+	.guidance-group.optional {
+		border-left: 3px solid #64748b;
+	}
+
+	.guidance-group.regulations {
+		border-left: 3px solid #a855f7;
+	}
+
+	.guidance-group.citations {
+		border-left: 3px solid #3b82f6;
+	}
+
+	.guidance-label {
+		display: block;
+		font-size: 0.625rem;
+		font-weight: 600;
+		text-transform: uppercase;
+		color: #94a3b8;
+		margin-bottom: 0.5rem;
+	}
+
+	.guidance-group summary {
+		font-size: 0.6875rem;
+		color: #94a3b8;
+		cursor: pointer;
+		padding: 0.25rem 0;
+	}
+
+	.guidance-group summary:hover {
+		color: #e2e8f0;
+	}
+
+	.guidance-item {
+		padding: 0.5rem 0;
+		border-bottom: 1px solid #1e293b;
+	}
+
+	.guidance-item:last-child {
+		border-bottom: none;
+	}
+
+	.guidance-type {
+		display: inline-block;
+		font-size: 0.5625rem;
+		font-weight: 600;
+		text-transform: uppercase;
+		padding: 0.125rem 0.25rem;
+		border-radius: 0.125rem;
+		margin-right: 0.5rem;
+	}
+
+	.guidance-type.risk { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+	.guidance-type.subcategory { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
+	.guidance-type.control { background: rgba(249, 115, 22, 0.2); color: #f97316; }
+	.guidance-type.question { background: rgba(96, 165, 250, 0.2); color: #60a5fa; }
+
+	.guidance-name {
+		font-size: 0.75rem;
+		color: #e2e8f0;
+		font-weight: 500;
+	}
+
+	.guidance-text {
+		font-size: 0.6875rem;
+		color: #94a3b8;
+		margin: 0.25rem 0 0;
+		line-height: 1.4;
+	}
+
+	.guidance-source {
+		display: inline-block;
+		font-size: 0.5625rem;
+		color: #64748b;
+		margin-top: 0.25rem;
+	}
+
+	.guidance-citation {
+		display: block;
+		font-size: 0.6875rem;
+		color: #a855f7;
+		font-weight: 500;
 	}
 
 	/* Buttons */
