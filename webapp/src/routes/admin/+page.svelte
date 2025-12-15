@@ -1692,9 +1692,12 @@
 									{#if node.link}
 										<button
 											class="trace-link-btn"
-											title="Edit link"
+											title="Edit connection to parent"
 											onclick={(e) => { e.stopPropagation(); editingLink = JSON.parse(JSON.stringify(node.link)); showLinkEditor = true; }}
-										>⟿</button>
+										>
+											<span class="link-icon">⟿</span>
+											<span class="link-text">edit link</span>
+										</button>
 									{/if}
 									<button
 										class="trace-node-content"
@@ -1753,47 +1756,109 @@
 							if (t === 'regulation') return allRegulations.find(r => r.id === id);
 							return null;
 						})()}
-						<aside class="trace-detail-panel">
-							<div class="trace-detail-header">
-								<span class="badge {traceSelectedNode.type}">{traceSelectedNode.type}</span>
+						<aside class="detail-panel">
+							<div class="detail-header">
+								<span class="detail-type {traceSelectedNode.type}">{traceSelectedNode.type}</span>
 								<button class="close-btn" onclick={() => traceSelectedNode = null}>×</button>
 							</div>
 							{#if selectedItem}
-								<h4>
-									{#if traceSelectedNode.type === 'question'}
-										{selectedItem.id}
-									{:else if traceSelectedNode.type === 'risk'}
-										{selectedItem.code}
-									{:else if traceSelectedNode.type === 'mitigation'}
-										{selectedItem.code}
-									{:else if traceSelectedNode.type === 'regulation'}
-										{selectedItem.citation}
-									{:else if traceSelectedNode.type === 'control'}
-										{selectedItem.id}
+								{#if traceSelectedNode.type === 'question'}
+									<h3>{selectedItem.text}</h3>
+									<div class="detail-meta">
+										<span class="meta-item">ID: {selectedItem.id}</span>
+										<span class="meta-item">Type: {selectedItem.type}</span>
+										<span class="meta-item">Category: {selectedItem.category}</span>
+									</div>
+									{#if selectedItem.options?.length}
+										<div class="detail-options">
+											<strong>Options:</strong>
+											{#each selectedItem.options as opt}
+												<span class="option-tag">{opt.label}</span>
+											{/each}
+										</div>
 									{/if}
-								</h4>
-								<p class="trace-detail-text">
-									{#if traceSelectedNode.type === 'question'}
-										{selectedItem.text}
-									{:else if traceSelectedNode.type === 'risk'}
-										{selectedItem.shortName}
-									{:else if traceSelectedNode.type === 'mitigation'}
-										{selectedItem.name}
-									{:else if traceSelectedNode.type === 'regulation'}
-										{selectedItem.description}
-									{:else if traceSelectedNode.type === 'control'}
-										{selectedItem.name}
+									{#if selectedItem.showIf}
+										<div class="detail-section">
+											<strong>Show when:</strong>
+											<div class="showif-summary">
+												{#each Object.entries(selectedItem.showIf) as [qId, val]}
+													<span class="showif-condition">{qId} = {Array.isArray(val) ? val.join(' or ') : val}</span>
+												{/each}
+											</div>
+										</div>
 									{/if}
-								</p>
-								<button
-									class="btn edit-entity"
-									onclick={() => {
-										if (traceSelectedNode?.type === 'question') { entityType = 'questions'; editEntity(selectedItem); }
-										else if (traceSelectedNode?.type === 'risk') { entityType = 'risks'; editEntity(selectedItem); }
-										else if (traceSelectedNode?.type === 'regulation') { entityType = 'regulations'; editEntity(selectedItem); }
-										else if (traceSelectedNode?.type === 'control') { entityType = 'controls'; editEntity(selectedItem); }
-									}}
-								>Edit {traceSelectedNode.type}</button>
+									<button class="btn edit-entity" onclick={() => { entityType = 'questions'; editEntity(selectedItem); }}>
+										Edit Question
+									</button>
+								{:else if traceSelectedNode.type === 'risk'}
+									<h3>{selectedItem.name}</h3>
+									<div class="detail-meta">
+										<span class="meta-item">Code: {selectedItem.code}</span>
+										<span class="meta-item">Domain: {selectedItem.domain}</span>
+									</div>
+									<p class="detail-desc">{selectedItem.shortName}</p>
+									<button class="btn edit-entity" onclick={() => { entityType = 'risks'; editEntity(selectedItem); }}>
+										Edit Risk
+									</button>
+								{:else if traceSelectedNode.type === 'mitigation'}
+									{@const subcategoryControls = allControls.filter(c => c.subcategoryId === selectedItem.id)}
+									<h3>{selectedItem.name}</h3>
+									<div class="detail-meta">
+										<span class="meta-item">Code: {selectedItem.code}</span>
+										<span class="meta-item">Category: {selectedItem.category}</span>
+									</div>
+									{#if subcategoryControls.length > 0}
+										<div class="detail-controls">
+											<strong>Controls ({subcategoryControls.length}):</strong>
+											<div class="controls-list">
+												{#each subcategoryControls.slice(0, 5) as ctrl}
+													<div class="control-item">{ctrl.name}</div>
+												{/each}
+												{#if subcategoryControls.length > 5}
+													<div class="control-item more">+{subcategoryControls.length - 5} more</div>
+												{/if}
+											</div>
+										</div>
+									{/if}
+								{:else if traceSelectedNode.type === 'regulation'}
+									<h3>{selectedItem.citation}</h3>
+									<div class="detail-meta">
+										<span class="meta-item">{selectedItem.framework}</span>
+									</div>
+									<p class="detail-desc">{selectedItem.description}</p>
+									<button class="btn edit-entity" onclick={() => { entityType = 'regulations'; editEntity(selectedItem); }}>
+										Edit Regulation
+									</button>
+								{:else if traceSelectedNode.type === 'control'}
+									{@const subcategory = getControlSubcategory(selectedItem.subcategoryId)}
+									<h3>{selectedItem.name}</h3>
+									<div class="detail-meta">
+										<span class="meta-item">ID: {selectedItem.id}</span>
+										<span class="meta-item">Source: {selectedItem.source}</span>
+									</div>
+									{#if selectedItem.description}
+										<p class="detail-desc">{selectedItem.description}</p>
+									{/if}
+									<div class="detail-section">
+										<strong>Category:</strong>
+										{#if subcategory}
+											<span class="category-badge">{subcategory.code}: {subcategory.name}</span>
+										{:else}
+											<span>{selectedItem.subcategoryId}</span>
+										{/if}
+									</div>
+									<div class="detail-section">
+										<strong>Phases:</strong>
+										<div class="phase-badges">
+											{#each selectedItem.phases || [] as phase}
+												<span class="phase-badge">{phase.replace('phase-', 'P')}</span>
+											{/each}
+										</div>
+									</div>
+									<button class="btn edit-entity" onclick={() => { entityType = 'controls'; editEntity(selectedItem); }}>
+										Edit Control
+									</button>
+								{/if}
 
 								<!-- Connections section -->
 								{@const traceConnections = getConnections(traceSelectedNode.type, traceSelectedNode.id)}
@@ -1807,7 +1872,7 @@
 												{@const isFrom = link.from.entity === traceSelectedNode.type && link.from.id === traceSelectedNode.id}
 												{@const otherEntity = isFrom ? link.to.entity : link.from.entity}
 												{@const otherId = isFrom ? link.to.id : link.from.id}
-												<button class="connection-item" onclick={() => { editingLink = link; showLinkEditor = true; }}>
+												<button class="connection-item" onclick={() => { editingLink = JSON.parse(JSON.stringify(link)); showLinkEditor = true; }}>
 													<span class="conn-type {link.type}">{link.type}</span>
 													<span class="conn-direction">{isFrom ? '→' : '←'}</span>
 													<span class="conn-target {otherEntity}">{getEntityName(otherEntity, otherId)}</span>
@@ -3379,7 +3444,16 @@
 
 	.trace-node.selected {
 		border-color: #60a5fa;
-		box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.2);
+		background: rgba(96, 165, 250, 0.15);
+		box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.3);
+	}
+
+	.trace-node.selected .trace-node-content {
+		background: transparent;
+	}
+
+	.trace-node.selected .trace-node-label {
+		color: #fff;
 	}
 
 	.trace-node.question { border-left: 3px solid #60a5fa; }
@@ -3432,19 +3506,32 @@
 	}
 
 	.trace-link-btn {
-		padding: 0;
-		background: none;
-		border: none;
-		color: #64748b;
-		font-size: 0.875rem;
+		display: flex;
+		align-items: center;
+		gap: 0.25rem;
+		padding: 0.125rem 0.375rem;
+		background: rgba(96, 165, 250, 0.1);
+		border: 1px solid rgba(96, 165, 250, 0.3);
+		border-radius: 0.25rem;
+		color: #60a5fa;
+		font-size: 0.625rem;
 		cursor: pointer;
-		opacity: 0.6;
 		transition: all 0.15s ease;
 	}
 
 	.trace-link-btn:hover {
-		opacity: 1;
-		color: #60a5fa;
+		background: rgba(96, 165, 250, 0.2);
+		border-color: #60a5fa;
+	}
+
+	.trace-link-btn .link-icon {
+		font-size: 0.75rem;
+	}
+
+	.trace-link-btn .link-text {
+		text-transform: uppercase;
+		font-weight: 500;
+		letter-spacing: 0.02em;
 	}
 
 	.trace-children {
@@ -3477,67 +3564,22 @@
 	.trace-stat.control { border-left: 2px solid #06b6d4; }
 	.trace-stat.regulation { border-left: 2px solid #a78bfa; }
 
-	.trace-detail-panel {
-		position: fixed;
-		top: 4rem;
-		right: 1rem;
-		width: 300px;
-		background: #1e293b;
-		border: 1px solid #334155;
-		border-radius: 0.5rem;
-		padding: 1rem;
-		box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-		z-index: 100;
-	}
-
-	.trace-detail-header {
+	/* showIf dependency display */
+	.showif-summary {
 		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		margin-bottom: 0.75rem;
+		flex-direction: column;
+		gap: 0.25rem;
+		margin-top: 0.5rem;
 	}
 
-	.trace-detail-header .badge {
-		font-size: 0.6875rem;
+	.showif-condition {
+		font-size: 0.75rem;
+		background: rgba(6, 182, 212, 0.15);
+		border: 1px solid rgba(6, 182, 212, 0.3);
+		color: #06b6d4;
 		padding: 0.25rem 0.5rem;
 		border-radius: 0.25rem;
-		text-transform: uppercase;
-		font-weight: 600;
-	}
-
-	.trace-detail-header .badge.question { background: rgba(96, 165, 250, 0.2); color: #60a5fa; }
-	.trace-detail-header .badge.risk { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
-	.trace-detail-header .badge.mitigation { background: rgba(16, 185, 129, 0.2); color: #10b981; }
-	.trace-detail-header .badge.control { background: rgba(6, 182, 212, 0.2); color: #06b6d4; }
-	.trace-detail-header .badge.regulation { background: rgba(167, 139, 250, 0.2); color: #a78bfa; }
-
-	.trace-detail-panel h4 {
-		margin: 0 0 0.5rem;
-		font-size: 0.875rem;
-		color: #f1f5f9;
-	}
-
-	.trace-detail-text {
-		font-size: 0.8125rem;
-		color: #94a3b8;
-		margin: 0 0 1rem;
-		line-height: 1.4;
-	}
-
-	.trace-detail-panel .edit-entity {
-		width: 100%;
-		margin-bottom: 1rem;
-	}
-
-	.trace-detail-panel .connections-section {
-		margin-top: 1rem;
-		padding-top: 1rem;
-		border-top: 1px solid #334155;
-	}
-
-	.trace-detail-panel .connect-action {
-		width: 100%;
-		margin-top: 1rem;
+		font-family: monospace;
 	}
 
 	/* Graph View Toolbar */
