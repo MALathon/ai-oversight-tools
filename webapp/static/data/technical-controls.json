@@ -1406,21 +1406,6 @@
       ]
     },
     {
-      "id": "A0089_Future of Life Institute2024",
-      "name": "Board of directors",
-      "description": "Information about board independence; any non-standard safety-related powers; whether it has a mandate to prioritize safety over profits.",
-      "source": "Future of Life Institute2024",
-      "subcategoryId": "board-oversight-1.1",
-      "phases": [
-        "phase-1",
-        "phase-2",
-        "phase-3"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
       "id": "A0091_Future of Life Institute2024",
       "name": "BOD formal risk committee",
       "description": "Does the board of directors feature a formal risk committee that is tasked with overseeing the firm\u2019s risk management practices? If yes, please name the members of this committee.",
@@ -1429,19 +1414,6 @@
       "phases": [
         "phase-1",
         "phase-2",
-        "phase-3"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
-      "id": "A0099_Future of Life Institute2024",
-      "name": "Company structure",
-      "description": "Information that indicates whether the structure of the firm would allow it to prioritize safety in critical situations or whether shareholder pressure could drive it to deploy capable but dangerous systems.",
-      "source": "Future of Life Institute2024",
-      "subcategoryId": "board-oversight-1.1",
-      "phases": [
         "phase-3"
       ],
       "techTypes": [
@@ -1798,21 +1770,6 @@
       "source": "Future of Life Institute2024",
       "subcategoryId": "risk-management-1.2",
       "phases": [
-        "phase-2",
-        "phase-3"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
-      "id": "A0143_Future of Life Institute2024",
-      "name": "Protections that guard critical decisions against stakeholder pressure",
-      "description": "Is your firm's governance structure set up in a way that would allow its leadership to prioritize safety in critical situations even if such a decision runs counter to the profit incentive (e.g., choosing not to deploy very capable yet critically dangerous AI systems)? Are there any protections that guard such decisions against shareholder pressure (e.g., in the form of lawsuits)? Are shareholders briefed that such situations might arise in the future? Please describe how your firm prioritizes safety (e.g., relevant policies, legal structure, etc.).",
-      "source": "Future of Life Institute2024",
-      "subcategoryId": "conflict-interest-1.3",
-      "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],
@@ -7808,21 +7765,6 @@
       "source": "UK Government2023",
       "subcategoryId": "risk-management-1.2",
       "phases": [
-        "phase-2",
-        "phase-3"
-      ],
-      "techTypes": [
-        "all"
-      ]
-    },
-    {
-      "id": "A0847_UK Government2023",
-      "name": "Board-level Responsibility for Protective Security",
-      "description": "Ensure board-level responsibility for protective security with regular engagement with key stakeholders from across the business and a firm understanding of the risks the organisation faces. Ensure stakeholder engagement throughout the business for specialist insight and development and implementation of an insider risk mitigation programme.",
-      "source": "UK Government2023",
-      "subcategoryId": "board-oversight-1.1",
-      "phases": [
-        "phase-1",
         "phase-2",
         "phase-3"
       ],

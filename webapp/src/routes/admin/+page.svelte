@@ -790,16 +790,16 @@
 			getAll: () => {
 				let filtered = allControls;
 				if (selectedPhase !== 'all') {
-					filtered = filtered.filter(c => c.phases?.includes(selectedPhase));
+					filtered = filtered.filter(c => !c.phases || c.phases.length === 0 || c.phases.includes(selectedPhase));
 				}
 				if (selectedTechType !== 'all') {
-					filtered = filtered.filter(c => c.techTypes?.includes('all') || c.techTypes?.includes(selectedTechType));
+					filtered = filtered.filter(c => !c.techTypes || c.techTypes.includes('all') || c.techTypes.includes(selectedTechType));
 				}
 				return filtered.slice(0, 100); // Limit for performance
 			},
 			getLabel: (c) => c.name,
 			getShortLabel: (c) => c.id.split('_')[0],
-			searchText: (c) => c.name + ' ' + c.id
+			searchText: (c) => `${c.name} ${c.id} ${c.description || ''} ${c.source || ''} ${c.subcategoryId || ''}`
 		}
 	};
 
@@ -993,10 +993,48 @@
 
 	// Get connections for a node
 	function getConnections(type: string, id: string) {
-		return filteredLinks.filter((l: any) =>
+		const linkConnections = filteredLinks.filter((l: any) =>
 			(l.from.entity === type && l.from.id === id) ||
 			(l.to.entity === type && l.to.id === id)
 		);
+
+		// For controls, add virtual connection to parent subcategory via subcategoryId
+		if (type === 'control') {
+			const control = allControls.find(c => c.id === id);
+			if (control?.subcategoryId) {
+				const virtualLink = {
+					type: 'subcategory',
+					from: { entity: 'control', id: id },
+					to: { entity: 'subcategory', id: control.subcategoryId },
+					_virtual: true
+				};
+				return [...linkConnections, virtualLink];
+			}
+		}
+
+		// For subcategories, add virtual connections to child controls
+		if (type === 'subcategory') {
+			const childControls = allControls.filter(c => c.subcategoryId === id);
+			const virtualLinks = childControls.slice(0, 10).map(c => ({
+				type: 'subcategory',
+				from: { entity: 'subcategory', id: id },
+				to: { entity: 'control', id: c.id },
+				_virtual: true
+			}));
+			// Add indicator if there are more
+			if (childControls.length > 10) {
+				virtualLinks.push({
+					type: 'subcategory',
+					from: { entity: 'subcategory', id: id },
+					to: { entity: 'control', id: `+${childControls.length - 10} more` },
+					_virtual: true,
+					_overflow: true
+				});
+			}
+			return [...linkConnections, ...virtualLinks];
+		}
+
+		return linkConnections;
 	}
 
 	// Get all transitively connected nodes from selected node
@@ -3177,9 +3215,14 @@
 	}
 
 	.matrix .col-header .verbose-label {
-		max-height: 120px;
+		writing-mode: vertical-rl;
+		text-orientation: mixed;
+		max-height: 150px;
 		overflow: hidden;
 		text-overflow: ellipsis;
+		font-size: 0.5625rem;
+		line-height: 1.2;
+		white-space: nowrap;
 	}
 
 	.matrix .row-label {
@@ -3218,18 +3261,29 @@
 	.matrix .row-label .verbose-label {
 		font-family: inherit;
 		display: block;
-		max-width: 250px;
+		max-width: 300px;
 		overflow: hidden;
 		text-overflow: ellipsis;
+		font-size: 0.5625rem;
+		line-height: 1.3;
+		white-space: nowrap;
 	}
 
 	/* Verbose mode adjustments */
 	.matrix:has(.verbose-label) .col-header {
-		max-width: 3rem;
+		min-width: 1.75rem;
+		max-width: 2rem;
+		padding: 0.25rem;
 	}
 
 	.matrix:has(.verbose-label) .row-label {
-		max-width: 250px;
+		max-width: 300px;
+		min-width: 200px;
+	}
+
+	.matrix:has(.verbose-label) .matrix-cell {
+		min-width: 1.75rem;
+		height: 1.25rem;
 	}
 
 	.matrix-cell {
