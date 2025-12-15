@@ -22,7 +22,11 @@
 		"vite": "^7.2.6"
 	},
 	"dependencies": {
+		"docx": "^9.5.1",
+		"docxtemplater": "^3.67.6",
+		"file-saver": "^2.0.5",
 		"graphology": "^0.26.0",
-		"graphology-traversal": "^0.3.1"
+		"graphology-traversal": "^0.3.1",
+		"pizzip": "^3.2.0"
 	}
 }
