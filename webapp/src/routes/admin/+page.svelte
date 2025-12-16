@@ -5202,6 +5202,7 @@
 	.conn-type.regulation { background: rgba(168, 85, 247, 0.2); color: #a855f7; }
 	.conn-type.control { background: rgba(249, 115, 22, 0.2); color: #f97316; }
 	.conn-type.implementation { background: rgba(236, 72, 153, 0.2); color: #ec4899; }
+	.conn-type.contains { background: rgba(6, 182, 212, 0.2); color: #06b6d4; }
 	.conn-type.custom { background: rgba(148, 163, 184, 0.2); color: #94a3b8; }
 
 	.conn-direction {
