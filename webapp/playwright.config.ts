@@ -16,6 +16,7 @@ export default defineConfig({
 		['json', { outputFile: 'test-results/results.json' }]
 	],
 	use: {
+		// In CI, serve runs at root; locally, vite preview uses /ai-oversight-tools base
 		baseURL: process.env.BASE_URL || 'http://localhost:4173/ai-oversight-tools',
 		trace: 'on-first-retry',
 		screenshot: 'only-on-failure',
@@ -43,10 +44,13 @@ export default defineConfig({
 			use: { ...devices['iPhone 12'] },
 		},
 	],
-	webServer: {
-		command: 'npm run preview',
-		url: 'http://localhost:4173/ai-oversight-tools',
-		reuseExistingServer: !process.env.CI,
-		timeout: 60000,
-	},
+	// Only start webserver locally, in CI we use external server
+	...(process.env.CI ? {} : {
+		webServer: {
+			command: 'npm run preview',
+			url: 'http://localhost:4173/ai-oversight-tools',
+			reuseExistingServer: true,
+			timeout: 60000,
+		},
+	}),
 });
