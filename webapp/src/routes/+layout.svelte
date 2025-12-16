@@ -11,6 +11,74 @@
 		{ href: '/protocol-builder', label: 'Protocol Builder' },
 		{ href: '/admin', label: 'Admin' }
 	];
+
+	// Feedback modal state
+	let showFeedback = $state(false);
+	let feedbackType = $state<'bug' | 'feature' | 'error'>('bug');
+	let feedbackTitle = $state('');
+	let feedbackDescription = $state('');
+	let feedbackSubmitting = $state(false);
+	let feedbackSuccess = $state(false);
+	let feedbackError = $state('');
+	let feedbackIssueUrl = $state('');
+
+	const WORKER_URL = 'https://ai-oversight-feedback.malathon.workers.dev';
+
+	async function submitFeedback() {
+		if (!feedbackTitle.trim() || !feedbackDescription.trim()) {
+			feedbackError = 'Please fill in both title and description';
+			return;
+		}
+
+		feedbackSubmitting = true;
+		feedbackError = '';
+
+		try {
+			const response = await fetch(WORKER_URL, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({
+					type: feedbackType,
+					title: feedbackTitle.trim(),
+					description: feedbackDescription.trim(),
+					page: typeof window !== 'undefined' ? window.location.pathname : '',
+					userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : ''
+				})
+			});
+
+			const data = await response.json();
+
+			if (response.ok && data.success) {
+				feedbackSuccess = true;
+				feedbackIssueUrl = data.issueUrl;
+			} else {
+				feedbackError = data.error || 'Failed to submit feedback';
+			}
+		} catch (err) {
+			feedbackError = 'Network error. Please try again.';
+		} finally {
+			feedbackSubmitting = false;
+		}
+	}
+
+	function closeFeedback() {
+		showFeedback = false;
+		// Reset after animation
+		setTimeout(() => {
+			feedbackType = 'bug';
+			feedbackTitle = '';
+			feedbackDescription = '';
+			feedbackSuccess = false;
+			feedbackError = '';
+			feedbackIssueUrl = '';
+		}, 200);
+	}
+
+	function openFeedback() {
+		showFeedback = true;
+		feedbackSuccess = false;
+		feedbackError = '';
+	}
 </script>
 
 <svelte:head>
@@ -47,6 +115,133 @@
 		</p>
 	</footer>
 </div>
+
+<!-- Feedback Button -->
+<button class="feedback-button" onclick={openFeedback} aria-label="Submit feedback">
+	<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+		<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+	</svg>
+	<span>Feedback</span>
+</button>
+
+<!-- Feedback Modal -->
+{#if showFeedback}
+	<!-- svelte-ignore a11y_no_static_element_interactions a11y_click_events_have_key_events -->
+	<div class="modal-backdrop" onclick={closeFeedback}>
+		<!-- svelte-ignore a11y_no_static_element_interactions a11y_click_events_have_key_events -->
+		<div class="modal" onclick={(e) => e.stopPropagation()} role="dialog" aria-labelledby="feedback-title" aria-modal="true">
+			<div class="modal-header">
+				<h2 id="feedback-title">Submit Feedback</h2>
+				<button class="close-btn" onclick={closeFeedback} aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+
+			{#if feedbackSuccess}
+				<div class="modal-body success">
+					<div class="success-icon">
+						<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+							<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+							<polyline points="22 4 12 14.01 9 11.01"></polyline>
+						</svg>
+					</div>
+					<h3>Thank you!</h3>
+					<p>Your feedback has been submitted successfully.</p>
+					{#if feedbackIssueUrl}
+						<a href={feedbackIssueUrl} target="_blank" rel="noopener" class="issue-link">
+							View issue on GitHub
+						</a>
+					{/if}
+					<button class="btn primary" onclick={closeFeedback}>Close</button>
+				</div>
+			{:else}
+				<div class="modal-body">
+					<div class="form-group">
+						<label for="feedback-type">Type</label>
+						<div class="type-buttons">
+							<button
+								class="type-btn"
+								class:active={feedbackType === 'bug'}
+								onclick={() => feedbackType = 'bug'}
+							>
+								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+									<circle cx="12" cy="12" r="10"></circle>
+									<line x1="12" y1="8" x2="12" y2="12"></line>
+									<line x1="12" y1="16" x2="12.01" y2="16"></line>
+								</svg>
+								Bug
+							</button>
+							<button
+								class="type-btn"
+								class:active={feedbackType === 'feature'}
+								onclick={() => feedbackType = 'feature'}
+							>
+								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+									<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+								</svg>
+								Feature
+							</button>
+							<button
+								class="type-btn"
+								class:active={feedbackType === 'error'}
+								onclick={() => feedbackType = 'error'}
+							>
+								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+									<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+									<line x1="12" y1="9" x2="12" y2="13"></line>
+									<line x1="12" y1="17" x2="12.01" y2="17"></line>
+								</svg>
+								Error
+							</button>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="feedback-title-input">Title</label>
+						<input
+							id="feedback-title-input"
+							type="text"
+							bind:value={feedbackTitle}
+							placeholder="Brief summary of your feedback"
+						/>
+					</div>
+
+					<div class="form-group">
+						<label for="feedback-description">Description</label>
+						<textarea
+							id="feedback-description"
+							bind:value={feedbackDescription}
+							placeholder="Please describe the issue or suggestion in detail..."
+							rows="5"
+						></textarea>
+					</div>
+
+					<p class="attachment-note">
+						<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+							<path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
+						</svg>
+						To attach screenshots, add them to the GitHub issue after submission
+					</p>
+
+					{#if feedbackError}
+						<div class="error-message">{feedbackError}</div>
+					{/if}
+				</div>
+
+				<div class="modal-footer">
+					<button class="btn" onclick={closeFeedback}>Cancel</button>
+					<button
+						class="btn primary"
+						onclick={submitFeedback}
+						disabled={feedbackSubmitting || !feedbackTitle.trim() || !feedbackDescription.trim()}
+					>
+						{feedbackSubmitting ? 'Submitting...' : 'Submit Feedback'}
+					</button>
+				</div>
+			{/if}
+		</div>
+	</div>
+{/if}
 
 <style>
 	:global(*) {
@@ -145,5 +340,247 @@
 
 	footer a:hover {
 		text-decoration: underline;
+	}
+
+	/* Feedback Button */
+	.feedback-button {
+		position: fixed;
+		bottom: 1.5rem;
+		right: 1.5rem;
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		padding: 0.75rem 1rem;
+		background: #3b82f6;
+		color: white;
+		border: none;
+		border-radius: 2rem;
+		font-size: 0.875rem;
+		font-weight: 500;
+		cursor: pointer;
+		box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+		transition: all 0.2s ease;
+		z-index: 90;
+	}
+
+	.feedback-button:hover {
+		background: #2563eb;
+		transform: translateY(-2px);
+		box-shadow: 0 6px 16px rgba(59, 130, 246, 0.5);
+	}
+
+	.feedback-button:active {
+		transform: translateY(0);
+	}
+
+	/* Modal */
+	.modal-backdrop {
+		position: fixed;
+		inset: 0;
+		background: rgba(0, 0, 0, 0.7);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		z-index: 200;
+		padding: 1rem;
+	}
+
+	.modal {
+		background: #1e293b;
+		border: 1px solid #334155;
+		border-radius: 0.75rem;
+		width: 100%;
+		max-width: 500px;
+		max-height: 90vh;
+		overflow-y: auto;
+	}
+
+	.modal-header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 1rem 1.25rem;
+		border-bottom: 1px solid #334155;
+	}
+
+	.modal-header h2 {
+		font-size: 1.125rem;
+		font-weight: 600;
+		color: #f1f5f9;
+	}
+
+	.close-btn {
+		background: none;
+		border: none;
+		color: #94a3b8;
+		font-size: 1.5rem;
+		cursor: pointer;
+		padding: 0.25rem;
+		line-height: 1;
+	}
+
+	.close-btn:hover {
+		color: #e2e8f0;
+	}
+
+	.modal-body {
+		padding: 1.25rem;
+	}
+
+	.modal-body.success {
+		text-align: center;
+		padding: 2rem 1.25rem;
+	}
+
+	.success-icon {
+		color: #4ade80;
+		margin-bottom: 1rem;
+	}
+
+	.modal-body.success h3 {
+		font-size: 1.25rem;
+		color: #f1f5f9;
+		margin-bottom: 0.5rem;
+	}
+
+	.modal-body.success p {
+		color: #94a3b8;
+		margin-bottom: 1rem;
+	}
+
+	.issue-link {
+		display: inline-block;
+		color: #60a5fa;
+		text-decoration: none;
+		margin-bottom: 1.5rem;
+	}
+
+	.issue-link:hover {
+		text-decoration: underline;
+	}
+
+	.modal-footer {
+		display: flex;
+		justify-content: flex-end;
+		gap: 0.75rem;
+		padding: 1rem 1.25rem;
+		border-top: 1px solid #334155;
+	}
+
+	.form-group {
+		margin-bottom: 1rem;
+	}
+
+	.form-group label {
+		display: block;
+		font-size: 0.8125rem;
+		font-weight: 500;
+		color: #94a3b8;
+		margin-bottom: 0.5rem;
+	}
+
+	.type-buttons {
+		display: flex;
+		gap: 0.5rem;
+	}
+
+	.type-btn {
+		flex: 1;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.375rem;
+		padding: 0.625rem 0.75rem;
+		background: #0f172a;
+		border: 1px solid #334155;
+		border-radius: 0.375rem;
+		color: #94a3b8;
+		font-size: 0.8125rem;
+		cursor: pointer;
+		transition: all 0.15s ease;
+	}
+
+	.type-btn:hover {
+		border-color: #475569;
+		color: #e2e8f0;
+	}
+
+	.type-btn.active {
+		background: rgba(59, 130, 246, 0.1);
+		border-color: #3b82f6;
+		color: #60a5fa;
+	}
+
+	.form-group input,
+	.form-group textarea {
+		width: 100%;
+		padding: 0.625rem 0.75rem;
+		background: #0f172a;
+		border: 1px solid #334155;
+		border-radius: 0.375rem;
+		color: #e2e8f0;
+		font-size: 0.875rem;
+		font-family: inherit;
+	}
+
+	.form-group input:focus,
+	.form-group textarea:focus {
+		outline: none;
+		border-color: #3b82f6;
+	}
+
+	.form-group textarea {
+		resize: vertical;
+		min-height: 100px;
+	}
+
+	.attachment-note {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		font-size: 0.75rem;
+		color: #64748b;
+		margin-top: 0.5rem;
+	}
+
+	.error-message {
+		background: rgba(239, 68, 68, 0.1);
+		border: 1px solid #ef4444;
+		color: #f87171;
+		padding: 0.625rem 0.75rem;
+		border-radius: 0.375rem;
+		font-size: 0.8125rem;
+		margin-top: 1rem;
+	}
+
+	.btn {
+		padding: 0.625rem 1rem;
+		border-radius: 0.375rem;
+		font-size: 0.875rem;
+		font-weight: 500;
+		cursor: pointer;
+		transition: all 0.15s ease;
+		border: 1px solid #334155;
+		background: #0f172a;
+		color: #e2e8f0;
+	}
+
+	.btn:hover {
+		background: #1e293b;
+	}
+
+	.btn.primary {
+		background: #3b82f6;
+		border-color: #3b82f6;
+		color: white;
+	}
+
+	.btn.primary:hover {
+		background: #2563eb;
+	}
+
+	.btn:disabled {
+		opacity: 0.5;
+		cursor: not-allowed;
 	}
 </style>
