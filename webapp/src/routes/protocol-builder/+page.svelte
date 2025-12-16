@@ -1044,8 +1044,6 @@
 									<button class="risk-header" onclick={() => toggleRiskExpanded(risk.subdomain.id)}>
 										{#if essentialCov.complete}
 											<span class="complete-check">✓</span>
-										{:else if controlCount > 0}
-											<span class="partial-check">◐</span>
 										{/if}
 										<span class="risk-name">{risk.subdomain.shortName}</span>
 										<span class="risk-meta">
@@ -1466,11 +1464,6 @@
 		color: var(--color-subcategory, #4ade80);
 		font-size: 0.875rem;
 		font-weight: 700;
-	}
-
-	.partial-check {
-		color: var(--color-trigger, #fcd34d);
-		font-size: 0.75rem;
 	}
 
 	.risk-header {
