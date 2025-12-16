@@ -921,76 +921,56 @@
 </svelte:head>
 
 <div class="builder">
-	<header class="builder-header">
-		<div class="header-left">
-			<h1>Protocol Builder</h1>
-			<span class="subtitle">AI Risk Mitigation for Human Subjects Research</span>
-		</div>
-		<div class="header-actions">
-			{#if hasProtocolContent}
-				<span class="control-count">{totalSelectedControls} controls selected</span>
-				<button class="btn-outline" onclick={copyMarkdown} aria-label="Copy protocol as Markdown to clipboard">Copy Markdown</button>
-				<button class="btn-primary" onclick={exportDocx} aria-label="Export protocol as Word document">Export DOCX</button>
-			{/if}
-		</div>
-	</header>
-
-	<!-- Assessment Bar (Top) -->
-	<div class="assessment-bar">
-		{#each visibleCategories as category}
-			<div class="question-group">
-				<h3>{category.name}</h3>
-				<div class="questions-row">
-					{#each category.questions as question}
-						{#if checkShowIf(question.showIf)}
-							<div class="question">
-								<span class="question-label">{question.question}</span>
-								<div class="question-options">
-									{#if question.type === 'single-select'}
-										{#each question.options as option}
-											<button
-												class="option-btn"
-												class:active={answers[question.id] === option.value}
-												onclick={() => answers[question.id] = option.value}
-											>{option.label}</button>
-										{/each}
-									{:else if question.type === 'multi-select'}
-										{#each question.options as option}
-											<button
-												class="option-btn"
-												class:active={(answers[question.id] as string[] || []).includes(option.value)}
-												onclick={() => toggleMulti(question.id, option.value)}
-											>{option.label}</button>
-										{/each}
-									{:else if question.type === 'yes-no'}
-										<button class="option-btn" class:active={answers[question.id] === 'yes'} onclick={() => answers[question.id] = 'yes'}>Yes</button>
-										<button class="option-btn" class:active={answers[question.id] === 'no'} onclick={() => answers[question.id] = 'no'}>No</button>
-									{/if}
-								</div>
-							</div>
-						{/if}
-					{/each}
-				</div>
+	<div class="builder-columns">
+		<!-- Assessment Panel -->
+		<aside class="panel assessment-panel">
+			<div class="panel-header">
+				<h2>Assessment</h2>
 			</div>
-		{/each}
-	</div>
+			<div class="panel-content">
+				{#each visibleCategories as category}
+					<div class="question-group">
+						<h3>{category.name}</h3>
+						{#each category.questions as question}
+							{#if checkShowIf(question.showIf)}
+								<div class="question">
+									<span class="question-label">{question.question}</span>
+									<div class="question-options">
+										{#if question.type === 'single-select'}
+											{#each question.options as option}
+												<button
+													class="option-btn"
+													class:active={answers[question.id] === option.value}
+													onclick={() => answers[question.id] = option.value}
+												>{option.label}</button>
+											{/each}
+										{:else if question.type === 'multi-select'}
+											{#each question.options as option}
+												<button
+													class="option-btn"
+													class:active={(answers[question.id] as string[] || []).includes(option.value)}
+													onclick={() => toggleMulti(question.id, option.value)}
+												>{option.label}</button>
+											{/each}
+										{:else if question.type === 'yes-no'}
+											<button class="option-btn" class:active={answers[question.id] === 'yes'} onclick={() => answers[question.id] = 'yes'}>Yes</button>
+											<button class="option-btn" class:active={answers[question.id] === 'no'} onclick={() => answers[question.id] = 'no'}>No</button>
+										{/if}
+									</div>
+								</div>
+							{/if}
+						{/each}
+					</div>
+				{/each}
+			</div>
+		</aside>
 
-	<div class="builder-body">
-
-		<!-- Main Risk Selection -->
-		<main class="risks-panel">
-			{#if !selectedPhase}
-				<div class="placeholder">
-					<p>Select a development phase to identify applicable risks.</p>
-				</div>
-			{:else if triggeredRisks.length === 0}
-				<div class="placeholder">
-					<p>Answer more assessment questions to identify risks.</p>
-				</div>
-			{:else}
-				<div class="risks-toolbar">
-					<h2>Risks ({displayedRisks.length})</h2>
-					<div class="toolbar-filters">
+		<!-- Risks Panel -->
+		<main class="panel risks-panel">
+			<div class="panel-header">
+				<h2>Risks {#if selectedPhase}({displayedRisks.length}){/if}</h2>
+				<div class="panel-header-actions">
+					{#if selectedPhase && triggeredRisks.length > 0}
 						<select class="filter-select" bind:value={appropriatenessFilter} aria-label="Filter strategies by appropriateness">
 							<option value="all">All Strategies</option>
 							<option value="essential">Essential Only</option>
@@ -999,19 +979,29 @@
 						{#if risksWithUnaddressedEssential > 0}
 							<label class="filter-checkbox">
 								<input type="checkbox" bind:checked={showOnlyUnaddressed} />
-								<span>Incomplete only ({risksWithUnaddressedEssential})</span>
+								<span>Incomplete ({risksWithUnaddressedEssential})</span>
 							</label>
 						{/if}
+					{/if}
+				</div>
+			</div>
+			<div class="panel-content">
+				{#if !selectedPhase}
+					<div class="placeholder">
+						<p>Select a development phase to identify applicable risks.</p>
 					</div>
-				</div>
+				{:else if triggeredRisks.length === 0}
+					<div class="placeholder">
+						<p>Answer more assessment questions to identify risks.</p>
+					</div>
+				{:else}
+					<div class="defense-legend">
+						<span><i class="dot-p"></i> Preventive</span>
+						<span><i class="dot-d"></i> Detective</span>
+						<span><i class="dot-c"></i> Corrective</span>
+					</div>
 
-				<div class="defense-legend">
-					<span><i class="dot-p"></i> Preventive</span>
-					<span><i class="dot-d"></i> Detective</span>
-					<span><i class="dot-c"></i> Corrective</span>
-				</div>
-
-				<div class="risks-list">
+					<div class="risks-list">
 					{#each displayedRisks as risk}
 						{@const isExpanded = expandedRisks.has(risk.subdomain.id)}
 						{@const controlCount = getControlCount(risk.subdomain.id)}
@@ -1185,30 +1175,42 @@
 							{/if}
 						</div>
 					{/each}
-				</div>
-			{/if}
+					</div>
+				{/if}
+			</div>
 		</main>
 
-		<!-- Protocol Preview -->
-		<aside class="protocol-panel">
-			<div class="protocol-doc">
-				<div class="doc-header">
-					<h2>AI Research Protocol</h2>
-					<span>Risk Mitigation Plan</span>
+		<!-- Protocol Panel -->
+		<aside class="panel protocol-panel">
+			<div class="panel-header">
+				<h2>Protocol Output</h2>
+				<div class="panel-header-actions">
+					{#if hasProtocolContent}
+						<span class="control-count">{totalSelectedControls} controls</span>
+						<button class="btn-small" onclick={copyMarkdown} aria-label="Copy as Markdown">Copy</button>
+						<button class="btn-small btn-primary-small" onclick={exportDocx} aria-label="Export DOCX">Export</button>
+					{/if}
 				</div>
-				<table class="doc-meta">
-					<tbody>
-						<tr><td>Phase</td><td>{phaseName || '—'}</td></tr>
-						<tr><td>Model Types</td><td>{selectedModelTypes.join(', ') || '—'}</td></tr>
-						<tr><td>Risks Addressed</td><td>{risksAddressed} / {triggeredRisks.length}</td></tr>
-						<tr><td>Controls</td><td>{totalSelectedControls}</td></tr>
-					</tbody>
-				</table>
+			</div>
+			<div class="panel-content protocol-content">
+				<div class="protocol-doc">
+					<div class="doc-header">
+						<h3>AI Research Protocol</h3>
+						<span>Risk Mitigation Plan</span>
+					</div>
+					<table class="doc-meta">
+						<tbody>
+							<tr><td>Phase</td><td>{phaseName || '—'}</td></tr>
+							<tr><td>Model Types</td><td>{selectedModelTypes.join(', ') || '—'}</td></tr>
+							<tr><td>Risks Addressed</td><td>{risksAddressed} / {triggeredRisks.length}</td></tr>
+							<tr><td>Controls</td><td>{totalSelectedControls}</td></tr>
+						</tbody>
+					</table>
 
-				{#if !hasProtocolContent}
-					<p class="doc-empty">Select controls from the risk strategies to build your protocol.</p>
-				{:else}
-					<div class="doc-content">
+					{#if !hasProtocolContent}
+						<p class="doc-empty">Select controls from the risk strategies to build your protocol.</p>
+					{:else}
+						<div class="doc-content">
 						{#if implementedControls.length > 0}
 							<section>
 								<h3>Already Implemented</h3>
@@ -1276,8 +1278,9 @@
 								{/each}
 							</section>
 						{/if}
-					</div>
-				{/if}
+						</div>
+					{/if}
+				</div>
 			</div>
 		</aside>
 	</div>
@@ -1287,88 +1290,70 @@
 	.builder {
 		display: flex;
 		flex-direction: column;
-		height: calc(100vh - 80px);
+		height: calc(100vh - 60px);
 		background: #0f172a;
 		color: #e2e8f0;
 	}
 
-	/* Header */
-	.builder-header {
+	/* Three-column layout */
+	.builder-columns {
+		display: grid;
+		grid-template-columns: 320px 1fr 400px;
+		flex: 1;
+		overflow: hidden;
+		gap: 1px;
+		background: #334155;
+	}
+
+	/* Shared panel styles */
+	.panel {
+		display: flex;
+		flex-direction: column;
+		background: #0f172a;
+		overflow: hidden;
+	}
+
+	.panel-header {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		padding: 1rem 1.5rem;
+		padding: 1rem 1.25rem;
 		background: #1e293b;
 		border-bottom: 1px solid #334155;
+		flex-shrink: 0;
+		min-height: 56px;
 	}
 
-	.header-left h1 {
-		font-size: 1.5rem;
+	.panel-header h2 {
+		font-size: 1rem;
 		font-weight: 600;
+		color: #e2e8f0;
 		margin: 0;
 	}
 
-	.subtitle {
-		font-size: 0.875rem;
-		color: #64748b;
-	}
-
-	.header-actions {
+	.panel-header-actions {
 		display: flex;
-		gap: 0.75rem;
+		gap: 0.5rem;
 		align-items: center;
 	}
 
-	.control-count {
-		font-size: 0.875rem;
-		color: var(--color-subcategory, #4ade80);
-		font-weight: 500;
+	.panel-content {
+		flex: 1;
+		overflow-y: auto;
+		padding: 1.25rem;
 	}
 
-	.btn-outline, .btn-primary {
-		padding: 0.5rem 1rem;
-		border-radius: 4px;
-		font-size: 0.875rem;
-		font-weight: 500;
-		cursor: pointer;
-	}
-
-	.btn-outline {
-		background: transparent;
-		border: 1px solid #475569;
-		color: #cbd5e1;
-	}
-
-	.btn-outline:hover {
-		border-color: #64748b;
+	/* Assessment Panel */
+	.assessment-panel {
 		background: #1e293b;
 	}
 
-	.btn-primary {
-		background: var(--color-question, #60a5fa);
-		border: 1px solid var(--color-question, #60a5fa);
-		color: #0f172a;
-	}
-
-	.btn-primary:hover {
-		background: #2563eb;
-	}
-
-	/* Assessment Bar (Top) */
-	.assessment-bar {
-		background: #1e293b;
-		border-bottom: 1px solid #334155;
-		padding: 1rem 2rem;
-		display: flex;
-		flex-wrap: wrap;
-		gap: 2rem;
-		align-items: flex-start;
+	.assessment-panel .panel-content {
+		padding: 1rem 1.25rem;
 	}
 
 	.question-group {
-		display: flex;
-		flex-direction: column;
-		gap: 0.5rem;
+		margin-bottom: 1.5rem;
 	}
 
 	.question-group h3 {
@@ -1377,26 +1362,18 @@
 		text-transform: uppercase;
 		letter-spacing: 0.1em;
 		color: #64748b;
-		margin: 0;
-	}
-
-	.questions-row {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 1.5rem;
-		align-items: center;
+		margin: 0 0 0.75rem 0;
 	}
 
 	.question {
-		display: flex;
-		align-items: center;
-		gap: 0.75rem;
+		margin-bottom: 1rem;
 	}
 
 	.question-label {
+		display: block;
 		font-size: 0.9375rem;
 		color: #cbd5e1;
-		white-space: nowrap;
+		margin-bottom: 0.5rem;
 	}
 
 	.question-options {
@@ -1406,14 +1383,13 @@
 	}
 
 	.option-btn {
-		padding: 0.375rem 0.75rem;
-		font-size: 0.875rem;
+		padding: 0.375rem 0.625rem;
+		font-size: 0.8125rem;
 		background: #0f172a;
 		border: 1px solid #334155;
 		border-radius: 4px;
 		color: #94a3b8;
 		cursor: pointer;
-		white-space: nowrap;
 	}
 
 	.option-btn:hover {
@@ -1427,48 +1403,84 @@
 		color: #0f172a;
 	}
 
-	/* Body - Two columns */
-	.builder-body {
-		display: grid;
-		grid-template-columns: 1fr 520px;
-		flex: 1;
-		overflow: hidden;
+	/* Filter controls in header */
+	.filter-select {
+		padding: 0.375rem 0.5rem;
+		font-size: 0.8125rem;
+		background: #0f172a;
+		border: 1px solid #475569;
+		border-radius: 4px;
+		color: #e2e8f0;
+		cursor: pointer;
+	}
+
+	.filter-checkbox {
+		display: flex;
+		align-items: center;
+		gap: 0.375rem;
+		font-size: 0.8125rem;
+		color: #94a3b8;
+		cursor: pointer;
+	}
+
+	.filter-checkbox input {
+		cursor: pointer;
+	}
+
+	/* Small buttons for panel headers */
+	.btn-small {
+		padding: 0.375rem 0.625rem;
+		font-size: 0.75rem;
+		font-weight: 500;
+		background: transparent;
+		border: 1px solid #475569;
+		border-radius: 4px;
+		color: #cbd5e1;
+		cursor: pointer;
+	}
+
+	.btn-small:hover {
+		border-color: #64748b;
+		background: #334155;
+	}
+
+	.btn-primary-small {
+		background: var(--color-question, #60a5fa);
+		border-color: var(--color-question, #60a5fa);
+		color: #0f172a;
+	}
+
+	.btn-primary-small:hover {
+		background: #3b82f6;
+	}
+
+	.control-count {
+		font-size: 0.75rem;
+		color: var(--color-subcategory, #4ade80);
+		font-weight: 500;
 	}
 
 	/* Risks Panel */
-	.risks-panel {
-		background: #0f172a;
-		overflow-y: auto;
-		padding: 1.5rem 2rem;
+	.risks-panel .panel-content {
+		padding: 1rem 1.25rem;
 	}
 
 	.placeholder {
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		height: 100%;
+		height: 200px;
 		color: #64748b;
-		font-size: 1rem;
-	}
-
-	.risks-toolbar {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		margin-bottom: 1.25rem;
-	}
-
-	.risks-toolbar h2 {
-		font-size: 1.125rem;
-		font-weight: 600;
-		margin: 0;
+		font-size: 0.9375rem;
+		text-align: center;
 	}
 
 	.defense-legend {
 		display: flex;
 		gap: 1rem;
-		font-size: 0.875rem;
+		font-size: 0.8125rem;
 		color: #64748b;
+		margin-bottom: 1rem;
 	}
 
 	.defense-legend span {
@@ -1829,48 +1841,50 @@
 
 	/* Protocol Panel */
 	.protocol-panel {
+		background: #1e293b;
+	}
+
+	.protocol-content {
 		background: #475569;
-		padding: 1.25rem;
-		overflow-y: auto;
+		padding: 1rem;
 	}
 
 	.protocol-doc {
 		background: white;
 		color: #1e293b;
 		border-radius: 6px;
-		padding: 2rem;
+		padding: 1.5rem;
 		min-height: 100%;
-		box-shadow: 0 4px 12px rgba(0,0,0,0.3);
 	}
 
 	.doc-header {
 		text-align: center;
-		padding-bottom: 1rem;
+		padding-bottom: 0.75rem;
 		border-bottom: 2px solid #1e293b;
-		margin-bottom: 1.25rem;
+		margin-bottom: 1rem;
 	}
 
-	.doc-header h2 {
-		font-size: 1.25rem;
+	.doc-header h3 {
+		font-size: 1rem;
 		font-weight: 700;
 		margin: 0;
 		color: #0f172a;
 	}
 
 	.doc-header span {
-		font-size: 0.9375rem;
+		font-size: 0.8125rem;
 		color: #64748b;
 	}
 
 	.doc-meta {
 		width: 100%;
-		font-size: 0.9375rem;
+		font-size: 0.8125rem;
 		border-collapse: collapse;
-		margin-bottom: 1.25rem;
+		margin-bottom: 1rem;
 	}
 
 	.doc-meta td {
-		padding: 0.375rem 0.75rem;
+		padding: 0.25rem 0.5rem;
 		border: 1px solid #e2e8f0;
 	}
 
@@ -1883,25 +1897,25 @@
 	.doc-empty {
 		text-align: center;
 		color: #64748b;
-		font-size: 0.9375rem;
-		padding: 2.5rem 1.5rem;
+		font-size: 0.875rem;
+		padding: 2rem 1rem;
 	}
 
 	.doc-content section {
-		margin-bottom: 1.5rem;
+		margin-bottom: 1.25rem;
 	}
 
 	.doc-content h3 {
-		font-size: 1rem;
+		font-size: 0.875rem;
 		font-weight: 700;
 		color: #0f172a;
 		border-bottom: 1px solid #e2e8f0;
-		padding-bottom: 0.375rem;
-		margin: 0 0 1rem 0;
+		padding-bottom: 0.25rem;
+		margin: 0 0 0.75rem 0;
 	}
 
 	.doc-risk {
-		margin-bottom: 1.25rem;
+		margin-bottom: 1rem;
 	}
 
 	.doc-risk.not-required {
@@ -1909,55 +1923,19 @@
 	}
 
 	.doc-risk h4 {
-		font-size: 0.9375rem;
+		font-size: 0.8125rem;
 		font-weight: 600;
 		color: #334155;
-		margin: 0 0 0.75rem 0;
+		margin: 0 0 0.5rem 0;
 	}
 
 	.doc-control {
-		font-size: 0.9375rem;
-		line-height: 1.6;
+		font-size: 0.8125rem;
+		line-height: 1.5;
 		color: #475569;
-		margin: 0 0 0.75rem 1rem;
-		padding-left: 0.75rem;
+		margin: 0 0 0.5rem 0.75rem;
+		padding-left: 0.5rem;
 		border-left: 2px solid #e2e8f0;
-	}
-
-	/* Toolbar Filters */
-	.toolbar-filters {
-		display: flex;
-		gap: 1rem;
-		align-items: center;
-	}
-
-	.filter-select {
-		padding: 0.625rem 1rem;
-		font-size: 1rem;
-		background: #1e293b;
-		border: 1px solid #475569;
-		border-radius: 4px;
-		color: #e2e8f0;
-		cursor: pointer;
-	}
-
-	.filter-select:hover {
-		border-color: #64748b;
-	}
-
-	.filter-checkbox {
-		display: flex;
-		align-items: center;
-		gap: 0.625rem;
-		font-size: 1rem;
-		color: #94a3b8;
-		cursor: pointer;
-	}
-
-	.filter-checkbox input {
-		cursor: pointer;
-		width: 16px;
-		height: 16px;
 	}
 
 	/* Essential group styling */
