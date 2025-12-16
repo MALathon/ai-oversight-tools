@@ -118,15 +118,8 @@
 		return questions;
 	});
 
-	// Check if all visible questions have been answered
-	let allQuestionsAnswered = $derived.by(() => {
-		for (const q of visibleQuestions) {
-			const answer = answers[q.id];
-			if (!answer) return false;
-			if (Array.isArray(answer) && answer.length === 0) return false;
-		}
-		return visibleQuestions.length > 0;
-	});
+	// Show risks once phase is selected (simpler - conditional questions make "all answered" complex)
+	let showRisks = $derived(!!answers['phase']);
 
 	// Count answered questions for progress display
 	let answeredCount = $derived.by(() => {
@@ -1107,8 +1100,8 @@
 		</aside>
 	</div>
 
-	<!-- Risks Panel (only shows when all questions answered) -->
-	{#if allQuestionsAnswered}
+	<!-- Risks Panel (shows once phase is selected) -->
+	{#if showRisks}
 		<main class="panel risks-panel">
 			<div class="panel-header">
 				<h2>Identified Risks ({displayedRisks.length})</h2>
@@ -1321,22 +1314,25 @@
 </div>
 
 <style>
+	/* Break out of layout's max-width to use full viewport */
 	.builder {
 		display: flex;
 		flex-direction: column;
 		height: calc(100vh - 60px);
 		background: #0f172a;
 		color: #e2e8f0;
+		width: 100vw;
+		margin-left: calc(-50vw + 50%);
+		position: relative;
 	}
 
 	/* Top Row: Questions + Protocol side by side */
 	.top-row {
 		display: grid;
-		grid-template-columns: 1fr 550px;
+		grid-template-columns: 1fr 600px;
 		gap: 1px;
 		background: #334155;
-		min-height: 280px;
-		max-height: 50vh;
+		flex-shrink: 0;
 	}
 
 	/* Questions Panel */
