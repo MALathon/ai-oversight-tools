@@ -1006,7 +1006,7 @@
 				entity
 			});
 
-			// Traverse outbound edges
+			// Traverse DOWNSTREAM only (outbound edges) - what this node affects
 			traceGraph.forEachOutEdge(nodeKey, (edge, attrs, src, target) => {
 				if (!visited.has(target)) {
 					visited.add(target);
@@ -1017,24 +1017,12 @@
 					});
 				}
 			});
-
-			// Traverse inbound edges (for bidirectional discovery)
-			traceGraph.forEachInEdge(nodeKey, (edge, attrs, src, target) => {
-				if (!visited.has(src)) {
-					visited.add(src);
-					queue.push({
-						nodeKey: src,
-						depth: depth + 1,
-						edgeType: attrs.link?.type
-					});
-				}
-			});
 		}
 
 		return accumulated;
 	}
 
-	// Collect regulations along traversal paths
+	// Collect regulations along DOWNSTREAM traversal paths only
 	function collectRegulations(startType: string, startId: string): Array<{ id: string; citation: string; description: string; depth: number }> {
 		const startKey = `${startType}:${startId}`;
 		if (!traceGraph.hasNode(startKey)) return [];
@@ -1046,11 +1034,10 @@
 		while (queue.length > 0) {
 			const { nodeKey, depth } = queue.shift()!;
 
-			// Check outbound edges for regulation links
+			// Check outbound edges only (downstream)
 			traceGraph.forEachOutEdge(nodeKey, (edge, attrs, src, target) => {
 				if (target.startsWith('regulation:')) {
 					const regId = target.split(':')[1];
-					// Find regulation in allRegulations (defined later in file)
 					const reg = data.traceability.regulations?.find((r: any) => r.id === regId);
 					if (reg && !regulations.some(r => r.id === regId)) {
 						regulations.push({
@@ -1066,31 +1053,12 @@
 					queue.push({ nodeKey: target, depth: depth + 1 });
 				}
 			});
-
-			traceGraph.forEachInEdge(nodeKey, (edge, attrs, src, target) => {
-				if (src.startsWith('regulation:')) {
-					const regId = src.split(':')[1];
-					const reg = data.traceability.regulations?.find((r: any) => r.id === regId);
-					if (reg && !regulations.some(r => r.id === regId)) {
-						regulations.push({
-							id: regId,
-							citation: reg.citation,
-							description: reg.description,
-							depth: depth + 1
-						});
-					}
-				}
-				if (!visited.has(src)) {
-					visited.add(src);
-					queue.push({ nodeKey: src, depth: depth + 1 });
-				}
-			});
 		}
 
 		return regulations;
 	}
 
-	// Collect citations/sources along traversal paths
+	// Collect citations/sources along DOWNSTREAM traversal paths only
 	function collectCitations(startType: string, startId: string): Array<{ controlId: string; controlName: string; source: string; citation: string; depth: number }> {
 		const startKey = `${startType}:${startId}`;
 		if (!traceGraph.hasNode(startKey)) return [];
@@ -1117,17 +1085,11 @@
 				}
 			}
 
+			// Downstream only (outbound edges)
 			traceGraph.forEachOutEdge(nodeKey, (edge, attrs, src, target) => {
 				if (!visited.has(target)) {
 					visited.add(target);
 					queue.push({ nodeKey: target, depth: depth + 1 });
-				}
-			});
-
-			traceGraph.forEachInEdge(nodeKey, (edge, attrs, src, target) => {
-				if (!visited.has(src)) {
-					visited.add(src);
-					queue.push({ nodeKey: src, depth: depth + 1 });
 				}
 			});
 		}
@@ -1439,37 +1401,32 @@
 
 		const connected = new Set<string>();
 		const selectedKey = `${selectedNode.type}:${selectedNode.id}`;
-		const selectedType = selectedNode.type;
 
 		if (!traceGraph.hasNode(selectedKey)) {
 			connected.add(selectedKey);
 			return connected;
 		}
 
-		// Use BFS to find all connected nodes (both directions)
-		const queue: string[] = [selectedKey];
-		const visited = new Set<string>([selectedKey]);
+		// Collect DOWNSTREAM only (what this node affects/triggers)
+		const downstreamQueue: string[] = [selectedKey];
+		const downstreamVisited = new Set<string>([selectedKey]);
 
-		while (queue.length > 0) {
-			const nodeKey = queue.shift()!;
+		while (downstreamQueue.length > 0) {
+			const nodeKey = downstreamQueue.shift()!;
 			connected.add(nodeKey);
 
-			// Traverse outgoing edges
 			traceGraph.forEachOutEdge(nodeKey, (edge, attrs, source, target) => {
-				if (!visited.has(target)) {
-					visited.add(target);
-					queue.push(target);
-				}
-			});
-
-			// Traverse incoming edges
-			traceGraph.forEachInEdge(nodeKey, (edge, attrs, source, target) => {
-				if (!visited.has(source)) {
-					visited.add(source);
-					queue.push(source);
+				if (!downstreamVisited.has(target)) {
+					downstreamVisited.add(target);
+					downstreamQueue.push(target);
 				}
 			});
 		}
+
+		// Collect UPSTREAM only (what triggers/leads to this node) - just 1 level for context
+		traceGraph.forEachInEdge(selectedKey, (edge, attrs, source) => {
+			connected.add(source);
+		});
 
 		return connected;
 	});
