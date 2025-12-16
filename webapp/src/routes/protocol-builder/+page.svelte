@@ -1024,15 +1024,10 @@
 					{:else}
 						<div class="risks-toolbar">
 							<select class="filter-select" bind:value={appropriatenessFilter}>
-								<option value="all">All</option>
-								<option value="essential">Essential</option>
-								<option value="essential-recommended">Ess+Rec</option>
+								<option value="all">All strategies</option>
+								<option value="essential">Essential only</option>
+								<option value="essential-recommended">Essential + Recommended</option>
 							</select>
-							<div class="defense-legend">
-								<span><i class="dot-p"></i>P</span>
-								<span><i class="dot-d"></i>D</span>
-								<span><i class="dot-c"></i>C</span>
-							</div>
 						</div>
 						<div class="risks-list">
 							{#each displayedRisks as risk}
@@ -1047,11 +1042,6 @@
 										{/if}
 										<span class="risk-name">{risk.subdomain.shortName}</span>
 										<span class="risk-meta">
-											<span class="defense-coverage">
-												{#if coverage.available.preventive}<i class="dot-p" class:active={coverage.selected.preventive}></i>{/if}
-												{#if coverage.available.detective}<i class="dot-d" class:active={coverage.selected.detective}></i>{/if}
-												{#if coverage.available.corrective}<i class="dot-c" class:active={coverage.selected.corrective}></i>{/if}
-											</span>
 											{#if controlCount > 0}<span class="control-badge">{controlCount}</span>{/if}
 											<span class="toggle-icon">{isExpanded ? '−' : '+'}</span>
 										</span>
