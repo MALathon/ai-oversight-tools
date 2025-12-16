@@ -439,4 +439,20 @@
 		font-size: 0.625rem;
 		font-weight: 600;
 	}
+
+	/* Focus states for accessibility */
+	select:focus-visible {
+		outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, #60a5fa);
+		outline-offset: var(--focus-ring-offset, 2px);
+	}
+
+	.chip:focus-visible {
+		outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, #60a5fa);
+		outline-offset: var(--focus-ring-offset, 2px);
+	}
+
+	.prompt-item input[type="checkbox"]:focus-visible {
+		outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, #60a5fa);
+		outline-offset: var(--focus-ring-offset, 2px);
+	}
 </style>

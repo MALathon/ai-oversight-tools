@@ -1940,8 +1940,8 @@
 		<div class="matrix-toolbar">
 			<div class="matrix-selectors">
 				<div class="selector-group">
-					<label>Rows:</label>
-					<select bind:value={matrixRowType}>
+					<label for="matrix-row-select">Rows:</label>
+					<select id="matrix-row-select" bind:value={matrixRowType}>
 						<option value="question">Questions</option>
 						<option value="risk">Risks</option>
 						<option value="regulation">Regulations</option>
@@ -1950,8 +1950,8 @@
 				</div>
 				<span class="selector-arrow">→</span>
 				<div class="selector-group">
-					<label>Columns:</label>
-					<select bind:value={matrixColType}>
+					<label for="matrix-col-select">Columns:</label>
+					<select id="matrix-col-select" bind:value={matrixColType}>
 						<option value="question">Questions</option>
 						<option value="risk">Risks</option>
 						<option value="regulation">Regulations</option>
@@ -2078,7 +2078,7 @@
 			<div class="intersection-panel">
 				<div class="intersection-header">
 					<h3>Intersection Details</h3>
-					<button class="close-btn" onclick={() => selectedIntersection = null}>×</button>
+					<button class="close-btn" aria-label="Close intersection details" onclick={() => selectedIntersection = null}><span aria-hidden="true">×</span></button>
 				</div>
 				<div class="intersection-content">
 					<!-- Row Entity -->
@@ -2365,7 +2365,7 @@
 						<aside class="detail-panel">
 							<div class="detail-header">
 								<span class="detail-type {traceSelectedNode.type}">{traceSelectedNode.type}</span>
-								<button class="close-btn" onclick={() => traceSelectedNode = null}>×</button>
+								<button class="close-btn" aria-label="Close trace details" onclick={() => traceSelectedNode = null}><span aria-hidden="true">×</span></button>
 							</div>
 							{#if selectedItem}
 								{#if traceSelectedNode.type === 'question'}
@@ -2611,6 +2611,8 @@
 							class:connecting={connectingFrom?.type === 'question' && connectingFrom?.id === q.id}
 							role="button"
 							tabindex="0"
+							aria-label="Question: {q.text}"
+							aria-pressed={isSelected}
 							onclick={() => handleNodeClick('question', q.id)}
 							onkeydown={(e) => e.key === 'Enter' && handleNodeClick('question', q.id)}
 						>
@@ -2662,6 +2664,8 @@
 							class:connecting={connectingFrom?.type === 'risk' && connectingFrom?.id === r.id}
 							role="button"
 							tabindex="0"
+							aria-label="Risk {r.code}: {r.shortName}"
+							aria-pressed={isSelected}
 							onclick={() => handleNodeClick('risk', r.id)}
 							onkeydown={(e) => e.key === 'Enter' && handleNodeClick('risk', r.id)}
 						>
@@ -2704,6 +2708,8 @@
 							class:connecting={connectingFrom?.type === 'subcategory' && connectingFrom?.id === s.id}
 							role="button"
 							tabindex="0"
+							aria-label="Subcategory {s.code}: {s.name}"
+							aria-pressed={isSelected}
 							onclick={() => handleNodeClick('subcategory', s.id)}
 							onkeydown={(e) => e.key === 'Enter' && handleNodeClick('subcategory', s.id)}
 						>
@@ -2748,6 +2754,8 @@
 							class:connecting={connectingFrom?.type === 'regulation' && connectingFrom?.id === r.id}
 							role="button"
 							tabindex="0"
+							aria-label="Regulation {r.citation}"
+							aria-pressed={isSelected}
 							onclick={() => handleNodeClick('regulation', r.id)}
 							onkeydown={(e) => e.key === 'Enter' && handleNodeClick('regulation', r.id)}
 						>
@@ -2792,6 +2800,8 @@
 							class:connecting={connectingFrom?.type === 'control' && connectingFrom?.id === ctrl.id}
 							role="button"
 							tabindex="0"
+							aria-label="Control {ctrl.id}: {ctrl.name}"
+							aria-pressed={isSelected}
 							onclick={() => handleNodeClick('control', ctrl.id)}
 							onkeydown={(e) => e.key === 'Enter' && handleNodeClick('control', ctrl.id)}
 						>
@@ -2827,7 +2837,7 @@
 			<aside class="detail-panel">
 				<div class="detail-header">
 					<span class="detail-type {selectedDetails.type}">{selectedDetails.type}</span>
-					<button class="close-btn" onclick={() => selectedNode = null}>×</button>
+					<button class="close-btn" aria-label="Close detail panel" onclick={() => selectedNode = null}><span aria-hidden="true">×</span></button>
 				</div>
 
 				{#if selectedDetails.type === 'question' && selectedDetails.item}
@@ -2939,30 +2949,30 @@
 
 <!-- Entity Editor Modal -->
 {#if showEntityEditor && editingEntity}
-	<div class="modal-overlay" role="dialog" aria-modal="true">
+	<div class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="entity-editor-title">
 		<div class="modal entity-editor">
 			<div class="modal-header">
-				<h3>{isNewEntity ? 'New' : 'Edit'} {entityType.slice(0, -1)}</h3>
-				<button class="close-btn" onclick={() => { showEntityEditor = false; editingEntity = null; }}>×</button>
+				<h3 id="entity-editor-title">{isNewEntity ? 'New' : 'Edit'} {entityType.slice(0, -1)}</h3>
+				<button class="close-btn" aria-label="Close entity editor" onclick={() => { showEntityEditor = false; editingEntity = null; }}><span aria-hidden="true">×</span></button>
 			</div>
 
 			<div class="modal-body">
 				{#if entityType === 'risks'}
 					<div class="form-group">
-						<label>Code (e.g., "1.4")</label>
-						<input type="text" bind:value={editingEntity.code} placeholder="1.4" />
+						<label for="entity-code-input">Code (e.g., "1.4")</label>
+						<input id="entity-code-input" type="text" bind:value={editingEntity.code} placeholder="1.4" />
 					</div>
 					<div class="form-group">
-						<label>Short Name</label>
-						<input type="text" bind:value={editingEntity.shortName} placeholder="Brief name" />
+						<label for="entity-shortname-input">Short Name</label>
+						<input id="entity-shortname-input" type="text" bind:value={editingEntity.shortName} placeholder="Brief name" />
 					</div>
 					<div class="form-group">
-						<label>Full Name</label>
-						<input type="text" bind:value={editingEntity.name} placeholder="Full descriptive name" />
+						<label for="entity-fullname-input">Full Name</label>
+						<input id="entity-fullname-input" type="text" bind:value={editingEntity.name} placeholder="Full descriptive name" />
 					</div>
 					<div class="form-group">
-						<label>Domain</label>
-						<input type="text" bind:value={editingEntity.domain} placeholder="Risk domain" />
+						<label for="entity-domain-input">Domain</label>
+						<input id="entity-domain-input" type="text" bind:value={editingEntity.domain} placeholder="Risk domain" />
 					</div>
 
 					<!-- Phase Guidance Editor -->
@@ -3312,11 +3322,11 @@
 
 <!-- Link Editor Modal -->
 {#if showLinkEditor && editingLink}
-	<div class="modal-overlay" role="dialog" aria-modal="true">
+	<div class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="link-editor-title">
 		<div class="modal link-editor">
 			<div class="modal-header">
-				<h3>{links.some((l: any) => l.id === editingLink.id) ? 'Edit' : 'New'} Link</h3>
-				<button class="close-btn" onclick={() => { showLinkEditor = false; editingLink = null; }}>×</button>
+				<h3 id="link-editor-title">{links.some((l: any) => l.id === editingLink.id) ? 'Edit' : 'New'} Link</h3>
+				<button class="close-btn" aria-label="Close link editor" onclick={() => { showLinkEditor = false; editingLink = null; }}><span aria-hidden="true">×</span></button>
 			</div>
 
 			<div class="modal-body">
@@ -3379,8 +3389,8 @@
 				{/if}
 
 				<div class="form-group">
-					<label>Link Type</label>
-					<select bind:value={editingLink.type} onchange={() => {
+					<label for="link-type-select">Link Type</label>
+					<select id="link-type-select" bind:value={editingLink.type} onchange={() => {
 						// Reset entities when type changes
 						if (editingLink.type === 'trigger') {
 							editingLink.from = { entity: 'question', id: allQuestions[0]?.id || '' };
@@ -3529,28 +3539,46 @@
 {/if}
 
 <style>
-	/* Entity color theme - change these to update colors everywhere */
+	/* Entity color theme - WCAG 2.1 AA compliant (4.5:1+ contrast on dark backgrounds) */
 	:global(:root) {
 		--color-question: #60a5fa;
 		--color-question-bg: rgba(96, 165, 250, 0.2);
-		--color-risk: #ef4444;
-		--color-risk-bg: rgba(239, 68, 68, 0.2);
-		--color-subcategory: #22c55e;
-		--color-subcategory-bg: rgba(34, 197, 94, 0.2);
-		--color-control: #f97316;
-		--color-control-bg: rgba(249, 115, 22, 0.2);
-		--color-regulation: #a855f7;
-		--color-regulation-bg: rgba(168, 85, 247, 0.2);
+		--color-risk: #f87171;
+		--color-risk-bg: rgba(248, 113, 113, 0.2);
+		--color-subcategory: #4ade80;
+		--color-subcategory-bg: rgba(74, 222, 128, 0.2);
+		--color-control: #fb923c;
+		--color-control-bg: rgba(251, 146, 60, 0.2);
+		--color-regulation: #c084fc;
+		--color-regulation-bg: rgba(192, 132, 252, 0.2);
 
 		/* Link type colors */
-		--color-trigger: #fbbf24;
-		--color-trigger-bg: rgba(251, 191, 36, 0.2);
+		--color-trigger: #fcd34d;
+		--color-trigger-bg: rgba(252, 211, 77, 0.2);
 		--color-dependency: #3b82f6;
 		--color-dependency-bg: rgba(59, 130, 246, 0.2);
-		--color-mitigation: #22c55e;
-		--color-mitigation-bg: rgba(34, 197, 94, 0.2);
-		--color-contains: #06b6d4;
-		--color-contains-bg: rgba(6, 182, 212, 0.2);
+		--color-mitigation: #4ade80;
+		--color-mitigation-bg: rgba(74, 222, 128, 0.2);
+		--color-contains: #22d3ee;
+		--color-contains-bg: rgba(34, 211, 238, 0.2);
+
+		/* Focus state variables */
+		--focus-ring-color: #60a5fa;
+		--focus-ring-offset: 2px;
+		--focus-ring-width: 2px;
+	}
+
+	/* Screen reader only utility */
+	:global(.sr-only) {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		padding: 0;
+		margin: -1px;
+		overflow: hidden;
+		clip: rect(0, 0, 0, 0);
+		white-space: nowrap;
+		border: 0;
 	}
 
 	/* Custom scrollbars */
@@ -3716,8 +3744,9 @@
 		cursor: pointer;
 	}
 
-	.selector-group select:focus {
-		outline: none;
+	.selector-group select:focus-visible {
+		outline: var(--focus-ring-width) solid var(--focus-ring-color);
+		outline-offset: var(--focus-ring-offset);
 		border-color: var(--color-question);
 	}
 
@@ -3992,6 +4021,10 @@
 
 	.matrix-cell:hover {
 		background: #334155;
+	}
+	.matrix-cell:focus-visible {
+		outline: var(--focus-ring-width) solid var(--focus-ring-color);
+		outline-offset: var(--focus-ring-offset);
 	}
 
 	.matrix-cell.col-highlighted {
@@ -4358,8 +4391,9 @@
 		font-size: 0.8125rem;
 	}
 
-	.trace-start-selector select:focus {
-		outline: none;
+	.trace-start-selector select:focus-visible {
+		outline: var(--focus-ring-width) solid var(--focus-ring-color);
+		outline-offset: var(--focus-ring-offset);
 		border-color: var(--color-question);
 	}
 
@@ -4478,6 +4512,10 @@
 
 	.trace-node-content:hover {
 		background: rgba(255, 255, 255, 0.05);
+	}
+	.trace-node-content:focus-visible {
+		outline: var(--focus-ring-width) solid var(--focus-ring-color);
+		outline-offset: var(--focus-ring-offset);
 	}
 
 	.trace-node.selected {
@@ -4640,7 +4678,11 @@
 		margin-left: auto;
 	}
 
-	.search:focus { outline: none; border-color: var(--color-question); }
+	.search:focus-visible {
+		outline: var(--focus-ring-width) solid var(--focus-ring-color);
+		outline-offset: var(--focus-ring-offset);
+		border-color: var(--color-question);
+	}
 
 	.connection-banner {
 		background: var(--color-trigger-bg);
@@ -4881,6 +4923,10 @@
 	}
 
 	.node:hover { border-color: #475569; }
+	.node:focus-visible {
+		outline: var(--focus-ring-width) solid var(--focus-ring-color);
+		outline-offset: var(--focus-ring-offset);
+	}
 
 	.node.question.selected { border-color: var(--color-question); background: rgba(96, 165, 250, 0.1); }
 	.node.risk.selected { border-color: var(--color-risk); background: rgba(239, 68, 68, 0.1); }
@@ -5388,6 +5434,10 @@
 	}
 
 	.btn:hover { background: #475569; }
+	.btn:focus-visible {
+		outline: var(--focus-ring-width) solid var(--focus-ring-color);
+		outline-offset: var(--focus-ring-offset);
+	}
 	.btn.primary { background: var(--color-question); color: #0f172a; }
 	.btn.primary:hover { background: var(--color-dependency); }
 	.btn.danger { background: var(--color-risk-bg); color: var(--color-risk); }
@@ -5421,6 +5471,10 @@
 	}
 
 	.close-btn:hover { color: #e2e8f0; }
+	.close-btn:focus-visible {
+		outline: var(--focus-ring-width) solid var(--focus-ring-color);
+		outline-offset: var(--focus-ring-offset);
+	}
 
 	/* Modal */
 	.modal-overlay {
@@ -5710,8 +5764,9 @@
 		font-size: 0.8125rem;
 	}
 
-	.selector-search:focus {
-		outline: none;
+	.selector-search:focus-visible {
+		outline: var(--focus-ring-width) solid var(--focus-ring-color);
+		outline-offset: var(--focus-ring-offset);
 		border-color: var(--color-question);
 	}
 
@@ -5823,8 +5878,9 @@
 		font-size: 0.8125rem;
 	}
 
-	.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
-		outline: none;
+	.form-group input:focus-visible, .form-group select:focus-visible, .form-group textarea:focus-visible {
+		outline: var(--focus-ring-width) solid var(--focus-ring-color);
+		outline-offset: var(--focus-ring-offset);
 		border-color: var(--color-question);
 	}
 

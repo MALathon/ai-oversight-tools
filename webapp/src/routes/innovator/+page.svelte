@@ -1946,4 +1946,30 @@
 		font-size: 0.5625rem;
 		color: #94a3b8;
 	}
+
+	/* Focus states for accessibility */
+	.btn-outline:focus-visible, .btn-primary:focus-visible {
+		outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, #60a5fa);
+		outline-offset: var(--focus-ring-offset, 2px);
+	}
+
+	.option-btn:focus-visible {
+		outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, #60a5fa);
+		outline-offset: var(--focus-ring-offset, 2px);
+	}
+
+	.risk-header:focus-visible {
+		outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, #60a5fa);
+		outline-offset: var(--focus-ring-offset, 2px);
+	}
+
+	.filter-select:focus-visible {
+		outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, #60a5fa);
+		outline-offset: var(--focus-ring-offset, 2px);
+	}
+
+	.filter-checkbox input:focus-visible {
+		outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, #60a5fa);
+		outline-offset: var(--focus-ring-offset, 2px);
+	}
 </style>

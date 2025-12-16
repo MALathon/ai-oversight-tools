@@ -447,4 +447,15 @@
 		height: 12px;
 		border-radius: 50%;
 	}
+
+	/* Focus states for accessibility */
+	.cell.data:focus-visible {
+		outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, #60a5fa);
+		outline-offset: var(--focus-ring-offset, 2px);
+	}
+
+	.action-hint a:focus-visible {
+		outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, #60a5fa);
+		outline-offset: var(--focus-ring-offset, 2px);
+	}
 </style>
