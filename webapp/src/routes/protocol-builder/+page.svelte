@@ -1355,7 +1355,7 @@
 	/* Body */
 	.builder-body {
 		display: grid;
-		grid-template-columns: 320px 1fr 420px;
+		grid-template-columns: 360px 1fr 480px;
 		flex: 1;
 		overflow: hidden;
 	}
@@ -1364,7 +1364,7 @@
 	.assessment-panel {
 		background: #1e293b;
 		border-right: 1px solid #334155;
-		padding: 1.25rem;
+		padding: 1.5rem;
 		overflow-y: auto;
 	}
 
@@ -1402,11 +1402,11 @@
 	.question-options {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 0.375rem;
+		gap: 0.5rem;
 	}
 
 	.option-btn {
-		padding: 0.375rem 0.75rem;
+		padding: 0.5rem 1rem;
 		font-size: 0.875rem;
 		background: #0f172a;
 		border: 1px solid #334155;
@@ -1430,7 +1430,7 @@
 	.risks-panel {
 		background: #0f172a;
 		overflow-y: auto;
-		padding: 1.25rem;
+		padding: 1.5rem 2rem;
 	}
 
 	.placeholder {
@@ -1505,8 +1505,8 @@
 		width: 100%;
 		display: flex;
 		align-items: center;
-		gap: 0.75rem;
-		padding: 0.875rem 1rem;
+		gap: 1rem;
+		padding: 1rem 1.25rem;
 		background: transparent;
 		border: none;
 		cursor: pointer;
@@ -1520,7 +1520,7 @@
 
 	.risk-name {
 		flex: 1;
-		font-size: 1rem;
+		font-size: 1.0625rem;
 		font-weight: 500;
 	}
 
@@ -1550,24 +1550,24 @@
 	}
 
 	.risk-content {
-		padding: 0 1rem 1rem;
+		padding: 0.5rem 1.25rem 1.25rem;
 		border-top: 1px solid #334155;
 	}
 
 	.risk-description {
-		font-size: 0.9375rem;
+		font-size: 1rem;
 		color: #94a3b8;
-		line-height: 1.5;
+		line-height: 1.6;
 		margin: 1rem 0;
 	}
 
 	/* Strategy Groups */
 	.strategy-group {
-		margin-bottom: 1rem;
+		margin-bottom: 1.25rem;
 	}
 
 	.strategy-group h4 {
-		font-size: 0.875rem;
+		font-size: 0.9375rem;
 		font-weight: 600;
 		text-transform: uppercase;
 		letter-spacing: 0.05em;
@@ -1579,7 +1579,7 @@
 		background: #0f172a;
 		border: 1px solid #334155;
 		border-radius: 6px;
-		margin-bottom: 0.5rem;
+		margin-bottom: 0.625rem;
 	}
 
 	.strategy-item.has-selections {
@@ -1589,13 +1589,13 @@
 	.strategy-main {
 		display: flex;
 		align-items: center;
-		gap: 0.75rem;
-		padding: 0.75rem;
+		gap: 1rem;
+		padding: 0.875rem 1rem;
 	}
 
 	.strategy-name {
 		flex: 1;
-		font-size: 0.9375rem;
+		font-size: 1rem;
 	}
 
 	.badge {
@@ -1634,20 +1634,20 @@
 
 	.controls-drawer {
 		border-top: 1px solid #334155;
-		padding: 0.75rem;
+		padding: 1rem 1.25rem;
 		background: #1e293b;
 	}
 
 	.controls-toolbar {
 		display: flex;
-		gap: 0.75rem;
-		margin-bottom: 0.75rem;
+		gap: 1rem;
+		margin-bottom: 1rem;
 	}
 
 	.controls-search {
 		flex: 1;
-		padding: 0.5rem 0.75rem;
-		font-size: 0.9375rem;
+		padding: 0.625rem 1rem;
+		font-size: 1rem;
 		background: #0f172a;
 		border: 1px solid #334155;
 		border-radius: 4px;
@@ -1659,8 +1659,8 @@
 	}
 
 	.source-filter {
-		padding: 0.5rem 0.75rem;
-		font-size: 0.9375rem;
+		padding: 0.625rem 1rem;
+		font-size: 1rem;
 		background: #0f172a;
 		border: 1px solid #334155;
 		border-radius: 4px;
@@ -1669,15 +1669,15 @@
 	}
 
 	.controls-list {
-		max-height: 350px;
+		max-height: 400px;
 		overflow-y: auto;
 	}
 
 	.control-row {
-		padding: 0.75rem;
+		padding: 1rem;
 		border: 1px solid #334155;
 		border-radius: 6px;
-		margin-bottom: 0.5rem;
+		margin-bottom: 0.625rem;
 		background: #0f172a;
 	}
 
@@ -1700,7 +1700,7 @@
 	}
 
 	.control-header strong {
-		font-size: 0.9375rem;
+		font-size: 1rem;
 		color: #e2e8f0;
 		font-weight: 600;
 		flex: 1;
@@ -1745,12 +1745,12 @@
 	.status-buttons {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 0.375rem;
+		gap: 0.5rem;
 	}
 
 	.status-btn {
-		font-size: 0.8125rem;
-		padding: 0.375rem 0.75rem;
+		font-size: 0.875rem;
+		padding: 0.5rem 1rem;
 		border: 1px solid #475569;
 		background: transparent;
 		color: #94a3b8;
@@ -1923,8 +1923,8 @@
 	}
 
 	.filter-select {
-		padding: 0.5rem 0.75rem;
-		font-size: 0.9375rem;
+		padding: 0.625rem 1rem;
+		font-size: 1rem;
 		background: #1e293b;
 		border: 1px solid #475569;
 		border-radius: 4px;
@@ -1939,8 +1939,8 @@
 	.filter-checkbox {
 		display: flex;
 		align-items: center;
-		gap: 0.5rem;
-		font-size: 0.9375rem;
+		gap: 0.625rem;
+		font-size: 1rem;
 		color: #94a3b8;
 		cursor: pointer;
 	}
