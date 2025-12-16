@@ -10,7 +10,7 @@ interface Env {
 }
 
 interface FeedbackRequest {
-	type: 'bug' | 'feature' | 'error';
+	labels: string[];
 	title: string;
 	description: string;
 	page?: string;
@@ -59,26 +59,22 @@ export default {
 			const body: FeedbackRequest = await request.json();
 
 			// Validate required fields
-			if (!body.type || !body.title || !body.description) {
-				return new Response(JSON.stringify({ error: 'Missing required fields: type, title, description' }), {
+			if (!body.labels || !Array.isArray(body.labels) || body.labels.length === 0 || !body.title || !body.description) {
+				return new Response(JSON.stringify({ error: 'Missing required fields: labels, title, description' }), {
 					status: 400,
 					headers: { ...corsHeaders, 'Content-Type': 'application/json' }
 				});
 			}
 
-			// Map feedback type to label
-			const labelMap: Record<string, string> = {
-				'bug': 'bug',
-				'feature': 'enhancement',
-				'error': 'bug'
-			};
+			// Always include user-feedback label
+			const allLabels = [...new Set([...body.labels, 'user-feedback'])];
 
 			// Build issue body with metadata
 			const issueBody = `## Description
 ${body.description}
 
 ---
-**Feedback Type:** ${body.type}
+**Labels:** ${body.labels.join(', ')}
 **Page:** ${body.page || 'Not specified'}
 **User Agent:** ${body.userAgent || 'Not specified'}
 **Submitted:** ${new Date().toISOString()}`;
@@ -94,9 +90,9 @@ ${body.description}
 					'Content-Type': 'application/json'
 				},
 				body: JSON.stringify({
-					title: `[${body.type.toUpperCase()}] ${body.title}`,
+					title: body.title,
 					body: issueBody,
-					labels: [labelMap[body.type] || 'feedback', 'user-feedback']
+					labels: allLabels
 				})
 			});
 

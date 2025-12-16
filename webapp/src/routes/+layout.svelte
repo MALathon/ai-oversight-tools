@@ -14,7 +14,6 @@
 
 	// Feedback modal state
 	let showFeedback = $state(false);
-	let feedbackType = $state<'bug' | 'feature' | 'error'>('bug');
 	let feedbackTitle = $state('');
 	let feedbackDescription = $state('');
 	let feedbackSubmitting = $state(false);
@@ -22,11 +21,53 @@
 	let feedbackError = $state('');
 	let feedbackIssueUrl = $state('');
 
+	// Labels from GitHub
+	interface GitHubLabel {
+		name: string;
+		color: string;
+		description: string | null;
+	}
+	let availableLabels = $state<GitHubLabel[]>([]);
+	let selectedLabels = $state<string[]>([]);
+	let labelsLoading = $state(false);
+
 	const WORKER_URL = 'https://ai-oversight-feedback.malathon.workers.dev';
+	const GITHUB_REPO = 'MALathon/ai-oversight-tools';
+
+	// Labels to exclude from user selection
+	const EXCLUDED_LABELS = ['user-feedback', 'invalid', 'wontfix', 'duplicate', 'good first issue', 'help wanted'];
+
+	async function fetchLabels() {
+		if (availableLabels.length > 0) return; // Already fetched
+		labelsLoading = true;
+		try {
+			const response = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/labels`);
+			if (response.ok) {
+				const labels: GitHubLabel[] = await response.json();
+				availableLabels = labels.filter(l => !EXCLUDED_LABELS.includes(l.name.toLowerCase()));
+			}
+		} catch (err) {
+			console.error('Failed to fetch labels:', err);
+		} finally {
+			labelsLoading = false;
+		}
+	}
+
+	function toggleLabel(labelName: string) {
+		if (selectedLabels.includes(labelName)) {
+			selectedLabels = selectedLabels.filter(l => l !== labelName);
+		} else {
+			selectedLabels = [...selectedLabels, labelName];
+		}
+	}
 
 	async function submitFeedback() {
 		if (!feedbackTitle.trim() || !feedbackDescription.trim()) {
 			feedbackError = 'Please fill in both title and description';
+			return;
+		}
+		if (selectedLabels.length === 0) {
+			feedbackError = 'Please select at least one label';
 			return;
 		}
 
@@ -38,7 +79,7 @@
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({
-					type: feedbackType,
+					labels: selectedLabels,
 					title: feedbackTitle.trim(),
 					description: feedbackDescription.trim(),
 					page: typeof window !== 'undefined' ? window.location.pathname : '',
@@ -65,7 +106,7 @@
 		showFeedback = false;
 		// Reset after animation
 		setTimeout(() => {
-			feedbackType = 'bug';
+			selectedLabels = [];
 			feedbackTitle = '';
 			feedbackDescription = '';
 			feedbackSuccess = false;
@@ -78,6 +119,7 @@
 		showFeedback = true;
 		feedbackSuccess = false;
 		feedbackError = '';
+		fetchLabels();
 	}
 </script>
 
@@ -157,42 +199,26 @@
 			{:else}
 				<div class="modal-body">
 					<div class="form-group">
-						<label for="feedback-type">Type</label>
-						<div class="type-buttons">
-							<button
-								class="type-btn"
-								class:active={feedbackType === 'bug'}
-								onclick={() => feedbackType = 'bug'}
-							>
-								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-									<circle cx="12" cy="12" r="10"></circle>
-									<line x1="12" y1="8" x2="12" y2="12"></line>
-									<line x1="12" y1="16" x2="12.01" y2="16"></line>
-								</svg>
-								Bug
-							</button>
-							<button
-								class="type-btn"
-								class:active={feedbackType === 'feature'}
-								onclick={() => feedbackType = 'feature'}
-							>
-								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-									<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-								</svg>
-								Feature
-							</button>
-							<button
-								class="type-btn"
-								class:active={feedbackType === 'error'}
-								onclick={() => feedbackType = 'error'}
-							>
-								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-									<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-									<line x1="12" y1="9" x2="12" y2="13"></line>
-									<line x1="12" y1="17" x2="12.01" y2="17"></line>
-								</svg>
-								Error
-							</button>
+						<label id="labels-label">Labels</label>
+						<div class="labels-container" role="group" aria-labelledby="labels-label">
+							{#if labelsLoading}
+								<span class="labels-loading">Loading labels...</span>
+							{:else if availableLabels.length === 0}
+								<span class="labels-loading">No labels available</span>
+							{:else}
+								{#each availableLabels as label}
+									<button
+										type="button"
+										class="label-chip"
+										class:selected={selectedLabels.includes(label.name)}
+										style="--label-color: #{label.color}"
+										onclick={() => toggleLabel(label.name)}
+										title={label.description || label.name}
+									>
+										{label.name}
+									</button>
+								{/each}
+							{/if}
 						</div>
 					</div>
 
@@ -233,7 +259,7 @@
 					<button
 						class="btn primary"
 						onclick={submitFeedback}
-						disabled={feedbackSubmitting || !feedbackTitle.trim() || !feedbackDescription.trim()}
+						disabled={feedbackSubmitting || !feedbackTitle.trim() || !feedbackDescription.trim() || selectedLabels.length === 0}
 					>
 						{feedbackSubmitting ? 'Submitting...' : 'Submit Feedback'}
 					</button>
@@ -479,36 +505,42 @@
 		margin-bottom: 0.5rem;
 	}
 
-	.type-buttons {
+	.labels-container {
 		display: flex;
+		flex-wrap: wrap;
 		gap: 0.5rem;
 	}
 
-	.type-btn {
-		flex: 1;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		gap: 0.375rem;
-		padding: 0.625rem 0.75rem;
-		background: #0f172a;
-		border: 1px solid #334155;
-		border-radius: 0.375rem;
-		color: #94a3b8;
+	.labels-loading {
+		color: #64748b;
 		font-size: 0.8125rem;
+		font-style: italic;
+	}
+
+	.label-chip {
+		display: inline-flex;
+		align-items: center;
+		padding: 0.375rem 0.75rem;
+		background: color-mix(in srgb, var(--label-color) 15%, #0f172a);
+		border: 1px solid color-mix(in srgb, var(--label-color) 50%, #334155);
+		border-radius: 1rem;
+		color: color-mix(in srgb, var(--label-color) 80%, white);
+		font-size: 0.75rem;
+		font-weight: 500;
 		cursor: pointer;
 		transition: all 0.15s ease;
 	}
 
-	.type-btn:hover {
-		border-color: #475569;
-		color: #e2e8f0;
+	.label-chip:hover {
+		background: color-mix(in srgb, var(--label-color) 25%, #0f172a);
+		border-color: var(--label-color);
 	}
 
-	.type-btn.active {
-		background: rgba(59, 130, 246, 0.1);
-		border-color: #3b82f6;
-		color: #60a5fa;
+	.label-chip.selected {
+		background: color-mix(in srgb, var(--label-color) 40%, #0f172a);
+		border-color: var(--label-color);
+		color: white;
+		box-shadow: 0 0 0 2px color-mix(in srgb, var(--label-color) 30%, transparent);
 	}
 
 	.form-group input,
