@@ -269,11 +269,17 @@
 		const impact = control.impact || 2;
 		const effort = control.effort || 2;
 
+		// High impact (3)
 		if (impact === 3 && effort === 1) return { label: 'Quick Win', class: 'priority-quick-win' };
 		if (impact === 3 && effort === 2) return { label: 'High Impact', class: 'priority-high-impact' };
 		if (impact === 3 && effort === 3) return { label: 'Major', class: 'priority-major' };
+		// Medium impact (2)
+		if (impact === 2 && effort === 1) return { label: 'Easy', class: 'priority-easy' };
+		if (impact === 2 && effort === 3) return { label: 'High Effort', class: 'priority-high-effort' };
+		// Low impact (1)
 		if (impact === 1) return { label: 'Low Priority', class: 'priority-low' };
-		return null; // Medium impact, don't show badge
+		// Standard (effort=2, impact=2) - no badge
+		return null;
 	}
 
 	function getControlsForStrategy(strategyId: string): any[] {
@@ -1713,6 +1719,16 @@
 
 	.priority-major {
 		background: var(--color-trigger, #fcd34d);
+		color: #0f172a;
+	}
+
+	.priority-easy {
+		background: #86efac;
+		color: #0f172a;
+	}
+
+	.priority-high-effort {
+		background: var(--color-control, #fb923c);
 		color: #0f172a;
 	}
 
