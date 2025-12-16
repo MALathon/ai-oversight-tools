@@ -921,54 +921,50 @@
 </svelte:head>
 
 <div class="builder">
-	<div class="builder-columns">
-		<!-- Assessment Panel -->
-		<aside class="panel assessment-panel">
-			<div class="panel-header">
-				<h2>Assessment</h2>
-			</div>
-			<div class="panel-content">
-				{#each visibleCategories as category}
-					<div class="question-group">
-						<h3>{category.name}</h3>
-						{#each category.questions as question}
-							{#if checkShowIf(question.showIf)}
-								<div class="question">
-									<span class="question-label">{question.question}</span>
-									<div class="question-options">
-										{#if question.type === 'single-select'}
-											{#each question.options as option}
-												<button
-													class="option-btn"
-													class:active={answers[question.id] === option.value}
-													onclick={() => answers[question.id] = option.value}
-												>{option.label}</button>
-											{/each}
-										{:else if question.type === 'multi-select'}
-											{#each question.options as option}
-												<button
-													class="option-btn"
-													class:active={(answers[question.id] as string[] || []).includes(option.value)}
-													onclick={() => toggleMulti(question.id, option.value)}
-												>{option.label}</button>
-											{/each}
-										{:else if question.type === 'yes-no'}
-											<button class="option-btn" class:active={answers[question.id] === 'yes'} onclick={() => answers[question.id] = 'yes'}>Yes</button>
-											<button class="option-btn" class:active={answers[question.id] === 'no'} onclick={() => answers[question.id] = 'no'}>No</button>
-										{/if}
-									</div>
-								</div>
-							{/if}
-						{/each}
-					</div>
+	<!-- Assessment Bar (Top) -->
+	<div class="assessment-bar">
+		{#each visibleCategories as category}
+			<div class="question-group">
+				<span class="group-label">{category.name}</span>
+				{#each category.questions as question}
+					{#if checkShowIf(question.showIf)}
+						<div class="question">
+							<span class="question-label">{question.question}</span>
+							<div class="question-options">
+								{#if question.type === 'single-select'}
+									{#each question.options as option}
+										<button
+											class="option-btn"
+											class:active={answers[question.id] === option.value}
+											onclick={() => answers[question.id] = option.value}
+										>{option.label}</button>
+									{/each}
+								{:else if question.type === 'multi-select'}
+									{#each question.options as option}
+										<button
+											class="option-btn"
+											class:active={(answers[question.id] as string[] || []).includes(option.value)}
+											onclick={() => toggleMulti(question.id, option.value)}
+										>{option.label}</button>
+									{/each}
+								{:else if question.type === 'yes-no'}
+									<button class="option-btn" class:active={answers[question.id] === 'yes'} onclick={() => answers[question.id] = 'yes'}>Yes</button>
+									<button class="option-btn" class:active={answers[question.id] === 'no'} onclick={() => answers[question.id] = 'no'}>No</button>
+								{/if}
+							</div>
+						</div>
+					{/if}
 				{/each}
 			</div>
-		</aside>
+		{/each}
+	</div>
 
+	<!-- Main Content: Two Columns -->
+	<div class="builder-columns">
 		<!-- Risks Panel -->
 		<main class="panel risks-panel">
 			<div class="panel-header">
-				<h2>Risks {#if selectedPhase}({displayedRisks.length}){/if}</h2>
+				<h2>Identified Risks {#if selectedPhase}({displayedRisks.length}){/if}</h2>
 				<div class="panel-header-actions">
 					{#if selectedPhase && triggeredRisks.length > 0}
 						<select class="filter-select" bind:value={appropriatenessFilter} aria-label="Filter strategies by appropriateness">
@@ -988,17 +984,22 @@
 			<div class="panel-content">
 				{#if !selectedPhase}
 					<div class="placeholder">
-						<p>Select a development phase to identify applicable risks.</p>
+						<div class="placeholder-icon">↑</div>
+						<p>Select a <strong>development phase</strong> above to see applicable risks</p>
 					</div>
 				{:else if triggeredRisks.length === 0}
 					<div class="placeholder">
-						<p>Answer more assessment questions to identify risks.</p>
+						<div class="placeholder-icon">↑</div>
+						<p>Answer more questions above to identify risks for your project</p>
 					</div>
 				{:else}
-					<div class="defense-legend">
-						<span><i class="dot-p"></i> Preventive</span>
-						<span><i class="dot-d"></i> Detective</span>
-						<span><i class="dot-c"></i> Corrective</span>
+					<div class="risks-intro">
+						<p>Click a risk to expand it, then select controls to add to your protocol →</p>
+						<div class="defense-legend">
+							<span><i class="dot-p"></i> Preventive</span>
+							<span><i class="dot-d"></i> Detective</span>
+							<span><i class="dot-c"></i> Corrective</span>
+						</div>
 					</div>
 
 					<div class="risks-list">
@@ -1295,10 +1296,76 @@
 		color: #e2e8f0;
 	}
 
-	/* Three-column layout */
+	/* Assessment Bar (Top) */
+	.assessment-bar {
+		background: #1e293b;
+		border-bottom: 1px solid #334155;
+		padding: 1rem 1.5rem;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 1.5rem 3rem;
+		align-items: flex-start;
+	}
+
+	.question-group {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+		flex-wrap: wrap;
+	}
+
+	.group-label {
+		font-size: 0.6875rem;
+		font-weight: 600;
+		text-transform: uppercase;
+		letter-spacing: 0.1em;
+		color: #64748b;
+		min-width: 80px;
+	}
+
+	.question {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+	}
+
+	.question-label {
+		font-size: 0.875rem;
+		color: #94a3b8;
+		white-space: nowrap;
+	}
+
+	.question-options {
+		display: flex;
+		gap: 0.25rem;
+	}
+
+	.option-btn {
+		padding: 0.375rem 0.625rem;
+		font-size: 0.8125rem;
+		background: #0f172a;
+		border: 1px solid #334155;
+		border-radius: 4px;
+		color: #94a3b8;
+		cursor: pointer;
+		white-space: nowrap;
+	}
+
+	.option-btn:hover {
+		border-color: #475569;
+		color: #e2e8f0;
+	}
+
+	.option-btn.active {
+		background: var(--color-question, #60a5fa);
+		border-color: var(--color-question, #60a5fa);
+		color: #0f172a;
+	}
+
+	/* Two-column layout */
 	.builder-columns {
 		display: grid;
-		grid-template-columns: 320px 1fr 400px;
+		grid-template-columns: 1fr 420px;
 		flex: 1;
 		overflow: hidden;
 		gap: 1px;
@@ -1317,15 +1384,14 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		padding: 1rem 1.25rem;
+		padding: 0.75rem 1.25rem;
 		background: #1e293b;
 		border-bottom: 1px solid #334155;
 		flex-shrink: 0;
-		min-height: 56px;
 	}
 
 	.panel-header h2 {
-		font-size: 1rem;
+		font-size: 0.9375rem;
 		font-weight: 600;
 		color: #e2e8f0;
 		margin: 0;
@@ -1340,67 +1406,7 @@
 	.panel-content {
 		flex: 1;
 		overflow-y: auto;
-		padding: 1.25rem;
-	}
-
-	/* Assessment Panel */
-	.assessment-panel {
-		background: #1e293b;
-	}
-
-	.assessment-panel .panel-content {
 		padding: 1rem 1.25rem;
-	}
-
-	.question-group {
-		margin-bottom: 1.5rem;
-	}
-
-	.question-group h3 {
-		font-size: 0.75rem;
-		font-weight: 600;
-		text-transform: uppercase;
-		letter-spacing: 0.1em;
-		color: #64748b;
-		margin: 0 0 0.75rem 0;
-	}
-
-	.question {
-		margin-bottom: 1rem;
-	}
-
-	.question-label {
-		display: block;
-		font-size: 0.9375rem;
-		color: #cbd5e1;
-		margin-bottom: 0.5rem;
-	}
-
-	.question-options {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.375rem;
-	}
-
-	.option-btn {
-		padding: 0.375rem 0.625rem;
-		font-size: 0.8125rem;
-		background: #0f172a;
-		border: 1px solid #334155;
-		border-radius: 4px;
-		color: #94a3b8;
-		cursor: pointer;
-	}
-
-	.option-btn:hover {
-		border-color: #475569;
-		color: #e2e8f0;
-	}
-
-	.option-btn.active {
-		background: var(--color-question, #60a5fa);
-		border-color: var(--color-question, #60a5fa);
-		color: #0f172a;
 	}
 
 	/* Filter controls in header */
@@ -1467,12 +1473,47 @@
 
 	.placeholder {
 		display: flex;
+		flex-direction: column;
 		align-items: center;
 		justify-content: center;
 		height: 200px;
 		color: #64748b;
 		font-size: 0.9375rem;
 		text-align: center;
+		gap: 0.75rem;
+	}
+
+	.placeholder-icon {
+		font-size: 2rem;
+		color: #475569;
+		animation: bounce 2s infinite;
+	}
+
+	@keyframes bounce {
+		0%, 100% { transform: translateY(0); }
+		50% { transform: translateY(-8px); }
+	}
+
+	.placeholder p {
+		margin: 0;
+	}
+
+	.placeholder strong {
+		color: #60a5fa;
+	}
+
+	.risks-intro {
+		margin-bottom: 1rem;
+		padding: 0.75rem 1rem;
+		background: #1e293b;
+		border-radius: 6px;
+		border-left: 3px solid #60a5fa;
+	}
+
+	.risks-intro p {
+		margin: 0 0 0.5rem 0;
+		font-size: 0.875rem;
+		color: #94a3b8;
 	}
 
 	.defense-legend {
