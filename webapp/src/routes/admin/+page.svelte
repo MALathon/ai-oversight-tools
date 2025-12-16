@@ -3664,7 +3664,7 @@
 
 	.add-entity-btn {
 		background: var(--color-subcategory) !important;
-		color: white !important;
+		color: #0f172a !important;
 	}
 
 	.add-entity-btn:hover {
@@ -4206,11 +4206,11 @@
 		font-weight: 600;
 	}
 
-	.entity-type-badge.question { background: var(--color-question); color: white; }
-	.entity-type-badge.risk { background: var(--color-risk); color: white; }
-	.entity-type-badge.subcategory { background: var(--color-subcategory); color: white; }
-	.entity-type-badge.regulation { background: var(--color-regulation); color: white; }
-	.entity-type-badge.control { background: var(--color-control); color: white; }
+	.entity-type-badge.question { background: var(--color-question); color: #0f172a; }
+	.entity-type-badge.risk { background: var(--color-risk); color: #0f172a; }
+	.entity-type-badge.subcategory { background: var(--color-subcategory); color: #0f172a; }
+	.entity-type-badge.regulation { background: var(--color-regulation); color: #0f172a; }
+	.entity-type-badge.control { background: var(--color-control); color: #0f172a; }
 
 	.entity-name {
 		font-weight: 500;
@@ -4883,11 +4883,15 @@
 
 	/* Connection indicator */
 	.conn-indicator {
-		display: block;
-		font-size: 0.625rem;
-		color: var(--color-trigger);
+		display: inline-block;
+		font-size: 0.5625rem;
+		background: var(--color-trigger);
+		color: #0f172a;
+		padding: 0.0625rem 0.25rem;
+		border-radius: 0.125rem;
 		margin-top: 0.25rem;
-		font-style: italic;
+		font-weight: 600;
+		text-transform: uppercase;
 	}
 
 	.more-indicator {
@@ -4899,8 +4903,8 @@
 	}
 
 	.conn-badge.transitive {
-		background: var(--color-control-bg);
-		color: var(--color-control);
+		background: var(--color-control);
+		color: #0f172a;
 	}
 
 	.nodes {
@@ -5266,14 +5270,14 @@
 		border-radius: 0.125rem;
 	}
 
-	.conn-type.trigger { background: var(--color-trigger-bg); color: var(--color-trigger); }
-	.conn-type.dependency { background: var(--color-dependency-bg); color: var(--color-dependency); }
-	.conn-type.mitigation { background: var(--color-mitigation-bg); color: var(--color-mitigation); }
-	.conn-type.regulation { background: var(--color-regulation-bg); color: var(--color-regulation); }
-	.conn-type.control { background: var(--color-control-bg); color: var(--color-control); }
-	.conn-type.implementation { background: rgba(236, 72, 153, 0.2); color: #ec4899; }
-	.conn-type.contains { background: var(--color-contains-bg); color: var(--color-contains); }
-	.conn-type.custom { background: rgba(148, 163, 184, 0.2); color: #94a3b8; }
+	.conn-type.trigger { background: var(--color-trigger); color: #0f172a; }
+	.conn-type.dependency { background: var(--color-dependency); color: white; }
+	.conn-type.mitigation { background: var(--color-mitigation); color: #0f172a; }
+	.conn-type.regulation { background: var(--color-regulation); color: #0f172a; }
+	.conn-type.control { background: var(--color-control); color: #0f172a; }
+	.conn-type.implementation { background: #ec4899; color: #0f172a; }
+	.conn-type.contains { background: var(--color-contains); color: #0f172a; }
+	.conn-type.custom { background: #94a3b8; color: #0f172a; }
 
 	.conn-direction {
 		color: #64748b;
@@ -5574,10 +5578,12 @@
 		text-transform: uppercase;
 	}
 
-	.conn-type-badge.trigger { background: var(--color-trigger-bg); color: var(--color-trigger); }
-	.conn-type-badge.control { background: var(--color-control-bg); color: var(--color-control); }
-	.conn-type-badge.regulation { background: var(--color-regulation-bg); color: var(--color-regulation); }
-	.conn-type-badge.dependency { background: rgba(148, 163, 184, 0.2); color: #94a3b8; }
+	.conn-type-badge.trigger { background: var(--color-trigger); color: #0f172a; }
+	.conn-type-badge.mitigation { background: var(--color-subcategory); color: #0f172a; }
+	.conn-type-badge.control { background: var(--color-control); color: #0f172a; }
+	.conn-type-badge.regulation { background: var(--color-regulation); color: #0f172a; }
+	.conn-type-badge.contains { background: var(--color-contains); color: #0f172a; }
+	.conn-type-badge.dependency { background: var(--color-dependency); color: white; }
 
 	.conn-direction {
 		color: #64748b;
