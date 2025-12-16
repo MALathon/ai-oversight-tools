@@ -1085,7 +1085,6 @@
 													{@const selectedInStrategy = strategyControls.filter((c: any) => isControlSelected(c.id, risk.subdomain.id, strategy.id)).length}
 													<button class="strategy-item" class:has-selections={selectedInStrategy > 0} class:expanded={showControlsFor === strategy.id} onclick={() => toggleControlsPanel(strategy.id)}>
 														<span class="strategy-name">{strategy.name}</span>
-														<span class="badge badge-{strategy.defenseLayer}">{strategy.defenseLayer.charAt(0).toUpperCase()}</span>
 														{#if selectedInStrategy > 0}<span class="selected-indicator">{selectedInStrategy}</span>{/if}
 														<span class="controls-count">{strategyControls.length} controls</span>
 														<span class="expand-icon">{showControlsFor === strategy.id ? '▲' : '▼'}</span>
@@ -1591,10 +1590,6 @@
 		border-radius: 2px;
 	}
 
-	/* Defense layer badges - WCAG compliant with dark text */
-	.badge-preventive { background: var(--color-question, #60a5fa); color: #0f172a; }
-	.badge-detective { background: var(--color-trigger, #fcd34d); color: #0f172a; }
-	.badge-corrective { background: var(--color-risk, #f87171); color: #0f172a; }
 	/* Appropriateness badges */
 	.badge-essential { background: var(--color-subcategory, #4ade80); color: #0f172a; }
 	.badge-recommended { background: var(--color-question, #60a5fa); color: #0f172a; }
