@@ -53,6 +53,7 @@ jobs:
         working-directory: webapp
         env:
           NODE_ENV: production
+          CI_TEST: true
         run: npm run build
 
       - name: Upload build artifact

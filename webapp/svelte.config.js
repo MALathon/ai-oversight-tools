@@ -14,7 +14,9 @@ const config = {
 			strict: true
 		}),
 		paths: {
-			base: process.env.NODE_ENV === 'production' ? '/ai-oversight-tools' : ''
+			// CI_TEST=true builds without base path for testing with serve
+			// NODE_ENV=production builds with base path for GitHub Pages
+			base: process.env.CI_TEST ? '' : (process.env.NODE_ENV === 'production' ? '/ai-oversight-tools' : '')
 		}
 	}
 };

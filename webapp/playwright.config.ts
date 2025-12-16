@@ -16,7 +16,7 @@ export default defineConfig({
 		['json', { outputFile: 'test-results/results.json' }]
 	],
 	use: {
-		// In CI, serve runs at root; locally, vite preview uses /ai-oversight-tools base
+		// In CI with CI_TEST=true, serve runs at root; locally, vite preview uses /ai-oversight-tools base
 		baseURL: process.env.BASE_URL || 'http://localhost:4173/ai-oversight-tools',
 		trace: 'on-first-retry',
 		screenshot: 'only-on-failure',
