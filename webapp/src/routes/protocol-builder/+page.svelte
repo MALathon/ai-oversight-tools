@@ -381,15 +381,25 @@
 	}
 
 	function getDefenseCoverage(riskId: string, linkedStrategies: any[]) {
-		const selected = selectedStrategies[riskId] || new Set();
-		const coverage = { preventive: false, detective: false, corrective: false };
+		const riskControls = selectedControlsByRisk.get(riskId) || [];
+		const available = { preventive: false, detective: false, corrective: false };
+		const selected = { preventive: false, detective: false, corrective: false };
+
 		for (const strategy of linkedStrategies) {
-			if (selected.has(strategy.id)) {
-				const layer = strategy.defenseLayer as keyof typeof coverage;
-				if (layer in coverage) coverage[layer] = true;
+			// Only count strategies that have controls available
+			const strategyControls = getControlsForStrategy(strategy.id);
+			if (strategyControls.length > 0) {
+				const layer = strategy.defenseLayer as keyof typeof available;
+				if (layer in available) {
+					available[layer] = true;
+					// Check if any control from this strategy is selected for this risk
+					if (riskControls.some(c => c.strategyId === strategy.id)) {
+						selected[layer] = true;
+					}
+				}
 			}
 		}
-		return coverage;
+		return { available, selected };
 	}
 
 	// Get appropriateness level for a strategy in current phase
@@ -1040,9 +1050,9 @@
 										<span class="risk-name">{risk.subdomain.shortName}</span>
 										<span class="risk-meta">
 											<span class="defense-coverage">
-												<i class="dot-p" class:active={coverage.preventive}></i>
-												<i class="dot-d" class:active={coverage.detective}></i>
-												<i class="dot-c" class:active={coverage.corrective}></i>
+												{#if coverage.available.preventive}<i class="dot-p" class:active={coverage.selected.preventive}></i>{/if}
+												{#if coverage.available.detective}<i class="dot-d" class:active={coverage.selected.detective}></i>{/if}
+												{#if coverage.available.corrective}<i class="dot-c" class:active={coverage.selected.corrective}></i>{/if}
 											</span>
 											{#if controlCount > 0}<span class="control-badge">{controlCount}</span>{/if}
 											<span class="toggle-icon">{isExpanded ? '−' : '+'}</span>
