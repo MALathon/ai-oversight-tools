@@ -2327,7 +2327,6 @@
 											if (connectingFrom) {
 												handleNodeClick(node.type, node.id);
 											} else {
-												console.log('[DEBUG] Clicking trace node:', node.type, node.id);
 												traceSelectedNode = { type: node.type, id: node.id };
 											}
 										}}
@@ -2368,7 +2367,6 @@
 
 					<!-- Selected node details panel -->
 					{#if traceSelectedNode}
-						{@const _debug = console.log('[DEBUG] Rendering detail panel for:', traceSelectedNode)}
 						{@const selectedItem = (() => {
 							const t = traceSelectedNode.type;
 							const id = traceSelectedNode.id;
@@ -2488,7 +2486,6 @@
 								</div>
 
 								<!-- Accumulated Guidance from Graph Traversal -->
-								{@const _ = console.log('[DEBUG] selectedNodeGuidance:', selectedNodeGuidance)}
 								{#if selectedNodeGuidance}
 									{@const guidanceWithContent = selectedNodeGuidance.guidance.filter(g => g.guidance)}
 									{@const essentialItems = guidanceWithContent.filter(g => g.appropriateness === 'essential')}
@@ -3483,14 +3480,34 @@
 				{/if}
 
 				{#if editingLink.type === 'control'}
+					{@const linkedControl = controlsById.get(editingLink.to.id)}
+					{#if linkedControl?.implementationNotes}
+						<div class="form-group">
+							<label>Control's Implementation Notes (from source)</label>
+							<div class="readonly-guidance">
+								{#each phases as phase}
+									{#if linkedControl.implementationNotes[phase.id]}
+										<div class="guidance-display">
+											<span class="guidance-phase">{phase.short}</span>
+											<p class="guidance-text-readonly">{linkedControl.implementationNotes[phase.id]}</p>
+										</div>
+									{/if}
+								{/each}
+							</div>
+							{#if linkedControl.source}
+								<span class="guidance-source-tag">Source: {linkedControl.source}</span>
+							{/if}
+						</div>
+					{/if}
 					<div class="form-group">
-						<label>Phase-specific Guidance</label>
+						<label>Additional Link-specific Guidance (optional)</label>
+						<span class="field-hint">Override or supplement the control's guidance for this specific risk</span>
 						{#each phases as phase}
 							{#if editingLink.phases?.includes(phase.id)}
 								<div class="guidance-input">
 									<span class="guidance-phase">{phase.short}</span>
 									<textarea
-										placeholder="Guidance for {phase.name}..."
+										placeholder="Additional guidance for {phase.name}..."
 										value={editingLink.guidance?.[phase.id] || ''}
 										oninput={(e) => {
 											if (!editingLink.guidance) editingLink.guidance = {};
@@ -5887,6 +5904,38 @@
 
 	.guidance-input textarea {
 		flex: 1;
+	}
+
+	.readonly-guidance {
+		background: #0f172a;
+		border-radius: 0.375rem;
+		padding: 0.75rem;
+		margin-bottom: 0.5rem;
+	}
+
+	.guidance-display {
+		display: flex;
+		gap: 0.5rem;
+		margin-bottom: 0.5rem;
+	}
+
+	.guidance-display:last-child {
+		margin-bottom: 0;
+	}
+
+	.guidance-text-readonly {
+		flex: 1;
+		font-size: 0.75rem;
+		color: #94a3b8;
+		margin: 0;
+		line-height: 1.4;
+	}
+
+	.guidance-source-tag {
+		display: inline-block;
+		font-size: 0.625rem;
+		color: #64748b;
+		margin-top: 0.25rem;
 	}
 
 	@media (max-width: 1600px) {
