@@ -935,13 +935,12 @@
 		</div>
 	</header>
 
-	<div class="builder-body">
-		<!-- Assessment Sidebar -->
-		<aside class="assessment-panel">
-			<h2>Assessment</h2>
-			{#each visibleCategories as category}
-				<div class="question-section">
-					<h3>{category.name}</h3>
+	<!-- Assessment Bar (Top) -->
+	<div class="assessment-bar">
+		{#each visibleCategories as category}
+			<div class="question-group">
+				<h3>{category.name}</h3>
+				<div class="questions-row">
 					{#each category.questions as question}
 						{#if checkShowIf(question.showIf)}
 							<div class="question">
@@ -972,8 +971,11 @@
 						{/if}
 					{/each}
 				</div>
-			{/each}
-		</aside>
+			</div>
+		{/each}
+	</div>
+
+	<div class="builder-body">
 
 		<!-- Main Risk Selection -->
 		<main class="risks-panel">
@@ -1352,67 +1354,66 @@
 		background: #2563eb;
 	}
 
-	/* Body */
-	.builder-body {
-		display: grid;
-		grid-template-columns: 360px 1fr 480px;
-		flex: 1;
-		overflow: hidden;
-	}
-
-	/* Assessment Panel */
-	.assessment-panel {
+	/* Assessment Bar (Top) */
+	.assessment-bar {
 		background: #1e293b;
-		border-right: 1px solid #334155;
-		padding: 1.5rem;
-		overflow-y: auto;
+		border-bottom: 1px solid #334155;
+		padding: 1rem 2rem;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 2rem;
+		align-items: flex-start;
 	}
 
-	.assessment-panel h2 {
-		font-size: 0.875rem;
+	.question-group {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+
+	.question-group h3 {
+		font-size: 0.75rem;
 		font-weight: 600;
 		text-transform: uppercase;
 		letter-spacing: 0.1em;
 		color: #64748b;
-		margin: 0 0 1.25rem 0;
+		margin: 0;
 	}
 
-	.question-section {
-		margin-bottom: 1.25rem;
-	}
-
-	.question-section h3 {
-		font-size: 0.9375rem;
-		font-weight: 600;
-		color: #94a3b8;
-		margin: 0 0 0.75rem 0;
+	.questions-row {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 1.5rem;
+		align-items: center;
 	}
 
 	.question {
-		margin-bottom: 1rem;
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
 	}
 
 	.question-label {
-		display: block;
 		font-size: 0.9375rem;
 		color: #cbd5e1;
-		margin-bottom: 0.5rem;
+		white-space: nowrap;
 	}
 
 	.question-options {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 0.5rem;
+		gap: 0.375rem;
 	}
 
 	.option-btn {
-		padding: 0.5rem 1rem;
+		padding: 0.375rem 0.75rem;
 		font-size: 0.875rem;
 		background: #0f172a;
 		border: 1px solid #334155;
 		border-radius: 4px;
 		color: #94a3b8;
 		cursor: pointer;
+		white-space: nowrap;
 	}
 
 	.option-btn:hover {
@@ -1424,6 +1425,14 @@
 		background: var(--color-question, #60a5fa);
 		border-color: var(--color-question, #60a5fa);
 		color: #0f172a;
+	}
+
+	/* Body - Two columns */
+	.builder-body {
+		display: grid;
+		grid-template-columns: 1fr 520px;
+		flex: 1;
+		overflow: hidden;
 	}
 
 	/* Risks Panel */
