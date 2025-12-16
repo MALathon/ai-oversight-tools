@@ -240,7 +240,7 @@
 		for (const domain of data.domains) {
 			for (const subId of domain.subdomains) {
 				if (!triggeredSubdomains.has(subId)) continue;
-				const subdomain = subdomainsById.get(subId);
+				const subdomain = subdomainsById.get(subId) as any;
 				if (!subdomain) continue;
 
 				const riskContext = subdomain.phaseGuidance?.[selectedPhase] || '';
@@ -256,6 +256,25 @@
 		}
 		return risks;
 	});
+
+	// Priority score: high impact (3) + low effort (1) = best (score 5)
+	// Score = impact - effort + 3 (so range is 1-5, higher is better)
+	function getPriorityScore(control: any): number {
+		const impact = control.impact || 2;
+		const effort = control.effort || 2;
+		return impact - effort + 3;
+	}
+
+	function getPriorityLabel(control: any): { label: string; class: string } | null {
+		const impact = control.impact || 2;
+		const effort = control.effort || 2;
+
+		if (impact === 3 && effort === 1) return { label: 'Quick Win', class: 'priority-quick-win' };
+		if (impact === 3 && effort === 2) return { label: 'High Impact', class: 'priority-high-impact' };
+		if (impact === 3 && effort === 3) return { label: 'Major', class: 'priority-major' };
+		if (impact === 1) return { label: 'Low Priority', class: 'priority-low' };
+		return null; // Medium impact, don't show badge
+	}
 
 	function getControlsForStrategy(strategyId: string): any[] {
 		// Use pre-filtered cache (already filtered by phase and techType)
@@ -274,8 +293,12 @@
 				c.description?.toLowerCase().includes(search)
 			);
 		}
-		// Sort: regulatory first, then by name
+		// Sort by priority: high impact + low effort first
 		return [...controls].sort((a: any, b: any) => {
+			const aPriority = getPriorityScore(a);
+			const bPriority = getPriorityScore(b);
+			if (aPriority !== bPriority) return bPriority - aPriority; // Higher priority first
+			// Tiebreaker: regulatory sources first, then by name
 			const aReg = isRegulatory(a.source) ? 0 : 1;
 			const bReg = isRegulatory(b.source) ? 0 : 1;
 			if (aReg !== bReg) return aReg - bReg;
@@ -450,11 +473,10 @@
 
 		if (appropriatenessFilter === 'essential') {
 			filtered = strategies.filter(s => getAppropriateness(s) === 'essential');
-		} else if (appropriatenessFilter === 'recommended') {
-			filtered = strategies.filter(s => getAppropriateness(s) === 'recommended');
 		} else if (appropriatenessFilter === 'essential-recommended') {
 			filtered = strategies.filter(s => ['essential', 'recommended'].includes(getAppropriateness(s)));
 		}
+		// 'all' shows everything, no filtering needed
 
 		// Sort by appropriateness (essential first)
 		return filtered.sort((a, b) => {
@@ -1063,6 +1085,7 @@
 														<span class="expand-icon">{showControlsFor === strategy.id ? '▲' : '▼'}</span>
 													</button>
 													{#if showControlsFor === strategy.id}
+														<!-- svelte-ignore a11y_no_static_element_interactions a11y_click_events_have_key_events -->
 														<div class="controls-drawer" onclick={(e) => e.stopPropagation()}>
 															<div class="controls-toolbar">
 																<input type="text" class="controls-search" placeholder="Search..." bind:value={controlSearch} />
@@ -1077,10 +1100,12 @@
 																	{@const key = makeControlKey(control.id, risk.subdomain.id, strategy.id)}
 																	{@const selection = getControlSelection(control.id, risk.subdomain.id, strategy.id)}
 																	{@const isSelected = !!selection}
+																	{@const priority = getPriorityLabel(control)}
 																	<div class="control-row" class:selected={isSelected}>
 																		<div class="control-header">
 																			<input type="checkbox" checked={isSelected} onchange={() => toggleControl(control, risk, strategy)} />
 																			<strong>{control.name}</strong>
+																			{#if priority}<span class="priority-badge {priority.class}">{priority.label}</span>{/if}
 																			<span class="source-badge" class:regulatory={isRegulatory(control.source)}>{getSourceLabel(control.source)}</span>
 																		</div>
 																		{#if control.description}<p class="control-desc">{control.description}</p>{/if}
@@ -1102,7 +1127,7 @@
 													{/if}
 												{/if}
 											{/snippet}
-											{#if essentialStrategies.length > 0 && appropriatenessFilter !== 'recommended'}
+											{#if essentialStrategies.length > 0}
 												<div class="strategy-group essential-group">
 													<h4>Essential</h4>
 													{#each essentialStrategies as strategy}{@render strategyRow(strategy, risk)}{/each}
@@ -1400,35 +1425,6 @@
 		text-align: center;
 	}
 
-	.defense-legend {
-		display: flex;
-		gap: 0.5rem;
-		font-size: 0.6875rem;
-		color: #94a3b8;
-	}
-
-	.defense-legend span {
-		display: flex;
-		align-items: center;
-		gap: 0.125rem;
-	}
-
-	.dot-p, .dot-d, .dot-c {
-		display: inline-block;
-		width: 8px;
-		height: 8px;
-		border-radius: 2px;
-		border: 1px solid;
-	}
-
-	.dot-p { border-color: var(--color-question, #60a5fa); background: transparent; }
-	.dot-d { border-color: var(--color-trigger, #fcd34d); background: transparent; }
-	.dot-c { border-color: var(--color-risk, #f87171); background: transparent; }
-
-	.dot-p.active { background: var(--color-question, #60a5fa); }
-	.dot-d.active { background: var(--color-trigger, #fcd34d); }
-	.dot-c.active { background: var(--color-risk, #f87171); }
-
 	/* Risk Cards */
 	.risks-list {
 		display: flex;
@@ -1693,6 +1689,36 @@
 	.source-badge.regulatory {
 		background: #1e3a5f;
 		color: #60a5fa;
+	}
+
+	.priority-badge {
+		font-size: 0.5625rem;
+		padding: 0.125rem 0.375rem;
+		border-radius: 2px;
+		font-weight: 600;
+		text-transform: uppercase;
+		letter-spacing: 0.025em;
+		flex-shrink: 0;
+	}
+
+	.priority-quick-win {
+		background: var(--color-subcategory, #4ade80);
+		color: #0f172a;
+	}
+
+	.priority-high-impact {
+		background: var(--color-question, #60a5fa);
+		color: #0f172a;
+	}
+
+	.priority-major {
+		background: var(--color-trigger, #fcd34d);
+		color: #0f172a;
+	}
+
+	.priority-low {
+		background: #475569;
+		color: #94a3b8;
 	}
 
 	.control-desc {

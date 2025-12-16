@@ -1994,6 +1994,7 @@
 			{/if}
 		</div>
 
+		<!-- svelte-ignore a11y_no_static_element_interactions -->
 		<div class="matrix-container" onmouseleave={() => { matrixHoverRow = null; matrixHoverCol = null; }}>
 			{#if matrixRowItems.length === 0 || matrixColItems.length === 0}
 				<div class="matrix-no-pair">
@@ -2234,8 +2235,8 @@
 		<div class="trace-view">
 			<div class="trace-toolbar">
 				<div class="trace-start-selector">
-					<label>Start from:</label>
-					<select bind:value={traceStartType}>
+					<label for="trace-start-type">Start from:</label>
+					<select id="trace-start-type" bind:value={traceStartType}>
 						<option value="question">Question</option>
 						<option value="risk">Risk</option>
 						<option value="control">Control</option>
@@ -2982,24 +2983,27 @@
 
 						{#if editingEntity.phaseGuidance}
 							<div class="form-group">
-								<label>Phase 1: Discovery <span class="phase-tag p1">P1</span></label>
+								<label for="phase-1-guidance">Phase 1: Discovery <span class="phase-tag p1">P1</span></label>
 								<textarea
+									id="phase-1-guidance"
 									bind:value={editingEntity.phaseGuidance['phase-1']}
 									placeholder="Guidance for Phase 1 (Discovery) - retrospective data, algorithm development..."
 									rows="4"
 								></textarea>
 							</div>
 							<div class="form-group">
-								<label>Phase 2: Validation <span class="phase-tag p2">P2</span></label>
+								<label for="phase-2-guidance">Phase 2: Validation <span class="phase-tag p2">P2</span></label>
 								<textarea
+									id="phase-2-guidance"
 									bind:value={editingEntity.phaseGuidance['phase-2']}
 									placeholder="Guidance for Phase 2 (Validation) - prospective testing, controlled settings..."
 									rows="4"
 								></textarea>
 							</div>
 							<div class="form-group">
-								<label>Phase 3: Deployment <span class="phase-tag p3">P3</span></label>
+								<label for="phase-3-guidance">Phase 3: Deployment <span class="phase-tag p3">P3</span></label>
 								<textarea
+									id="phase-3-guidance"
 									bind:value={editingEntity.phaseGuidance['phase-3']}
 									placeholder="Guidance for Phase 3 (Deployment) - live use, influences decisions..."
 									rows="4"
@@ -3009,29 +3013,29 @@
 					</div>
 				{:else if entityType === 'questions'}
 					<div class="form-group">
-						<label>ID (no spaces, lowercase)</label>
-						<input type="text" bind:value={editingEntity.id} placeholder="my-question-id" />
+						<label for="question-id">ID (no spaces, lowercase)</label>
+						<input id="question-id" type="text" bind:value={editingEntity.id} placeholder="my-question-id" />
 					</div>
 					<div class="form-group">
-						<label>Question Text</label>
-						<textarea bind:value={editingEntity.text} placeholder="Enter the question..." rows="3"></textarea>
+						<label for="question-text">Question Text</label>
+						<textarea id="question-text" bind:value={editingEntity.text} placeholder="Enter the question..." rows="3"></textarea>
 					</div>
 					<div class="form-group">
-						<label>Type</label>
-						<select bind:value={editingEntity.type}>
+						<label for="question-type">Type</label>
+						<select id="question-type" bind:value={editingEntity.type}>
 							<option value="yes-no">Yes/No</option>
 							<option value="single-select">Single Select</option>
 							<option value="multi-select">Multi Select</option>
 						</select>
 					</div>
 					<div class="form-group">
-						<label>Category</label>
-						<input type="text" bind:value={editingEntity.category} placeholder="Category" />
+						<label for="question-category">Category</label>
+						<input id="question-category" type="text" bind:value={editingEntity.category} placeholder="Category" />
 					</div>
 
 					<!-- Show Conditions Editor -->
 					<div class="form-group show-conditions">
-						<label>Show Conditions <span class="hint">(Only show this question when...)</span></label>
+						<span class="form-label">Show Conditions <span class="hint">(Only show this question when...)</span></span>
 						{#if !editingEntity.showIf || Object.keys(editingEntity.showIf).length === 0}
 							<p class="no-conditions">Always shown (no conditions)</p>
 						{:else}
@@ -3123,37 +3127,37 @@
 					</div>
 				{:else if entityType === 'regulations'}
 					<div class="form-group">
-						<label>Citation (e.g., "45 CFR 46.111(a)(1)")</label>
-						<input type="text" bind:value={editingEntity.citation} placeholder="45 CFR 46.111(a)(1)" />
+						<label for="reg-citation">Citation (e.g., "45 CFR 46.111(a)(1)")</label>
+						<input id="reg-citation" type="text" bind:value={editingEntity.citation} placeholder="45 CFR 46.111(a)(1)" />
 					</div>
 					<div class="form-group">
-						<label>Description</label>
-						<textarea bind:value={editingEntity.description} placeholder="Description of the regulation..." rows="3"></textarea>
+						<label for="reg-description">Description</label>
+						<textarea id="reg-description" bind:value={editingEntity.description} placeholder="Description of the regulation..." rows="3"></textarea>
 					</div>
 					<div class="form-group">
-						<label>Framework</label>
-						<input type="text" bind:value={editingEntity.framework} placeholder="e.g., Common Rule, HIPAA" />
+						<label for="reg-framework">Framework</label>
+						<input id="reg-framework" type="text" bind:value={editingEntity.framework} placeholder="e.g., Common Rule, HIPAA" />
 					</div>
 				{:else if entityType === 'controls'}
 					<div class="form-group">
-						<label>ID</label>
-						<input type="text" bind:value={editingEntity.id} placeholder="e.g., A0001_Source2024" />
+						<label for="control-id">ID</label>
+						<input id="control-id" type="text" bind:value={editingEntity.id} placeholder="e.g., A0001_Source2024" />
 					</div>
 					<div class="form-group">
-						<label>Name</label>
-						<input type="text" bind:value={editingEntity.name} placeholder="Control name" />
+						<label for="control-name">Name</label>
+						<input id="control-name" type="text" bind:value={editingEntity.name} placeholder="Control name" />
 					</div>
 					<div class="form-group">
-						<label>Description</label>
-						<textarea bind:value={editingEntity.description} placeholder="Description of the control..." rows="4"></textarea>
+						<label for="control-description">Description</label>
+						<textarea id="control-description" bind:value={editingEntity.description} placeholder="Description of the control..." rows="4"></textarea>
 					</div>
 					<div class="form-group">
-						<label>Source</label>
-						<input type="text" bind:value={editingEntity.source} placeholder="e.g., NIST2024, Bengio2025" />
+						<label for="control-source">Source</label>
+						<input id="control-source" type="text" bind:value={editingEntity.source} placeholder="e.g., NIST2024, Bengio2025" />
 					</div>
 					<div class="form-group">
-						<label>Subcategory</label>
-						<select bind:value={editingEntity.subcategoryId}>
+						<label for="control-subcategory">Subcategory</label>
+						<select id="control-subcategory" bind:value={editingEntity.subcategoryId}>
 							<option value="">Select subcategory...</option>
 							{#each data.controlSubcategories as subcat}
 								<option value={subcat.id}>{subcat.code} {subcat.name}</option>
@@ -3161,7 +3165,7 @@
 						</select>
 					</div>
 					<div class="form-group">
-						<label>Applicable Phases</label>
+						<span class="form-label">Applicable Phases</span>
 						<span class="field-hint">No selection = applies to all phases</span>
 						<div class="checkbox-group">
 							{#each phases as phase}
@@ -3183,7 +3187,7 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label>Applicable Technology Types</label>
+						<span class="form-label">Applicable Technology Types</span>
 						<div class="checkbox-group tech-types">
 							<label class="checkbox-label all-types">
 								<input
@@ -3220,14 +3224,15 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label>Implementation Notes by Phase</label>
+						<span class="form-label">Implementation Notes by Phase</span>
 						<span class="field-hint">Protocol-ready text for each applicable phase</span>
 						<div class="impl-notes-group">
 							{#each phases as phase}
 								{#if !editingEntity.phases?.length || editingEntity.phases?.includes(phase.id)}
 									<div class="impl-note-item">
-										<label class="impl-note-label">{phase.name}</label>
+										<label class="impl-note-label" for="impl-note-{phase.id}">{phase.name}</label>
 										<textarea
+											id="impl-note-{phase.id}"
 											rows="2"
 											placeholder="Implementation guidance for {phase.name}..."
 											value={editingEntity.implementationNotes?.[phase.id] || ''}
@@ -3418,7 +3423,7 @@
 				</div>
 
 				<div class="form-group">
-					<label>Applicable Phases</label>
+					<span class="form-label">Applicable Phases</span>
 					<span class="field-hint">No selection = applies to all phases</span>
 					<div class="phase-checkboxes">
 						{#each phases as phase}
@@ -3444,7 +3449,7 @@
 					{@const q = getQuestion(editingLink.from.id)}
 					{#if q}
 						<div class="form-group">
-							<label>Trigger when answer is:</label>
+							<span class="form-label">Trigger when answer is:</span>
 							<div class="answer-checkboxes">
 								{#each q.options as opt}
 									<label class="checkbox-label">
@@ -3466,8 +3471,8 @@
 						</div>
 
 						<div class="form-group">
-							<label>Logic (when multiple triggers for same risk)</label>
-							<select bind:value={editingLink.logic}>
+							<label for="link-logic">Logic (when multiple triggers for same risk)</label>
+							<select id="link-logic" bind:value={editingLink.logic}>
 								<option value="OR">OR - Any trigger activates</option>
 								<option value="AND">AND - All triggers required</option>
 							</select>
@@ -3479,7 +3484,7 @@
 					{@const linkedControl = controlsById.get(editingLink.to.id)}
 					{#if linkedControl?.implementationNotes}
 						<div class="form-group">
-							<label>Control's Implementation Notes (from source)</label>
+							<span class="form-label">Control's Implementation Notes (from source)</span>
 							<div class="readonly-guidance">
 								{#each phases as phase}
 									{#if linkedControl.implementationNotes[phase.id]}
@@ -3496,7 +3501,7 @@
 						</div>
 					{/if}
 					<div class="form-group">
-						<label>Additional Link-specific Guidance (optional)</label>
+						<span class="form-label">Additional Link-specific Guidance (optional)</span>
 						<span class="field-hint">Override or supplement the control's guidance for this specific risk</span>
 						{#each phases as phase}
 							{#if editingLink.phases?.includes(phase.id)}
@@ -3519,8 +3524,8 @@
 
 				{#if editingLink.type === 'regulation'}
 					<div class="form-group">
-						<label>Note</label>
-						<input type="text" bind:value={editingLink.note} placeholder="Brief note about this regulatory link..." />
+						<label for="link-note">Note</label>
+						<input id="link-note" type="text" bind:value={editingLink.note} placeholder="Brief note about this regulatory link..." />
 					</div>
 				{/if}
 			</div>
@@ -5859,7 +5864,8 @@
 		margin-bottom: 1rem;
 	}
 
-	.form-group label {
+	.form-group label,
+	.form-group .form-label {
 		display: block;
 		font-size: 0.75rem;
 		color: #94a3b8;

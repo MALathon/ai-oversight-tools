@@ -152,13 +152,14 @@
 		</div>
 
 		<div class="filter-group">
-			<label>AI Model Type(s)</label>
-			<div class="model-chips">
+			<span id="model-type-label" class="filter-label">AI Model Type(s)</span>
+			<div class="model-chips" role="group" aria-labelledby="model-type-label">
 				{#each modelTypes.slice(0, 8) as model}
 					<button
 						class="chip"
 						class:selected={selectedModelTypes.includes(model.id)}
 						onclick={() => toggleModelType(model.id)}
+						aria-pressed={selectedModelTypes.includes(model.id)}
 					>
 						{model.name}
 					</button>
@@ -255,7 +256,8 @@
 		gap: 1.5rem;
 	}
 
-	.filter-group label {
+	.filter-group label,
+	.filter-group .filter-label {
 		display: block;
 		font-size: 0.875rem;
 		font-weight: 600;
