@@ -31,3 +31,7 @@ coverage/
 
 # Misc
 *.local
+
+# Test artifacts
+webapp/playwright-report/
+webapp/test-results/

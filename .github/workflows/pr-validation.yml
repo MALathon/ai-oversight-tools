@@ -1,0 +1,186 @@
+name: PR Validation
+
+on:
+  pull_request:
+    branches: ['main']
+    types: [opened, synchronize, reopened, ready_for_review]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  validate-pr:
+    name: Validate PR
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check PR title format
+        run: |
+          TITLE="${{ github.event.pull_request.title }}"
+          # Check for conventional commit format or descriptive title
+          if [[ ${#TITLE} -lt 10 ]]; then
+            echo "PR title is too short. Please provide a descriptive title."
+            exit 1
+          fi
+          echo "PR title looks good: $TITLE"
+
+      - name: Check for large files
+        run: |
+          # Find files larger than 1MB added in this PR
+          git diff --name-only origin/main...HEAD | while read file; do
+            if [ -f "$file" ]; then
+              size=$(stat -f%z "$file" 2>/dev/null || stat -c%s "$file" 2>/dev/null || echo 0)
+              if [ "$size" -gt 1048576 ]; then
+                echo "Warning: Large file detected: $file ($size bytes)"
+              fi
+            fi
+          done
+
+      - name: Check for sensitive files
+        run: |
+          SENSITIVE_PATTERNS=".env .env.local .env.production secrets credentials password token api_key"
+          for pattern in $SENSITIVE_PATTERNS; do
+            if git diff --name-only origin/main...HEAD | grep -i "$pattern"; then
+              echo "Warning: Potentially sensitive file pattern detected: $pattern"
+            fi
+          done
+
+  quick-test:
+    name: Quick Test
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: webapp/package-lock.json
+
+      - name: Install webapp dependencies
+        working-directory: webapp
+        run: npm ci
+
+      - name: Run Svelte check
+        working-directory: webapp
+        run: npm run check
+
+      - name: Build webapp
+        working-directory: webapp
+        run: npm run build
+
+      - name: Install Playwright (Chromium only)
+        working-directory: webapp
+        run: npx playwright install --with-deps chromium
+
+      - name: Run critical path tests
+        working-directory: webapp
+        run: |
+          npx playwright test tests/pages/home.spec.ts --project=chromium
+          npx playwright test tests/components/feedback-modal.spec.ts --project=chromium
+        env:
+          CI: true
+
+      - name: Upload test artifacts
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: pr-test-failures
+          path: |
+            webapp/playwright-report/
+            webapp/test-results/
+          retention-days: 3
+
+  worker-check:
+    name: Worker Check
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: worker/package-lock.json
+
+      - name: Install worker dependencies
+        working-directory: worker
+        run: npm ci
+
+      - name: Type check worker
+        working-directory: worker
+        run: npx tsc --noEmit
+
+  pr-comment:
+    name: PR Status Comment
+    runs-on: ubuntu-latest
+    needs: [validate-pr, quick-test, worker-check]
+    if: always() && github.event.pull_request.draft == false
+    steps:
+      - name: Create status comment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const validateResult = '${{ needs.validate-pr.result }}';
+            const testResult = '${{ needs.quick-test.result }}';
+            const workerResult = '${{ needs.worker-check.result }}';
+
+            const allPassed = validateResult === 'success' &&
+                              testResult === 'success' &&
+                              workerResult === 'success';
+
+            const statusEmoji = allPassed ? '✅' : '❌';
+            const statusText = allPassed ? 'All checks passed!' : 'Some checks failed.';
+
+            const body = `## PR Validation Results ${statusEmoji}
+
+            ${statusText}
+
+            | Check | Status |
+            |-------|--------|
+            | PR Validation | ${validateResult === 'success' ? '✅' : '❌'} ${validateResult} |
+            | Quick Tests | ${testResult === 'success' ? '✅' : '❌'} ${testResult} |
+            | Worker Check | ${workerResult === 'success' ? '✅' : '❌'} ${workerResult} |
+
+            ${allPassed ? '🚀 Ready to merge!' : '⚠️ Please fix the failing checks before merging.'}
+            `;
+
+            // Find existing comment
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+
+            const botComment = comments.find(comment =>
+              comment.user.type === 'Bot' &&
+              comment.body.includes('PR Validation Results')
+            );
+
+            if (botComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: body
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: body
+              });
+            }
