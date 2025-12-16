@@ -1183,11 +1183,14 @@
 </div>
 
 <style>
-	/* 3-column layout */
+	/* 3-column layout - break out of parent max-width */
 	.builder {
 		height: calc(100vh - 120px);
 		background: #0f172a;
 		color: #e2e8f0;
+		width: 100vw;
+		margin-left: calc(-50vw + 50%);
+		padding: 0 1rem;
 	}
 
 	.three-columns {
@@ -1196,6 +1199,7 @@
 		gap: 1px;
 		background: #334155;
 		height: 100%;
+		max-width: 100%;
 	}
 
 	/* Shared panel styles */
