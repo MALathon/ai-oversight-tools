@@ -121,6 +121,10 @@
 	// Show risks once phase is selected (simpler - conditional questions make "all answered" complex)
 	let showRisks = $derived(!!answers['phase']);
 
+	// Collapsible panels
+	let questionsCollapsed = $state(false);
+	let risksCollapsed = $state(false);
+
 	// Count answered questions for progress display
 	let answeredCount = $derived.by(() => {
 		let count = 0;
@@ -949,61 +953,186 @@
 </svelte:head>
 
 <div class="builder">
-	<!-- Top Row: Questions + Protocol side by side -->
-	<div class="top-row">
-		<!-- Questions Panel -->
-		<div class="questions-panel">
-			<div class="panel-header">
-				<h2>Assessment Questions</h2>
-				<span class="progress-badge">{answeredCount} / {visibleQuestions.length}</span>
-			</div>
-			<div class="questions-content">
-				{#each visibleCategories as category}
-					<div class="question-group">
-						<h3 class="group-label">{category.name}</h3>
-						{#each category.questions as question}
-							{#if checkShowIf(question.showIf)}
-								<div class="question">
-									<span class="question-label">{question.question}</span>
-									<div class="question-options">
-										{#if question.type === 'single-select'}
-											{#each question.options as option}
-												<button
-													class="option-btn"
-													class:active={answers[question.id] === option.value}
-													onclick={() => answers[question.id] = option.value}
-												>{option.label}</button>
-											{/each}
-										{:else if question.type === 'multi-select'}
-											{#each question.options as option}
-												<button
-													class="option-btn"
-													class:active={(answers[question.id] as string[] || []).includes(option.value)}
-													onclick={() => toggleMulti(question.id, option.value)}
-												>{option.label}</button>
-											{/each}
-										{:else if question.type === 'yes-no'}
-											<button class="option-btn" class:active={answers[question.id] === 'yes'} onclick={() => answers[question.id] = 'yes'}>Yes</button>
-											<button class="option-btn" class:active={answers[question.id] === 'no'} onclick={() => answers[question.id] = 'no'}>No</button>
-										{/if}
+	<!-- 3-Column Layout: Questions (20%) | Risks (30%) | Protocol (50%) -->
+	<div class="three-columns">
+		<!-- Column 1: Questions -->
+		<section class="panel questions-panel" class:collapsed={questionsCollapsed}>
+			<button class="panel-header" onclick={() => questionsCollapsed = !questionsCollapsed}>
+				<h2>Questions</h2>
+				<span class="header-meta">
+					<span class="progress-badge">{answeredCount}/{visibleQuestions.length}</span>
+					<span class="collapse-icon">{questionsCollapsed ? '▶' : '▼'}</span>
+				</span>
+			</button>
+			{#if !questionsCollapsed}
+				<div class="panel-content">
+					{#each visibleCategories as category}
+						<div class="question-group">
+							<h3 class="group-label">{category.name}</h3>
+							{#each category.questions as question}
+								{#if checkShowIf(question.showIf)}
+									<div class="question">
+										<span class="question-label">{question.question}</span>
+										<div class="question-options">
+											{#if question.type === 'single-select'}
+												{#each question.options as option}
+													<button class="option-btn" class:active={answers[question.id] === option.value} onclick={() => answers[question.id] = option.value}>{option.label}</button>
+												{/each}
+											{:else if question.type === 'multi-select'}
+												{#each question.options as option}
+													<button class="option-btn" class:active={(answers[question.id] as string[] || []).includes(option.value)} onclick={() => toggleMulti(question.id, option.value)}>{option.label}</button>
+												{/each}
+											{:else if question.type === 'yes-no'}
+												<button class="option-btn" class:active={answers[question.id] === 'yes'} onclick={() => answers[question.id] = 'yes'}>Yes</button>
+												<button class="option-btn" class:active={answers[question.id] === 'no'} onclick={() => answers[question.id] = 'no'}>No</button>
+											{/if}
+										</div>
 									</div>
-								</div>
-							{/if}
-						{/each}
-					</div>
-				{/each}
-			</div>
-		</div>
+								{/if}
+							{/each}
+						</div>
+					{/each}
+				</div>
+			{/if}
+		</section>
 
-		<!-- Protocol Panel (Right) -->
-		<aside class="panel protocol-panel">
+		<!-- Column 2: Risk Controls -->
+		<section class="panel risks-panel" class:collapsed={risksCollapsed}>
+			<button class="panel-header" onclick={() => risksCollapsed = !risksCollapsed}>
+				<h2>Risk Controls</h2>
+				<span class="header-meta">
+					{#if showRisks}<span class="progress-badge">{displayedRisks.length} risks</span>{/if}
+					<span class="collapse-icon">{risksCollapsed ? '▶' : '▼'}</span>
+				</span>
+			</button>
+			{#if !risksCollapsed}
+				<div class="panel-content">
+					{#if !showRisks}
+						<div class="placeholder">Select a phase to see risks</div>
+					{:else if triggeredRisks.length === 0}
+						<div class="placeholder">No risks identified</div>
+					{:else}
+						<div class="risks-toolbar">
+							<select class="filter-select" bind:value={appropriatenessFilter}>
+								<option value="all">All</option>
+								<option value="essential">Essential</option>
+								<option value="essential-recommended">Ess+Rec</option>
+							</select>
+							<div class="defense-legend">
+								<span><i class="dot-p"></i>P</span>
+								<span><i class="dot-d"></i>D</span>
+								<span><i class="dot-c"></i>C</span>
+							</div>
+						</div>
+						<div class="risks-list">
+							{#each displayedRisks as risk}
+								{@const isExpanded = expandedRisks.has(risk.subdomain.id)}
+								{@const controlCount = getControlCount(risk.subdomain.id)}
+								{@const coverage = getDefenseCoverage(risk.subdomain.id, risk.linkedStrategies)}
+								<div class="risk-card" class:addressed={controlCount > 0}>
+									<button class="risk-header" onclick={() => toggleRiskExpanded(risk.subdomain.id)}>
+										<span class="risk-name">{risk.subdomain.shortName}</span>
+										<span class="risk-meta">
+											<span class="defense-coverage">
+												<i class="dot-p" class:active={coverage.preventive}></i>
+												<i class="dot-d" class:active={coverage.detective}></i>
+												<i class="dot-c" class:active={coverage.corrective}></i>
+											</span>
+											{#if controlCount > 0}<span class="control-badge">{controlCount}</span>{/if}
+											<span class="toggle-icon">{isExpanded ? '−' : '+'}</span>
+										</span>
+									</button>
+									{#if isExpanded}
+										{@const essentialStrategies = risk.linkedStrategies.filter((s: any) => getAppropriateness(s) === 'essential')}
+										{@const otherStrategies = risk.linkedStrategies.filter((s: any) => getAppropriateness(s) !== 'essential')}
+										<div class="risk-content">
+											{#if risk.riskContext}<p class="risk-description">{risk.riskContext}</p>{/if}
+											{#snippet strategyRow(strategy: any, risk: any)}
+												{@const strategyControls = getControlsForStrategy(strategy.id)}
+												{@const selectedInStrategy = strategyControls.filter((c: any) => isControlSelected(c.id, risk.subdomain.id, strategy.id)).length}
+												<div class="strategy-item" class:has-selections={selectedInStrategy > 0}>
+													<div class="strategy-main">
+														<span class="strategy-name">{strategy.name}</span>
+														<span class="badge badge-{strategy.defenseLayer}">{strategy.defenseLayer.charAt(0).toUpperCase()}</span>
+														{#if selectedInStrategy > 0}<span class="selected-indicator">{selectedInStrategy}</span>{/if}
+														<button class="controls-btn" onclick={() => toggleControlsPanel(strategy.id)}>{strategyControls.length} {showControlsFor === strategy.id ? '▲' : '▼'}</button>
+													</div>
+													{#if showControlsFor === strategy.id}
+														<div class="controls-drawer">
+															<div class="controls-toolbar">
+																<input type="text" class="controls-search" placeholder="Search..." bind:value={controlSearch} />
+																<select class="source-filter" bind:value={sourceFilter}>
+																	<option value="all">All</option>
+																	<option value="regulatory">Reg</option>
+																	<option value="academic">Acad</option>
+																</select>
+															</div>
+															<div class="controls-list">
+																{#each strategyControls as control}
+																	{@const key = makeControlKey(control.id, risk.subdomain.id, strategy.id)}
+																	{@const selection = getControlSelection(control.id, risk.subdomain.id, strategy.id)}
+																	{@const isSelected = !!selection}
+																	<div class="control-row" class:selected={isSelected}>
+																		<div class="control-header">
+																			<input type="checkbox" checked={isSelected} onchange={() => toggleControl(control, risk, strategy)} />
+																			<strong>{control.name}</strong>
+																			<span class="source-badge" class:regulatory={isRegulatory(control.source)}>{getSourceLabel(control.source)}</span>
+																		</div>
+																		{#if control.description}<p class="control-desc">{control.description}</p>{/if}
+																		{#if isSelected && selection}
+																			<div class="control-config">
+																				<div class="status-buttons">
+																					{#each Object.entries(statusLabels) as [status, label]}
+																						<button class="status-btn" class:active={selection.status === status} style:--status-color={statusColors[status as ImplementationStatus]} onclick={() => updateControlStatus(key, status as ImplementationStatus)}>{label}</button>
+																					{/each}
+																				</div>
+																			</div>
+																		{/if}
+																	</div>
+																{:else}
+																	<p class="no-results">No controls found</p>
+																{/each}
+															</div>
+														</div>
+													{/if}
+												</div>
+											{/snippet}
+											{#if essentialStrategies.length > 0 && appropriatenessFilter !== 'recommended'}
+												<div class="strategy-group essential-group">
+													<h4>Essential</h4>
+													{#each essentialStrategies as strategy}{@render strategyRow(strategy, risk)}{/each}
+												</div>
+											{/if}
+											{#if appropriatenessFilter !== 'essential'}
+												{#each data.mitigationCategories as category}
+													{@const catStrategies = otherStrategies.filter((s: any) => s.categoryId === category.id && (appropriatenessFilter === 'all' || getAppropriateness(s) === 'recommended'))}
+													{#if catStrategies.length > 0}
+														<div class="strategy-group">
+															<h4>{category.name}</h4>
+															{#each catStrategies as strategy}{@render strategyRow(strategy, risk)}{/each}
+														</div>
+													{/if}
+												{/each}
+											{/if}
+										</div>
+									{/if}
+								</div>
+							{/each}
+						</div>
+					{/if}
+				</div>
+			{/if}
+		</section>
+
+		<!-- Column 3: Protocol Output -->
+		<section class="panel protocol-panel">
 			<div class="panel-header">
-				<h2>Protocol Output</h2>
-				<div class="panel-header-actions">
+				<h2>Protocol</h2>
+				<div class="header-meta">
 					{#if hasProtocolContent}
-						<span class="control-count">{totalSelectedControls} controls</span>
-						<button class="btn-small" onclick={copyMarkdown} aria-label="Copy as Markdown">Copy</button>
-						<button class="btn-small btn-primary-small" onclick={exportDocx} aria-label="Export DOCX">Export</button>
+						<span class="control-count">{totalSelectedControls}</span>
+						<button class="btn-small" onclick={copyMarkdown}>Copy</button>
+						<button class="btn-small btn-primary-small" onclick={exportDocx}>Export</button>
 					{/if}
 				</div>
 			</div>
@@ -1017,366 +1146,145 @@
 						<tbody>
 							<tr><td>Phase</td><td>{phaseName || '—'}</td></tr>
 							<tr><td>Model Types</td><td>{selectedModelTypes.join(', ') || '—'}</td></tr>
-							<tr><td>Risks Addressed</td><td>{risksAddressed} / {triggeredRisks.length}</td></tr>
+							<tr><td>Risks</td><td>{risksAddressed}/{triggeredRisks.length}</td></tr>
 							<tr><td>Controls</td><td>{totalSelectedControls}</td></tr>
 						</tbody>
 					</table>
-
 					{#if !hasProtocolContent}
-						<p class="doc-empty">Select controls from the risk strategies to build your protocol.</p>
+						<p class="doc-empty">Select controls to build your protocol.</p>
 					{:else}
 						<div class="doc-content">
-						{#if implementedControls.length > 0}
-							<section>
-								<h3>Already Implemented</h3>
-								{#each protocolItems as item}
-									{@const riskImplemented = item.controls.filter(c => c.status === 'implemented')}
-									{#if riskImplemented.length > 0}
-										<div class="doc-risk">
-											<h4>{item.riskIndex}. {item.risk.subdomain.shortName}</h4>
-											{#each riskImplemented as control, i}
-												<p class="doc-control">{item.riskIndex}.{i + 1} {generateProtocolText(control)}</p>
-											{/each}
-										</div>
-									{/if}
-								{/each}
-							</section>
-						{/if}
-
-						{#if inProtocolControls.length > 0}
-							<section>
-								<h3>In This Protocol</h3>
-								{#each protocolItems as item}
-									{@const riskInProtocol = item.controls.filter(c => c.status === 'in-protocol')}
-									{#if riskInProtocol.length > 0}
-										<div class="doc-risk">
-											<h4>{item.riskIndex}. {item.risk.subdomain.shortName}</h4>
-											{#each riskInProtocol as control, i}
-												<p class="doc-control">{item.riskIndex}.{i + 1} {generateProtocolText(control)}</p>
-											{/each}
-										</div>
-									{/if}
-								{/each}
-							</section>
-						{/if}
-
-						{#if postPhaseControls.length > 0}
-							<section>
-								<h3>Post-Phase Implementation</h3>
-								{#each protocolItems as item}
-									{@const riskPostPhase = item.controls.filter(c => c.status === 'post-phase')}
-									{#if riskPostPhase.length > 0}
-										<div class="doc-risk">
-											<h4>{item.riskIndex}. {item.risk.subdomain.shortName}</h4>
-											{#each riskPostPhase as control, i}
-												<p class="doc-control">{item.riskIndex}.{i + 1} {generateProtocolText(control)}</p>
-											{/each}
-										</div>
-									{/if}
-								{/each}
-							</section>
-						{/if}
-
-						{#if notRequiredControls.length > 0}
-							<section>
-								<h3>Not Required</h3>
-								{#each protocolItems as item}
-									{@const riskNotRequired = item.controls.filter(c => c.status === 'not-required')}
-									{#if riskNotRequired.length > 0}
-										<div class="doc-risk not-required">
-											<h4>{item.riskIndex}. {item.risk.subdomain.shortName}</h4>
-											{#each riskNotRequired as control, i}
-												<p class="doc-control">{item.riskIndex}.{i + 1} {generateProtocolText(control)}</p>
-											{/each}
-										</div>
-									{/if}
-								{/each}
-							</section>
-						{/if}
-						</div>
-					{/if}
-				</div>
-			</div>
-		</aside>
-	</div>
-
-	<!-- Risks Panel (shows once phase is selected) -->
-	{#if showRisks}
-		<main class="panel risks-panel">
-			<div class="panel-header">
-				<h2>Identified Risks ({displayedRisks.length})</h2>
-				<div class="panel-header-actions">
-					<div class="defense-legend">
-						<span><i class="dot-p"></i> Preventive</span>
-						<span><i class="dot-d"></i> Detective</span>
-						<span><i class="dot-c"></i> Corrective</span>
-					</div>
-					{#if triggeredRisks.length > 0}
-						<select class="filter-select" bind:value={appropriatenessFilter} aria-label="Filter strategies by appropriateness">
-							<option value="all">All Strategies</option>
-							<option value="essential">Essential Only</option>
-							<option value="essential-recommended">Essential + Recommended</option>
-						</select>
-						{#if risksWithUnaddressedEssential > 0}
-							<label class="filter-checkbox">
-								<input type="checkbox" bind:checked={showOnlyUnaddressed} />
-								<span>Incomplete ({risksWithUnaddressedEssential})</span>
-							</label>
-						{/if}
-					{/if}
-				</div>
-			</div>
-			<div class="panel-content risks-content">
-				{#if triggeredRisks.length === 0}
-					<div class="placeholder">
-						<p>No risks identified based on your answers. Your project may have minimal AI-specific risk concerns.</p>
-					</div>
-				{:else}
-					<div class="risks-list">
-					{#each displayedRisks as risk}
-						{@const isExpanded = expandedRisks.has(risk.subdomain.id)}
-						{@const controlCount = getControlCount(risk.subdomain.id)}
-						{@const coverage = getDefenseCoverage(risk.subdomain.id, risk.linkedStrategies)}
-						{@const essentialCoverage = getEssentialCoverage(risk.subdomain.id, risk.linkedStrategies)}
-						<div class="risk-card" class:addressed={controlCount > 0}>
-							<button class="risk-header" onclick={() => toggleRiskExpanded(risk.subdomain.id)} aria-expanded={isExpanded} aria-label="Toggle {risk.subdomain.shortName} details">
-								<span class="risk-name">{risk.subdomain.shortName}</span>
-								<span class="risk-meta">
-									<span class="defense-coverage">
-										<i class="dot-p" class:active={coverage.preventive}></i>
-										<i class="dot-d" class:active={coverage.detective}></i>
-										<i class="dot-c" class:active={coverage.corrective}></i>
-									</span>
-									{#if controlCount > 0}
-										<span class="control-badge">{controlCount}</span>
-									{/if}
-									{#if essentialCoverage.hasEssential && !essentialCoverage.complete}
-										<span class="essential-gap">{essentialCoverage.total - essentialCoverage.selected} ess.</span>
-									{/if}
-									<span class="toggle-icon">{isExpanded ? '−' : '+'}</span>
-								</span>
-							</button>
-
-							{#if isExpanded}
-								{@const essentialStrategies = risk.linkedStrategies.filter((s: any) => getAppropriateness(s) === 'essential')}
-								{@const otherStrategies = risk.linkedStrategies.filter((s: any) => getAppropriateness(s) !== 'essential')}
-								<div class="risk-content">
-									{#if risk.riskContext}
-										<p class="risk-description">{risk.riskContext}</p>
-									{/if}
-
-									{#snippet strategyRow(strategy: any, risk: any)}
-										{@const appropriateness = getAppropriateness(strategy)}
-										{@const strategyControls = getControlsForStrategy(strategy.id)}
-										{@const selectedInStrategy = strategyControls.filter((c: any) => isControlSelected(c.id, risk.subdomain.id, strategy.id)).length}
-										<div class="strategy-item" class:has-selections={selectedInStrategy > 0}>
-											<div class="strategy-main">
-												<span class="strategy-name">{strategy.name}</span>
-												<span class="badge badge-{strategy.defenseLayer}">{strategy.defenseLayer.charAt(0).toUpperCase()}</span>
-												{#if selectedInStrategy > 0}
-													<span class="selected-indicator">{selectedInStrategy}</span>
-												{/if}
-												<button
-													class="controls-btn"
-													onclick={() => toggleControlsPanel(strategy.id)}
-													aria-expanded={showControlsFor === strategy.id}
-													aria-label="Toggle controls for {strategy.name}"
-												>
-													{strategyControls.length} {showControlsFor === strategy.id ? '▲' : '▼'}
-												</button>
-											</div>
-											{#if showControlsFor === strategy.id}
-												<div class="controls-drawer">
-													<div class="controls-toolbar">
-														<input
-															type="text"
-															class="controls-search"
-															placeholder="Search..."
-															bind:value={controlSearch}
-															aria-label="Search controls"
-														/>
-														<select class="source-filter" bind:value={sourceFilter} aria-label="Filter by source type">
-															<option value="all">All sources</option>
-															<option value="regulatory">Regulatory</option>
-															<option value="academic">Academic</option>
-														</select>
-													</div>
-													<div class="controls-list">
-														{#each strategyControls as control}
-															{@const key = makeControlKey(control.id, risk.subdomain.id, strategy.id)}
-															{@const selection = getControlSelection(control.id, risk.subdomain.id, strategy.id)}
-															{@const isSelected = !!selection}
-															{@const implNote = control.implementationNotes?.[selectedPhase]}
-															<div class="control-row" class:selected={isSelected}>
-																<div class="control-header">
-																	<input
-																		type="checkbox"
-																		checked={isSelected}
-																		onchange={() => toggleControl(control, risk, strategy)}
-																		aria-label="Select {control.name}"
-																	/>
-																	<strong>{control.name}</strong>
-																	<span class="source-badge" class:regulatory={isRegulatory(control.source)}>{getSourceLabel(control.source)}</span>
-																</div>
-																{#if implNote}
-																	<p class="impl-note">{implNote}</p>
-																{:else if control.description}
-																	<p class="control-desc">{control.description}</p>
-																{/if}
-																{#if isSelected && selection}
-																	<div class="control-config">
-																		<div class="status-buttons">
-																			{#each Object.entries(statusLabels) as [status, label]}
-																				<button
-																					class="status-btn"
-																					class:active={selection.status === status}
-																					style:--status-color={statusColors[status as ImplementationStatus]}
-																					onclick={() => updateControlStatus(key, status as ImplementationStatus)}
-																					aria-pressed={selection.status === status}
-																					aria-label="Set status to {label}"
-																				>{label}</button>
-																			{/each}
-																		</div>
-																		<div class="notes-row">
-																			{#if editingControlNotes === key}
-																				<textarea
-																					class="notes-input"
-																					placeholder={selection.status === 'not-required' ? 'Justification for why this control is not required...' : 'Implementation notes or details...'}
-																					value={selection.notes}
-																					oninput={(e) => updateControlNotes(key, (e.target as HTMLTextAreaElement).value)}
-																					onblur={() => editingControlNotes = null}
-																					aria-label={selection.status === 'not-required' ? 'Justification notes' : 'Implementation notes'}
-																				></textarea>
-																			{:else}
-																				<button
-																					class="add-notes-btn"
-																					onclick={() => editingControlNotes = key}
-																					aria-label={selection.notes ? 'Edit notes' : (selection.status === 'not-required' ? 'Add justification' : 'Add notes')}
-																				>
-																					{selection.notes ? 'Edit notes' : (selection.status === 'not-required' ? '+ Add justification' : '+ Add notes')}
-																				</button>
-																				{#if selection.notes}
-																					<span class="notes-preview">{selection.notes.slice(0, 50)}{selection.notes.length > 50 ? '...' : ''}</span>
-																				{/if}
-																			{/if}
-																		</div>
-																	</div>
-																{/if}
-															</div>
-														{:else}
-															<p class="no-results">No controls match your search.</p>
-														{/each}
-													</div>
-												</div>
-											{/if}
-										</div>
-									{/snippet}
-
-									<!-- Essential strategies first -->
-									{#if essentialStrategies.length > 0 && (appropriatenessFilter === 'all' || appropriatenessFilter === 'essential' || appropriatenessFilter === 'essential-recommended')}
-										<div class="strategy-group essential-group">
-											<h4>Essential</h4>
-											{#each essentialStrategies as strategy}
-												{@render strategyRow(strategy, risk)}
-											{/each}
-										</div>
-									{/if}
-
-									<!-- Other strategies grouped by category -->
-									{#if appropriatenessFilter !== 'essential'}
-										{#each data.mitigationCategories as category}
-											{@const catStrategies = otherStrategies.filter((s: any) => {
-												if (s.categoryId !== category.id) return false;
-												const app = getAppropriateness(s);
-												if (appropriatenessFilter === 'recommended') return app === 'recommended';
-												if (appropriatenessFilter === 'essential-recommended') return app === 'recommended';
-												return true;
-											})}
-											{#if catStrategies.length > 0}
-												<div class="strategy-group">
-													<h4>{category.name}</h4>
-													{#each catStrategies as strategy}
-														{@render strategyRow(strategy, risk)}
-													{/each}
-												</div>
-											{/if}
-										{/each}
-									{/if}
-								</div>
+							{#if implementedControls.length > 0}
+								<section><h3>Already Implemented</h3>
+									{#each protocolItems as item}{@const rc = item.controls.filter(c => c.status === 'implemented')}{#if rc.length > 0}<div class="doc-risk"><h4>{item.riskIndex}. {item.risk.subdomain.shortName}</h4>{#each rc as control, i}<p class="doc-control">{item.riskIndex}.{i + 1} {generateProtocolText(control)}</p>{/each}</div>{/if}{/each}
+								</section>
+							{/if}
+							{#if inProtocolControls.length > 0}
+								<section><h3>In This Protocol</h3>
+									{#each protocolItems as item}{@const rc = item.controls.filter(c => c.status === 'in-protocol')}{#if rc.length > 0}<div class="doc-risk"><h4>{item.riskIndex}. {item.risk.subdomain.shortName}</h4>{#each rc as control, i}<p class="doc-control">{item.riskIndex}.{i + 1} {generateProtocolText(control)}</p>{/each}</div>{/if}{/each}
+								</section>
+							{/if}
+							{#if postPhaseControls.length > 0}
+								<section><h3>Post-Phase</h3>
+									{#each protocolItems as item}{@const rc = item.controls.filter(c => c.status === 'post-phase')}{#if rc.length > 0}<div class="doc-risk"><h4>{item.riskIndex}. {item.risk.subdomain.shortName}</h4>{#each rc as control, i}<p class="doc-control">{item.riskIndex}.{i + 1} {generateProtocolText(control)}</p>{/each}</div>{/if}{/each}
+								</section>
+							{/if}
+							{#if notRequiredControls.length > 0}
+								<section><h3>Not Required</h3>
+									{#each protocolItems as item}{@const rc = item.controls.filter(c => c.status === 'not-required')}{#if rc.length > 0}<div class="doc-risk not-required"><h4>{item.riskIndex}. {item.risk.subdomain.shortName}</h4>{#each rc as control, i}<p class="doc-control">{item.riskIndex}.{i + 1} {generateProtocolText(control)}</p>{/each}</div>{/if}{/each}
+								</section>
 							{/if}
 						</div>
-					{/each}
-					</div>
-				{/if}
+					{/if}
+				</div>
 			</div>
-		</main>
-	{/if}
+		</section>
+	</div>
 </div>
 
 <style>
-	/* Break out of layout's max-width to use full viewport */
+	/* 3-column layout */
 	.builder {
-		display: flex;
-		flex-direction: column;
-		height: calc(100vh - 60px);
+		height: calc(100vh - 120px);
 		background: #0f172a;
 		color: #e2e8f0;
-		width: 100vw;
-		margin-left: calc(-50vw + 50%);
-		position: relative;
 	}
 
-	/* Top Row: Questions + Protocol side by side */
-	.top-row {
+	.three-columns {
 		display: grid;
-		grid-template-columns: 1fr 600px;
+		grid-template-columns: 20% 30% 50%;
 		gap: 1px;
 		background: #334155;
-		flex-shrink: 0;
+		height: 100%;
 	}
 
-	/* Questions Panel */
-	.questions-panel {
+	/* Shared panel styles */
+	.panel {
 		display: flex;
 		flex-direction: column;
 		background: #0f172a;
 		overflow: hidden;
 	}
 
-	.questions-content {
+	.panel.collapsed {
+		flex: none;
+	}
+
+	.panel-header {
+		width: 100%;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 0.75rem 1rem;
+		background: #1e293b;
+		border: none;
+		border-bottom: 1px solid #334155;
+		flex-shrink: 0;
+		cursor: pointer;
+		text-align: left;
+		color: inherit;
+	}
+
+	.panel-header:hover {
+		background: #334155;
+	}
+
+	button.panel-header h2 {
+		font-size: 0.875rem;
+		font-weight: 600;
+		color: #e2e8f0;
+		margin: 0;
+	}
+
+	.header-meta {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+	}
+
+	.collapse-icon {
+		color: #64748b;
+		font-size: 0.75rem;
+	}
+
+	.panel-content {
 		flex: 1;
 		overflow-y: auto;
-		padding: 1rem 1.5rem;
+		padding: 0.75rem;
+	}
+
+	/* Questions Panel */
+	.questions-panel .panel-content {
+		padding: 0.5rem 0.75rem;
 	}
 
 	.question-group {
-		margin-bottom: 1.25rem;
+		margin-bottom: 1rem;
 	}
 
 	.group-label {
 		display: block;
-		font-size: 0.75rem;
+		font-size: 0.6875rem;
 		font-weight: 600;
 		text-transform: uppercase;
 		letter-spacing: 0.1em;
 		color: #60a5fa;
-		margin-bottom: 0.75rem;
-		padding-bottom: 0.5rem;
+		margin-bottom: 0.5rem;
+		padding-bottom: 0.375rem;
 		border-bottom: 1px solid #334155;
 	}
 
 	.question {
 		display: flex;
-		align-items: center;
-		gap: 0.75rem;
-		margin-bottom: 0.5rem;
-		flex-wrap: wrap;
+		flex-direction: column;
+		gap: 0.375rem;
+		margin-bottom: 0.625rem;
 	}
 
 	.question-label {
-		font-size: 0.875rem;
+		font-size: 0.8125rem;
 		color: #cbd5e1;
-		min-width: 200px;
+		line-height: 1.3;
 	}
 
 	.question-options {
@@ -1386,8 +1294,8 @@
 	}
 
 	.option-btn {
-		padding: 0.375rem 0.75rem;
-		font-size: 0.8125rem;
+		padding: 0.25rem 0.5rem;
+		font-size: 0.75rem;
 		background: #1e293b;
 		border: 1px solid #334155;
 		border-radius: 4px;
@@ -1408,54 +1316,17 @@
 	}
 
 	.progress-badge {
-		font-size: 0.75rem;
+		font-size: 0.6875rem;
 		color: #94a3b8;
 		background: #334155;
-		padding: 0.25rem 0.5rem;
+		padding: 0.125rem 0.375rem;
 		border-radius: 4px;
 	}
 
-	/* Shared panel styles */
-	.panel {
-		display: flex;
-		flex-direction: column;
-		background: #0f172a;
-		overflow: hidden;
-	}
-
-	.panel-header {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		padding: 0.75rem 1.25rem;
-		background: #1e293b;
-		border-bottom: 1px solid #334155;
-		flex-shrink: 0;
-	}
-
-	.panel-header h2 {
-		font-size: 0.9375rem;
-		font-weight: 600;
-		color: #e2e8f0;
-		margin: 0;
-	}
-
-	.panel-header-actions {
-		display: flex;
-		gap: 0.5rem;
-		align-items: center;
-	}
-
-	.panel-content {
-		flex: 1;
-		overflow-y: auto;
-		padding: 1rem 1.25rem;
-	}
-
-	/* Filter controls in header */
+	/* Filter controls */
 	.filter-select {
-		padding: 0.375rem 0.5rem;
-		font-size: 0.8125rem;
+		padding: 0.25rem 0.375rem;
+		font-size: 0.75rem;
 		background: #0f172a;
 		border: 1px solid #475569;
 		border-radius: 4px;
@@ -1463,23 +1334,10 @@
 		cursor: pointer;
 	}
 
-	.filter-checkbox {
-		display: flex;
-		align-items: center;
-		gap: 0.375rem;
-		font-size: 0.8125rem;
-		color: #94a3b8;
-		cursor: pointer;
-	}
-
-	.filter-checkbox input {
-		cursor: pointer;
-	}
-
 	/* Small buttons for panel headers */
 	.btn-small {
-		padding: 0.375rem 0.625rem;
-		font-size: 0.75rem;
+		padding: 0.25rem 0.5rem;
+		font-size: 0.6875rem;
 		font-weight: 500;
 		background: transparent;
 		border: 1px solid #475569;
@@ -1504,57 +1362,52 @@
 	}
 
 	.control-count {
-		font-size: 0.75rem;
+		font-size: 0.6875rem;
 		color: var(--color-subcategory, #4ade80);
 		font-weight: 500;
 	}
 
-	/* Risks Panel - takes remaining space below top row */
-	.risks-panel {
-		flex: 1;
-		border-top: 1px solid #334155;
-		overflow: hidden;
+	/* Risks Panel */
+	.risks-panel .panel-content {
+		padding: 0.5rem 0.75rem;
 	}
 
-	.risks-content {
+	.risks-toolbar {
 		display: flex;
-		flex-direction: column;
-		gap: 1rem;
-		padding: 1rem 1.5rem;
+		align-items: center;
+		gap: 0.5rem;
+		margin-bottom: 0.5rem;
+		padding-bottom: 0.5rem;
+		border-bottom: 1px solid #334155;
 	}
 
 	.placeholder {
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		padding: 2rem;
+		padding: 1.5rem;
 		color: #64748b;
-		font-size: 0.9375rem;
+		font-size: 0.8125rem;
 		text-align: center;
-	}
-
-	.placeholder p {
-		margin: 0;
 	}
 
 	.defense-legend {
 		display: flex;
-		gap: 1rem;
-		font-size: 0.75rem;
+		gap: 0.5rem;
+		font-size: 0.6875rem;
 		color: #94a3b8;
-		margin-right: 1rem;
 	}
 
 	.defense-legend span {
 		display: flex;
 		align-items: center;
-		gap: 0.25rem;
+		gap: 0.125rem;
 	}
 
 	.dot-p, .dot-d, .dot-c {
 		display: inline-block;
-		width: 10px;
-		height: 10px;
+		width: 8px;
+		height: 8px;
 		border-radius: 2px;
 		border: 1px solid;
 	}
@@ -1571,13 +1424,13 @@
 	.risks-list {
 		display: flex;
 		flex-direction: column;
-		gap: 0.75rem;
+		gap: 0.5rem;
 	}
 
 	.risk-card {
 		background: #1e293b;
 		border: 1px solid #334155;
-		border-radius: 8px;
+		border-radius: 6px;
 	}
 
 	.risk-card.addressed {
@@ -1588,8 +1441,8 @@
 		width: 100%;
 		display: flex;
 		align-items: center;
-		gap: 1rem;
-		padding: 1rem 1.25rem;
+		gap: 0.5rem;
+		padding: 0.625rem 0.75rem;
 		background: transparent;
 		border: none;
 		cursor: pointer;
@@ -1603,66 +1456,66 @@
 
 	.risk-name {
 		flex: 1;
-		font-size: 1.0625rem;
+		font-size: 0.8125rem;
 		font-weight: 500;
 	}
 
 	.risk-meta {
 		display: flex;
 		align-items: center;
-		gap: 0.5rem;
+		gap: 0.375rem;
 	}
 
 	.defense-coverage {
 		display: flex;
-		gap: 2px;
+		gap: 1px;
 	}
 
 	.control-badge {
-		font-size: 0.875rem;
+		font-size: 0.6875rem;
 		font-weight: 600;
 		color: var(--color-subcategory, #4ade80);
 		background: var(--color-subcategory-bg, rgba(74, 222, 128, 0.2));
-		padding: 0.25rem 0.5rem;
-		border-radius: 4px;
+		padding: 0.125rem 0.375rem;
+		border-radius: 3px;
 	}
 
 	.toggle-icon {
 		color: #64748b;
-		font-size: 1rem;
+		font-size: 0.875rem;
 	}
 
 	.risk-content {
-		padding: 0.5rem 1.25rem 1.25rem;
+		padding: 0.5rem 0.75rem 0.75rem;
 		border-top: 1px solid #334155;
 	}
 
 	.risk-description {
-		font-size: 1rem;
+		font-size: 0.8125rem;
 		color: #94a3b8;
-		line-height: 1.6;
-		margin: 1rem 0;
+		line-height: 1.5;
+		margin: 0.5rem 0;
 	}
 
 	/* Strategy Groups */
 	.strategy-group {
-		margin-bottom: 1.25rem;
+		margin-bottom: 0.75rem;
 	}
 
 	.strategy-group h4 {
-		font-size: 0.9375rem;
+		font-size: 0.6875rem;
 		font-weight: 600;
 		text-transform: uppercase;
 		letter-spacing: 0.05em;
 		color: #64748b;
-		margin: 0 0 0.75rem 0;
+		margin: 0 0 0.5rem 0;
 	}
 
 	.strategy-item {
 		background: #0f172a;
 		border: 1px solid #334155;
-		border-radius: 6px;
-		margin-bottom: 0.625rem;
+		border-radius: 4px;
+		margin-bottom: 0.375rem;
 	}
 
 	.strategy-item.has-selections {
@@ -1672,20 +1525,20 @@
 	.strategy-main {
 		display: flex;
 		align-items: center;
-		gap: 1rem;
-		padding: 0.875rem 1rem;
+		gap: 0.5rem;
+		padding: 0.5rem 0.625rem;
 	}
 
 	.strategy-name {
 		flex: 1;
-		font-size: 1rem;
+		font-size: 0.75rem;
 	}
 
 	.badge {
-		font-size: 0.75rem;
+		font-size: 0.625rem;
 		font-weight: 600;
-		padding: 0.25rem 0.5rem;
-		border-radius: 3px;
+		padding: 0.125rem 0.25rem;
+		border-radius: 2px;
 	}
 
 	/* Defense layer badges - WCAG compliant with dark text */
@@ -1698,17 +1551,17 @@
 	.badge-overkill { background: var(--color-risk, #f87171); color: #0f172a; }
 
 	.selected-indicator {
-		font-size: 0.875rem;
+		font-size: 0.6875rem;
 		color: var(--color-subcategory, #4ade80);
 	}
 
 	.controls-btn {
-		font-size: 0.875rem;
+		font-size: 0.6875rem;
 		color: #60a5fa;
 		background: transparent;
 		border: none;
 		cursor: pointer;
-		padding: 0.375rem;
+		padding: 0.25rem;
 	}
 
 	.controls-btn:hover {
@@ -1717,20 +1570,20 @@
 
 	.controls-drawer {
 		border-top: 1px solid #334155;
-		padding: 1rem 1.25rem;
+		padding: 0.625rem;
 		background: #1e293b;
 	}
 
 	.controls-toolbar {
 		display: flex;
-		gap: 1rem;
-		margin-bottom: 1rem;
+		gap: 0.5rem;
+		margin-bottom: 0.5rem;
 	}
 
 	.controls-search {
 		flex: 1;
-		padding: 0.625rem 1rem;
-		font-size: 1rem;
+		padding: 0.375rem 0.5rem;
+		font-size: 0.75rem;
 		background: #0f172a;
 		border: 1px solid #334155;
 		border-radius: 4px;
@@ -1742,8 +1595,8 @@
 	}
 
 	.source-filter {
-		padding: 0.625rem 1rem;
-		font-size: 1rem;
+		padding: 0.375rem 0.5rem;
+		font-size: 0.75rem;
 		background: #0f172a;
 		border: 1px solid #334155;
 		border-radius: 4px;
@@ -1752,15 +1605,15 @@
 	}
 
 	.controls-list {
-		max-height: 400px;
+		max-height: 300px;
 		overflow-y: auto;
 	}
 
 	.control-row {
-		padding: 1rem;
+		padding: 0.5rem;
 		border: 1px solid #334155;
-		border-radius: 6px;
-		margin-bottom: 0.625rem;
+		border-radius: 4px;
+		margin-bottom: 0.375rem;
 		background: #0f172a;
 	}
 
@@ -1772,27 +1625,27 @@
 	.control-header {
 		display: flex;
 		align-items: flex-start;
-		gap: 0.75rem;
+		gap: 0.5rem;
 	}
 
 	.control-header input[type="checkbox"] {
-		margin-top: 3px;
+		margin-top: 2px;
 		flex-shrink: 0;
-		width: 16px;
-		height: 16px;
+		width: 14px;
+		height: 14px;
 	}
 
 	.control-header strong {
-		font-size: 1rem;
+		font-size: 0.75rem;
 		color: #e2e8f0;
 		font-weight: 600;
 		flex: 1;
 	}
 
 	.source-badge {
-		font-size: 0.75rem;
-		padding: 0.25rem 0.5rem;
-		border-radius: 3px;
+		font-size: 0.625rem;
+		padding: 0.125rem 0.25rem;
+		border-radius: 2px;
 		background: #334155;
 		color: #94a3b8;
 		flex-shrink: 0;
@@ -1803,41 +1656,33 @@
 		color: #60a5fa;
 	}
 
-	.impl-note {
-		margin: 0.5rem 0 0 1.5rem;
-		font-size: 0.875rem;
-		color: var(--color-subcategory, #4ade80);
-		line-height: 1.5;
-		font-style: italic;
-	}
-
 	.control-desc {
-		margin: 0.5rem 0 0 1.5rem;
-		font-size: 0.875rem;
+		margin: 0.375rem 0 0 1.25rem;
+		font-size: 0.6875rem;
 		color: #64748b;
-		line-height: 1.5;
+		line-height: 1.4;
 	}
 
 	.control-config {
-		margin-top: 0.75rem;
-		padding-top: 0.75rem;
+		margin-top: 0.5rem;
+		padding-top: 0.5rem;
 		border-top: 1px solid #334155;
-		margin-left: 1.5rem;
+		margin-left: 1.25rem;
 	}
 
 	.status-buttons {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 0.5rem;
+		gap: 0.25rem;
 	}
 
 	.status-btn {
-		font-size: 0.875rem;
-		padding: 0.5rem 1rem;
+		font-size: 0.625rem;
+		padding: 0.25rem 0.5rem;
 		border: 1px solid #475569;
 		background: transparent;
 		color: #94a3b8;
-		border-radius: 4px;
+		border-radius: 3px;
 		cursor: pointer;
 	}
 
@@ -1852,53 +1697,11 @@
 		color: white;
 	}
 
-	.notes-row {
-		margin-top: 0.5rem;
-		display: flex;
-		align-items: center;
-		gap: 0.75rem;
-	}
-
-	.add-notes-btn {
-		font-size: 0.875rem;
-		color: #60a5fa;
-		background: none;
-		border: none;
-		cursor: pointer;
-		padding: 0;
-	}
-
-	.add-notes-btn:hover {
-		text-decoration: underline;
-	}
-
-	.notes-preview {
-		font-size: 0.875rem;
-		color: #64748b;
-		font-style: italic;
-	}
-
-	.notes-input {
-		width: 100%;
-		min-height: 60px;
-		padding: 0.5rem;
-		font-size: 0.875rem;
-		background: #0f172a;
-		border: 1px solid #475569;
-		border-radius: 4px;
-		color: #e2e8f0;
-		resize: vertical;
-	}
-
-	.notes-input::placeholder {
-		color: #64748b;
-	}
-
 	.no-results {
 		color: #64748b;
-		font-size: 0.9375rem;
+		font-size: 0.75rem;
 		text-align: center;
-		padding: 1.5rem;
+		padding: 1rem;
 	}
 
 	/* Protocol Panel */
@@ -1906,78 +1709,93 @@
 		background: #1e293b;
 	}
 
+	.protocol-panel > .panel-header {
+		cursor: default;
+	}
+
+	.protocol-panel > .panel-header:hover {
+		background: #1e293b;
+	}
+
+	.protocol-panel .panel-header h2 {
+		font-size: 0.875rem;
+		font-weight: 600;
+		color: #e2e8f0;
+		margin: 0;
+	}
+
 	.protocol-content {
 		background: #475569;
-		padding: 1rem;
+		padding: 0.75rem;
 	}
 
 	.protocol-doc {
 		background: white;
 		color: #1e293b;
 		border-radius: 6px;
-		padding: 1.5rem;
+		padding: 1.25rem;
 		min-height: 100%;
 	}
 
 	.doc-header {
 		text-align: center;
-		padding-bottom: 0.75rem;
+		padding-bottom: 0.5rem;
 		border-bottom: 2px solid #1e293b;
-		margin-bottom: 1rem;
+		margin-bottom: 0.75rem;
 	}
 
 	.doc-header h3 {
-		font-size: 1rem;
+		font-size: 0.9375rem;
 		font-weight: 700;
 		margin: 0;
 		color: #0f172a;
 	}
 
 	.doc-header span {
-		font-size: 0.8125rem;
+		font-size: 0.75rem;
 		color: #64748b;
 	}
 
 	.doc-meta {
 		width: 100%;
-		font-size: 0.8125rem;
+		font-size: 0.75rem;
 		border-collapse: collapse;
-		margin-bottom: 1rem;
+		margin-bottom: 0.75rem;
 	}
 
 	.doc-meta td {
-		padding: 0.25rem 0.5rem;
+		padding: 0.1875rem 0.375rem;
 		border: 1px solid #e2e8f0;
 	}
 
 	.doc-meta td:first-child {
 		font-weight: 600;
 		background: #f8fafc;
-		width: 40%;
+		width: 30%;
 	}
 
 	.doc-empty {
 		text-align: center;
 		color: #64748b;
-		font-size: 0.875rem;
-		padding: 2rem 1rem;
+		font-size: 0.8125rem;
+		padding: 1.5rem 1rem;
 	}
 
 	.doc-content section {
-		margin-bottom: 1.25rem;
+		margin-bottom: 1rem;
 	}
 
 	.doc-content h3 {
-		font-size: 0.875rem;
+		font-size: 0.8125rem;
 		font-weight: 700;
 		color: #0f172a;
 		border-bottom: 1px solid #e2e8f0;
-		padding-bottom: 0.25rem;
-		margin: 0 0 0.75rem 0;
+		padding-bottom: 0.1875rem;
+		margin: 0 0 0.5rem 0;
 	}
 
 	.doc-risk {
-		margin-bottom: 1rem;
+		margin-bottom: 0.75rem;
 	}
 
 	.doc-risk.not-required {
@@ -1985,18 +1803,18 @@
 	}
 
 	.doc-risk h4 {
-		font-size: 0.8125rem;
+		font-size: 0.75rem;
 		font-weight: 600;
 		color: #334155;
-		margin: 0 0 0.5rem 0;
+		margin: 0 0 0.375rem 0;
 	}
 
 	.doc-control {
-		font-size: 0.8125rem;
+		font-size: 0.75rem;
 		line-height: 1.5;
 		color: #475569;
-		margin: 0 0 0.5rem 0.75rem;
-		padding-left: 0.5rem;
+		margin: 0 0 0.375rem 0.625rem;
+		padding-left: 0.375rem;
 		border-left: 2px solid #e2e8f0;
 	}
 
@@ -2005,14 +1823,13 @@
 		color: var(--color-subcategory, #4ade80);
 	}
 
-	/* Subtle indicator for missing essentials */
-	.essential-gap {
-		font-size: 0.875rem;
-		color: #94a3b8;
+	/* Focus states for accessibility */
+	button.panel-header:focus-visible {
+		outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, #60a5fa);
+		outline-offset: var(--focus-ring-offset, 2px);
 	}
 
-	/* Focus states for accessibility */
-	.btn-outline:focus-visible, .btn-primary:focus-visible {
+	.btn-small:focus-visible {
 		outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, #60a5fa);
 		outline-offset: var(--focus-ring-offset, 2px);
 	}
@@ -2028,11 +1845,6 @@
 	}
 
 	.filter-select:focus-visible {
-		outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, #60a5fa);
-		outline-offset: var(--focus-ring-offset, 2px);
-	}
-
-	.filter-checkbox input:focus-visible {
 		outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, #60a5fa);
 		outline-offset: var(--focus-ring-offset, 2px);
 	}
@@ -2058,16 +1870,6 @@
 	}
 
 	.status-btn:focus-visible {
-		outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, #60a5fa);
-		outline-offset: var(--focus-ring-offset, 2px);
-	}
-
-	.add-notes-btn:focus-visible {
-		outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, #60a5fa);
-		outline-offset: var(--focus-ring-offset, 2px);
-	}
-
-	.notes-input:focus-visible {
 		outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, #60a5fa);
 		outline-offset: var(--focus-ring-offset, 2px);
 	}
