@@ -1401,32 +1401,61 @@
 
 		const connected = new Set<string>();
 		const selectedKey = `${selectedNode.type}:${selectedNode.id}`;
+		const nodeType = selectedNode.type;
 
 		if (!traceGraph.hasNode(selectedKey)) {
 			connected.add(selectedKey);
 			return connected;
 		}
 
-		// Collect DOWNSTREAM only (what this node affects/triggers)
-		const downstreamQueue: string[] = [selectedKey];
-		const downstreamVisited = new Set<string>([selectedKey]);
+		// Smart traversal based on node type:
+		// - Questions (top): downstream only - what they trigger
+		// - Risks (middle): both directions - triggers + mitigations
+		// - Subcategories: both - risks + controls
+		// - Controls (bottom): upstream only - trace back to why you need it
+		// - Regulations: upstream - what risks reference it
 
-		while (downstreamQueue.length > 0) {
-			const nodeKey = downstreamQueue.shift()!;
-			connected.add(nodeKey);
+		const showDownstream = ['question', 'risk', 'subcategory'].includes(nodeType);
+		const showUpstream = ['control', 'regulation', 'risk', 'subcategory'].includes(nodeType);
 
-			traceGraph.forEachOutEdge(nodeKey, (edge, attrs, source, target) => {
-				if (!downstreamVisited.has(target)) {
-					downstreamVisited.add(target);
-					downstreamQueue.push(target);
-				}
-			});
+		// Collect DOWNSTREAM (what this node affects/triggers)
+		if (showDownstream) {
+			const downstreamQueue: string[] = [selectedKey];
+			const downstreamVisited = new Set<string>([selectedKey]);
+
+			while (downstreamQueue.length > 0) {
+				const nodeKey = downstreamQueue.shift()!;
+				connected.add(nodeKey);
+
+				traceGraph.forEachOutEdge(nodeKey, (edge, attrs, source, target) => {
+					if (!downstreamVisited.has(target)) {
+						downstreamVisited.add(target);
+						downstreamQueue.push(target);
+					}
+				});
+			}
 		}
 
-		// Collect UPSTREAM only (what triggers/leads to this node) - just 1 level for context
-		traceGraph.forEachInEdge(selectedKey, (edge, attrs, source) => {
-			connected.add(source);
-		});
+		// Collect UPSTREAM (what triggers/leads to this node)
+		if (showUpstream) {
+			const upstreamQueue: string[] = [selectedKey];
+			const upstreamVisited = new Set<string>([selectedKey]);
+
+			while (upstreamQueue.length > 0) {
+				const nodeKey = upstreamQueue.shift()!;
+				connected.add(nodeKey);
+
+				traceGraph.forEachInEdge(nodeKey, (edge, attrs, source) => {
+					if (!upstreamVisited.has(source)) {
+						upstreamVisited.add(source);
+						upstreamQueue.push(source);
+					}
+				});
+			}
+		}
+
+		// Always include the selected node itself
+		connected.add(selectedKey);
 
 		return connected;
 	});
