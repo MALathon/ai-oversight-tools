@@ -42,16 +42,18 @@
 		<span class="user-badge">For IRB Reviewers</span>
 	</a>
 
-	<a href="{base}/innovator" class="tool-card">
+	<a href="{base}/protocol-builder" class="tool-card">
 		<div class="tool-icon" style="background: #f59e0b20; color: #f59e0b;">
 			<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-				<circle cx="12" cy="12" r="10"/>
-				<path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/>
-				<line x1="12" y1="17" x2="12.01" y2="17"/>
+				<path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+				<path d="M14 2v6h6"/>
+				<line x1="16" y1="13" x2="8" y2="13"/>
+				<line x1="16" y1="17" x2="8" y2="17"/>
+				<line x1="10" y1="9" x2="8" y2="9"/>
 			</svg>
 		</div>
-		<h2>Innovator Checklist</h2>
-		<p>Self-assessment tool to identify risks and get mitigation guidance</p>
+		<h2>Protocol Builder</h2>
+		<p>Build IRB protocols with risk-based mitigation strategies and controls</p>
 		<span class="user-badge">For Researchers</span>
 	</a>
 </div>

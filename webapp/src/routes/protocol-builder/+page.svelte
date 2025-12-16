@@ -70,11 +70,12 @@
 		'not-required': 'Not Required'
 	};
 
+	// Use WCAG-compliant colors (match admin page CSS variables)
 	const statusColors: Record<ImplementationStatus, string> = {
-		'implemented': '#22c55e',
-		'in-protocol': '#3b82f6',
-		'post-phase': '#f59e0b',
-		'not-required': '#64748b'
+		'implemented': '#4ade80',  // --color-subcategory (green)
+		'in-protocol': '#60a5fa',  // --color-question (blue)
+		'post-phase': '#fcd34d',   // --color-trigger (yellow)
+		'not-required': '#94a3b8'
 	};
 
 	// Check showIf conditions
@@ -928,8 +929,8 @@
 		<div class="header-actions">
 			{#if hasProtocolContent}
 				<span class="control-count">{totalSelectedControls} controls selected</span>
-				<button class="btn-outline" onclick={copyMarkdown}>Copy Markdown</button>
-				<button class="btn-primary" onclick={exportDocx}>Export DOCX</button>
+				<button class="btn-outline" onclick={copyMarkdown} aria-label="Copy protocol as Markdown to clipboard">Copy Markdown</button>
+				<button class="btn-primary" onclick={exportDocx} aria-label="Export protocol as Word document">Export DOCX</button>
 			{/if}
 		</div>
 	</header>
@@ -988,7 +989,7 @@
 				<div class="risks-toolbar">
 					<h2>Risks ({displayedRisks.length})</h2>
 					<div class="toolbar-filters">
-						<select class="filter-select" bind:value={appropriatenessFilter}>
+						<select class="filter-select" bind:value={appropriatenessFilter} aria-label="Filter strategies by appropriateness">
 							<option value="all">All Strategies</option>
 							<option value="essential">Essential Only</option>
 							<option value="essential-recommended">Essential + Recommended</option>
@@ -1015,7 +1016,7 @@
 						{@const coverage = getDefenseCoverage(risk.subdomain.id, risk.linkedStrategies)}
 						{@const essentialCoverage = getEssentialCoverage(risk.subdomain.id, risk.linkedStrategies)}
 						<div class="risk-card" class:addressed={controlCount > 0}>
-							<button class="risk-header" onclick={() => toggleRiskExpanded(risk.subdomain.id)}>
+							<button class="risk-header" onclick={() => toggleRiskExpanded(risk.subdomain.id)} aria-expanded={isExpanded} aria-label="Toggle {risk.subdomain.shortName} details">
 								<span class="risk-name">{risk.subdomain.shortName}</span>
 								<span class="risk-meta">
 									<span class="defense-coverage">
@@ -1055,6 +1056,8 @@
 												<button
 													class="controls-btn"
 													onclick={() => toggleControlsPanel(strategy.id)}
+													aria-expanded={showControlsFor === strategy.id}
+													aria-label="Toggle controls for {strategy.name}"
 												>
 													{strategyControls.length} {showControlsFor === strategy.id ? '▲' : '▼'}
 												</button>
@@ -1067,8 +1070,9 @@
 															class="controls-search"
 															placeholder="Search..."
 															bind:value={controlSearch}
+															aria-label="Search controls"
 														/>
-														<select class="source-filter" bind:value={sourceFilter}>
+														<select class="source-filter" bind:value={sourceFilter} aria-label="Filter by source type">
 															<option value="all">All sources</option>
 															<option value="regulatory">Regulatory</option>
 															<option value="academic">Academic</option>
@@ -1086,6 +1090,7 @@
 																		type="checkbox"
 																		checked={isSelected}
 																		onchange={() => toggleControl(control, risk, strategy)}
+																		aria-label="Select {control.name}"
 																	/>
 																	<strong>{control.name}</strong>
 																	<span class="source-badge" class:regulatory={isRegulatory(control.source)}>{getSourceLabel(control.source)}</span>
@@ -1104,6 +1109,8 @@
 																					class:active={selection.status === status}
 																					style:--status-color={statusColors[status as ImplementationStatus]}
 																					onclick={() => updateControlStatus(key, status as ImplementationStatus)}
+																					aria-pressed={selection.status === status}
+																					aria-label="Set status to {label}"
 																				>{label}</button>
 																			{/each}
 																		</div>
@@ -1115,11 +1122,13 @@
 																					value={selection.notes}
 																					oninput={(e) => updateControlNotes(key, (e.target as HTMLTextAreaElement).value)}
 																					onblur={() => editingControlNotes = null}
+																					aria-label={selection.status === 'not-required' ? 'Justification notes' : 'Implementation notes'}
 																				></textarea>
 																			{:else}
 																				<button
 																					class="add-notes-btn"
 																					onclick={() => editingControlNotes = key}
+																					aria-label={selection.notes ? 'Edit notes' : (selection.status === 'not-required' ? 'Add justification' : 'Add notes')}
 																				>
 																					{selection.notes ? 'Edit notes' : (selection.status === 'not-required' ? '+ Add justification' : '+ Add notes')}
 																				</button>
@@ -1286,19 +1295,19 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		padding: 0.75rem 1rem;
+		padding: 1rem 1.5rem;
 		background: #1e293b;
 		border-bottom: 1px solid #334155;
 	}
 
 	.header-left h1 {
-		font-size: 1rem;
+		font-size: 1.5rem;
 		font-weight: 600;
 		margin: 0;
 	}
 
 	.subtitle {
-		font-size: 0.6875rem;
+		font-size: 0.875rem;
 		color: #64748b;
 	}
 
@@ -1309,15 +1318,15 @@
 	}
 
 	.control-count {
-		font-size: 0.75rem;
-		color: #22c55e;
+		font-size: 0.875rem;
+		color: var(--color-subcategory, #4ade80);
 		font-weight: 500;
 	}
 
 	.btn-outline, .btn-primary {
-		padding: 0.375rem 0.75rem;
+		padding: 0.5rem 1rem;
 		border-radius: 4px;
-		font-size: 0.75rem;
+		font-size: 0.875rem;
 		font-weight: 500;
 		cursor: pointer;
 	}
@@ -1334,9 +1343,9 @@
 	}
 
 	.btn-primary {
-		background: #3b82f6;
-		border: 1px solid #3b82f6;
-		color: white;
+		background: var(--color-question, #60a5fa);
+		border: 1px solid var(--color-question, #60a5fa);
+		color: #0f172a;
 	}
 
 	.btn-primary:hover {
@@ -1346,7 +1355,7 @@
 	/* Body */
 	.builder-body {
 		display: grid;
-		grid-template-columns: 260px 1fr 380px;
+		grid-template-columns: 320px 1fr 420px;
 		flex: 1;
 		overflow: hidden;
 	}
@@ -1355,53 +1364,53 @@
 	.assessment-panel {
 		background: #1e293b;
 		border-right: 1px solid #334155;
-		padding: 1rem;
+		padding: 1.25rem;
 		overflow-y: auto;
 	}
 
 	.assessment-panel h2 {
-		font-size: 0.625rem;
+		font-size: 0.875rem;
 		font-weight: 600;
 		text-transform: uppercase;
 		letter-spacing: 0.1em;
 		color: #64748b;
-		margin: 0 0 1rem 0;
+		margin: 0 0 1.25rem 0;
 	}
 
 	.question-section {
-		margin-bottom: 1rem;
+		margin-bottom: 1.25rem;
 	}
 
 	.question-section h3 {
-		font-size: 0.6875rem;
+		font-size: 0.9375rem;
 		font-weight: 600;
 		color: #94a3b8;
-		margin: 0 0 0.5rem 0;
+		margin: 0 0 0.75rem 0;
 	}
 
 	.question {
-		margin-bottom: 0.75rem;
+		margin-bottom: 1rem;
 	}
 
 	.question-label {
 		display: block;
-		font-size: 0.6875rem;
+		font-size: 0.9375rem;
 		color: #cbd5e1;
-		margin-bottom: 0.375rem;
+		margin-bottom: 0.5rem;
 	}
 
 	.question-options {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 0.25rem;
+		gap: 0.375rem;
 	}
 
 	.option-btn {
-		padding: 0.25rem 0.5rem;
-		font-size: 0.625rem;
+		padding: 0.375rem 0.75rem;
+		font-size: 0.875rem;
 		background: #0f172a;
 		border: 1px solid #334155;
-		border-radius: 3px;
+		border-radius: 4px;
 		color: #94a3b8;
 		cursor: pointer;
 	}
@@ -1412,16 +1421,16 @@
 	}
 
 	.option-btn.active {
-		background: #3b82f6;
-		border-color: #3b82f6;
-		color: white;
+		background: var(--color-question, #60a5fa);
+		border-color: var(--color-question, #60a5fa);
+		color: #0f172a;
 	}
 
 	/* Risks Panel */
 	.risks-panel {
 		background: #0f172a;
 		overflow-y: auto;
-		padding: 1rem;
+		padding: 1.25rem;
 	}
 
 	.placeholder {
@@ -1430,26 +1439,26 @@
 		justify-content: center;
 		height: 100%;
 		color: #64748b;
-		font-size: 0.875rem;
+		font-size: 1rem;
 	}
 
 	.risks-toolbar {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		margin-bottom: 1rem;
+		margin-bottom: 1.25rem;
 	}
 
 	.risks-toolbar h2 {
-		font-size: 0.8125rem;
+		font-size: 1.125rem;
 		font-weight: 600;
 		margin: 0;
 	}
 
 	.defense-legend {
 		display: flex;
-		gap: 0.75rem;
-		font-size: 0.625rem;
+		gap: 1rem;
+		font-size: 0.875rem;
 		color: #64748b;
 	}
 
@@ -1461,43 +1470,43 @@
 
 	.dot-p, .dot-d, .dot-c {
 		display: inline-block;
-		width: 8px;
-		height: 8px;
+		width: 10px;
+		height: 10px;
 		border-radius: 2px;
 		border: 1px solid;
 	}
 
-	.dot-p { border-color: #3b82f6; background: transparent; }
-	.dot-d { border-color: #f59e0b; background: transparent; }
-	.dot-c { border-color: #ef4444; background: transparent; }
+	.dot-p { border-color: var(--color-question, #60a5fa); background: transparent; }
+	.dot-d { border-color: var(--color-trigger, #fcd34d); background: transparent; }
+	.dot-c { border-color: var(--color-risk, #f87171); background: transparent; }
 
-	.dot-p.active { background: #3b82f6; }
-	.dot-d.active { background: #f59e0b; }
-	.dot-c.active { background: #ef4444; }
+	.dot-p.active { background: var(--color-question, #60a5fa); }
+	.dot-d.active { background: var(--color-trigger, #fcd34d); }
+	.dot-c.active { background: var(--color-risk, #f87171); }
 
 	/* Risk Cards */
 	.risks-list {
 		display: flex;
 		flex-direction: column;
-		gap: 0.5rem;
+		gap: 0.75rem;
 	}
 
 	.risk-card {
 		background: #1e293b;
 		border: 1px solid #334155;
-		border-radius: 6px;
+		border-radius: 8px;
 	}
 
 	.risk-card.addressed {
-		border-color: #22c55e;
+		border-color: var(--color-subcategory, #4ade80);
 	}
 
 	.risk-header {
 		width: 100%;
 		display: flex;
 		align-items: center;
-		gap: 0.5rem;
-		padding: 0.625rem 0.75rem;
+		gap: 0.75rem;
+		padding: 0.875rem 1rem;
 		background: transparent;
 		border: none;
 		cursor: pointer;
@@ -1511,7 +1520,7 @@
 
 	.risk-name {
 		flex: 1;
-		font-size: 0.8125rem;
+		font-size: 1rem;
 		font-weight: 500;
 	}
 
@@ -1527,94 +1536,96 @@
 	}
 
 	.control-badge {
-		font-size: 0.625rem;
+		font-size: 0.875rem;
 		font-weight: 600;
-		color: #22c55e;
-		background: rgba(34, 197, 94, 0.15);
-		padding: 0.125rem 0.375rem;
-		border-radius: 3px;
+		color: var(--color-subcategory, #4ade80);
+		background: var(--color-subcategory-bg, rgba(74, 222, 128, 0.2));
+		padding: 0.25rem 0.5rem;
+		border-radius: 4px;
 	}
 
 	.toggle-icon {
 		color: #64748b;
-		font-size: 0.875rem;
+		font-size: 1rem;
 	}
 
 	.risk-content {
-		padding: 0 0.75rem 0.75rem;
+		padding: 0 1rem 1rem;
 		border-top: 1px solid #334155;
 	}
 
 	.risk-description {
-		font-size: 0.75rem;
+		font-size: 0.9375rem;
 		color: #94a3b8;
 		line-height: 1.5;
-		margin: 0.75rem 0;
+		margin: 1rem 0;
 	}
 
 	/* Strategy Groups */
 	.strategy-group {
-		margin-bottom: 0.75rem;
+		margin-bottom: 1rem;
 	}
 
 	.strategy-group h4 {
-		font-size: 0.625rem;
+		font-size: 0.875rem;
 		font-weight: 600;
 		text-transform: uppercase;
 		letter-spacing: 0.05em;
 		color: #64748b;
-		margin: 0 0 0.5rem 0;
+		margin: 0 0 0.75rem 0;
 	}
 
 	.strategy-item {
 		background: #0f172a;
 		border: 1px solid #334155;
-		border-radius: 4px;
-		margin-bottom: 0.375rem;
+		border-radius: 6px;
+		margin-bottom: 0.5rem;
 	}
 
 	.strategy-item.has-selections {
-		border-color: #22c55e;
+		border-color: var(--color-subcategory, #4ade80);
 	}
 
 	.strategy-main {
 		display: flex;
 		align-items: center;
-		gap: 0.5rem;
-		padding: 0.5rem;
+		gap: 0.75rem;
+		padding: 0.75rem;
 	}
 
 	.strategy-name {
 		flex: 1;
-		font-size: 0.75rem;
+		font-size: 0.9375rem;
 	}
 
 	.badge {
-		font-size: 0.5rem;
+		font-size: 0.75rem;
 		font-weight: 600;
-		padding: 0.125rem 0.25rem;
-		border-radius: 2px;
+		padding: 0.25rem 0.5rem;
+		border-radius: 3px;
 	}
 
-	.badge-preventive { background: #3b82f6; color: white; }
-	.badge-detective { background: #f59e0b; color: black; }
-	.badge-corrective { background: #ef4444; color: white; }
-	.badge-essential { background: #22c55e; color: black; }
-	.badge-recommended { background: #60a5fa; color: black; }
-	.badge-overkill { background: #ef4444; color: white; }
+	/* Defense layer badges - WCAG compliant with dark text */
+	.badge-preventive { background: var(--color-question, #60a5fa); color: #0f172a; }
+	.badge-detective { background: var(--color-trigger, #fcd34d); color: #0f172a; }
+	.badge-corrective { background: var(--color-risk, #f87171); color: #0f172a; }
+	/* Appropriateness badges */
+	.badge-essential { background: var(--color-subcategory, #4ade80); color: #0f172a; }
+	.badge-recommended { background: var(--color-question, #60a5fa); color: #0f172a; }
+	.badge-overkill { background: var(--color-risk, #f87171); color: #0f172a; }
 
 	.selected-indicator {
-		font-size: 0.625rem;
-		color: #22c55e;
+		font-size: 0.875rem;
+		color: var(--color-subcategory, #4ade80);
 	}
 
 	.controls-btn {
-		font-size: 0.625rem;
+		font-size: 0.875rem;
 		color: #60a5fa;
 		background: transparent;
 		border: none;
 		cursor: pointer;
-		padding: 0.25rem;
+		padding: 0.375rem;
 	}
 
 	.controls-btn:hover {
@@ -1623,23 +1634,23 @@
 
 	.controls-drawer {
 		border-top: 1px solid #334155;
-		padding: 0.5rem;
+		padding: 0.75rem;
 		background: #1e293b;
 	}
 
 	.controls-toolbar {
 		display: flex;
-		gap: 0.5rem;
-		margin-bottom: 0.5rem;
+		gap: 0.75rem;
+		margin-bottom: 0.75rem;
 	}
 
 	.controls-search {
 		flex: 1;
-		padding: 0.375rem 0.5rem;
-		font-size: 0.6875rem;
+		padding: 0.5rem 0.75rem;
+		font-size: 0.9375rem;
 		background: #0f172a;
 		border: 1px solid #334155;
-		border-radius: 3px;
+		border-radius: 4px;
 		color: #e2e8f0;
 	}
 
@@ -1648,55 +1659,57 @@
 	}
 
 	.source-filter {
-		padding: 0.375rem 0.5rem;
-		font-size: 0.6875rem;
+		padding: 0.5rem 0.75rem;
+		font-size: 0.9375rem;
 		background: #0f172a;
 		border: 1px solid #334155;
-		border-radius: 3px;
+		border-radius: 4px;
 		color: #e2e8f0;
 		cursor: pointer;
 	}
 
 	.controls-list {
-		max-height: 300px;
+		max-height: 350px;
 		overflow-y: auto;
 	}
 
 	.control-row {
-		padding: 0.5rem;
+		padding: 0.75rem;
 		border: 1px solid #334155;
-		border-radius: 4px;
-		margin-bottom: 0.375rem;
+		border-radius: 6px;
+		margin-bottom: 0.5rem;
 		background: #0f172a;
 	}
 
 	.control-row.selected {
-		border-color: #3b82f6;
-		background: rgba(59, 130, 246, 0.1);
+		border-color: var(--color-question, #60a5fa);
+		background: var(--color-question-bg, rgba(96, 165, 250, 0.2));
 	}
 
 	.control-header {
 		display: flex;
 		align-items: flex-start;
-		gap: 0.5rem;
+		gap: 0.75rem;
 	}
 
 	.control-header input[type="checkbox"] {
-		margin-top: 2px;
+		margin-top: 3px;
 		flex-shrink: 0;
+		width: 16px;
+		height: 16px;
 	}
 
 	.control-header strong {
-		font-size: 0.6875rem;
+		font-size: 0.9375rem;
 		color: #e2e8f0;
 		font-weight: 600;
 		flex: 1;
 	}
 
 	.source-badge {
-		font-size: 0.5rem;
-		padding: 0.125rem 0.25rem;
-		border-radius: 2px;
+		font-size: 0.75rem;
+		padding: 0.25rem 0.5rem;
+		border-radius: 3px;
 		background: #334155;
 		color: #94a3b8;
 		flex-shrink: 0;
@@ -1708,40 +1721,40 @@
 	}
 
 	.impl-note {
-		margin: 0.375rem 0 0 1.25rem;
-		font-size: 0.625rem;
-		color: #22c55e;
-		line-height: 1.4;
+		margin: 0.5rem 0 0 1.5rem;
+		font-size: 0.875rem;
+		color: var(--color-subcategory, #4ade80);
+		line-height: 1.5;
 		font-style: italic;
 	}
 
 	.control-desc {
-		margin: 0.375rem 0 0 1.25rem;
-		font-size: 0.625rem;
+		margin: 0.5rem 0 0 1.5rem;
+		font-size: 0.875rem;
 		color: #64748b;
-		line-height: 1.4;
+		line-height: 1.5;
 	}
 
 	.control-config {
-		margin-top: 0.5rem;
-		padding-top: 0.5rem;
+		margin-top: 0.75rem;
+		padding-top: 0.75rem;
 		border-top: 1px solid #334155;
-		margin-left: 1.25rem;
+		margin-left: 1.5rem;
 	}
 
 	.status-buttons {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 0.25rem;
+		gap: 0.375rem;
 	}
 
 	.status-btn {
-		font-size: 0.5625rem;
-		padding: 0.25rem 0.5rem;
+		font-size: 0.8125rem;
+		padding: 0.375rem 0.75rem;
 		border: 1px solid #475569;
 		background: transparent;
 		color: #94a3b8;
-		border-radius: 3px;
+		border-radius: 4px;
 		cursor: pointer;
 	}
 
@@ -1757,14 +1770,14 @@
 	}
 
 	.notes-row {
-		margin-top: 0.375rem;
+		margin-top: 0.5rem;
 		display: flex;
 		align-items: center;
-		gap: 0.5rem;
+		gap: 0.75rem;
 	}
 
 	.add-notes-btn {
-		font-size: 0.5625rem;
+		font-size: 0.875rem;
 		color: #60a5fa;
 		background: none;
 		border: none;
@@ -1777,19 +1790,19 @@
 	}
 
 	.notes-preview {
-		font-size: 0.5625rem;
+		font-size: 0.875rem;
 		color: #64748b;
 		font-style: italic;
 	}
 
 	.notes-input {
 		width: 100%;
-		min-height: 50px;
-		padding: 0.375rem;
-		font-size: 0.625rem;
+		min-height: 60px;
+		padding: 0.5rem;
+		font-size: 0.875rem;
 		background: #0f172a;
 		border: 1px solid #475569;
-		border-radius: 3px;
+		border-radius: 4px;
 		color: #e2e8f0;
 		resize: vertical;
 	}
@@ -1800,55 +1813,55 @@
 
 	.no-results {
 		color: #64748b;
-		font-size: 0.6875rem;
+		font-size: 0.9375rem;
 		text-align: center;
-		padding: 1rem;
+		padding: 1.5rem;
 	}
 
 	/* Protocol Panel */
 	.protocol-panel {
 		background: #475569;
-		padding: 1rem;
+		padding: 1.25rem;
 		overflow-y: auto;
 	}
 
 	.protocol-doc {
 		background: white;
 		color: #1e293b;
-		border-radius: 4px;
-		padding: 1.5rem;
+		border-radius: 6px;
+		padding: 2rem;
 		min-height: 100%;
 		box-shadow: 0 4px 12px rgba(0,0,0,0.3);
 	}
 
 	.doc-header {
 		text-align: center;
-		padding-bottom: 0.75rem;
+		padding-bottom: 1rem;
 		border-bottom: 2px solid #1e293b;
-		margin-bottom: 1rem;
+		margin-bottom: 1.25rem;
 	}
 
 	.doc-header h2 {
-		font-size: 1rem;
+		font-size: 1.25rem;
 		font-weight: 700;
 		margin: 0;
 		color: #0f172a;
 	}
 
 	.doc-header span {
-		font-size: 0.75rem;
+		font-size: 0.9375rem;
 		color: #64748b;
 	}
 
 	.doc-meta {
 		width: 100%;
-		font-size: 0.6875rem;
+		font-size: 0.9375rem;
 		border-collapse: collapse;
-		margin-bottom: 1rem;
+		margin-bottom: 1.25rem;
 	}
 
 	.doc-meta td {
-		padding: 0.25rem 0.5rem;
+		padding: 0.375rem 0.75rem;
 		border: 1px solid #e2e8f0;
 	}
 
@@ -1861,25 +1874,25 @@
 	.doc-empty {
 		text-align: center;
 		color: #64748b;
-		font-size: 0.75rem;
-		padding: 2rem 1rem;
+		font-size: 0.9375rem;
+		padding: 2.5rem 1.5rem;
 	}
 
 	.doc-content section {
-		margin-bottom: 1.25rem;
+		margin-bottom: 1.5rem;
 	}
 
 	.doc-content h3 {
-		font-size: 0.8125rem;
+		font-size: 1rem;
 		font-weight: 700;
 		color: #0f172a;
 		border-bottom: 1px solid #e2e8f0;
-		padding-bottom: 0.25rem;
-		margin: 0 0 0.75rem 0;
+		padding-bottom: 0.375rem;
+		margin: 0 0 1rem 0;
 	}
 
 	.doc-risk {
-		margin-bottom: 1rem;
+		margin-bottom: 1.25rem;
 	}
 
 	.doc-risk.not-required {
@@ -1887,31 +1900,31 @@
 	}
 
 	.doc-risk h4 {
-		font-size: 0.75rem;
+		font-size: 0.9375rem;
 		font-weight: 600;
 		color: #334155;
-		margin: 0 0 0.5rem 0;
+		margin: 0 0 0.75rem 0;
 	}
 
 	.doc-control {
-		font-size: 0.6875rem;
-		line-height: 1.5;
+		font-size: 0.9375rem;
+		line-height: 1.6;
 		color: #475569;
-		margin: 0 0 0.5rem 0.75rem;
-		padding-left: 0.5rem;
+		margin: 0 0 0.75rem 1rem;
+		padding-left: 0.75rem;
 		border-left: 2px solid #e2e8f0;
 	}
 
 	/* Toolbar Filters */
 	.toolbar-filters {
 		display: flex;
-		gap: 0.75rem;
+		gap: 1rem;
 		align-items: center;
 	}
 
 	.filter-select {
-		padding: 0.375rem 0.5rem;
-		font-size: 0.6875rem;
+		padding: 0.5rem 0.75rem;
+		font-size: 0.9375rem;
 		background: #1e293b;
 		border: 1px solid #475569;
 		border-radius: 4px;
@@ -1926,24 +1939,26 @@
 	.filter-checkbox {
 		display: flex;
 		align-items: center;
-		gap: 0.375rem;
-		font-size: 0.6875rem;
+		gap: 0.5rem;
+		font-size: 0.9375rem;
 		color: #94a3b8;
 		cursor: pointer;
 	}
 
 	.filter-checkbox input {
 		cursor: pointer;
+		width: 16px;
+		height: 16px;
 	}
 
 	/* Essential group styling */
 	.essential-group h4 {
-		color: #22c55e;
+		color: var(--color-subcategory, #4ade80);
 	}
 
 	/* Subtle indicator for missing essentials */
 	.essential-gap {
-		font-size: 0.5625rem;
+		font-size: 0.875rem;
 		color: #94a3b8;
 	}
 
@@ -1969,6 +1984,41 @@
 	}
 
 	.filter-checkbox input:focus-visible {
+		outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, #60a5fa);
+		outline-offset: var(--focus-ring-offset, 2px);
+	}
+
+	.controls-btn:focus-visible {
+		outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, #60a5fa);
+		outline-offset: var(--focus-ring-offset, 2px);
+	}
+
+	.controls-search:focus-visible {
+		outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, #60a5fa);
+		outline-offset: var(--focus-ring-offset, 2px);
+	}
+
+	.source-filter:focus-visible {
+		outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, #60a5fa);
+		outline-offset: var(--focus-ring-offset, 2px);
+	}
+
+	.control-header input[type="checkbox"]:focus-visible {
+		outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, #60a5fa);
+		outline-offset: var(--focus-ring-offset, 2px);
+	}
+
+	.status-btn:focus-visible {
+		outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, #60a5fa);
+		outline-offset: var(--focus-ring-offset, 2px);
+	}
+
+	.add-notes-btn:focus-visible {
+		outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, #60a5fa);
+		outline-offset: var(--focus-ring-offset, 2px);
+	}
+
+	.notes-input:focus-visible {
 		outline: var(--focus-ring-width, 2px) solid var(--focus-ring-color, #60a5fa);
 		outline-offset: var(--focus-ring-offset, 2px);
 	}
