@@ -105,6 +105,41 @@
 		data.questionCategories.filter((cat: any) => checkShowIf(cat.showIf))
 	);
 
+	// Get all visible questions (flattened)
+	let visibleQuestions = $derived.by(() => {
+		const questions: any[] = [];
+		for (const cat of visibleCategories) {
+			for (const q of cat.questions) {
+				if (checkShowIf(q.showIf)) {
+					questions.push(q);
+				}
+			}
+		}
+		return questions;
+	});
+
+	// Check if all visible questions have been answered
+	let allQuestionsAnswered = $derived.by(() => {
+		for (const q of visibleQuestions) {
+			const answer = answers[q.id];
+			if (!answer) return false;
+			if (Array.isArray(answer) && answer.length === 0) return false;
+		}
+		return visibleQuestions.length > 0;
+	});
+
+	// Count answered questions for progress display
+	let answeredCount = $derived.by(() => {
+		let count = 0;
+		for (const q of visibleQuestions) {
+			const answer = answers[q.id];
+			if (answer && (!Array.isArray(answer) || answer.length > 0)) {
+				count++;
+			}
+		}
+		return count;
+	});
+
 	let selectedPhase = $derived(answers['phase'] as string || '');
 	let selectedModelTypes = $derived((answers['model-types'] as string[]) || []);
 	let phaseName = $derived(
@@ -921,52 +956,169 @@
 </svelte:head>
 
 <div class="builder">
-	<!-- Assessment Bar (Top) -->
-	<div class="assessment-bar">
-		{#each visibleCategories as category}
-			<div class="question-group">
-				<span class="group-label">{category.name}</span>
-				{#each category.questions as question}
-					{#if checkShowIf(question.showIf)}
-						<div class="question">
-							<span class="question-label">{question.question}</span>
-							<div class="question-options">
-								{#if question.type === 'single-select'}
-									{#each question.options as option}
-										<button
-											class="option-btn"
-											class:active={answers[question.id] === option.value}
-											onclick={() => answers[question.id] = option.value}
-										>{option.label}</button>
-									{/each}
-								{:else if question.type === 'multi-select'}
-									{#each question.options as option}
-										<button
-											class="option-btn"
-											class:active={(answers[question.id] as string[] || []).includes(option.value)}
-											onclick={() => toggleMulti(question.id, option.value)}
-										>{option.label}</button>
-									{/each}
-								{:else if question.type === 'yes-no'}
-									<button class="option-btn" class:active={answers[question.id] === 'yes'} onclick={() => answers[question.id] = 'yes'}>Yes</button>
-									<button class="option-btn" class:active={answers[question.id] === 'no'} onclick={() => answers[question.id] = 'no'}>No</button>
-								{/if}
-							</div>
-						</div>
-					{/if}
+	<!-- Top Row: Questions + Protocol side by side -->
+	<div class="top-row">
+		<!-- Questions Panel -->
+		<div class="questions-panel">
+			<div class="panel-header">
+				<h2>Assessment Questions</h2>
+				<span class="progress-badge">{answeredCount} / {visibleQuestions.length}</span>
+			</div>
+			<div class="questions-content">
+				{#each visibleCategories as category}
+					<div class="question-group">
+						<h3 class="group-label">{category.name}</h3>
+						{#each category.questions as question}
+							{#if checkShowIf(question.showIf)}
+								<div class="question">
+									<span class="question-label">{question.question}</span>
+									<div class="question-options">
+										{#if question.type === 'single-select'}
+											{#each question.options as option}
+												<button
+													class="option-btn"
+													class:active={answers[question.id] === option.value}
+													onclick={() => answers[question.id] = option.value}
+												>{option.label}</button>
+											{/each}
+										{:else if question.type === 'multi-select'}
+											{#each question.options as option}
+												<button
+													class="option-btn"
+													class:active={(answers[question.id] as string[] || []).includes(option.value)}
+													onclick={() => toggleMulti(question.id, option.value)}
+												>{option.label}</button>
+											{/each}
+										{:else if question.type === 'yes-no'}
+											<button class="option-btn" class:active={answers[question.id] === 'yes'} onclick={() => answers[question.id] = 'yes'}>Yes</button>
+											<button class="option-btn" class:active={answers[question.id] === 'no'} onclick={() => answers[question.id] = 'no'}>No</button>
+										{/if}
+									</div>
+								</div>
+							{/if}
+						{/each}
+					</div>
 				{/each}
 			</div>
-		{/each}
+		</div>
+
+		<!-- Protocol Panel (Right) -->
+		<aside class="panel protocol-panel">
+			<div class="panel-header">
+				<h2>Protocol Output</h2>
+				<div class="panel-header-actions">
+					{#if hasProtocolContent}
+						<span class="control-count">{totalSelectedControls} controls</span>
+						<button class="btn-small" onclick={copyMarkdown} aria-label="Copy as Markdown">Copy</button>
+						<button class="btn-small btn-primary-small" onclick={exportDocx} aria-label="Export DOCX">Export</button>
+					{/if}
+				</div>
+			</div>
+			<div class="panel-content protocol-content">
+				<div class="protocol-doc">
+					<div class="doc-header">
+						<h3>AI Research Protocol</h3>
+						<span>Risk Mitigation Plan</span>
+					</div>
+					<table class="doc-meta">
+						<tbody>
+							<tr><td>Phase</td><td>{phaseName || '—'}</td></tr>
+							<tr><td>Model Types</td><td>{selectedModelTypes.join(', ') || '—'}</td></tr>
+							<tr><td>Risks Addressed</td><td>{risksAddressed} / {triggeredRisks.length}</td></tr>
+							<tr><td>Controls</td><td>{totalSelectedControls}</td></tr>
+						</tbody>
+					</table>
+
+					{#if !hasProtocolContent}
+						<p class="doc-empty">Select controls from the risk strategies to build your protocol.</p>
+					{:else}
+						<div class="doc-content">
+						{#if implementedControls.length > 0}
+							<section>
+								<h3>Already Implemented</h3>
+								{#each protocolItems as item}
+									{@const riskImplemented = item.controls.filter(c => c.status === 'implemented')}
+									{#if riskImplemented.length > 0}
+										<div class="doc-risk">
+											<h4>{item.riskIndex}. {item.risk.subdomain.shortName}</h4>
+											{#each riskImplemented as control, i}
+												<p class="doc-control">{item.riskIndex}.{i + 1} {generateProtocolText(control)}</p>
+											{/each}
+										</div>
+									{/if}
+								{/each}
+							</section>
+						{/if}
+
+						{#if inProtocolControls.length > 0}
+							<section>
+								<h3>In This Protocol</h3>
+								{#each protocolItems as item}
+									{@const riskInProtocol = item.controls.filter(c => c.status === 'in-protocol')}
+									{#if riskInProtocol.length > 0}
+										<div class="doc-risk">
+											<h4>{item.riskIndex}. {item.risk.subdomain.shortName}</h4>
+											{#each riskInProtocol as control, i}
+												<p class="doc-control">{item.riskIndex}.{i + 1} {generateProtocolText(control)}</p>
+											{/each}
+										</div>
+									{/if}
+								{/each}
+							</section>
+						{/if}
+
+						{#if postPhaseControls.length > 0}
+							<section>
+								<h3>Post-Phase Implementation</h3>
+								{#each protocolItems as item}
+									{@const riskPostPhase = item.controls.filter(c => c.status === 'post-phase')}
+									{#if riskPostPhase.length > 0}
+										<div class="doc-risk">
+											<h4>{item.riskIndex}. {item.risk.subdomain.shortName}</h4>
+											{#each riskPostPhase as control, i}
+												<p class="doc-control">{item.riskIndex}.{i + 1} {generateProtocolText(control)}</p>
+											{/each}
+										</div>
+									{/if}
+								{/each}
+							</section>
+						{/if}
+
+						{#if notRequiredControls.length > 0}
+							<section>
+								<h3>Not Required</h3>
+								{#each protocolItems as item}
+									{@const riskNotRequired = item.controls.filter(c => c.status === 'not-required')}
+									{#if riskNotRequired.length > 0}
+										<div class="doc-risk not-required">
+											<h4>{item.riskIndex}. {item.risk.subdomain.shortName}</h4>
+											{#each riskNotRequired as control, i}
+												<p class="doc-control">{item.riskIndex}.{i + 1} {generateProtocolText(control)}</p>
+											{/each}
+										</div>
+									{/if}
+								{/each}
+							</section>
+						{/if}
+						</div>
+					{/if}
+				</div>
+			</div>
+		</aside>
 	</div>
 
-	<!-- Main Content: Two Columns -->
-	<div class="builder-columns">
-		<!-- Risks Panel -->
+	<!-- Risks Panel (only shows when all questions answered) -->
+	{#if allQuestionsAnswered}
 		<main class="panel risks-panel">
 			<div class="panel-header">
-				<h2>Identified Risks {#if selectedPhase}({displayedRisks.length}){/if}</h2>
+				<h2>Identified Risks ({displayedRisks.length})</h2>
 				<div class="panel-header-actions">
-					{#if selectedPhase && triggeredRisks.length > 0}
+					<div class="defense-legend">
+						<span><i class="dot-p"></i> Preventive</span>
+						<span><i class="dot-d"></i> Detective</span>
+						<span><i class="dot-c"></i> Corrective</span>
+					</div>
+					{#if triggeredRisks.length > 0}
 						<select class="filter-select" bind:value={appropriatenessFilter} aria-label="Filter strategies by appropriateness">
 							<option value="all">All Strategies</option>
 							<option value="essential">Essential Only</option>
@@ -981,27 +1133,12 @@
 					{/if}
 				</div>
 			</div>
-			<div class="panel-content">
-				{#if !selectedPhase}
+			<div class="panel-content risks-content">
+				{#if triggeredRisks.length === 0}
 					<div class="placeholder">
-						<div class="placeholder-icon">↑</div>
-						<p>Select a <strong>development phase</strong> above to see applicable risks</p>
-					</div>
-				{:else if triggeredRisks.length === 0}
-					<div class="placeholder">
-						<div class="placeholder-icon">↑</div>
-						<p>Answer more questions above to identify risks for your project</p>
+						<p>No risks identified based on your answers. Your project may have minimal AI-specific risk concerns.</p>
 					</div>
 				{:else}
-					<div class="risks-intro">
-						<p>Click a risk to expand it, then select controls to add to your protocol →</p>
-						<div class="defense-legend">
-							<span><i class="dot-p"></i> Preventive</span>
-							<span><i class="dot-d"></i> Detective</span>
-							<span><i class="dot-c"></i> Corrective</span>
-						</div>
-					</div>
-
 					<div class="risks-list">
 					{#each displayedRisks as risk}
 						{@const isExpanded = expandedRisks.has(risk.subdomain.id)}
@@ -1180,111 +1317,7 @@
 				{/if}
 			</div>
 		</main>
-
-		<!-- Protocol Panel -->
-		<aside class="panel protocol-panel">
-			<div class="panel-header">
-				<h2>Protocol Output</h2>
-				<div class="panel-header-actions">
-					{#if hasProtocolContent}
-						<span class="control-count">{totalSelectedControls} controls</span>
-						<button class="btn-small" onclick={copyMarkdown} aria-label="Copy as Markdown">Copy</button>
-						<button class="btn-small btn-primary-small" onclick={exportDocx} aria-label="Export DOCX">Export</button>
-					{/if}
-				</div>
-			</div>
-			<div class="panel-content protocol-content">
-				<div class="protocol-doc">
-					<div class="doc-header">
-						<h3>AI Research Protocol</h3>
-						<span>Risk Mitigation Plan</span>
-					</div>
-					<table class="doc-meta">
-						<tbody>
-							<tr><td>Phase</td><td>{phaseName || '—'}</td></tr>
-							<tr><td>Model Types</td><td>{selectedModelTypes.join(', ') || '—'}</td></tr>
-							<tr><td>Risks Addressed</td><td>{risksAddressed} / {triggeredRisks.length}</td></tr>
-							<tr><td>Controls</td><td>{totalSelectedControls}</td></tr>
-						</tbody>
-					</table>
-
-					{#if !hasProtocolContent}
-						<p class="doc-empty">Select controls from the risk strategies to build your protocol.</p>
-					{:else}
-						<div class="doc-content">
-						{#if implementedControls.length > 0}
-							<section>
-								<h3>Already Implemented</h3>
-								{#each protocolItems as item}
-									{@const riskImplemented = item.controls.filter(c => c.status === 'implemented')}
-									{#if riskImplemented.length > 0}
-										<div class="doc-risk">
-											<h4>{item.riskIndex}. {item.risk.subdomain.shortName}</h4>
-											{#each riskImplemented as control, i}
-												<p class="doc-control">{item.riskIndex}.{i + 1} {generateProtocolText(control)}</p>
-											{/each}
-										</div>
-									{/if}
-								{/each}
-							</section>
-						{/if}
-
-						{#if inProtocolControls.length > 0}
-							<section>
-								<h3>In This Protocol</h3>
-								{#each protocolItems as item}
-									{@const riskInProtocol = item.controls.filter(c => c.status === 'in-protocol')}
-									{#if riskInProtocol.length > 0}
-										<div class="doc-risk">
-											<h4>{item.riskIndex}. {item.risk.subdomain.shortName}</h4>
-											{#each riskInProtocol as control, i}
-												<p class="doc-control">{item.riskIndex}.{i + 1} {generateProtocolText(control)}</p>
-											{/each}
-										</div>
-									{/if}
-								{/each}
-							</section>
-						{/if}
-
-						{#if postPhaseControls.length > 0}
-							<section>
-								<h3>Post-Phase Implementation</h3>
-								{#each protocolItems as item}
-									{@const riskPostPhase = item.controls.filter(c => c.status === 'post-phase')}
-									{#if riskPostPhase.length > 0}
-										<div class="doc-risk">
-											<h4>{item.riskIndex}. {item.risk.subdomain.shortName}</h4>
-											{#each riskPostPhase as control, i}
-												<p class="doc-control">{item.riskIndex}.{i + 1} {generateProtocolText(control)}</p>
-											{/each}
-										</div>
-									{/if}
-								{/each}
-							</section>
-						{/if}
-
-						{#if notRequiredControls.length > 0}
-							<section>
-								<h3>Not Required</h3>
-								{#each protocolItems as item}
-									{@const riskNotRequired = item.controls.filter(c => c.status === 'not-required')}
-									{#if riskNotRequired.length > 0}
-										<div class="doc-risk not-required">
-											<h4>{item.riskIndex}. {item.risk.subdomain.shortName}</h4>
-											{#each riskNotRequired as control, i}
-												<p class="doc-control">{item.riskIndex}.{i + 1} {generateProtocolText(control)}</p>
-											{/each}
-										</div>
-									{/if}
-								{/each}
-							</section>
-						{/if}
-						</div>
-					{/if}
-				</div>
-			</div>
-		</aside>
-	</div>
+	{/if}
 </div>
 
 <style>
@@ -1296,54 +1329,70 @@
 		color: #e2e8f0;
 	}
 
-	/* Assessment Bar (Top) */
-	.assessment-bar {
-		background: #1e293b;
-		border-bottom: 1px solid #334155;
-		padding: 1rem 1.5rem;
+	/* Top Row: Questions + Protocol side by side */
+	.top-row {
+		display: grid;
+		grid-template-columns: 1fr 550px;
+		gap: 1px;
+		background: #334155;
+		min-height: 280px;
+		max-height: 50vh;
+	}
+
+	/* Questions Panel */
+	.questions-panel {
 		display: flex;
-		flex-wrap: wrap;
-		gap: 1.5rem 3rem;
-		align-items: flex-start;
+		flex-direction: column;
+		background: #0f172a;
+		overflow: hidden;
+	}
+
+	.questions-content {
+		flex: 1;
+		overflow-y: auto;
+		padding: 1rem 1.5rem;
 	}
 
 	.question-group {
-		display: flex;
-		align-items: center;
-		gap: 1rem;
-		flex-wrap: wrap;
+		margin-bottom: 1.25rem;
 	}
 
 	.group-label {
-		font-size: 0.6875rem;
+		display: block;
+		font-size: 0.75rem;
 		font-weight: 600;
 		text-transform: uppercase;
 		letter-spacing: 0.1em;
-		color: #64748b;
-		min-width: 80px;
+		color: #60a5fa;
+		margin-bottom: 0.75rem;
+		padding-bottom: 0.5rem;
+		border-bottom: 1px solid #334155;
 	}
 
 	.question {
 		display: flex;
 		align-items: center;
-		gap: 0.5rem;
+		gap: 0.75rem;
+		margin-bottom: 0.5rem;
+		flex-wrap: wrap;
 	}
 
 	.question-label {
 		font-size: 0.875rem;
-		color: #94a3b8;
-		white-space: nowrap;
+		color: #cbd5e1;
+		min-width: 200px;
 	}
 
 	.question-options {
 		display: flex;
 		gap: 0.25rem;
+		flex-wrap: wrap;
 	}
 
 	.option-btn {
-		padding: 0.375rem 0.625rem;
+		padding: 0.375rem 0.75rem;
 		font-size: 0.8125rem;
-		background: #0f172a;
+		background: #1e293b;
 		border: 1px solid #334155;
 		border-radius: 4px;
 		color: #94a3b8;
@@ -1362,14 +1411,12 @@
 		color: #0f172a;
 	}
 
-	/* Two-column layout */
-	.builder-columns {
-		display: grid;
-		grid-template-columns: 1fr 420px;
-		flex: 1;
-		overflow: hidden;
-		gap: 1px;
+	.progress-badge {
+		font-size: 0.75rem;
+		color: #94a3b8;
 		background: #334155;
+		padding: 0.25rem 0.5rem;
+		border-radius: 4px;
 	}
 
 	/* Shared panel styles */
@@ -1466,62 +1513,40 @@
 		font-weight: 500;
 	}
 
-	/* Risks Panel */
-	.risks-panel .panel-content {
-		padding: 1rem 1.25rem;
+	/* Risks Panel - takes remaining space below top row */
+	.risks-panel {
+		flex: 1;
+		border-top: 1px solid #334155;
+		overflow: hidden;
+	}
+
+	.risks-content {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+		padding: 1rem 1.5rem;
 	}
 
 	.placeholder {
 		display: flex;
-		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-		height: 200px;
+		padding: 2rem;
 		color: #64748b;
 		font-size: 0.9375rem;
 		text-align: center;
-		gap: 0.75rem;
-	}
-
-	.placeholder-icon {
-		font-size: 2rem;
-		color: #475569;
-		animation: bounce 2s infinite;
-	}
-
-	@keyframes bounce {
-		0%, 100% { transform: translateY(0); }
-		50% { transform: translateY(-8px); }
 	}
 
 	.placeholder p {
 		margin: 0;
 	}
 
-	.placeholder strong {
-		color: #60a5fa;
-	}
-
-	.risks-intro {
-		margin-bottom: 1rem;
-		padding: 0.75rem 1rem;
-		background: #1e293b;
-		border-radius: 6px;
-		border-left: 3px solid #60a5fa;
-	}
-
-	.risks-intro p {
-		margin: 0 0 0.5rem 0;
-		font-size: 0.875rem;
-		color: #94a3b8;
-	}
-
 	.defense-legend {
 		display: flex;
 		gap: 1rem;
-		font-size: 0.8125rem;
-		color: #64748b;
-		margin-bottom: 1rem;
+		font-size: 0.75rem;
+		color: #94a3b8;
+		margin-right: 1rem;
 	}
 
 	.defense-legend span {
