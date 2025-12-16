@@ -1029,8 +1029,14 @@
 								{@const isExpanded = expandedRisks.has(risk.subdomain.id)}
 								{@const controlCount = getControlCount(risk.subdomain.id)}
 								{@const coverage = getDefenseCoverage(risk.subdomain.id, risk.linkedStrategies)}
-								<div class="risk-card" class:addressed={controlCount > 0}>
+								{@const essentialCov = getEssentialCoverage(risk.subdomain.id, risk.linkedStrategies)}
+								<div class="risk-card" class:addressed={controlCount > 0} class:essentials-complete={essentialCov.complete}>
 									<button class="risk-header" onclick={() => toggleRiskExpanded(risk.subdomain.id)}>
+										{#if essentialCov.complete}
+											<span class="complete-check">✓</span>
+										{:else if controlCount > 0}
+											<span class="partial-check">◐</span>
+										{/if}
 										<span class="risk-name">{risk.subdomain.shortName}</span>
 										<span class="risk-meta">
 											<span class="defense-coverage">
@@ -1049,16 +1055,17 @@
 											{#if risk.riskContext}<p class="risk-description">{risk.riskContext}</p>{/if}
 											{#snippet strategyRow(strategy: any, risk: any)}
 												{@const strategyControls = getControlsForStrategy(strategy.id)}
-												{@const selectedInStrategy = strategyControls.filter((c: any) => isControlSelected(c.id, risk.subdomain.id, strategy.id)).length}
-												<div class="strategy-item" class:has-selections={selectedInStrategy > 0}>
-													<div class="strategy-main">
+												{#if strategyControls.length > 0}
+													{@const selectedInStrategy = strategyControls.filter((c: any) => isControlSelected(c.id, risk.subdomain.id, strategy.id)).length}
+													<button class="strategy-item" class:has-selections={selectedInStrategy > 0} class:expanded={showControlsFor === strategy.id} onclick={() => toggleControlsPanel(strategy.id)}>
 														<span class="strategy-name">{strategy.name}</span>
 														<span class="badge badge-{strategy.defenseLayer}">{strategy.defenseLayer.charAt(0).toUpperCase()}</span>
 														{#if selectedInStrategy > 0}<span class="selected-indicator">{selectedInStrategy}</span>{/if}
-														<button class="controls-btn" onclick={() => toggleControlsPanel(strategy.id)}>{strategyControls.length} {showControlsFor === strategy.id ? '▲' : '▼'}</button>
-													</div>
+														<span class="controls-count">{strategyControls.length} controls</span>
+														<span class="expand-icon">{showControlsFor === strategy.id ? '▲' : '▼'}</span>
+													</button>
 													{#if showControlsFor === strategy.id}
-														<div class="controls-drawer">
+														<div class="controls-drawer" onclick={(e) => e.stopPropagation()}>
 															<div class="controls-toolbar">
 																<input type="text" class="controls-search" placeholder="Search..." bind:value={controlSearch} />
 																<select class="source-filter" bind:value={sourceFilter}>
@@ -1095,7 +1102,7 @@
 															</div>
 														</div>
 													{/if}
-												</div>
+												{/if}
 											{/snippet}
 											{#if essentialStrategies.length > 0 && appropriatenessFilter !== 'recommended'}
 												<div class="strategy-group essential-group">
@@ -1438,7 +1445,22 @@
 	}
 
 	.risk-card.addressed {
+		border-color: var(--color-trigger, #fcd34d);
+	}
+
+	.risk-card.essentials-complete {
 		border-color: var(--color-subcategory, #4ade80);
+	}
+
+	.complete-check {
+		color: var(--color-subcategory, #4ade80);
+		font-size: 0.875rem;
+		font-weight: 700;
+	}
+
+	.partial-check {
+		color: var(--color-trigger, #fcd34d);
+		font-size: 0.75rem;
 	}
 
 	.risk-header {
@@ -1516,26 +1538,55 @@
 	}
 
 	.strategy-item {
-		background: #0f172a;
-		border: 1px solid #334155;
+		width: 100%;
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		padding: 0.5rem 0.625rem;
+		background: #1e293b;
+		border: 1px solid #475569;
 		border-radius: 4px;
 		margin-bottom: 0.375rem;
+		cursor: pointer;
+		text-align: left;
+		color: inherit;
+		transition: all 0.15s ease;
+	}
+
+	.strategy-item:hover {
+		background: #334155;
+		border-color: #60a5fa;
+	}
+
+	.strategy-item.expanded {
+		background: #334155;
+		border-color: #60a5fa;
+		border-bottom-left-radius: 0;
+		border-bottom-right-radius: 0;
 	}
 
 	.strategy-item.has-selections {
 		border-color: var(--color-subcategory, #4ade80);
 	}
 
-	.strategy-main {
-		display: flex;
-		align-items: center;
-		gap: 0.5rem;
-		padding: 0.5rem 0.625rem;
+	.strategy-item.has-selections:hover {
+		border-color: var(--color-subcategory, #4ade80);
+		background: rgba(74, 222, 128, 0.1);
 	}
 
 	.strategy-name {
 		flex: 1;
 		font-size: 0.75rem;
+	}
+
+	.controls-count {
+		font-size: 0.6875rem;
+		color: #94a3b8;
+	}
+
+	.expand-icon {
+		font-size: 0.625rem;
+		color: #60a5fa;
 	}
 
 	.badge {
@@ -1559,23 +1610,14 @@
 		color: var(--color-subcategory, #4ade80);
 	}
 
-	.controls-btn {
-		font-size: 0.6875rem;
-		color: #60a5fa;
-		background: transparent;
-		border: none;
-		cursor: pointer;
-		padding: 0.25rem;
-	}
-
-	.controls-btn:hover {
-		text-decoration: underline;
-	}
-
 	.controls-drawer {
-		border-top: 1px solid #334155;
 		padding: 0.625rem;
 		background: #1e293b;
+		border: 1px solid #60a5fa;
+		border-top: none;
+		border-radius: 0 0 4px 4px;
+		margin-top: -0.375rem;
+		margin-bottom: 0.375rem;
 	}
 
 	.controls-toolbar {
