@@ -360,7 +360,7 @@
 			<h2 class="completion-title">Review Complete</h2>
 			<p class="completion-summary">All {progress.total} items reviewed for {getSelectedStageName()}</p>
 			<div class="completion-actions">
-				<button class="completion-btn disabled" disabled title="Coming soon">
+				<button class="completion-btn" onclick={() => exportDocx()}>
 					Download this checklist
 				</button>
 				<a href="{base}/protocol-builder" class="completion-btn primary">
@@ -560,6 +560,28 @@
 		transition: width 0.3s ease;
 	}
 
+	.download-btn {
+		margin-top: 0.75rem;
+		padding: 0.5rem 1rem;
+		background: #1e40af;
+		border: 1px solid #60a5fa;
+		border-radius: 0.375rem;
+		color: #f1f5f9;
+		font-size: 0.8125rem;
+		font-weight: 600;
+		cursor: pointer;
+		transition: all 0.15s ease;
+	}
+
+	.download-btn:hover:not(:disabled) {
+		background: #2563eb;
+	}
+
+	.download-btn:disabled {
+		opacity: 0.4;
+		cursor: not-allowed;
+	}
+
 	.checklist {
 		display: flex;
 		flex-direction: column;
@@ -750,11 +772,6 @@
 	.completion-btn.secondary:hover {
 		border-color: #60a5fa;
 		color: #e2e8f0;
-	}
-
-	.completion-btn.disabled {
-		opacity: 0.5;
-		cursor: not-allowed;
 	}
 
 	/* Focus states for accessibility */
