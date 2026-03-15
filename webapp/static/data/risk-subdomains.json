@@ -82,7 +82,9 @@
 			"description": "AI system may be vulnerable to security breaches or adversarial attacks",
 			"cfrReferences": [
 				"21 CFR 820.100 \u2013 Corrective & Preventive Actions (CAPA)",
-				"21 CFR 820.30(g) \u2013 Design Validation"
+				"21 CFR 820.30(g) \u2013 Design Validation",
+				"45 CFR 46.111(a)(7) \u2013 privacy and confidentiality",
+				"45 CFR Parts 160/164 \u2013 HIPAA Security Rule"
 			],
 			"stageGuidance": {
 				"stage-1": "In discovery, security risks include vulnerabilities in the development environment, insecure data storage, and potential for malicious code injection during model training. Development systems may lack production-grade security controls.",
@@ -179,7 +181,9 @@
 			"description": "Users may over-trust AI outputs without appropriate verification",
 			"cfrReferences": [
 				"21 CFR 812.30(b)(4) \u2013 risk/benefit analysis",
-				"21 CFR 820.70 \u2013 production/process controls"
+				"21 CFR 820.70 \u2013 production/process controls",
+				"45 CFR 46.111(a)(1) \u2013 minimize risks",
+				"45 CFR 46.111(a)(2) \u2013 reasonable risk-benefit"
 			],
 			"stageGuidance": {
 				"stage-1": "In discovery, overreliance risks are designed into the system when models are built without appropriate uncertainty quantification, confidence indicators, or limitations documentation. Users may later trust outputs that should require verification.",
