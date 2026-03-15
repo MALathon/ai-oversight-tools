@@ -82,15 +82,15 @@
 		reader.readAsText(file);
 	}
 
-	const phases = [
-		{ id: 'phase-1', name: 'Phase 1: Discovery', short: 'P1' },
-		{ id: 'phase-2', name: 'Phase 2: Validation', short: 'P2' },
-		{ id: 'phase-3', name: 'Phase 3: Deployment', short: 'P3' }
+	const stages = [
+		{ id: 'stage-1', name: 'Stage 1: Discovery', short: 'S1' },
+		{ id: 'stage-2', name: 'Stage 2: Validation', short: 'S2' },
+		{ id: 'stage-3', name: 'Stage 3: Deployment', short: 'S3' }
 	];
 
 	// UI State
 	let currentView = $state<'matrix' | 'trace' | 'graph'>('matrix');
-	let selectedPhase = $state<string>('all');
+	let selectedStage = $state<string>('all');
 	let selectedTechType = $state<string>('all');
 	let selectedNode = $state<{ type: string; id: string } | null>(null);
 	let connectingFrom = $state<{ type: string; id: string } | null>(null);
@@ -138,14 +138,14 @@
 		return fromType === canonTo && toType === canonFrom;
 	}
 
-	// Filter links by phase (must be before getMatrixLink)
+	// Filter links by stage (must be before getMatrixLink)
 	let filteredLinks = $derived(
-		selectedPhase === 'all'
+		selectedStage === 'all'
 			? links
-			: links.filter((l: any) => !l.phases || l.phases.length === 0 || l.phases.includes(selectedPhase))
+			: links.filter((l: any) => !l.stages || l.stages.length === 0 || l.stages.includes(selectedStage))
 	);
 
-	// Compute which entities appear in phase-filtered links (for graph filtering)
+	// Compute which entities appear in stage-filtered links (for graph filtering)
 	let linkedEntities = $derived.by(() => {
 		const entities: Record<string, Set<string>> = {
 			question: new Set(),
@@ -335,7 +335,7 @@
 			type: linkType,
 			from: { entity: fromEntity, id: fromId },
 			to: { entity: toEntity, id: toId },
-			phases: ['phase-1', 'phase-2', 'phase-3']
+			stages: ['stage-1', 'stage-2', 'stage-3']
 		};
 
 		// Add type-specific defaults
@@ -343,7 +343,7 @@
 			newLink.answerValues = [];
 			newLink.logic = 'OR';
 		} else if (linkType === 'control') {
-			newLink.guidance = {}; // Phase-specific guidance for this control
+			newLink.guidance = {}; // Stage-specific guidance for this control
 		}
 
 		editingLink = newLink;
@@ -701,7 +701,7 @@
 		name: s.name,
 		shortName: s.shortName,
 		domain: s.domain,
-		phaseGuidance: s.phaseGuidance || { 'phase-1': '', 'phase-2': '', 'phase-3': '' }
+		stageGuidance: s.stageGuidance || { 'stage-1': '', 'stage-2': '', 'stage-3': '' }
 	})));
 
 	// Control categories - used for organizing/filtering controls (not linkable entities)
@@ -741,7 +741,7 @@
 		description: c.description,
 		source: c.source,
 		subcategoryId: c.subcategoryId,
-		phases: c.phases || ['phase-1', 'phase-2', 'phase-3'],
+		stages: c.stages || ['stage-1', 'stage-2', 'stage-3'],
 		techTypes: c.techTypes || ['all'],
 		implementationNotes: c.implementationNotes || {}
 	})));
@@ -910,9 +910,9 @@
 
 	// GUIDANCE ACCUMULATION - Traverse graph and collect metadata for LLM synthesis
 	// Each entity type has different guidance properties:
-	// - risks: phaseGuidance (risk context per phase)
-	// - subcategories: phaseGuidance + phaseAppropriateness (strategy guidance + importance)
-	// - controls: implementationNotes (implementation guidance per phase)
+	// - risks: stageGuidance (risk context per stage)
+	// - subcategories: stageGuidance + stageAppropriateness (strategy guidance + importance)
+	// - controls: implementationNotes (implementation guidance per stage)
 	// - questions: text (the question itself, for context)
 
 	interface GuidanceNode {
@@ -921,7 +921,7 @@
 		name: string;
 		depth: number;
 		edgeType?: string;
-		// Phase-specific guidance
+		// Stage-specific guidance
 		guidance?: string;
 		// Phase appropriateness (optional/recommended/essential)
 		appropriateness?: string;
@@ -935,7 +935,7 @@
 	}
 
 	// Collect guidance along traversal paths from a starting node
-	function collectGuidance(startType: string, startId: string, phase: string): GuidanceNode[] {
+	function collectGuidance(startType: string, startId: string, stg: string): GuidanceNode[] {
 		const startKey = `${startType}:${startId}`;
 		if (!traceGraph.hasNode(startKey)) return [];
 
@@ -962,21 +962,21 @@
 				entity = risksById.get(id);
 				if (entity) {
 					name = entity.shortName || entity.name;
-					guidance = entity.phaseGuidance?.[phase];
+					guidance = entity.stageGuidance?.[stg];
 					severity = entity.severity;
 				}
 			} else if (type === 'subcategory') {
 				entity = subcategoriesById.get(id);
 				if (entity) {
 					name = entity.name;
-					guidance = entity.phaseGuidance?.[phase];
-					appropriateness = entity.phaseAppropriateness?.[phase];
+					guidance = entity.stageGuidance?.[stg];
+					appropriateness = entity.stageAppropriateness?.[stg];
 				}
 			} else if (type === 'control') {
 				entity = controlsById.get(id);
 				if (entity) {
 					name = entity.name;
-					guidance = entity.implementationNotes?.[phase];
+					guidance = entity.implementationNotes?.[stg];
 					source = entity.source;
 					citation = entity.citation;
 				}
@@ -984,7 +984,7 @@
 				entity = questionsById.get(id);
 				if (entity) {
 					name = entity.text;
-					// Questions don't have phase guidance, but their text provides context
+					// Questions don't have stage guidance, but their text provides context
 				}
 			} else if (type === 'regulation') {
 				// Regulations from allRegulations (defined later)
@@ -1098,11 +1098,11 @@
 	}
 
 	// Combined guidance collection for a node - ready for LLM synthesis
-	function collectAllGuidanceForNode(type: string, id: string, phase: string) {
+	function collectAllGuidanceForNode(type: string, id: string, stg: string) {
 		return {
-			phase,
+			stg,
 			startNode: { type, id },
-			guidance: collectGuidance(type, id, phase),
+			guidance: collectGuidance(type, id, stg),
 			regulations: collectRegulations(type, id),
 			citations: collectCitations(type, id)
 		};
@@ -1111,15 +1111,15 @@
 	// Reactive guidance for selected node (for trace view)
 	let selectedNodeGuidance = $derived.by(() => {
 		if (!traceSelectedNode) return null;
-		const phase = selectedPhase === 'all' ? 'phase-1' : selectedPhase;
-		return collectAllGuidanceForNode(traceSelectedNode.type, traceSelectedNode.id, phase);
+		const stg = selectedStage === 'all' ? 'stage-1' : selectedStage;
+		return collectAllGuidanceForNode(traceSelectedNode.type, traceSelectedNode.id, stg);
 	});
 
 	// Reactive guidance for graph view selected node
 	let graphSelectedNodeGuidance = $derived.by(() => {
 		if (!selectedNode) return null;
-		const phase = selectedPhase === 'all' ? 'phase-1' : selectedPhase;
-		return collectAllGuidanceForNode(selectedNode.type, selectedNode.id, phase);
+		const stg = selectedStage === 'all' ? 'stage-1' : selectedStage;
+		return collectAllGuidanceForNode(selectedNode.type, selectedNode.id, stg);
 	});
 
 	// Entity type configuration for Matrix
@@ -1135,7 +1135,7 @@
 		question: {
 			label: 'Questions',
 			shortLabel: 'Q',
-			getAll: () => allQuestions.filter(q => !['phase', 'model-types'].includes(q.id)),
+			getAll: () => allQuestions.filter(q => !['stage', 'model-types'].includes(q.id)),
 			getLabel: (q) => q.text,
 			getShortLabel: (q) => q.id,
 			searchText: (q) => q.text + ' ' + q.id
@@ -1169,8 +1169,8 @@
 			shortLabel: 'Ctrl',
 			getAll: () => {
 				let filtered = allControls;
-				if (selectedPhase !== 'all') {
-					filtered = filtered.filter(c => !c.phases || c.phases.length === 0 || c.phases.includes(selectedPhase));
+				if (selectedStage !== 'all') {
+					filtered = filtered.filter(c => !c.stages || c.stages.length === 0 || c.stages.includes(selectedStage));
 				}
 				if (selectedTechType !== 'all') {
 					filtered = filtered.filter(c => !c.techTypes || c.techTypes.includes('all') || c.techTypes.includes(selectedTechType));
@@ -1240,14 +1240,14 @@
 		return { row: rowInfo, col: colInfo };
 	});
 
-	// Filtered controls for graph view (by phase and tech type)
-	// Empty phases array = applies to all phases
+	// Filtered controls for graph view (by stage and tech type)
+	// Empty stages array = applies to all stages
 	// Empty techTypes or includes 'all' = applies to all tech types
 	let graphFilteredControls = $derived.by(() => {
 		let filtered = allControls;
-		if (selectedPhase !== 'all') {
+		if (selectedStage !== 'all') {
 			filtered = filtered.filter(c =>
-				!c.phases || c.phases.length === 0 || c.phases.includes(selectedPhase)
+				!c.stages || c.stages.length === 0 || c.stages.includes(selectedStage)
 			);
 		}
 		if (selectedTechType !== 'all') {
@@ -1258,11 +1258,11 @@
 		return filtered;
 	});
 
-	// Graph-filtered entities (by phase via links, and by search)
+	// Graph-filtered entities (by stage via links, and by search)
 	let graphFilteredQuestions = $derived.by(() => {
 		let filtered = filterBySearch(allQuestions, (q: any) => q.text, 'question');
-		// When phase selected, only show questions that appear in filtered links
-		if (selectedPhase !== 'all') {
+		// When stage selected, only show questions that appear in filtered links
+		if (selectedStage !== 'all') {
 			filtered = filtered.filter(q => linkedEntities.question.has(q.id));
 		}
 		return filtered;
@@ -1270,7 +1270,7 @@
 
 	let graphFilteredRisks = $derived.by(() => {
 		let filtered = filterBySearch(allRisks, (r: any) => r.shortName + ' ' + r.name, 'risk');
-		if (selectedPhase !== 'all') {
+		if (selectedStage !== 'all') {
 			filtered = filtered.filter(r => linkedEntities.risk.has(r.id));
 		}
 		return filtered;
@@ -1278,7 +1278,7 @@
 
 	let graphFilteredSubcategories = $derived.by(() => {
 		let filtered = filterBySearch(allSubcategories, (s: any) => s.name + ' ' + s.code, 'subcategory');
-		if (selectedPhase !== 'all') {
+		if (selectedStage !== 'all') {
 			filtered = filtered.filter(s => linkedEntities.subcategory.has(s.id));
 		}
 		return filtered;
@@ -1286,7 +1286,7 @@
 
 	let graphFilteredRegulations = $derived.by(() => {
 		let filtered = filterBySearch(allRegulations, (r: any) => r.citation + ' ' + r.description, 'regulation');
-		if (selectedPhase !== 'all') {
+		if (selectedStage !== 'all') {
 			filtered = filtered.filter(r => linkedEntities.regulation.has(r.id));
 		}
 		return filtered;
@@ -1521,7 +1521,7 @@
 						type: linkType,
 						from: { entity: fromNode.type, id: fromNode.id },
 						to: { entity: toNode.type, id: toNode.id },
-						phases: ['phase-1', 'phase-2', 'phase-3'],
+						stages: ['stage-1', 'stage-2', 'stage-3'],
 						answerValues: [],
 						logic: 'OR',
 						guidance: {}
@@ -1675,11 +1675,11 @@
 			newConditionQuestionId = '';
 			newConditionValues = [];
 		} else if (entityType === 'risks') {
-			editingEntity = { id: '', code: '', name: '', shortName: '', domain: '', phaseGuidance: { 'phase-1': '', 'phase-2': '', 'phase-3': '' } };
+			editingEntity = { id: '', code: '', name: '', shortName: '', domain: '', stageGuidance: { 'stage-1': '', 'stage-2': '', 'stage-3': '' } };
 		} else if (entityType === 'regulations') {
 			editingEntity = { id: '', citation: '', description: '', framework: '' };
 		} else if (entityType === 'controls') {
-			editingEntity = { id: '', name: '', description: '', source: '', subcategoryId: '', phases: ['phase-1', 'phase-2', 'phase-3'], techTypes: ['all'] };
+			editingEntity = { id: '', name: '', description: '', source: '', subcategoryId: '', stages: ['stage-1', 'stage-2', 'stage-3'], techTypes: ['all'] };
 		}
 		showEntityEditor = true;
 	}
@@ -1919,11 +1919,11 @@
 				<span class="status-badge default">Default</span>
 			{/if}
 			<GlobalFilters
-				{phases}
+				{stages}
 				modelTypes={data.modelTypes}
-				{selectedPhase}
+				{selectedStage}
 				{selectedTechType}
-				onPhaseChange={(p) => selectedPhase = p}
+				onStageChange={(p) => selectedStage = p}
 				onTechTypeChange={(t) => selectedTechType = t}
 			/>
 			<input type="file" accept=".json" bind:this={fileInput} onchange={handleFileImport} style="display: none" />
@@ -2092,13 +2092,13 @@
 							<p class="entity-detail">{intersectionDetails.rowEntity.text}</p>
 						{:else if intersectionDetails.rowType === 'risk' && intersectionDetails.rowEntity}
 							<p class="entity-detail">{intersectionDetails.rowEntity.name}</p>
-							{#if intersectionDetails.rowEntity.phaseGuidance}
-								<div class="phase-guidance">
-									<strong>Phase Guidance:</strong>
-									{#each Object.entries(intersectionDetails.rowEntity.phaseGuidance) as [phase, text]}
-										<div class="phase-item">
-											<span class="phase-label">{phase.replace('phase-', 'P')}</span>
-											<span class="phase-text">{text}</span>
+							{#if intersectionDetails.rowEntity.stageGuidance}
+								<div class="stage-guidance">
+									<strong>Stage Guidance:</strong>
+									{#each Object.entries(intersectionDetails.rowEntity.stageGuidance) as [stg, text]}
+										<div class="stage-item">
+											<span class="stage-label">{stg.replace('stage-', 'S')}</span>
+											<span class="stage-text">{text}</span>
 										</div>
 									{/each}
 								</div>
@@ -2108,10 +2108,10 @@
 							{#if intersectionDetails.rowEntity.implementationNotes}
 								<div class="impl-notes">
 									<strong>Implementation Notes:</strong>
-									{#each Object.entries(intersectionDetails.rowEntity.implementationNotes) as [phase, text]}
-										<div class="phase-item">
-											<span class="phase-label">{phase.replace('phase-', 'P')}</span>
-											<span class="phase-text">{text}</span>
+									{#each Object.entries(intersectionDetails.rowEntity.implementationNotes) as [stg, text]}
+										<div class="stage-item">
+											<span class="stage-label">{stg.replace('stage-', 'S')}</span>
+											<span class="stage-text">{text}</span>
 										</div>
 									{/each}
 								</div>
@@ -2126,8 +2126,8 @@
 						<div class="link-indicator" class:linked={intersectionDetails.directLink}>
 							{#if intersectionDetails.directLink}
 								<span class="link-icon">✓</span> Linked ({intersectionDetails.directLink.type})
-								{#if intersectionDetails.directLink.phases?.length}
-									<span class="link-phases">Phases: {intersectionDetails.directLink.phases.map((p: string) => p.replace('phase-', 'P')).join(', ')}</span>
+								{#if intersectionDetails.directLink.stages?.length}
+									<span class="link-stages">Stages: {intersectionDetails.directLink.stages.map((p: string) => p.replace('stage-', 'S')).join(', ')}</span>
 								{/if}
 							{:else}
 								<span class="link-icon">○</span> Not directly linked
@@ -2148,13 +2148,13 @@
 							<p class="entity-detail">{intersectionDetails.colEntity.text}</p>
 						{:else if intersectionDetails.colType === 'risk' && intersectionDetails.colEntity}
 							<p class="entity-detail">{intersectionDetails.colEntity.name}</p>
-							{#if intersectionDetails.colEntity.phaseGuidance}
-								<div class="phase-guidance">
-									<strong>Phase Guidance:</strong>
-									{#each Object.entries(intersectionDetails.colEntity.phaseGuidance) as [phase, text]}
-										<div class="phase-item">
-											<span class="phase-label">{phase.replace('phase-', 'P')}</span>
-											<span class="phase-text">{text}</span>
+							{#if intersectionDetails.colEntity.stageGuidance}
+								<div class="stage-guidance">
+									<strong>Stage Guidance:</strong>
+									{#each Object.entries(intersectionDetails.colEntity.stageGuidance) as [stg, text]}
+										<div class="stage-item">
+											<span class="stage-label">{stg.replace('stage-', 'S')}</span>
+											<span class="stage-text">{text}</span>
 										</div>
 									{/each}
 								</div>
@@ -2164,10 +2164,10 @@
 							{#if intersectionDetails.colEntity.implementationNotes}
 								<div class="impl-notes">
 									<strong>Implementation Notes:</strong>
-									{#each Object.entries(intersectionDetails.colEntity.implementationNotes) as [phase, text]}
-										<div class="phase-item">
-											<span class="phase-label">{phase.replace('phase-', 'P')}</span>
-											<span class="phase-text">{text}</span>
+									{#each Object.entries(intersectionDetails.colEntity.implementationNotes) as [stg, text]}
+										<div class="stage-item">
+											<span class="stage-label">{stg.replace('stage-', 'S')}</span>
+											<span class="stage-text">{text}</span>
 										</div>
 									{/each}
 								</div>
@@ -2435,10 +2435,10 @@
 										{/if}
 									</div>
 									<div class="detail-section">
-										<strong>Phases:</strong>
-										<div class="phase-badges">
-											{#each selectedItem.phases || [] as phase}
-												<span class="phase-badge">{phase.replace('phase-', 'P')}</span>
+										<strong>Stages:</strong>
+										<div class="stage-badges">
+											{#each selectedItem.stages || [] as stg}
+												<span class="stage-badge">{stg.replace('stage-', 'S')}</span>
 											{/each}
 										</div>
 									</div>
@@ -2463,8 +2463,8 @@
 													<span class="conn-type {link.type}">{link.type}</span>
 													<span class="conn-direction">{isFrom ? '→' : '←'}</span>
 													<span class="conn-target {otherEntity}">{getEntityName(otherEntity, otherId)}</span>
-													{#if link.phases}
-														<span class="conn-phases">{link.phases.map((p: string) => p.replace('phase-', 'P')).join(', ')}</span>
+													{#if link.stages}
+														<span class="conn-stages">{link.stages.map((p: string) => p.replace('stage-', 'S')).join(', ')}</span>
 													{/if}
 												</button>
 											{/each}
@@ -2478,7 +2478,7 @@
 									{@const essentialItems = guidanceWithContent.filter(g => g.appropriateness === 'essential')}
 									{@const recommendedItems = guidanceWithContent.filter(g => g.appropriateness === 'recommended')}
 									<div class="guidance-section">
-										<h4>Guidance Trail ({selectedNodeGuidance.phase.replace('phase-', 'Phase ')})</h4>
+										<h4>Guidance Trail ({selectedNodeGuidance.stg.replace('stage-', 'Stage ')})</h4>
 										<p class="guidance-hint">Collected from {selectedNodeGuidance.guidance.length} connected nodes</p>
 
 										{#if essentialItems.length > 0}
@@ -2775,7 +2775,7 @@
 				</div>
 			</div>
 
-			<!-- Controls Column (filtered by global phase/tech) -->
+			<!-- Controls Column (filtered by global stage/tech) -->
 			<div class="column controls">
 				<div class="column-header">
 					<span class="column-icon">⚙</span>
@@ -2812,7 +2812,7 @@
 							</div>
 							<div class="node-text">{ctrl.name}</div>
 							<div class="node-meta">
-								<span class="phases">{ctrl.phases?.map((p: string) => p.replace('phase-', 'P')).join(' ')}</span>
+								<span class="stages">{ctrl.stages?.map((p: string) => p.replace('stage-', 'S')).join(' ')}</span>
 								{#if subcategory}
 									<span class="subcategory" title="Subcategory">{subcategory.code}</span>
 								{/if}
@@ -2895,10 +2895,10 @@
 						{/if}
 					</div>
 					<div class="detail-section">
-						<strong>Phases:</strong>
-						<div class="phase-badges">
-							{#each selectedDetails.item.phases || [] as phase}
-								<span class="phase-badge">{phase.replace('phase-', 'P')}</span>
+						<strong>Stages:</strong>
+						<div class="stage-badges">
+							{#each selectedDetails.item.stages || [] as stg}
+								<span class="stage-badge">{stg.replace('stage-', 'S')}</span>
 							{/each}
 						</div>
 					</div>
@@ -2929,8 +2929,8 @@
 									<span class="conn-type {link.type}">{link.type}</span>
 									<span class="conn-direction">{isFrom ? '→' : '←'}</span>
 									<span class="conn-target {otherEntity}">{getEntityName(otherEntity, otherId)}</span>
-									{#if link.phases}
-										<span class="conn-phases">{link.phases.map((p: string) => p.replace('phase-', 'P')).join(', ')}</span>
+									{#if link.stages}
+										<span class="conn-stages">{link.stages.map((p: string) => p.replace('stage-', 'S')).join(', ')}</span>
 									{/if}
 								</button>
 							{/each}
@@ -2976,36 +2976,36 @@
 						<input id="entity-domain-input" type="text" bind:value={editingEntity.domain} placeholder="Risk domain" />
 					</div>
 
-					<!-- Phase Guidance Editor -->
-					<div class="phase-guidance-section">
-						<h4>Phase-Specific Guidance</h4>
+					<!-- Stage Guidance Editor -->
+					<div class="stage-guidance-section">
+						<h4>Stage-Specific Guidance</h4>
 						<p class="guidance-hint">Prose that researchers can adapt for their IRB protocols</p>
 
-						{#if editingEntity.phaseGuidance}
+						{#if editingEntity.stageGuidance}
 							<div class="form-group">
-								<label for="phase-1-guidance">Phase 1: Discovery <span class="phase-tag p1">P1</span></label>
+								<label for="stage-1-guidance">Stage 1: Discovery <span class="stage-tag s1">S1</span></label>
 								<textarea
-									id="phase-1-guidance"
-									bind:value={editingEntity.phaseGuidance['phase-1']}
-									placeholder="Guidance for Phase 1 (Discovery) - retrospective data, algorithm development..."
+									id="stage-1-guidance"
+									bind:value={editingEntity.stageGuidance['stage-1']}
+									placeholder="Guidance for Stage 1 (Discovery) - retrospective data, algorithm development..."
 									rows="4"
 								></textarea>
 							</div>
 							<div class="form-group">
-								<label for="phase-2-guidance">Phase 2: Validation <span class="phase-tag p2">P2</span></label>
+								<label for="stage-2-guidance">Stage 2: Validation <span class="stage-tag s2">S2</span></label>
 								<textarea
-									id="phase-2-guidance"
-									bind:value={editingEntity.phaseGuidance['phase-2']}
-									placeholder="Guidance for Phase 2 (Validation) - prospective testing, controlled settings..."
+									id="stage-2-guidance"
+									bind:value={editingEntity.stageGuidance['stage-2']}
+									placeholder="Guidance for Stage 2 (Validation) - prospective testing, controlled settings..."
 									rows="4"
 								></textarea>
 							</div>
 							<div class="form-group">
-								<label for="phase-3-guidance">Phase 3: Deployment <span class="phase-tag p3">P3</span></label>
+								<label for="stage-3-guidance">Stage 3: Deployment <span class="stage-tag s3">S3</span></label>
 								<textarea
-									id="phase-3-guidance"
-									bind:value={editingEntity.phaseGuidance['phase-3']}
-									placeholder="Guidance for Phase 3 (Deployment) - live use, influences decisions..."
+									id="stage-3-guidance"
+									bind:value={editingEntity.stageGuidance['stage-3']}
+									placeholder="Guidance for Stage 3 (Deployment) - live use, influences decisions..."
 									rows="4"
 								></textarea>
 							</div>
@@ -3165,23 +3165,23 @@
 						</select>
 					</div>
 					<div class="form-group">
-						<span class="form-label">Applicable Phases</span>
-						<span class="field-hint">No selection = applies to all phases</span>
+						<span class="form-label">Applicable Stages</span>
+						<span class="field-hint">No selection = applies to all stages</span>
 						<div class="checkbox-group">
-							{#each phases as phase}
+							{#each stages as stg}
 								<label class="checkbox-label">
 									<input
 										type="checkbox"
-										checked={editingEntity.phases?.includes(phase.id)}
+										checked={editingEntity.stages?.includes(stg.id)}
 										onchange={(e) => {
 											if (e.currentTarget.checked) {
-												editingEntity.phases = [...(editingEntity.phases || []), phase.id];
+												editingEntity.stages = [...(editingEntity.stages || []), stg.id];
 											} else {
-												editingEntity.phases = (editingEntity.phases || []).filter((p: string) => p !== phase.id);
+												editingEntity.stages = (editingEntity.stages || []).filter((p: string) => p !== stg.id);
 											}
 										}}
 									/>
-									{phase.name}
+									{stg.name}
 								</label>
 							{/each}
 						</div>
@@ -3224,23 +3224,23 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<span class="form-label">Implementation Notes by Phase</span>
-						<span class="field-hint">Protocol-ready text for each applicable phase</span>
+						<span class="form-label">Implementation Notes by Stage</span>
+						<span class="field-hint">Protocol-ready text for each applicable stage</span>
 						<div class="impl-notes-group">
-							{#each phases as phase}
-								{#if !editingEntity.phases?.length || editingEntity.phases?.includes(phase.id)}
+							{#each stages as stg}
+								{#if !editingEntity.stages?.length || editingEntity.stages?.includes(stg.id)}
 									<div class="impl-note-item">
-										<label class="impl-note-label" for="impl-note-{phase.id}">{phase.name}</label>
+										<label class="impl-note-label" for="impl-note-{stg.id}">{stg.name}</label>
 										<textarea
-											id="impl-note-{phase.id}"
+											id="impl-note-{stg.id}"
 											rows="2"
-											placeholder="Implementation guidance for {phase.name}..."
-											value={editingEntity.implementationNotes?.[phase.id] || ''}
+											placeholder="Implementation guidance for {stg.name}..."
+											value={editingEntity.implementationNotes?.[stg.id] || ''}
 											oninput={(e) => {
 												if (!editingEntity.implementationNotes) {
 													editingEntity.implementationNotes = {};
 												}
-												editingEntity.implementationNotes[phase.id] = e.currentTarget.value;
+												editingEntity.implementationNotes[stg.id] = e.currentTarget.value;
 											}}
 										></textarea>
 									</div>
@@ -3266,7 +3266,7 @@
 										type: eType === 'question' ? 'trigger' : eType === 'risk' ? 'control' : 'control',
 										from: { entity: eType, id: editingEntity.id },
 										to: { entity: eType === 'question' ? 'risk' : 'control', id: '' },
-										phases: ['phase-1', 'phase-2', 'phase-3'],
+										stages: ['stage-1', 'stage-2', 'stage-3'],
 										answerValues: [],
 										logic: 'OR',
 										guidance: {}
@@ -3287,8 +3287,8 @@
 										<span class="conn-type-badge {link.type}">{link.type}</span>
 										<span class="conn-direction">{isFrom ? '→' : '←'}</span>
 										<span class="conn-other {otherEntity}">{getEntityName(otherEntity, otherId)}</span>
-										{#if link.phases?.length}
-											<span class="conn-phases-small">{link.phases.map((p: string) => p.replace('phase-', 'P')).join(',')}</span>
+										{#if link.stages?.length}
+											<span class="conn-stages-small">{link.stages.map((p: string) => p.replace('stage-', 'S')).join(',')}</span>
 										{/if}
 										<div class="conn-actions">
 											<button
@@ -3423,23 +3423,23 @@
 				</div>
 
 				<div class="form-group">
-					<span class="form-label">Applicable Phases</span>
-					<span class="field-hint">No selection = applies to all phases</span>
-					<div class="phase-checkboxes">
-						{#each phases as phase}
+					<span class="form-label">Applicable Stages</span>
+					<span class="field-hint">No selection = applies to all stages</span>
+					<div class="stage-checkboxes">
+						{#each stages as stg}
 							<label class="checkbox-label">
 								<input
 									type="checkbox"
-									checked={editingLink.phases?.includes(phase.id) || false}
+									checked={editingLink.stages?.includes(stg.id) || false}
 									onchange={(e) => {
 										if (e.currentTarget.checked) {
-											editingLink.phases = [...(editingLink.phases || []), phase.id];
+											editingLink.stages = [...(editingLink.stages || []), stg.id];
 										} else {
-											editingLink.phases = (editingLink.phases || []).filter((p: string) => p !== phase.id);
+											editingLink.stages = (editingLink.stages || []).filter((p: string) => p !== stg.id);
 										}
 									}}
 								/>
-								{phase.name}
+								{stg.name}
 							</label>
 						{/each}
 					</div>
@@ -3486,11 +3486,11 @@
 						<div class="form-group">
 							<span class="form-label">Control's Implementation Notes (from source)</span>
 							<div class="readonly-guidance">
-								{#each phases as phase}
-									{#if linkedControl.implementationNotes[phase.id]}
+								{#each stages as stg}
+									{#if linkedControl.implementationNotes[stg.id]}
 										<div class="guidance-display">
-											<span class="guidance-phase">{phase.short}</span>
-											<p class="guidance-text-readonly">{linkedControl.implementationNotes[phase.id]}</p>
+											<span class="guidance-stage">{stg.short}</span>
+											<p class="guidance-text-readonly">{linkedControl.implementationNotes[stg.id]}</p>
 										</div>
 									{/if}
 								{/each}
@@ -3503,16 +3503,16 @@
 					<div class="form-group">
 						<span class="form-label">Additional Link-specific Guidance (optional)</span>
 						<span class="field-hint">Override or supplement the control's guidance for this specific risk</span>
-						{#each phases as phase}
-							{#if editingLink.phases?.includes(phase.id)}
+						{#each stages as stg}
+							{#if editingLink.stages?.includes(stg.id)}
 								<div class="guidance-input">
-									<span class="guidance-phase">{phase.short}</span>
+									<span class="guidance-stage">{stg.short}</span>
 									<textarea
-										placeholder="Additional guidance for {phase.name}..."
-										value={editingLink.guidance?.[phase.id] || ''}
+										placeholder="Additional guidance for {stg.name}..."
+										value={editingLink.guidance?.[stg.id] || ''}
 										oninput={(e) => {
 											if (!editingLink.guidance) editingLink.guidance = {};
-											editingLink.guidance[phase.id] = e.currentTarget.value;
+											editingLink.guidance[stg.id] = e.currentTarget.value;
 										}}
 										rows="2"
 									></textarea>
@@ -4230,18 +4230,18 @@
 		line-height: 1.4;
 	}
 
-	.phase-guidance, .impl-notes {
+	.stage-guidance, .impl-notes {
 		margin-top: 0.5rem;
 		font-size: 0.75rem;
 	}
 
-	.phase-guidance strong, .impl-notes strong {
+	.stage-guidance strong, .impl-notes strong {
 		color: #94a3b8;
 		display: block;
 		margin-bottom: 0.25rem;
 	}
 
-	.phase-item {
+	.stage-item {
 		display: flex;
 		gap: 0.5rem;
 		margin-bottom: 0.25rem;
@@ -4250,13 +4250,13 @@
 		border-radius: 0.25rem;
 	}
 
-	.phase-label {
+	.stage-label {
 		font-weight: 600;
 		color: var(--color-question);
 		min-width: 1.5rem;
 	}
 
-	.phase-text {
+	.stage-text {
 		color: #cbd5e1;
 		line-height: 1.3;
 	}
@@ -4287,7 +4287,7 @@
 		font-size: 1rem;
 	}
 
-	.link-phases {
+	.link-stages {
 		font-size: 0.625rem;
 		background: #334155;
 		padding: 0.125rem 0.375rem;
@@ -4845,7 +4845,7 @@
 		flex-wrap: wrap;
 	}
 
-	.node-meta .phases {
+	.node-meta .stages {
 		color: var(--color-question);
 	}
 
@@ -5165,7 +5165,7 @@
 		white-space: nowrap;
 	}
 
-	.control-item .control-phases {
+	.control-item .control-stages {
 		color: var(--color-question);
 		font-size: 0.625rem;
 		margin-left: 0.5rem;
@@ -5197,13 +5197,13 @@
 		border-radius: 0.25rem;
 	}
 
-	.phase-badges, .tech-badges {
+	.stage-badges, .tech-badges {
 		display: flex;
 		flex-wrap: wrap;
 		gap: 0.25rem;
 	}
 
-	.phase-badge {
+	.stage-badge {
 		font-size: 0.6875rem;
 		background: var(--color-question-bg);
 		color: var(--color-question);
@@ -5303,7 +5303,7 @@
 	.conn-target.mitigation { color: var(--color-subcategory); }
 	.conn-target.regulation { color: var(--color-regulation); }
 
-	.conn-phases {
+	.conn-stages {
 		font-size: 0.5625rem;
 		color: #64748b;
 	}
@@ -5607,7 +5607,7 @@
 	.conn-other.regulation { color: var(--color-regulation); }
 	.conn-other.control { color: var(--color-control); }
 
-	.conn-phases-small {
+	.conn-stages-small {
 		color: #64748b;
 		font-size: 0.6875rem;
 	}
@@ -5896,7 +5896,7 @@
 		border-color: var(--color-question);
 	}
 
-	.phase-checkboxes, .answer-checkboxes {
+	.stage-checkboxes, .answer-checkboxes {
 		display: flex;
 		flex-direction: column;
 		gap: 0.375rem;
@@ -5971,7 +5971,7 @@
 		margin-bottom: 0.5rem;
 	}
 
-	.guidance-phase {
+	.guidance-stage {
 		font-size: 0.6875rem;
 		font-weight: 600;
 		color: var(--color-question);
@@ -6177,14 +6177,14 @@
 		align-self: flex-start;
 	}
 
-	/* Phase Guidance Editor */
-	.phase-guidance-section {
+	/* Stage Guidance Editor */
+	.stage-guidance-section {
 		margin-top: 1.5rem;
 		padding-top: 1rem;
 		border-top: 1px solid #334155;
 	}
 
-	.phase-guidance-section h4 {
+	.stage-guidance-section h4 {
 		margin: 0 0 0.25rem 0;
 		font-size: 0.9375rem;
 		color: #e2e8f0;
@@ -6196,12 +6196,12 @@
 		margin: 0 0 1rem 0;
 	}
 
-	.phase-guidance-section textarea {
+	.stage-guidance-section textarea {
 		font-size: 0.8125rem;
 		line-height: 1.5;
 	}
 
-	.phase-tag {
+	.stage-tag {
 		display: inline-block;
 		font-size: 0.625rem;
 		font-weight: 600;
@@ -6211,17 +6211,17 @@
 		vertical-align: middle;
 	}
 
-	.phase-tag.p1 {
+	.stage-tag.s1 {
 		background: #166534;
 		color: #bbf7d0;
 	}
 
-	.phase-tag.p2 {
+	.stage-tag.s2 {
 		background: #854d0e;
 		color: #fef08a;
 	}
 
-	.phase-tag.p3 {
+	.stage-tag.s3 {
 		background: #991b1b;
 		color: #fecaca;
 	}

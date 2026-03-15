@@ -4,7 +4,7 @@
 
 	let { data }: { data: PageData } = $props();
 
-	type ImplementationStatus = 'implemented' | 'in-protocol' | 'post-phase' | 'not-required';
+	type ImplementationStatus = 'implemented' | 'in-protocol' | 'post-stage' | 'not-required';
 
 	interface ControlSelection {
 		controlId: string;
@@ -66,7 +66,7 @@
 	const statusLabels: Record<ImplementationStatus, string> = {
 		'implemented': 'Already Implemented',
 		'in-protocol': 'In This Protocol',
-		'post-phase': 'Post-Phase',
+		'post-stage': 'Post-Stage',
 		'not-required': 'Not Required'
 	};
 
@@ -74,7 +74,7 @@
 	const statusColors: Record<ImplementationStatus, string> = {
 		'implemented': '#4ade80',  // --color-subcategory (green)
 		'in-protocol': '#60a5fa',  // --color-question (blue)
-		'post-phase': '#fcd34d',   // --color-trigger (yellow)
+		'post-stage': '#fcd34d',   // --color-trigger (yellow)
 		'not-required': '#94a3b8'
 	};
 
@@ -118,8 +118,8 @@
 		return questions;
 	});
 
-	// Show risks once phase is selected (simpler - conditional questions make "all answered" complex)
-	let showRisks = $derived(!!answers['phase']);
+	// Show risks once stage is selected (simpler - conditional questions make "all answered" complex)
+	let showRisks = $derived(!!answers['stage']);
 
 	// Collapsible panels
 	let questionsCollapsed = $state(false);
@@ -137,12 +137,12 @@
 		return count;
 	});
 
-	let selectedPhase = $derived(answers['phase'] as string || '');
+	let selectedStage = $derived(answers['stage'] as string || '');
 	let selectedModelTypes = $derived((answers['model-types'] as string[]) || []);
-	let phaseName = $derived(
-		selectedPhase === 'phase-1' ? 'Discovery' :
-		selectedPhase === 'phase-2' ? 'Validation' :
-		selectedPhase === 'phase-3' ? 'Deployment' : ''
+	let stageName = $derived(
+		selectedStage === 'stage-1' ? 'Discovery' :
+		selectedStage === 'stage-2' ? 'Validation' :
+		selectedStage === 'stage-3' ? 'Deployment' : ''
 	);
 
 	// Pre-index data structures (computed once on load)
@@ -170,15 +170,15 @@
 		}
 	}
 
-	// Pre-filter controls by phase and techType (recomputes when those change)
+	// Pre-filter controls by stage and techType (recomputes when those change)
 	let filteredControlsByStrategy = $derived.by(() => {
 		const result = new Map<string, any[]>();
 		for (const [strategyId, controls] of controlsBySubcategory) {
 			let filtered = controls;
-			// Filter by phase
-			if (selectedPhase) {
+			// Filter by stage
+			if (selectedStage) {
 				filtered = filtered.filter((c: any) =>
-					!c.phases || c.phases.length === 0 || c.phases.includes(selectedPhase)
+					!c.stages || c.stages.length === 0 || c.stages.includes(selectedStage)
 				);
 			}
 			// Filter by techType
@@ -206,7 +206,7 @@
 				? answer.some(val => answerValues.includes(val))
 				: answerValues.includes(answer);
 			if (matches) {
-				if (selectedPhase && link.phases && !link.phases.includes(selectedPhase)) continue;
+				if (selectedStage && link.stages && !link.stages.includes(selectedStage)) continue;
 				triggered.add(link.to.id);
 			}
 		}
@@ -228,7 +228,7 @@
 	});
 
 	let triggeredRisks = $derived.by(() => {
-		if (!selectedPhase) return [];
+		if (!selectedStage) return [];
 
 		const risks: Array<{
 			subdomain: any;
@@ -243,7 +243,7 @@
 				const subdomain = subdomainsById.get(subId) as any;
 				if (!subdomain) continue;
 
-				const riskContext = subdomain.phaseGuidance?.[selectedPhase] || '';
+				const riskContext = subdomain.stageGuidance?.[selectedStage] || '';
 				const riskStrategyLinks = mitigationLinksByRisk.get(subId) || [];
 				const linkedStrategies = riskStrategyLinks
 					.map((link: any) => strategiesById.get(link.to.id))
@@ -283,7 +283,7 @@
 	}
 
 	function getControlsForStrategy(strategyId: string): any[] {
-		// Use pre-filtered cache (already filtered by phase and techType)
+		// Use pre-filtered cache (already filtered by stage and techType)
 		let controls = filteredControlsByStrategy.get(strategyId) || [];
 
 		// Only apply runtime filters (source and search)
@@ -431,9 +431,9 @@
 		return { available, selected };
 	}
 
-	// Get appropriateness level for a strategy in current phase
+	// Get appropriateness level for a strategy in current stage
 	function getAppropriateness(strategy: any): Appropriateness {
-		return strategy.phaseAppropriateness?.[selectedPhase] || 'optional';
+		return strategy.stageAppropriateness?.[selectedStage] || 'optional';
 	}
 
 	// Pre-compute selected controls by risk (avoids repeated Object.values())
@@ -452,7 +452,7 @@
 		for (const risk of triggeredRisks) {
 			const riskId = risk.subdomain.id;
 			const essentialStrategies = risk.linkedStrategies.filter((s: any) =>
-				s.phaseAppropriateness?.[selectedPhase] === 'essential'
+				s.stageAppropriateness?.[selectedStage] === 'essential'
 			);
 			const riskControls = selectedControlsByRisk.get(riskId) || [];
 			const selectedEssential = essentialStrategies.filter((s: any) =>
@@ -592,8 +592,8 @@
 	let inProtocolControls = $derived(
 		protocolItems.flatMap(i => i.controls.filter(c => c.status === 'in-protocol').map(c => ({ ...i, control: c })))
 	);
-	let postPhaseControls = $derived(
-		protocolItems.flatMap(i => i.controls.filter(c => c.status === 'post-phase').map(c => ({ ...i, control: c })))
+	let postStageControls = $derived(
+		protocolItems.flatMap(i => i.controls.filter(c => c.status === 'post-stage').map(c => ({ ...i, control: c })))
 	);
 	let notRequiredControls = $derived(
 		protocolItems.flatMap(i => i.controls.filter(c => c.status === 'not-required').map(c => ({ ...i, control: c })))
@@ -679,8 +679,8 @@
 					return control.notes;
 				case 'in-protocol':
 					return control.notes;
-				case 'post-phase':
-					return `Following the ${phaseName} phase: ${control.notes}`;
+				case 'post-stage':
+					return `Following the ${stageName} stage: ${control.notes}`;
 				case 'not-required':
 					return `Not applicable: ${control.notes}`;
 				default:
@@ -696,8 +696,8 @@
 			case 'in-protocol':
 				return transformToProtocolProse(rawDescription, 'future') ||
 					`${control.controlName} will be implemented to mitigate ${control.riskName}.`;
-			case 'post-phase':
-				return `Following the ${phaseName} phase: ${transformToProtocolProse(rawDescription, 'future') || control.controlName + ' will be implemented.'}`;
+			case 'post-stage':
+				return `Following the ${stageName} stage: ${transformToProtocolProse(rawDescription, 'future') || control.controlName + ' will be implemented.'}`;
 			case 'not-required':
 				return `${control.controlName} was evaluated and determined not applicable to this study's scope.`;
 			default:
@@ -741,8 +741,8 @@
 				rows: [
 					new TableRow({
 						children: [
-							new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: 'Development Phase', bold: true })] })] }),
-							new TableCell({ children: [new Paragraph(phaseName || 'Not specified')] })
+							new TableCell({ children: [new Paragraph({ children: [new TextRun({ text: 'Development Stage', bold: true })] })] }),
+							new TableCell({ children: [new Paragraph(stageName || 'Not specified')] })
 						]
 					}),
 					new TableRow({
@@ -778,7 +778,7 @@
 		const byStatus: Record<ImplementationStatus, typeof protocolItems> = {
 			'implemented': [],
 			'in-protocol': [],
-			'post-phase': [],
+			'post-stage': [],
 			'not-required': []
 		};
 
@@ -849,16 +849,16 @@
 			}
 		}
 
-		// Post-Phase section
-		if (byStatus['post-phase'].length > 0) {
+		// Post-Stage section
+		if (byStatus['post-stage'].length > 0) {
 			children.push(
 				new Paragraph({
-					text: 'Controls Planned for Post-Phase Implementation',
+					text: 'Controls Planned for Post-Stage Implementation',
 					heading: HeadingLevel.HEADING_1,
 					spacing: { before: 400, after: 200 }
 				})
 			);
-			for (const item of byStatus['post-phase']) {
+			for (const item of byStatus['post-stage']) {
 				children.push(
 					new Paragraph({
 						text: `${item.riskIndex}. ${item.risk.subdomain.shortName}`,
@@ -913,12 +913,12 @@
 		});
 
 		const blob = await Packer.toBlob(doc);
-		saveAs(blob, `AI-Protocol-${phaseName}-${new Date().toISOString().split('T')[0]}.docx`);
+		saveAs(blob, `AI-Protocol-${stageName}-${new Date().toISOString().split('T')[0]}.docx`);
 	}
 
 	function copyMarkdown() {
 		let md = `# AI Research Protocol - Risk Mitigation Plan\n\n`;
-		md += `**Phase:** ${phaseName}\n`;
+		md += `**Stage:** ${stageName}\n`;
 		md += `**Model Types:** ${selectedModelTypes.join(', ') || 'Not specified'}\n`;
 		md += `**Date:** ${new Date().toLocaleDateString()}\n`;
 		md += `**Controls Selected:** ${totalSelectedControls}\n\n---\n\n`;
@@ -926,7 +926,7 @@
 		// Group controls by status within each risk
 		const hasImplemented = protocolItems.some(i => i.controls.some(c => c.status === 'implemented'));
 		const hasInProtocol = protocolItems.some(i => i.controls.some(c => c.status === 'in-protocol'));
-		const hasPostPhase = protocolItems.some(i => i.controls.some(c => c.status === 'post-phase'));
+		const hasPostStage = protocolItems.some(i => i.controls.some(c => c.status === 'post-stage'));
 		const hasNotRequired = protocolItems.some(i => i.controls.some(c => c.status === 'not-required'));
 
 		if (hasImplemented) {
@@ -955,10 +955,10 @@
 			}
 		}
 
-		if (hasPostPhase) {
-			md += `## Controls Planned for Post-Phase Implementation\n\n`;
+		if (hasPostStage) {
+			md += `## Controls Planned for Post-Stage Implementation\n\n`;
 			for (const item of protocolItems) {
-				const controls = item.controls.filter(c => c.status === 'post-phase');
+				const controls = item.controls.filter(c => c.status === 'post-stage');
 				if (controls.length > 0) {
 					md += `### ${item.riskIndex}. ${item.risk.subdomain.shortName}\n\n`;
 					controls.forEach((control, i) => {
@@ -1046,7 +1046,7 @@
 			{#if !risksCollapsed}
 				<div class="panel-content">
 					{#if !showRisks}
-						<div class="placeholder">Select a phase to see risks</div>
+						<div class="placeholder">Select a stage to see risks</div>
 					{:else if triggeredRisks.length === 0}
 						<div class="placeholder">No risks identified</div>
 					{:else}
@@ -1179,7 +1179,7 @@
 					</div>
 					<table class="doc-meta">
 						<tbody>
-							<tr><td>Phase</td><td>{phaseName || '—'}</td></tr>
+							<tr><td>Stage</td><td>{stageName || '—'}</td></tr>
 							<tr><td>Model Types</td><td>{selectedModelTypes.join(', ') || '—'}</td></tr>
 							<tr><td>Risks</td><td>{risksAddressed}/{triggeredRisks.length}</td></tr>
 							<tr><td>Controls</td><td>{totalSelectedControls}</td></tr>
@@ -1199,9 +1199,9 @@
 									{#each protocolItems as item}{@const rc = item.controls.filter(c => c.status === 'in-protocol')}{#if rc.length > 0}<div class="doc-risk"><h4>{item.riskIndex}. {item.risk.subdomain.shortName}</h4>{#each rc as control, i}<p class="doc-control">{item.riskIndex}.{i + 1} {generateProtocolText(control)}</p>{/each}</div>{/if}{/each}
 								</section>
 							{/if}
-							{#if postPhaseControls.length > 0}
-								<section><h3>Post-Phase</h3>
-									{#each protocolItems as item}{@const rc = item.controls.filter(c => c.status === 'post-phase')}{#if rc.length > 0}<div class="doc-risk"><h4>{item.riskIndex}. {item.risk.subdomain.shortName}</h4>{#each rc as control, i}<p class="doc-control">{item.riskIndex}.{i + 1} {generateProtocolText(control)}</p>{/each}</div>{/if}{/each}
+							{#if postStageControls.length > 0}
+								<section><h3>Post-Stage</h3>
+									{#each protocolItems as item}{@const rc = item.controls.filter(c => c.status === 'post-stage')}{#if rc.length > 0}<div class="doc-risk"><h4>{item.riskIndex}. {item.risk.subdomain.shortName}</h4>{#each rc as control, i}<p class="doc-control">{item.riskIndex}.{i + 1} {generateProtocolText(control)}</p>{/each}</div>{/if}{/each}
 								</section>
 							{/if}
 							{#if notRequiredControls.length > 0}

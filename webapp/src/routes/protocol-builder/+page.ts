@@ -20,11 +20,11 @@ export const load: PageLoad = async ({ fetch }) => {
 	const mitigations = await mitigationsRes.json();
 	const controls = await controlsRes.json();
 
-	// Build phaseMitigations from subdomains (phaseGuidance is now on each subdomain)
-	const phaseMitigations: Record<string, Record<string, string>> = {};
+	// Build stageMitigations from subdomains (stageGuidance is now on each subdomain)
+	const stageMitigations: Record<string, Record<string, string>> = {};
 	for (const subdomain of subdomains.riskSubdomains) {
-		if (subdomain.phaseGuidance) {
-			phaseMitigations[subdomain.id] = subdomain.phaseGuidance;
+		if (subdomain.stageGuidance) {
+			stageMitigations[subdomain.id] = subdomain.stageGuidance;
 		}
 	}
 
@@ -40,7 +40,7 @@ export const load: PageLoad = async ({ fetch }) => {
 
 	return {
 		questionCategories: questions.questionCategories,
-		phaseMitigations,
+		stageMitigations,
 		subdomains: subdomains.riskSubdomains,
 		domains: domains.riskDomains,
 		modelTypeRelevance: unified.modelTypeToSubdomainRelevance,

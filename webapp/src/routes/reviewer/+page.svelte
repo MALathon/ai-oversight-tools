@@ -2,7 +2,7 @@
 	import { base } from '$app/paths';
 	import { onMount } from 'svelte';
 
-	interface Phase {
+	interface Stage {
 		id: string;
 		name: string;
 		shortName: string;
@@ -26,7 +26,7 @@
 
 	interface Prompt {
 		text: string;
-		phases: string[];
+		stages: string[];
 	}
 
 	interface PromptsData {
@@ -36,34 +36,34 @@
 		};
 	}
 
-	let phases: Phase[] = $state([]);
+	let stages: Stage[] = $state([]);
 	let modelTypes: ModelType[] = $state([]);
 	let riskSubdomains: RiskSubdomain[] = $state([]);
 	let reviewerPrompts: PromptsData = $state({});
 	let modelTypeRelevance: Record<string, string[]> = $state({});
 
-	let selectedPhase: string = $state('');
+	let selectedStage: string = $state('');
 	let selectedModelTypes: string[] = $state([]);
 	let checkedItems: Set<string> = $state(new Set());
 	let loading = $state(true);
 
 	onMount(async () => {
 		try {
-			const [phasesRes, modelsRes, subdomainsRes, promptsRes, schemaRes] = await Promise.all([
-				fetch(`${base}/data/phases.json`),
+			const [stagesRes, modelsRes, subdomainsRes, promptsRes, schemaRes] = await Promise.all([
+				fetch(`${base}/data/stages.json`),
 				fetch(`${base}/data/model-types.json`),
 				fetch(`${base}/data/risk-subdomains.json`),
 				fetch(`${base}/data/reviewer-prompts.json`),
 				fetch(`${base}/data/unified-schema.json`)
 			]);
 
-			const phasesData = await phasesRes.json();
+			const stagesData = await stagesRes.json();
 			const modelsData = await modelsRes.json();
 			const subdomainsData = await subdomainsRes.json();
 			const promptsData = await promptsRes.json();
 			const schemaData = await schemaRes.json();
 
-			phases = phasesData.phases;
+			stages = stagesData.stages;
 			modelTypes = modelsData.modelTypes;
 			riskSubdomains = subdomainsData.riskSubdomains;
 			reviewerPrompts = promptsData.reviewerPrompts;
@@ -98,8 +98,8 @@
 	function getPromptsForSubdomain(subdomainId: string): Prompt[] {
 		const promptData = reviewerPrompts[subdomainId];
 		if (!promptData) return [];
-		if (!selectedPhase) return promptData.prompts;
-		return promptData.prompts.filter(p => p.phases.includes(selectedPhase));
+		if (!selectedStage) return promptData.prompts;
+		return promptData.prompts.filter(p => p.stages.includes(selectedStage));
 	}
 
 	function toggleCheck(id: string) {
@@ -134,7 +134,7 @@
 
 <div class="page-header">
 	<h1>IRB Reviewer Checklist</h1>
-	<p>Select the development phase and AI model type(s) to see applicable review prompts</p>
+	<p>Select the development stage and AI model type(s) to see applicable review prompts</p>
 </div>
 
 {#if loading}
@@ -142,11 +142,11 @@
 {:else}
 	<div class="filters">
 		<div class="filter-group">
-			<label for="phase-select">Development Phase</label>
-			<select id="phase-select" bind:value={selectedPhase}>
-				<option value="">All Phases</option>
-				{#each phases as phase}
-					<option value={phase.id}>{phase.shortName}</option>
+			<label for="stage-select">Development Stage</label>
+			<select id="stage-select" bind:value={selectedStage}>
+				<option value="">All Stages</option>
+				{#each stages as stage}
+					<option value={stage.id}>{stage.shortName}</option>
 				{/each}
 			</select>
 		</div>
@@ -210,9 +210,9 @@
 									onchange={() => toggleCheck(itemId)}
 								/>
 								<span class="prompt-text">{prompt.text}</span>
-								<span class="phase-tags">
-									{#each prompt.phases as phase}
-										<span class="phase-tag">{phase.replace('phase-', 'P')}</span>
+								<span class="stage-tags">
+									{#each prompt.stages as stg}
+										<span class="stage-tag">{stg.replace('stage-', 'S')}</span>
 									{/each}
 								</span>
 							</label>
@@ -427,13 +427,13 @@
 		line-height: 1.5;
 	}
 
-	.phase-tags {
+	.stage-tags {
 		display: flex;
 		gap: 0.25rem;
 		flex-shrink: 0;
 	}
 
-	.phase-tag {
+	.stage-tag {
 		background: #334155;
 		color: #94a3b8;
 		padding: 0.125rem 0.375rem;

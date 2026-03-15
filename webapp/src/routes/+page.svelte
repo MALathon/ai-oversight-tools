@@ -10,7 +10,7 @@
 	<h1>AI Oversight Tools</h1>
 	<p class="subtitle">Decision support for AI research ethics review</p>
 	<p class="description">
-		Based on the 3-Phase IRB Review Framework and the AIHSR Risk Reference Tool by Tamiko Eto
+		Based on the 3-Stage IRB Review Framework and the AIHSR Risk Reference Tool by Tamiko Eto
 	</p>
 </div>
 
@@ -26,7 +26,7 @@
 			</svg>
 		</div>
 		<h2>Risk Matrix</h2>
-		<p>Visual 3×3 risk assessment grid based on development phase and patient impact</p>
+		<p>Visual 3×3 risk assessment grid based on development stage and patient impact</p>
 		<span class="user-badge">For IRB Reviewers</span>
 	</a>
 
@@ -59,20 +59,20 @@
 </div>
 
 <section class="info-section">
-	<h2>The 3-Phase IRB Framework</h2>
-	<div class="phases">
-		<div class="phase">
-			<div class="phase-number">1</div>
+	<h2>The 3-Stage IRB Framework</h2>
+	<div class="stages">
+		<div class="stage">
+			<div class="stage-number">1</div>
 			<h3>Discovery</h3>
 			<p>Algorithm development using retrospective data. No clinical impact.</p>
 		</div>
-		<div class="phase">
-			<div class="phase-number">2</div>
+		<div class="stage">
+			<div class="stage-number">2</div>
 			<h3>Validation</h3>
 			<p>Prospective testing in controlled settings. Limited clinical interaction.</p>
 		</div>
-		<div class="phase">
-			<div class="phase-number">3</div>
+		<div class="stage">
+			<div class="stage-number">3</div>
 			<h3>Clinical/Deployment</h3>
 			<p>Live deployment influencing clinical decisions. Ongoing monitoring required.</p>
 		</div>
@@ -173,17 +173,17 @@
 		text-align: center;
 	}
 
-	.phases {
+	.stages {
 		display: grid;
 		grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 		gap: 1.5rem;
 	}
 
-	.phase {
+	.stage {
 		text-align: center;
 	}
 
-	.phase-number {
+	.stage-number {
 		width: 40px;
 		height: 40px;
 		background: #60a5fa;
@@ -197,13 +197,13 @@
 		margin: 0 auto 0.75rem;
 	}
 
-	.phase h3 {
+	.stage h3 {
 		color: #f1f5f9;
 		font-size: 1rem;
 		margin-bottom: 0.5rem;
 	}
 
-	.phase p {
+	.stage p {
 		color: #94a3b8;
 		font-size: 0.875rem;
 		line-height: 1.4;

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Phase } from '../types';
+	import type { Stage } from '../types';
 
 	interface ModelType {
 		id: string;
@@ -7,31 +7,31 @@
 	}
 
 	interface Props {
-		phases: Phase[];
+		stages: Stage[];
 		modelTypes: ModelType[];
-		selectedPhase: string;
+		selectedStage: string;
 		selectedTechType: string;
-		onPhaseChange: (phase: string) => void;
+		onStageChange: (stage: string) => void;
 		onTechTypeChange: (techType: string) => void;
 	}
 
 	let {
-		phases,
+		stages,
 		modelTypes,
-		selectedPhase,
+		selectedStage,
 		selectedTechType,
-		onPhaseChange,
+		onStageChange,
 		onTechTypeChange
 	}: Props = $props();
 </script>
 
 <div class="global-filters">
 	<div class="filter-group">
-		<span class="filter-label">Phase:</span>
-		<div class="phase-filter">
-			<button class:active={selectedPhase === 'all'} onclick={() => onPhaseChange('all')}>All</button>
-			{#each phases as phase}
-				<button class:active={selectedPhase === phase.id} onclick={() => onPhaseChange(phase.id)}>{phase.short}</button>
+		<span class="filter-label">Stage:</span>
+		<div class="stage-filter">
+			<button class:active={selectedStage === 'all'} onclick={() => onStageChange('all')}>All</button>
+			{#each stages as stg}
+				<button class:active={selectedStage === stg.id} onclick={() => onStageChange(stg.id)}>{stg.short}</button>
 			{/each}
 		</div>
 	</div>
@@ -69,12 +69,12 @@
 		font-weight: 500;
 	}
 
-	.phase-filter {
+	.stage-filter {
 		display: flex;
 		gap: 0.125rem;
 	}
 
-	.phase-filter button {
+	.stage-filter button {
 		padding: 0.25rem 0.5rem;
 		background: transparent;
 		border: none;
@@ -85,12 +85,12 @@
 		transition: all 0.15s ease;
 	}
 
-	.phase-filter button:hover {
+	.stage-filter button:hover {
 		background: #334155;
 		color: #f1f5f9;
 	}
 
-	.phase-filter button.active {
+	.stage-filter button.active {
 		background: #3b82f6;
 		color: white;
 	}

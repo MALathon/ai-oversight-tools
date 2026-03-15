@@ -3,7 +3,7 @@
 	import { onMount } from 'svelte';
 
 	interface Cell {
-		phase: string;
+		stage: string;
 		impact: string;
 		riskLevel: string;
 		oversightLevel: string;
@@ -25,10 +25,10 @@
 	let selectedCell: Cell | null = $state(null);
 	let loading = $state(true);
 
-	const phaseLabels: Record<string, string> = {
-		'phase-1': 'Discovery',
-		'phase-2': 'Validation',
-		'phase-3': 'Clinical/Deployment'
+	const stageLabels: Record<string, string> = {
+		'stage-1': 'Discovery',
+		'stage-2': 'Validation',
+		'stage-3': 'Clinical/Deployment'
 	};
 
 	const impactLabels: Record<string, string> = {
@@ -62,12 +62,12 @@
 		}
 	});
 
-	function getCell(phase: string, impact: string): Cell | undefined {
-		return cells.find(c => c.phase === phase && c.impact === impact);
+	function getCell(stage: string, impact: string): Cell | undefined {
+		return cells.find(c => c.stage === stage && c.impact === impact);
 	}
 
 	function handleCellClick(cell: Cell) {
-		selectedCell = selectedCell?.phase === cell.phase && selectedCell?.impact === cell.impact ? null : cell;
+		selectedCell = selectedCell?.stage === cell.stage && selectedCell?.impact === cell.impact ? null : cell;
 	}
 
 	function getRelevantSubdomains(cell: Cell): RiskSubdomain[] {
@@ -98,19 +98,19 @@
 		<div class="matrix">
 			<!-- Header row -->
 			<div class="cell header corner"></div>
-			{#each ['phase-1', 'phase-2', 'phase-3'] as phase}
-				<div class="cell header">{phaseLabels[phase]}</div>
+			{#each ['stage-1', 'stage-2', 'stage-3'] as stage}
+				<div class="cell header">{stageLabels[stage]}</div>
 			{/each}
 
 			<!-- Data rows -->
 			{#each ['direct-care', 'indirect', 'no-impact'] as impact}
 				<div class="cell header row-header">{impactLabels[impact]}</div>
-				{#each ['phase-1', 'phase-2', 'phase-3'] as phase}
-					{@const cell = getCell(phase, impact)}
+				{#each ['stage-1', 'stage-2', 'stage-3'] as stage}
+					{@const cell = getCell(stage, impact)}
 					{#if cell}
 						<button
 							class="cell data"
-							class:selected={selectedCell?.phase === phase && selectedCell?.impact === impact}
+							class:selected={selectedCell?.stage === stage && selectedCell?.impact === impact}
 							style="background-color: {cell.color}20; border-color: {cell.color}"
 							onclick={() => handleCellClick(cell)}
 						>
@@ -123,7 +123,7 @@
 		</div>
 
 		<!-- Axis labels -->
-		<div class="x-axis-label">Development Phase →</div>
+		<div class="x-axis-label">Development Stage →</div>
 		<div class="y-axis-label">← Patient Impact</div>
 	</div>
 
@@ -131,7 +131,7 @@
 	{#if selectedCell}
 		<div class="details-panel">
 			<div class="details-header" style="border-color: {selectedCell.color}">
-				<h2>{phaseLabels[selectedCell.phase]} + {impactLabels[selectedCell.impact]}</h2>
+				<h2>{stageLabels[selectedCell.stage]} + {impactLabels[selectedCell.impact]}</h2>
 				<div class="badges">
 					<span class="badge risk" style="background: {selectedCell.color}">{selectedCell.riskLevel.toUpperCase()} RISK</span>
 					<span class="badge oversight">{selectedCell.oversightLevel.toUpperCase()} REVIEW</span>

@@ -1,6 +1,6 @@
 // Admin module types
 
-export interface Phase {
+export interface Stage {
 	id: string;
 	name: string;
 	short: string;
@@ -21,7 +21,7 @@ export interface Risk {
 	name: string;
 	shortName: string;
 	domain: string;
-	phaseGuidance: Record<string, string>;
+	stageGuidance: Record<string, string>;
 }
 
 export interface Mitigation {
@@ -44,7 +44,7 @@ export interface Control {
 	description?: string;
 	source?: string;
 	subcategoryId: string;
-	phases: string[];
+	stages: string[];
 	techTypes: string[];
 }
 
@@ -60,7 +60,7 @@ export interface Link {
 	type: 'trigger' | 'mitigation' | 'regulation';
 	from: { entity: string; id: string };
 	to: { entity: string; id: string };
-	phases?: string[];
+	stages?: string[];
 	reasoning?: string;
 }
 
