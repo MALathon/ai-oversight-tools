@@ -8,7 +8,7 @@
     {
       "id": "predictive-triage-ai",
       "name": "Predictive triage AI",
-      "phase": "phase-1",
+      "stage": "stage-1",
       "modelTypes": ["predictive"],
       "riskDomains": ["discrimination-toxicity", "privacy-security"],
       "primaryRisks": ["lack-robustness-7.3", "governance-failure-6.5", "privacy-breach-2.1", "unfair-discrimination-1.1"],
@@ -26,7 +26,7 @@
     {
       "id": "llm-chat-consent-assistant",
       "name": "LLM Chat Consent Assistant",
-      "phase": "phase-1",
+      "stage": "stage-1",
       "modelTypes": ["llm"],
       "riskDomains": ["discrimination-toxicity", "privacy-security"],
       "primaryRisks": ["governance-failure-6.5", "lack-robustness-7.3", "privacy-breach-2.1", "unfair-discrimination-1.1"],
@@ -44,7 +44,7 @@
     {
       "id": "llm-post-discharge-instructions",
       "name": "LLM Chatbot providing post-discharge instructions",
-      "phase": "phase-2",
+      "stage": "stage-2",
       "modelTypes": ["llm"],
       "riskDomains": ["discrimination-toxicity", "privacy-security"],
       "primaryRisks": ["security-vulnerabilities-2.2", "lack-transparency-7.4", "false-information-3.1", "unequal-performance-1.3", "toxic-content-1.2"],
@@ -62,7 +62,7 @@
     {
       "id": "sepsis-prediction-ehr",
       "name": "Predictive model for sepsis risk from EHR data",
-      "phase": "phase-2",
+      "stage": "stage-2",
       "modelTypes": ["supervised-ml", "predictive"],
       "riskDomains": ["discrimination-toxicity", "privacy-security", "misinformation"],
       "primaryRisks": ["unfair-discrimination-1.1", "unequal-performance-1.3", "privacy-breach-2.1", "security-vulnerabilities-2.2", "information-pollution-3.2", "lack-transparency-7.4"],
@@ -80,7 +80,7 @@
     {
       "id": "tumor-boundary-imaging",
       "name": "AI-assisted imaging for tumor boundary detection",
-      "phase": "phase-2",
+      "stage": "stage-2",
       "modelTypes": ["supervised-ml"],
       "riskDomains": ["discrimination-toxicity", "privacy-security", "misinformation"],
       "primaryRisks": ["information-pollution-3.2", "unfair-discrimination-1.1", "unequal-performance-1.3", "privacy-breach-2.1", "governance-failure-6.5", "lack-transparency-7.4"],
@@ -98,7 +98,7 @@
     {
       "id": "pediatric-llm-eligibility",
       "name": "LLM summarizing pediatric patient notes for clinical trials eligibility",
-      "phase": "phase-3",
+      "stage": "stage-3",
       "modelTypes": ["llm"],
       "riskDomains": ["discrimination-toxicity", "privacy-security", "misinformation", "malicious-misuse", "human-computer-interaction", "socioeconomic-harms", "ai-safety-limitations"],
       "populationVulnerability": "children",
@@ -117,7 +117,7 @@
     {
       "id": "diabetic-retinopathy-detection",
       "name": "Computer vision tool for diabetic retinopathy detection",
-      "phase": "phase-3",
+      "stage": "stage-3",
       "modelTypes": ["computer-vision"],
       "riskDomains": ["discrimination-toxicity", "privacy-security", "misinformation", "malicious-misuse", "human-computer-interaction", "socioeconomic-harms", "ai-safety-limitations"],
       "primaryRisks": ["loss-of-agency-5.2", "unfair-discrimination-1.1", "unequal-performance-1.3", "privacy-breach-2.1", "overreliance-5.1", "lack-robustness-7.3", "lack-transparency-7.4"],
@@ -135,7 +135,7 @@
     {
       "id": "behavioral-nudges-minority",
       "name": "Minority Population-Focused Behavioral nudges based on AI-identified patterns in EHR",
-      "phase": "phase-2",
+      "stage": "stage-2",
       "modelTypes": ["predictive", "supervised-ml", "recommendation", "generative"],
       "riskDomains": ["discrimination-toxicity", "privacy-security", "misinformation", "malicious-misuse", "human-computer-interaction", "ai-safety-limitations"],
       "populationVulnerability": "racial-ethnic-minorities",
@@ -154,7 +154,7 @@
     {
       "id": "mental-health-clustering-older-adults",
       "name": "Unsupervised clustering to identify mental health risk profiles in older adults",
-      "phase": "phase-2",
+      "stage": "stage-2",
       "modelTypes": ["unsupervised-ml", "classification"],
       "riskDomains": ["discrimination-toxicity", "privacy-security", "misinformation", "malicious-misuse", "human-computer-interaction", "ai-safety-limitations"],
       "populationVulnerability": ["cognitively-impaired", "older-adults"],
@@ -173,7 +173,7 @@
     {
       "id": "radiology-report-llm-classification",
       "name": "Evaluation of LLM for radiology report classification to monitor performance, value and user engagement of FDA-approved AI algorithms",
-      "phase": "phase-1",
+      "stage": "stage-1",
       "modelTypes": ["predictive", "llm"],
       "riskDomains": ["discrimination-toxicity", "privacy-security", "misinformation", "human-computer-interaction"],
       "primaryRisks": ["overreliance-5.1", "false-information-3.1", "unfair-discrimination-1.1", "privacy-breach-2.1", "unequal-performance-1.3", "lack-transparency-7.4", "loss-of-agency-5.2"],
@@ -191,7 +191,7 @@
     {
       "id": "nurse-patient-transcription",
       "name": "Automated transcription and structuring of nurse-patient conversation into EHR fields",
-      "phase": "phase-2",
+      "stage": "stage-2",
       "modelTypes": ["llm"],
       "riskDomains": ["privacy-security", "human-computer-interaction", "misinformation", "discrimination-toxicity"],
       "primaryRisks": ["privacy-breach-2.1", "security-vulnerabilities-2.2"],
@@ -209,7 +209,7 @@
     {
       "id": "voice-ehr-autofill",
       "name": "AI system recording clinician-patient conversations to automatically fill EHR fields",
-      "phase": "phase-1",
+      "stage": "stage-1",
       "modelTypes": ["predictive"],
       "riskDomains": ["privacy-security", "misinformation"],
       "primaryRisks": ["privacy-breach-2.1"],
@@ -227,7 +227,7 @@
     {
       "id": "medical-record-summary-chatbot",
       "name": "Chatbot that summarizes medical records in prep for a doctor appointment",
-      "phase": "phase-2",
+      "stage": "stage-2",
       "modelTypes": ["llm"],
       "riskDomains": ["discrimination-toxicity", "privacy-security", "misinformation", "human-computer-interaction"],
       "primaryRisks": ["unfair-discrimination-1.1", "privacy-breach-2.1", "false-information-3.1"],

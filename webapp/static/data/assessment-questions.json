@@ -11,24 +11,24 @@
       "order": 1,
       "questions": [
         {
-          "id": "phase",
-          "question": "What development phase is your AI project in?",
+          "id": "stage",
+          "question": "What development stage is your AI project in?",
           "type": "single-select",
           "required": true,
           "options": [
             {
-              "value": "phase-1",
-              "label": "Phase 1: Discovery",
+              "value": "stage-1",
+              "label": "Stage 1: Discovery",
               "description": "Retrospective data, algorithm development"
             },
             {
-              "value": "phase-2",
-              "label": "Phase 2: Validation",
+              "value": "stage-2",
+              "label": "Stage 2: Validation",
               "description": "Prospective testing, controlled settings"
             },
             {
-              "value": "phase-3",
-              "label": "Phase 3: Deployment",
+              "value": "stage-3",
+              "label": "Stage 3: Deployment",
               "description": "Live use, influences decisions"
             }
           ]
@@ -84,10 +84,10 @@
       "name": "AI Characteristics",
       "order": 2,
       "showIf": {
-        "phase": [
-          "phase-1",
-          "phase-2",
-          "phase-3"
+        "stage": [
+          "stage-1",
+          "stage-2",
+          "stage-3"
         ]
       },
       "questions": [
@@ -110,9 +110,9 @@
           "type": "yes-no",
           "required": true,
           "showIf": {
-            "phase": [
-              "phase-2",
-              "phase-3"
+            "stage": [
+              "stage-2",
+              "stage-3"
             ]
           }
         },
@@ -146,10 +146,10 @@
       "name": "Data & Bias",
       "order": 3,
       "showIf": {
-        "phase": [
-          "phase-1",
-          "phase-2",
-          "phase-3"
+        "stage": [
+          "stage-1",
+          "stage-2",
+          "stage-3"
         ]
       },
       "questions": [
@@ -231,9 +231,9 @@
       "name": "Deployment Details",
       "order": 5,
       "showIf": {
-        "phase": [
-          "phase-2",
-          "phase-3"
+        "stage": [
+          "stage-2",
+          "stage-3"
         ]
       },
       "questions": [
@@ -263,8 +263,8 @@
           "type": "yes-no",
           "required": false,
           "showIf": {
-            "phase": [
-              "phase-3"
+            "stage": [
+              "stage-3"
             ]
           }
         },
@@ -274,8 +274,8 @@
           "type": "yes-no",
           "required": false,
           "showIf": {
-            "phase": [
-              "phase-3"
+            "stage": [
+              "stage-3"
             ]
           }
         }

@@ -9,19 +9,19 @@
     "philosophy": "Risk Subdomains are the PRIMARY organizing principle. All three tools work with the same AIHSR data, viewed through different lenses.",
     "dataSource": "All content derives from SME-reviewed AIHSR Risk Reference Tool, NOT the slide techCharacteristics (which were made up)",
     "toolUsage": {
-      "riskMatrix": "Visual 3x3 grid showing risk subdomains mapped by Phase × Patient Impact. Click cell to see applicable subdomains, prompts, and mitigations.",
-      "reviewerChecklist": "Reviewer selects phase and model type(s). System shows applicable reviewer prompts per subdomain with CFR references. Reviewer checks each item.",
+      "riskMatrix": "Visual 3x3 grid showing risk subdomains mapped by Stage × Patient Impact. Click cell to see applicable subdomains, prompts, and mitigations.",
+      "reviewerChecklist": "Reviewer selects stage and model type(s). System shows applicable reviewer prompts per subdomain with CFR references. Reviewer checks each item.",
       "innovatorChecklist": "Innovator answers assessment questions. System identifies triggered risk subdomains. Shows relevant mitigations and calculates oversight level."
     }
   },
 
   "coreDataFiles": {
-    "_note": "These files contain all SME-reviewed data. phaseGuidance is now embedded in riskSubdomains.",
+    "_note": "These files contain all SME-reviewed data. stageGuidance is now embedded in riskSubdomains.",
     "riskDomains": "data/risk-domains.json",
-    "riskSubdomains": "data/risk-subdomains.json (includes phaseGuidance per risk)",
+    "riskSubdomains": "data/risk-subdomains.json (includes stageGuidance per risk)",
     "modelTypes": "data/model-types.json",
     "populationVulnerabilities": "data/population-vulnerabilities.json",
-    "phases": "data/phases.json",
+    "stages": "data/stages.json",
     "mitigationStrategies": "data/mitigation-strategies.json",
     "reviewerPrompts": "data/reviewer-prompts.json",
     "cfrRegulations": "data/cfr-regulations.json",
@@ -32,13 +32,13 @@
   "riskMatrix": {
     "_note": "Configuration for the Risk Matrix tool (Slide 18 equivalent)",
     "xAxis": {
-      "id": "phase",
-      "label": "Development Phase",
+      "id": "stage",
+      "label": "Development Stage",
       "description": "What stage of AI development is your project in?",
       "values": [
-        {"id": "phase-1", "label": "Discovery", "position": 1},
-        {"id": "phase-2", "label": "Validation", "position": 2},
-        {"id": "phase-3", "label": "Clinical/Deployment", "position": 3}
+        {"id": "stage-1", "label": "Discovery", "position": 1},
+        {"id": "stage-2", "label": "Validation", "position": 2},
+        {"id": "stage-3", "label": "Deployment", "position": 3}
       ]
     },
     "yAxis": {
@@ -52,22 +52,22 @@
       ]
     },
     "cells": [
-      {"phase": "phase-1", "impact": "no-impact", "riskLevel": "low", "oversightLevel": "minimal", "color": "#22c55e"},
-      {"phase": "phase-1", "impact": "indirect", "riskLevel": "low", "oversightLevel": "standard", "color": "#84cc16"},
-      {"phase": "phase-1", "impact": "direct-care", "riskLevel": "medium", "oversightLevel": "standard", "color": "#eab308"},
-      {"phase": "phase-2", "impact": "no-impact", "riskLevel": "low", "oversightLevel": "standard", "color": "#84cc16"},
-      {"phase": "phase-2", "impact": "indirect", "riskLevel": "medium", "oversightLevel": "standard", "color": "#eab308"},
-      {"phase": "phase-2", "impact": "direct-care", "riskLevel": "high", "oversightLevel": "enhanced", "color": "#f97316"},
-      {"phase": "phase-3", "impact": "no-impact", "riskLevel": "medium", "oversightLevel": "standard", "color": "#eab308"},
-      {"phase": "phase-3", "impact": "indirect", "riskLevel": "high", "oversightLevel": "enhanced", "color": "#f97316"},
-      {"phase": "phase-3", "impact": "direct-care", "riskLevel": "high", "oversightLevel": "full", "color": "#ef4444"}
+      {"stage": "stage-1", "impact": "no-impact", "riskLevel": "low", "oversightLevel": "minimal", "color": "#22c55e"},
+      {"stage": "stage-1", "impact": "indirect", "riskLevel": "low", "oversightLevel": "standard", "color": "#84cc16"},
+      {"stage": "stage-1", "impact": "direct-care", "riskLevel": "medium", "oversightLevel": "standard", "color": "#eab308"},
+      {"stage": "stage-2", "impact": "no-impact", "riskLevel": "low", "oversightLevel": "standard", "color": "#84cc16"},
+      {"stage": "stage-2", "impact": "indirect", "riskLevel": "medium", "oversightLevel": "standard", "color": "#eab308"},
+      {"stage": "stage-2", "impact": "direct-care", "riskLevel": "high", "oversightLevel": "enhanced", "color": "#f97316"},
+      {"stage": "stage-3", "impact": "no-impact", "riskLevel": "medium", "oversightLevel": "standard", "color": "#eab308"},
+      {"stage": "stage-3", "impact": "indirect", "riskLevel": "high", "oversightLevel": "enhanced", "color": "#f97316"},
+      {"stage": "stage-3", "impact": "direct-care", "riskLevel": "high", "oversightLevel": "full", "color": "#ef4444"}
     ]
   },
 
   "oversightLevels": [
-    {"id": "minimal", "name": "Minimal Review", "description": "Expedited administrative review", "criteria": "Low risk, Phase 1, no vulnerable populations"},
-    {"id": "standard", "name": "Standard Review", "description": "Standard IRB review process", "criteria": "Moderate risk or Phase 2 activities"},
-    {"id": "enhanced", "name": "Enhanced Review", "description": "Additional safeguards and monitoring required", "criteria": "High risk, vulnerable populations, or Phase 3"},
+    {"id": "minimal", "name": "Minimal Review", "description": "Expedited administrative review", "criteria": "Low risk, Stage 1, no vulnerable populations"},
+    {"id": "standard", "name": "Standard Review", "description": "Standard IRB review process", "criteria": "Moderate risk or Stage 2 activities"},
+    {"id": "enhanced", "name": "Enhanced Review", "description": "Additional safeguards and monitoring required", "criteria": "High risk, vulnerable populations, or Stage 3"},
     {"id": "full", "name": "Full Committee Review", "description": "Comprehensive committee review with ongoing oversight", "criteria": "Direct care decisions in clinical deployment"}
   ],
 

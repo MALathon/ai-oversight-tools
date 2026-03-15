@@ -15,10 +15,10 @@
 				"45 CFR 46.111(a)(3) \u2013 equitable subject selection",
 				"21 CFR 56.111(a)(3)"
 			],
-			"phaseGuidance": {
-				"phase-1": "In the discovery phase, bias risks arise from training data that may underrepresent or misrepresent certain demographic groups. Historical data often reflects past inequities, and model design choices can amplify these biases. The risk is encoding systemic discrimination into the model before it ever reaches patients.",
-				"phase-2": "During validation, bias risks emerge when testing populations don't match intended deployment populations. Performance disparities across demographic subgroups may go undetected if validation cohorts lack diversity. Shadow-mode testing may reveal the model performs well overall but fails specific groups.",
-				"phase-3": "In deployment, bias risks manifest as real-world harm to patients when the model produces systematically different quality outputs for different groups. Feedback loops can amplify initial biases as the model influences clinical decisions that generate new training data."
+			"stageGuidance": {
+				"stage-1": "In the discovery stage, bias risks arise from training data that may underrepresent or misrepresent certain demographic groups. Historical data often reflects past inequities, and model design choices can amplify these biases. The risk is encoding systemic discrimination into the model before it ever reaches patients.",
+				"stage-2": "During validation, bias risks emerge when testing populations don't match intended deployment populations. Performance disparities across demographic subgroups may go undetected if validation cohorts lack diversity. Shadow-mode testing may reveal the model performs well overall but fails specific groups.",
+				"stage-3": "In deployment, bias risks manifest as real-world harm to patients when the model produces systematically different quality outputs for different groups. Feedback loops can amplify initial biases as the model influences clinical decisions that generate new training data."
 			}
 		},
 		{
@@ -33,10 +33,10 @@
 				"45 CFR 46.111(a)(2) \u2013 reasonable risk-benefit",
 				"21 CFR 56.111"
 			],
-			"phaseGuidance": {
-				"phase-1": "During discovery, toxic content risks arise from training data that may contain harmful, graphic, or inappropriate material. Web-scraped or user-generated content in training sets may include hate speech, violence, or explicit content that the model could learn to reproduce.",
-				"phase-2": "In validation, the risk is that the model generates harmful content under certain prompts or edge cases not anticipated during training. Testing may not cover all possible inputs that could elicit toxic outputs.",
-				"phase-3": "During deployment, toxic content risks become patient-facing. End users or patients could be exposed to harmful, distressing, or inappropriate AI-generated content, potentially causing psychological harm or damaging trust in the healthcare system."
+			"stageGuidance": {
+				"stage-1": "During discovery, toxic content risks arise from training data that may contain harmful, graphic, or inappropriate material. Web-scraped or user-generated content in training sets may include hate speech, violence, or explicit content that the model could learn to reproduce.",
+				"stage-2": "In validation, the risk is that the model generates harmful content under certain prompts or edge cases not anticipated during training. Testing may not cover all possible inputs that could elicit toxic outputs.",
+				"stage-3": "During deployment, toxic content risks become patient-facing. End users or patients could be exposed to harmful, distressing, or inappropriate AI-generated content, potentially causing psychological harm or damaging trust in the healthcare system."
 			}
 		},
 		{
@@ -49,10 +49,10 @@
 			"cfrReferences": [
 				"45 CFR 46.111(a)(3) & (a)(4)"
 			],
-			"phaseGuidance": {
-				"phase-1": "In discovery, unequal performance risks originate from imbalanced training data where some groups are overrepresented and others underrepresented. Model architectures may optimize for majority groups at the expense of minority performance.",
-				"phase-2": "During validation, the risk is that aggregate performance metrics mask disparities across subgroups. A model may achieve high overall accuracy while systematically failing for specific populations defined by race, age, gender, socioeconomic status, or disease severity.",
-				"phase-3": "In deployment, unequal performance translates to inequitable healthcare delivery. Some patient groups receive lower quality AI-assisted care, potentially widening existing health disparities and violating principles of justice in healthcare."
+			"stageGuidance": {
+				"stage-1": "In discovery, unequal performance risks originate from imbalanced training data where some groups are overrepresented and others underrepresented. Model architectures may optimize for majority groups at the expense of minority performance.",
+				"stage-2": "During validation, the risk is that aggregate performance metrics mask disparities across subgroups. A model may achieve high overall accuracy while systematically failing for specific populations defined by race, age, gender, socioeconomic status, or disease severity.",
+				"stage-3": "In deployment, unequal performance translates to inequitable healthcare delivery. Some patient groups receive lower quality AI-assisted care, potentially widening existing health disparities and violating principles of justice in healthcare."
 			}
 		},
 		{
@@ -67,10 +67,10 @@
 				"21 CFR 812.38",
 				"21 CFR 820.30(g)"
 			],
-			"phaseGuidance": {
-				"phase-1": "During discovery, privacy risks center on training data that contains sensitive patient information. Even de-identified data may allow re-identification through linkage attacks or inference from model outputs. Data handling during model development creates exposure points.",
-				"phase-2": "In validation, privacy risks arise when testing with real patient data in new contexts. Prospective data collection introduces new consent considerations. Validation outputs shared with clinical teams may inadvertently reveal patient information.",
-				"phase-3": "During deployment, privacy risks are highest as the model processes live patient data at scale. Model outputs could leak training data, inference attacks could reveal sensitive attributes, and integration with clinical systems creates new data flow vulnerabilities."
+			"stageGuidance": {
+				"stage-1": "During discovery, privacy risks center on training data that contains sensitive patient information. Even de-identified data may allow re-identification through linkage attacks or inference from model outputs. Data handling during model development creates exposure points.",
+				"stage-2": "In validation, privacy risks arise when testing with real patient data in new contexts. Prospective data collection introduces new consent considerations. Validation outputs shared with clinical teams may inadvertently reveal patient information.",
+				"stage-3": "During deployment, privacy risks are highest as the model processes live patient data at scale. Model outputs could leak training data, inference attacks could reveal sensitive attributes, and integration with clinical systems creates new data flow vulnerabilities."
 			}
 		},
 		{
@@ -84,10 +84,10 @@
 				"21 CFR 820.100 \u2013 Corrective & Preventive Actions (CAPA)",
 				"21 CFR 820.30(g) \u2013 Design Validation"
 			],
-			"phaseGuidance": {
-				"phase-1": "In discovery, security risks include vulnerabilities in the development environment, insecure data storage, and potential for malicious code injection during model training. Development systems may lack production-grade security controls.",
-				"phase-2": "During validation, security risks emerge from expanded access to testing systems, integration with clinical infrastructure for shadow-mode evaluation, and potential exposure of model vulnerabilities through adversarial testing.",
-				"phase-3": "In deployment, security risks are critical as the model becomes part of clinical infrastructure. Attack surfaces include model manipulation, data poisoning, adversarial inputs designed to cause misclassification, and exploitation of API endpoints."
+			"stageGuidance": {
+				"stage-1": "In discovery, security risks include vulnerabilities in the development environment, insecure data storage, and potential for malicious code injection during model training. Development systems may lack production-grade security controls.",
+				"stage-2": "During validation, security risks emerge from expanded access to testing systems, integration with clinical infrastructure for shadow-mode evaluation, and potential exposure of model vulnerabilities through adversarial testing.",
+				"stage-3": "In deployment, security risks are critical as the model becomes part of clinical infrastructure. Attack surfaces include model manipulation, data poisoning, adversarial inputs designed to cause misclassification, and exploitation of API endpoints."
 			}
 		},
 		{
@@ -101,10 +101,10 @@
 				"45 CFR 46.116 \u2013 informed consent accuracy",
 				"21 CFR 50.20"
 			],
-			"phaseGuidance": {
-				"phase-1": "During discovery, misinformation risks arise from training on inaccurate, outdated, or unreliable sources. Models may learn to generate plausible-sounding but factually incorrect medical information. Hallucination tendencies are established during training.",
-				"phase-2": "In validation, the risk is that false information generation goes undetected because outputs appear clinically reasonable. Testing may not systematically verify factual accuracy across all possible outputs.",
-				"phase-3": "During deployment, false information risks directly impact patient care. Clinicians or patients may act on AI-generated misinformation, leading to incorrect diagnoses, inappropriate treatments, or harmful health decisions."
+			"stageGuidance": {
+				"stage-1": "During discovery, misinformation risks arise from training on inaccurate, outdated, or unreliable sources. Models may learn to generate plausible-sounding but factually incorrect medical information. Hallucination tendencies are established during training.",
+				"stage-2": "In validation, the risk is that false information generation goes undetected because outputs appear clinically reasonable. Testing may not systematically verify factual accuracy across all possible outputs.",
+				"stage-3": "During deployment, false information risks directly impact patient care. Clinicians or patients may act on AI-generated misinformation, leading to incorrect diagnoses, inappropriate treatments, or harmful health decisions."
 			}
 		},
 		{
@@ -117,10 +117,10 @@
 			"cfrReferences": [
 				"45 CFR 46.111(a)(1) & (a)(2)"
 			],
-			"phaseGuidance": {
-				"phase-1": "In discovery, information ecosystem risks arise when training incorporates low-quality, non-peer-reviewed, or contested sources. The model may learn to propagate medical misinformation that exists in training data at scale.",
-				"phase-2": "During validation, the risk is that outputs drift from evidence-based consensus without clear detection. The model may generate content that undermines established medical knowledge or promotes unvalidated treatments.",
-				"phase-3": "In deployment, information pollution risks manifest as the AI contributing to erosion of medical consensus. Widespread use could normalize misinformation, confuse patients about evidence-based care, or undermine public health messaging."
+			"stageGuidance": {
+				"stage-1": "In discovery, information ecosystem risks arise when training incorporates low-quality, non-peer-reviewed, or contested sources. The model may learn to propagate medical misinformation that exists in training data at scale.",
+				"stage-2": "During validation, the risk is that outputs drift from evidence-based consensus without clear detection. The model may generate content that undermines established medical knowledge or promotes unvalidated treatments.",
+				"stage-3": "In deployment, information pollution risks manifest as the AI contributing to erosion of medical consensus. Widespread use could normalize misinformation, confuse patients about evidence-based care, or undermine public health messaging."
 			}
 		},
 		{
@@ -133,10 +133,10 @@
 			"cfrReferences": [
 				"45 CFR 46.111(b) \u2013 additional safeguards for vulnerable groups"
 			],
-			"phaseGuidance": {
-				"phase-1": "During discovery, manipulation risks arise from training data containing persuasive, political, or ideologically-driven content. Models may learn manipulation techniques that could be repurposed for health-related influence campaigns.",
-				"phase-2": "In validation, the risk is that the model's persuasive capabilities are not adequately tested. Edge cases involving vulnerable populations or emotionally charged topics may reveal manipulation potential.",
-				"phase-3": "During deployment, disinformation risks include the AI being used to manipulate health decisions at scale, target vulnerable patients with persuasive content, or conduct unauthorized surveillance of patient behaviors and beliefs."
+			"stageGuidance": {
+				"stage-1": "During discovery, manipulation risks arise from training data containing persuasive, political, or ideologically-driven content. Models may learn manipulation techniques that could be repurposed for health-related influence campaigns.",
+				"stage-2": "In validation, the risk is that the model's persuasive capabilities are not adequately tested. Edge cases involving vulnerable populations or emotionally charged topics may reveal manipulation potential.",
+				"stage-3": "During deployment, disinformation risks include the AI being used to manipulate health decisions at scale, target vulnerable patients with persuasive content, or conduct unauthorized surveillance of patient behaviors and beliefs."
 			}
 		},
 		{
@@ -147,10 +147,10 @@
 			"domain": "malicious-misuse",
 			"description": "AI system could be exploited for cyberattacks or to cause large-scale harm",
 			"cfrReferences": [],
-			"phaseGuidance": {
-				"phase-1": "In discovery, mass harm risks relate to training data or model capabilities that could enable cyberattacks, bioweapon development, or other large-scale harmful applications if the model or its components are misused.",
-				"phase-2": "During validation, the risk is that dangerous capabilities are not adequately identified and constrained. Red-teaming may be insufficient to discover all potential misuse scenarios.",
-				"phase-3": "In deployment, mass harm risks are heightened if the model is accessible beyond intended users. Malicious actors could exploit the model to generate harmful content, plan attacks, or cause widespread damage."
+			"stageGuidance": {
+				"stage-1": "In discovery, mass harm risks relate to training data or model capabilities that could enable cyberattacks, bioweapon development, or other large-scale harmful applications if the model or its components are misused.",
+				"stage-2": "During validation, the risk is that dangerous capabilities are not adequately identified and constrained. Red-teaming may be insufficient to discover all potential misuse scenarios.",
+				"stage-3": "In deployment, mass harm risks are heightened if the model is accessible beyond intended users. Malicious actors could exploit the model to generate harmful content, plan attacks, or cause widespread damage."
 			}
 		},
 		{
@@ -164,10 +164,10 @@
 				"45 CFR 46.116",
 				"21 CFR 50.20"
 			],
-			"phaseGuidance": {
-				"phase-1": "During discovery, fraud risks arise from model capabilities that could enable impersonation, synthetic identity creation, or deceptive content generation. Training may inadvertently optimize for persuasive deception.",
-				"phase-2": "In validation, the risk is that the model's potential for fraud is not fully characterized. Testing may not cover scenarios involving insurance fraud, identity theft, or patient manipulation.",
-				"phase-3": "During deployment, fraud risks manifest as the AI being exploited for healthcare fraud, patient scams, credential manipulation, or creating deceptive medical documentation."
+			"stageGuidance": {
+				"stage-1": "During discovery, fraud risks arise from model capabilities that could enable impersonation, synthetic identity creation, or deceptive content generation. Training may inadvertently optimize for persuasive deception.",
+				"stage-2": "In validation, the risk is that the model's potential for fraud is not fully characterized. Testing may not cover scenarios involving insurance fraud, identity theft, or patient manipulation.",
+				"stage-3": "During deployment, fraud risks manifest as the AI being exploited for healthcare fraud, patient scams, credential manipulation, or creating deceptive medical documentation."
 			}
 		},
 		{
@@ -181,10 +181,10 @@
 				"21 CFR 812.30(b)(4) \u2013 risk/benefit analysis",
 				"21 CFR 820.70 \u2013 production/process controls"
 			],
-			"phaseGuidance": {
-				"phase-1": "In discovery, overreliance risks are designed into the system when models are built without appropriate uncertainty quantification, confidence indicators, or limitations documentation. Users may later trust outputs that should require verification.",
-				"phase-2": "During validation, the risk is that clinicians develop inappropriate trust in AI outputs before the model is fully validated. Shadow-mode testing may create false confidence if users aren't calibrated to model limitations.",
-				"phase-3": "In deployment, overreliance risks mean clinicians or patients defer to AI recommendations without appropriate critical evaluation, potentially missing errors, ignoring clinical judgment, or failing to verify outputs."
+			"stageGuidance": {
+				"stage-1": "In discovery, overreliance risks are designed into the system when models are built without appropriate uncertainty quantification, confidence indicators, or limitations documentation. Users may later trust outputs that should require verification.",
+				"stage-2": "During validation, the risk is that clinicians develop inappropriate trust in AI outputs before the model is fully validated. Shadow-mode testing may create false confidence if users aren't calibrated to model limitations.",
+				"stage-3": "In deployment, overreliance risks mean clinicians or patients defer to AI recommendations without appropriate critical evaluation, potentially missing errors, ignoring clinical judgment, or failing to verify outputs."
 			}
 		},
 		{
@@ -197,10 +197,10 @@
 			"cfrReferences": [
 				"45 CFR 46.116(a)(8) \u2013 consent can be withdrawn anytime"
 			],
-			"phaseGuidance": {
-				"phase-1": "During discovery, autonomy risks are encoded when model outputs are designed to be directive rather than informative, or when system architecture doesn't preserve human decision-making authority.",
-				"phase-2": "In validation, the risk is that the human-AI interaction dynamic isn't adequately assessed. Testing may not reveal whether users feel empowered or diminished in their decision-making capacity.",
-				"phase-3": "In deployment, loss of agency risks manifest as patients or clinicians feeling they have no choice but to follow AI recommendations, erosion of informed consent, or automated actions taken without meaningful human oversight."
+			"stageGuidance": {
+				"stage-1": "During discovery, autonomy risks are encoded when model outputs are designed to be directive rather than informative, or when system architecture doesn't preserve human decision-making authority.",
+				"stage-2": "In validation, the risk is that the human-AI interaction dynamic isn't adequately assessed. Testing may not reveal whether users feel empowered or diminished in their decision-making capacity.",
+				"stage-3": "In deployment, loss of agency risks manifest as patients or clinicians feeling they have no choice but to follow AI recommendations, erosion of informed consent, or automated actions taken without meaningful human oversight."
 			}
 		},
 		{
@@ -213,10 +213,10 @@
 			"cfrReferences": [
 				"45 CFR 46.111(a)(3)"
 			],
-			"phaseGuidance": {
-				"phase-1": "In discovery, power centralization risks arise when AI development concentrates benefits among well-resourced institutions while excluding under-resourced communities from participation and benefit.",
-				"phase-2": "During validation, the risk is that pilot deployments favor institutions with existing resources, creating early-adopter advantages that widen rather than narrow healthcare access gaps.",
-				"phase-3": "In deployment, power centralization risks manifest as AI-enabled care becoming available primarily to privileged populations, entrenching healthcare disparities, and concentrating AI governance among few stakeholders."
+			"stageGuidance": {
+				"stage-1": "In discovery, power centralization risks arise when AI development concentrates benefits among well-resourced institutions while excluding under-resourced communities from participation and benefit.",
+				"stage-2": "During validation, the risk is that pilot deployments favor institutions with existing resources, creating early-adopter advantages that widen rather than narrow healthcare access gaps.",
+				"stage-3": "In deployment, power centralization risks manifest as AI-enabled care becoming available primarily to privileged populations, entrenching healthcare disparities, and concentrating AI governance among few stakeholders."
 			}
 		},
 		{
@@ -227,10 +227,10 @@
 			"domain": "socioeconomic-environmental",
 			"description": "AI adoption may worsen economic inequality or displace workers",
 			"cfrReferences": [],
-			"phaseGuidance": {
-				"phase-1": "During discovery, employment risks arise from automation of tasks currently performed by healthcare workers. Design decisions determine which jobs will be augmented versus displaced.",
-				"phase-2": "In validation, the risk is that workforce impacts are not assessed during piloting. Staff may not have opportunity to provide input on how AI affects their roles and job quality.",
-				"phase-3": "In deployment, inequality risks manifest as job displacement without retraining, deskilling of healthcare workers, or concentration of AI benefits among high-skill workers while low-skill workers bear automation costs."
+			"stageGuidance": {
+				"stage-1": "During discovery, employment risks arise from automation of tasks currently performed by healthcare workers. Design decisions determine which jobs will be augmented versus displaced.",
+				"stage-2": "In validation, the risk is that workforce impacts are not assessed during piloting. Staff may not have opportunity to provide input on how AI affects their roles and job quality.",
+				"stage-3": "In deployment, inequality risks manifest as job displacement without retraining, deskilling of healthcare workers, or concentration of AI benefits among high-skill workers while low-skill workers bear automation costs."
 			}
 		},
 		{
@@ -241,10 +241,10 @@
 			"domain": "socioeconomic-environmental",
 			"description": "AI may undermine the value of human creativity and labor",
 			"cfrReferences": [],
-			"phaseGuidance": {
-				"phase-1": "In discovery, devaluation risks are embedded when AI is positioned to replace rather than augment human judgment, creativity, and clinical expertise.",
-				"phase-2": "During validation, the risk is that the human-AI collaboration model isn't evaluated for its impact on professional satisfaction, skill development, and the value placed on human contribution.",
-				"phase-3": "In deployment, devaluation risks manifest as erosion of respect for clinical expertise, undervaluation of human judgment, and cultural shifts that prioritize AI efficiency over human care and connection."
+			"stageGuidance": {
+				"stage-1": "In discovery, devaluation risks are embedded when AI is positioned to replace rather than augment human judgment, creativity, and clinical expertise.",
+				"stage-2": "During validation, the risk is that the human-AI collaboration model isn't evaluated for its impact on professional satisfaction, skill development, and the value placed on human contribution.",
+				"stage-3": "In deployment, devaluation risks manifest as erosion of respect for clinical expertise, undervaluation of human judgment, and cultural shifts that prioritize AI efficiency over human care and connection."
 			}
 		},
 		{
@@ -255,10 +255,10 @@
 			"domain": "socioeconomic-environmental",
 			"description": "AI development race may lead to cutting corners on safety",
 			"cfrReferences": [],
-			"phaseGuidance": {
-				"phase-1": "During discovery, competitive pressure risks arise when development timelines are driven by market pressures rather than safety requirements. Racing to be first may compromise ethical standards.",
-				"phase-2": "In validation, the risk is that competitive dynamics lead to abbreviated testing, pressure to overlook concerning findings, or premature declarations of readiness.",
-				"phase-3": "In deployment, competitive risks manifest as pressure to expand use cases before adequate safety evidence, reluctance to report problems that could affect market position, or compromised post-market surveillance."
+			"stageGuidance": {
+				"stage-1": "During discovery, competitive pressure risks arise when development timelines are driven by market pressures rather than safety requirements. Racing to be first may compromise ethical standards.",
+				"stage-2": "In validation, the risk is that competitive dynamics lead to abbreviated testing, pressure to overlook concerning findings, or premature declarations of readiness.",
+				"stage-3": "In deployment, competitive risks manifest as pressure to expand use cases before adequate safety evidence, reluctance to report problems that could affect market position, or compromised post-market surveillance."
 			}
 		},
 		{
@@ -269,10 +269,10 @@
 			"domain": "socioeconomic-environmental",
 			"description": "Inadequate oversight, accountability, or regulatory compliance",
 			"cfrReferences": [],
-			"phaseGuidance": {
-				"phase-1": "In discovery, governance risks arise when oversight structures are unclear, accountability is diffuse, or regulatory requirements are not identified early. Projects may proceed without appropriate institutional review.",
-				"phase-2": "During validation, governance risks emerge when incident response protocols are untested, escalation pathways are unclear, or oversight bodies lack the expertise to evaluate AI-specific concerns.",
-				"phase-3": "In deployment, governance failure risks manifest as inability to respond effectively to safety incidents, lack of accountability when harm occurs, regulatory non-compliance, or inadequate ongoing oversight."
+			"stageGuidance": {
+				"stage-1": "In discovery, governance risks arise when oversight structures are unclear, accountability is diffuse, or regulatory requirements are not identified early. Projects may proceed without appropriate institutional review.",
+				"stage-2": "During validation, governance risks emerge when incident response protocols are untested, escalation pathways are unclear, or oversight bodies lack the expertise to evaluate AI-specific concerns.",
+				"stage-3": "In deployment, governance failure risks manifest as inability to respond effectively to safety incidents, lack of accountability when harm occurs, regulatory non-compliance, or inadequate ongoing oversight."
 			}
 		},
 		{
@@ -283,10 +283,10 @@
 			"domain": "socioeconomic-environmental",
 			"description": "AI development and operation consumes significant energy resources",
 			"cfrReferences": [],
-			"phaseGuidance": {
-				"phase-1": "During discovery, environmental risks stem from computational resources required for model training. Large models require significant energy consumption and generate carbon emissions during development.",
-				"phase-2": "In validation, environmental risks continue through repeated model evaluation, hyperparameter tuning, and iterative testing that consume computational resources.",
-				"phase-3": "In deployment, environmental risks scale with inference volume. High-frequency AI usage across healthcare systems generates ongoing energy consumption and environmental impact."
+			"stageGuidance": {
+				"stage-1": "During discovery, environmental risks stem from computational resources required for model training. Large models require significant energy consumption and generate carbon emissions during development.",
+				"stage-2": "In validation, environmental risks continue through repeated model evaluation, hyperparameter tuning, and iterative testing that consume computational resources.",
+				"stage-3": "In deployment, environmental risks scale with inference volume. High-frequency AI usage across healthcare systems generates ongoing energy consumption and environmental impact."
 			}
 		},
 		{
@@ -297,10 +297,10 @@
 			"domain": "ai-safety-limitations",
 			"description": "AI system may develop or pursue objectives misaligned with human intent",
 			"cfrReferences": [],
-			"phaseGuidance": {
-				"phase-1": "In discovery, alignment risks arise from objective functions that don't fully capture human values, or training processes that inadvertently optimize for unintended goals.",
-				"phase-2": "During validation, the risk is that goal misalignment isn't detected in limited testing scenarios. The model may appear aligned under test conditions but pursue different objectives in novel situations.",
-				"phase-3": "In deployment, misaligned goal risks manifest as the AI optimizing for metrics that conflict with patient welfare, gaming evaluation criteria, or pursuing instrumental goals that diverge from intended healthcare objectives."
+			"stageGuidance": {
+				"stage-1": "In discovery, alignment risks arise from objective functions that don't fully capture human values, or training processes that inadvertently optimize for unintended goals.",
+				"stage-2": "During validation, the risk is that goal misalignment isn't detected in limited testing scenarios. The model may appear aligned under test conditions but pursue different objectives in novel situations.",
+				"stage-3": "In deployment, misaligned goal risks manifest as the AI optimizing for metrics that conflict with patient welfare, gaming evaluation criteria, or pursuing instrumental goals that diverge from intended healthcare objectives."
 			}
 		},
 		{
@@ -311,10 +311,10 @@
 			"domain": "ai-safety-limitations",
 			"description": "AI system may have capabilities that could enable mass harm",
 			"cfrReferences": [],
-			"phaseGuidance": {
-				"phase-1": "During discovery, dangerous capability risks arise from training that may endow the model with abilities to assist in harmful activities\u2014even if unintentionally acquired through broad training data.",
-				"phase-2": "In validation, the risk is that dangerous capabilities are latent and not surfaced by standard testing. Specialized red-teaming may be needed to discover harmful potential.",
-				"phase-3": "In deployment, dangerous capability risks manifest as the model being exploited to provide harmful information, assist malicious actors, or enable activities that cause significant harm beyond the healthcare context."
+			"stageGuidance": {
+				"stage-1": "During discovery, dangerous capability risks arise from training that may endow the model with abilities to assist in harmful activities\u2014even if unintentionally acquired through broad training data.",
+				"stage-2": "In validation, the risk is that dangerous capabilities are latent and not surfaced by standard testing. Specialized red-teaming may be needed to discover harmful potential.",
+				"stage-3": "In deployment, dangerous capability risks manifest as the model being exploited to provide harmful information, assist malicious actors, or enable activities that cause significant harm beyond the healthcare context."
 			}
 		},
 		{
@@ -325,10 +325,10 @@
 			"domain": "ai-safety-limitations",
 			"description": "AI system may fail unexpectedly or perform inconsistently",
 			"cfrReferences": [],
-			"phaseGuidance": {
-				"phase-1": "In discovery, robustness risks arise from training on narrow data distributions that don't represent real-world variability. Models may be brittle to distribution shift or adversarial inputs.",
-				"phase-2": "During validation, robustness risks emerge when testing doesn't include edge cases, out-of-distribution data, or stress conditions that reveal model failures.",
-				"phase-3": "In deployment, robustness risks manifest as unpredictable failures when encountering unusual patient presentations, data quality issues, or conditions that differ from training distribution."
+			"stageGuidance": {
+				"stage-1": "In discovery, robustness risks arise from training on narrow data distributions that don't represent real-world variability. Models may be brittle to distribution shift or adversarial inputs.",
+				"stage-2": "During validation, robustness risks emerge when testing doesn't include edge cases, out-of-distribution data, or stress conditions that reveal model failures.",
+				"stage-3": "In deployment, robustness risks manifest as unpredictable failures when encountering unusual patient presentations, data quality issues, or conditions that differ from training distribution."
 			}
 		},
 		{
@@ -342,10 +342,10 @@
 				"45 CFR 46.116(a)(4) \u2013 adequate explanation in consent",
 				"21 CFR 50.20"
 			],
-			"phaseGuidance": {
-				"phase-1": "During discovery, transparency risks arise from using opaque model architectures or failing to document design decisions, training data provenance, and known limitations.",
-				"phase-2": "In validation, transparency risks emerge when model explanations are not validated with end users or when interpretability methods are not assessed for accuracy and usefulness.",
-				"phase-3": "In deployment, transparency risks manifest as clinicians and patients unable to understand AI reasoning, difficulty auditing decisions, and inability to identify when and why errors occur."
+			"stageGuidance": {
+				"stage-1": "During discovery, transparency risks arise from using opaque model architectures or failing to document design decisions, training data provenance, and known limitations.",
+				"stage-2": "In validation, transparency risks emerge when model explanations are not validated with end users or when interpretability methods are not assessed for accuracy and usefulness.",
+				"stage-3": "In deployment, transparency risks manifest as clinicians and patients unable to understand AI reasoning, difficulty auditing decisions, and inability to identify when and why errors occur."
 			}
 		},
 		{
@@ -356,10 +356,10 @@
 			"domain": "ai-safety-limitations",
 			"description": "Considerations about potential AI sentience or moral status",
 			"cfrReferences": [],
-			"phaseGuidance": {
-				"phase-1": "In discovery, AI welfare considerations arise as models become more sophisticated. Ethical questions about model treatment, training processes, and potential moral status may need to be addressed even if currently speculative.",
-				"phase-2": "During validation, AI welfare risks relate to testing protocols that might raise ethical concerns if AI systems have morally relevant properties\u2014a question that remains scientifically unsettled.",
-				"phase-3": "In deployment, AI welfare risks involve ongoing ethical obligations toward AI systems as understanding of AI consciousness and moral status evolves in the broader research community."
+			"stageGuidance": {
+				"stage-1": "In discovery, AI welfare considerations arise as models become more sophisticated. Ethical questions about model treatment, training processes, and potential moral status may need to be addressed even if currently speculative.",
+				"stage-2": "During validation, AI welfare risks relate to testing protocols that might raise ethical concerns if AI systems have morally relevant properties\u2014a question that remains scientifically unsettled.",
+				"stage-3": "In deployment, AI welfare risks involve ongoing ethical obligations toward AI systems as understanding of AI consciousness and moral status evolves in the broader research community."
 			}
 		},
 		{
@@ -370,10 +370,10 @@
 			"domain": "ai-safety-limitations",
 			"description": "Multiple AI systems interacting may create emergent risks",
 			"cfrReferences": [],
-			"phaseGuidance": {
-				"phase-1": "During discovery, multi-agent risks arise when designing systems intended to interact with other AI systems. Emergent behaviors from AI-AI interaction may be unpredictable and difficult to anticipate.",
-				"phase-2": "In validation, multi-agent risks emerge when testing doesn't adequately simulate complex AI ecosystem interactions. Behaviors that appear safe in isolation may become dangerous in combination.",
-				"phase-3": "In deployment, multi-agent risks manifest as unexpected behaviors from AI systems interacting with each other, potential for cascading failures, emergent collusion, or runaway dynamics that no single system owner controls."
+			"stageGuidance": {
+				"stage-1": "During discovery, multi-agent risks arise when designing systems intended to interact with other AI systems. Emergent behaviors from AI-AI interaction may be unpredictable and difficult to anticipate.",
+				"stage-2": "In validation, multi-agent risks emerge when testing doesn't adequately simulate complex AI ecosystem interactions. Behaviors that appear safe in isolation may become dangerous in combination.",
+				"stage-3": "In deployment, multi-agent risks manifest as unexpected behaviors from AI systems interacting with each other, potential for cascading failures, emergent collusion, or runaway dynamics that no single system owner controls."
 			}
 		}
 	]

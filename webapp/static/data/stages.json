@@ -1,18 +1,18 @@
 {
   "$schema": "../schemas/phases.schema.json",
-  "version": "1.0.0",
-  "source": "AIHSR Risk Reference Tool v1.5 (Tamiko Eto)",
-  "lastUpdated": "2025-09-02",
-  "phases": [
+  "version": "2.0.0",
+  "source": "Three-Stage IRB Review Framework (Eto, Lifson & Vidal)",
+  "lastUpdated": "2026-03-15",
+  "stages": [
     {
-      "id": "phase-1",
+      "id": "stage-1",
       "number": 1,
-      "name": "Discovery & Algorithm Development",
+      "name": "Discovery & Ideation",
       "shortName": "Discovery",
-      "description": "Initial model development using retrospective or synthetic data. No direct patient interaction. Focus on proof-of-concept and feasibility.",
+      "description": "Teaching and training the system. AI is learning from data but is not providing advice or making decisions. Uses retrospective or secondary-use data.",
       "characteristics": [
         "Retrospective or synthetic data use",
-        "No clinical deployment",
+        "No real-world deployment",
         "Algorithm training and initial testing",
         "De-identification of training data",
         "Bias analysis on retrospective datasets"
@@ -26,14 +26,14 @@
       ]
     },
     {
-      "id": "phase-2",
+      "id": "stage-2",
       "number": 2,
-      "name": "Validation (Prospective or Synthetic Validation)",
+      "name": "Analytic & Performance Validation",
       "shortName": "Validation",
-      "description": "Prospective testing with real or synthetic validation data. May involve limited clinician interaction but no clinical reliance. Focus on performance validation.",
+      "description": "Evaluating system behavior. AI produces outputs that are tested and reviewed, not used in real situations.",
       "characteristics": [
         "Prospective data collection possible",
-        "Clinician review of outputs (not for decisions)",
+        "Reviewer assessment of outputs (not for decisions)",
         "Formal testing and auditing protocols",
         "Shadow mode or parallel testing",
         "Subgroup performance evaluation"
@@ -47,21 +47,21 @@
       ]
     },
     {
-      "id": "phase-3",
+      "id": "stage-3",
       "number": 3,
-      "name": "Clinical Investigation or Deployment",
-      "shortName": "Clinical/Deployment",
-      "description": "Active clinical use or deployment. AI outputs may inform or support clinical decisions. Ongoing monitoring required.",
+      "name": "Real-World Deployment",
+      "shortName": "Deployment",
+      "description": "AI is used in real settings and its outputs influence decisions and outcomes. Highest level of oversight required.",
       "characteristics": [
-        "Integration into clinical workflows",
-        "Clinician training on AI use",
+        "Integration into operational workflows",
+        "User training on AI use",
         "Staged rollout with monitoring",
         "Real-time safety monitoring",
         "Incident reporting systems"
       ],
       "typicalOversight": "Enhanced to Full IRB review",
       "keyFocus": [
-        "Patient safety",
+        "Participant safety",
         "Human-in-the-loop requirements",
         "Ongoing performance monitoring",
         "Adverse event reporting",
