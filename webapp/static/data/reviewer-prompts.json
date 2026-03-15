@@ -2,25 +2,25 @@
   "$schema": "../schemas/reviewer-prompts.schema.json",
   "version": "1.0.0",
   "source": "AIHSR Risk Reference Tool v1.5 (Tamiko Eto)",
-  "lastUpdated": "2025-09-02",
+  "lastUpdated": "2026-03-15",
   "reviewerPrompts": {
     "unfair-discrimination-1.1": {
       "shortName": "Biased Results or Misrepresentation",
       "prompts": [
         {
-          "text": "Please report the demographics of your training dataset and note any known gaps or limitations",
+          "text": "The protocol reports the demographics of the training dataset and notes any known gaps or limitations",
           "stages": ["stage-1"]
         },
         {
-          "text": "Please describe how you will evaluate potential bias in the dataset before model training",
+          "text": "The protocol describes how potential bias in the dataset will be evaluated before model training",
           "stages": ["stage-1"]
         },
         {
-          "text": "Your training data may be biased. Please add your plan for checking and reducing bias so that no group is unfairly treated",
+          "text": "The protocol includes a plan for checking and reducing bias so that no group is unfairly treated",
           "stages": ["stage-2", "stage-3"]
         },
         {
-          "text": "Please explain how you will check that AI does not unfairly harm or exclude marginalized groups",
+          "text": "The protocol explains how the investigator will verify that the AI does not unfairly harm or exclude marginalized groups",
           "stages": ["stage-3"]
         }
       ]
@@ -29,11 +29,11 @@
       "shortName": "Harmful Content Exposure",
       "prompts": [
         {
-          "text": "Please describe what safeguards are in place to ensure participants will not be exposed to harmful, offensive, or distressing AI-generated content during the study",
+          "text": "The protocol describes safeguards to ensure participants will not be exposed to harmful, offensive, or distressing AI-generated content during the study",
           "stages": ["stage-2", "stage-3"]
         },
         {
-          "text": "If participants are accidentally exposed to inappropriate or toxic material, what immediate protections (e.g., withdrawal, reporting, counseling referral) will be provided?",
+          "text": "The protocol addresses what happens if participants are accidentally exposed to inappropriate or toxic material, including immediate protections (e.g., withdrawal, reporting, counseling referral)",
           "stages": ["stage-2", "stage-3"]
         }
       ]
@@ -42,31 +42,31 @@
       "shortName": "Inequity or Fairness",
       "prompts": [
         {
-          "text": "Please describe how you will test your model on new and diverse datasets beyond those used in training",
+          "text": "The protocol describes how the model will be tested on new and diverse datasets beyond those used in training",
           "stages": ["stage-2"]
         },
         {
-          "text": "Please describe your strategy for bias evaluation and fairness testing across subgroups (e.g., race, gender, age)",
+          "text": "The protocol describes the strategy for bias evaluation and fairness testing across subgroups (e.g., race, gender, age)",
           "stages": ["stage-2"]
         },
         {
-          "text": "Please report training data demographics and known limits of the dataset",
+          "text": "The protocol reports training data demographics and known limits of the dataset",
           "stages": ["stage-2", "stage-3"]
         },
         {
-          "text": "Please add subgroup analysis or fairness checks in your prediction study",
+          "text": "The protocol includes subgroup analysis or fairness checks in the prediction study",
           "stages": ["stage-2", "stage-3"]
         },
         {
-          "text": "Please describe your plan for ongoing monitoring of AI performance after deployment, including how you will detect performance drift, new biases, or unintended harms over time",
+          "text": "The protocol describes a plan for ongoing monitoring of AI performance after deployment, including how performance drift, new biases, or unintended harms will be detected over time",
           "stages": ["stage-3"]
         },
         {
-          "text": "Please describe your plan for ongoing fairness evaluations to ensure the tool continues to perform equitably across subgroups",
+          "text": "The protocol describes a plan for ongoing fairness evaluations to ensure the tool continues to perform equitably across subgroups",
           "stages": ["stage-3"]
         },
         {
-          "text": "Please describe how you will make sure subgroups are not at greater risk (e.g., checking for bias in your dataset)",
+          "text": "The protocol describes how the investigator will ensure subgroups are not at greater risk (e.g., checking for bias in the dataset)",
           "stages": ["stage-3"]
         }
       ]
@@ -75,27 +75,27 @@
       "shortName": "Privacy or Confidentiality Breach",
       "prompts": [
         {
-          "text": "Please describe your process of de-identification to reduce re-identification risk",
+          "text": "The protocol describes the de-identification process to reduce re-identification risk",
           "stages": ["stage-1"]
         },
         {
-          "text": "Please describe your approach to ensure secondary data use complies with privacy requirements and participant consent limitations",
+          "text": "The protocol describes how secondary data use complies with privacy requirements and participant consent limitations",
           "stages": ["stage-1"]
         },
         {
-          "text": "There is a re-identification risk in AI prompts/embeddings. Please describe how you will reduce this risk",
+          "text": "The protocol addresses re-identification risk in AI prompts/embeddings and describes how this risk will be reduced",
           "stages": ["stage-1", "stage-2", "stage-3"]
         },
         {
-          "text": "Please explain what de-identification or aggregation methods you will use to protect identities",
+          "text": "The protocol describes the de-identification or aggregation methods that will be used to protect identities",
           "stages": ["stage-1", "stage-2", "stage-3"]
         },
         {
-          "text": "AI can expose sensitive personal data. Please add a plan to prevent this",
+          "text": "The protocol includes a plan to prevent the AI from exposing sensitive personal data",
           "stages": ["stage-1", "stage-2", "stage-3"]
         },
         {
-          "text": "Please describe how patient privacy will be maintained during real-world use, including any protections against re-identification or unintended inference",
+          "text": "The protocol describes how patient privacy will be maintained during real-world use, including protections against re-identification or unintended inference",
           "stages": ["stage-3"]
         }
       ]
@@ -104,15 +104,15 @@
       "shortName": "Data Insecurity",
       "prompts": [
         {
-          "text": "Please outline how the dataset will be secured to prevent unauthorized access or breaches",
+          "text": "The protocol outlines how the dataset will be secured to prevent unauthorized access or breaches",
           "stages": ["stage-1"]
         },
         {
-          "text": "Please explain how study data and AI system access will be protected against unauthorized use or cyberattacks. For example, who will be responsible for monitoring for breaches?",
+          "text": "The protocol describes how study data and AI system access will be protected against unauthorized use or cyberattacks, including who will be responsible for monitoring for breaches",
           "stages": ["stage-2", "stage-3"]
         },
         {
-          "text": "If the AI system is compromised, what corrective steps are in place to stop the attack, notify participants, and prevent harm?",
+          "text": "The protocol addresses corrective steps if the AI system is compromised, including how to stop an attack, notify participants, and prevent harm",
           "stages": ["stage-2", "stage-3"]
         }
       ]
@@ -121,11 +121,11 @@
       "shortName": "Inaccurate Findings",
       "prompts": [
         {
-          "text": "Please explain how your project ensures real-world relevance (For example, that correlations you find are linked to meaningful clinical associations, not just statistical patterns)",
+          "text": "The protocol explains how the project ensures real-world relevance (e.g., that correlations found are linked to meaningful clinical associations, not just statistical patterns)",
           "stages": ["stage-1"]
         },
         {
-          "text": "Your tool could give wrong or misleading results. Please add a plan in the protocol for how you will prevent harm if this happens",
+          "text": "The protocol includes a plan for how harm will be prevented if the tool produces wrong or misleading results",
           "stages": ["stage-2", "stage-3"]
         }
       ]
@@ -134,11 +134,11 @@
       "shortName": "Misleading Information",
       "prompts": [
         {
-          "text": "Please describe your plan for documenting early limitations of the model and how those will be addressed before moving to validation",
+          "text": "The protocol describes a plan for documenting early limitations of the model and how those will be addressed before moving to validation",
           "stages": ["stage-1"]
         },
         {
-          "text": "Please add a plan for testing model performance on incomplete or messy records ('edge cases')",
+          "text": "The protocol includes a plan for testing model performance on incomplete or messy records ('edge cases')",
           "stages": ["stage-2"]
         }
       ]
@@ -147,11 +147,11 @@
       "shortName": "Participant or End-User Manipulation",
       "prompts": [
         {
-          "text": "How will you ensure the AI does not mislead participants or present biased/misinformation that could influence their decisions?",
+          "text": "The protocol describes how the investigator will ensure the AI does not mislead participants or present biased/misinformation that could influence their decisions",
           "stages": ["stage-2", "stage-3"]
         },
         {
-          "text": "Please describe how participant data will be used so that the system does not engage in hidden tracking, surveillance, or manipulation of vulnerable groups",
+          "text": "The protocol describes how participant data will be used and ensures the system does not engage in hidden tracking, surveillance, or manipulation of vulnerable groups",
           "stages": ["stage-2", "stage-3"]
         }
       ]
@@ -160,11 +160,11 @@
       "shortName": "Malicious Misuse",
       "prompts": [
         {
-          "text": "Please clarify what safeguards are in place to prevent the AI system from being misused in ways that could cause large-scale harm (e.g., altering medical devices, mass data leaks)",
+          "text": "The protocol describes safeguards in place to prevent the AI system from being misused in ways that could cause large-scale harm (e.g., altering medical devices, mass data leaks)",
           "stages": ["stage-2", "stage-3"]
         },
         {
-          "text": "Please clarify and document who is responsible for monitoring the AI system for misuse, and what steps will be taken if harmful use is detected?",
+          "text": "The protocol documents who is responsible for monitoring the AI system for misuse, and what steps will be taken if harmful use is detected",
           "stages": ["stage-2", "stage-3"]
         }
       ]
@@ -173,11 +173,11 @@
       "shortName": "Tool Involves Any Form of Deception",
       "prompts": [
         {
-          "text": "Please confirm what measures will be used to prevent the AI system from generating deceptive or manipulative outputs that could affect participant decision-making",
+          "text": "The protocol describes measures to prevent the AI system from generating deceptive or manipulative outputs that could affect participant decision-making",
           "stages": ["stage-2", "stage-3"]
         },
         {
-          "text": "Describe how participants will be informed, in plain language, about the risks of fraud or manipulation if interacting with the AI system",
+          "text": "The protocol describes how participants will be informed, in plain language, about the risks of fraud or manipulation if interacting with the AI system",
           "stages": ["stage-2", "stage-3"]
         }
       ]
@@ -186,15 +186,15 @@
       "shortName": "Trusting Output Without Confirmation",
       "prompts": [
         {
-          "text": "Please describe in your protocol how you will compare your AI's performance against existing practice (e.g., standard-of-care approaches) and what those existing practices are",
+          "text": "The protocol describes how the AI's performance will be compared against existing practice (e.g., standard-of-care approaches) and identifies those existing practices",
           "stages": ["stage-2"]
         },
         {
-          "text": "Please describe your plan for human oversight (who checks the AI output and how)",
+          "text": "The protocol describes a plan for human oversight, including who checks the AI output and how",
           "stages": ["stage-2", "stage-3"]
         },
         {
-          "text": "Please outline safeguards against automation bias (clinicians over-relying on AI without critical judgment)",
+          "text": "The protocol outlines safeguards against automation bias (clinicians over-relying on AI without critical judgment)",
           "stages": ["stage-3"]
         }
       ]
@@ -203,23 +203,47 @@
       "shortName": "Respect for Person (End-User or Participant Does Not Have Choice if AI is Used)",
       "prompts": [
         {
-          "text": "Please describe the authorization and consent process by which you will gain access to the data (e.g., IRB approval, consent, HIPAA authorization, data use agreements)",
+          "text": "The protocol describes the authorization and consent process for gaining access to the data (e.g., IRB approval, consent, HIPAA authorization, data use agreements)",
           "stages": ["stage-1"]
         },
         {
-          "text": "Participants may not understand the AI's role or how AI affects their care or data. Please describe how you will explain this",
+          "text": "The protocol describes how consent for prospective validation participation will be obtained, including how participants are informed that AI is being tested",
+          "stages": ["stage-2"]
+        },
+        {
+          "text": "The protocol addresses re-consent procedures if the scope of AI use changes during the validation phase",
+          "stages": ["stage-2"]
+        },
+        {
+          "text": "The protocol describes how participants will be informed about the AI's role and how AI affects their care or data",
           "stages": ["stage-2", "stage-3"]
         },
         {
-          "text": "Please describe how chatbot responses will be explained to users. For example, will they be informed of the intended use, limitations, and potential hallucination? How should they engage with the tool? What should they not do?",
+          "text": "The protocol describes how chatbot or AI system responses will be explained to users, including the intended use, limitations, potential hallucination, and guidance on appropriate engagement",
           "stages": ["stage-2", "stage-3"]
         },
         {
-          "text": "Please clarify how you will ensure human-in-the-loop oversight for all AI-supported decisions that could affect patient safety or clinical outcomes",
+          "text": "The protocol describes the informed consent process for real-world AI use, including clear disclosure that AI contributes to clinical decisions",
           "stages": ["stage-3"]
         },
         {
-          "text": "Please describe how you will communicate risks and limitations of the AI tool to participants, clinicians, and other stakeholders",
+          "text": "The protocol addresses ongoing consent for adaptive AI systems where model behavior may change over time",
+          "stages": ["stage-3"]
+        },
+        {
+          "text": "The protocol describes participants' right to contest or override AI-driven decisions affecting their care",
+          "stages": ["stage-3"]
+        },
+        {
+          "text": "The protocol includes a deception debriefing plan if participants were not initially informed of AI involvement",
+          "stages": ["stage-3"]
+        },
+        {
+          "text": "The protocol describes how human-in-the-loop oversight will be ensured for all AI-supported decisions that could affect patient safety or clinical outcomes",
+          "stages": ["stage-3"]
+        },
+        {
+          "text": "The protocol describes how risks and limitations of the AI tool will be communicated to participants, clinicians, and other stakeholders",
           "stages": ["stage-3"]
         }
       ]
@@ -228,11 +252,11 @@
       "shortName": "Inequity/Unfair Advantage",
       "prompts": [
         {
-          "text": "Please explain how you will ensure that benefits of this AI system are shared fairly across participant groups and not restricted to one group or institution",
+          "text": "The protocol describes how benefits of the AI system will be shared fairly across participant groups and not restricted to one group or institution",
           "stages": ["stage-2", "stage-3"]
         },
         {
-          "text": "What steps will be taken to avoid concentrating control or decision-making power in one entity, to the detriment of research participants?",
+          "text": "The protocol addresses steps to avoid concentrating control or decision-making power in one entity, to the detriment of research participants",
           "stages": ["stage-2", "stage-3"]
         }
       ]
@@ -241,11 +265,11 @@
       "shortName": "Inequity/Widening Disparities",
       "prompts": [
         {
-          "text": "Please describe how your project accounts for the risk that the AI may replace or reduce the role of teachers, clinicians, or staff, and how you will mitigate participant concerns about job loss",
+          "text": "The protocol addresses the risk that the AI may replace or reduce the role of teachers, clinicians, or staff, and describes how participant concerns about job loss will be mitigated",
           "stages": ["stage-2", "stage-3"]
         },
         {
-          "text": "How will you ensure that the study does not worsen disparities in workforce opportunities, particularly for vulnerable or underrepresented groups?",
+          "text": "The protocol describes how the study will avoid worsening disparities in workforce opportunities, particularly for vulnerable or underrepresented groups",
           "stages": ["stage-2", "stage-3"]
         }
       ]
@@ -254,11 +278,28 @@
       "shortName": "Devaluing or Replacing Human Role",
       "prompts": [
         {
-          "text": "How will you address concerns that the AI system devalues human contributions (e.g., replacing teachers' feedback or clinicians' judgment) in this study?",
+          "text": "The protocol addresses concerns that the AI system may devalue human contributions (e.g., replacing teachers' feedback or clinicians' judgment) in this study",
           "stages": ["stage-2", "stage-3"]
         },
         {
-          "text": "Please describe how participants will be informed that human oversight remains central, and how their input will be recognized and respected",
+          "text": "The protocol describes how participants will be informed that human oversight remains central, and how their input will be recognized and respected",
+          "stages": ["stage-2", "stage-3"]
+        }
+      ]
+    },
+    "competitive-dynamics-6.4": {
+      "shortName": "Unethical Competition",
+      "prompts": [
+        {
+          "text": "The protocol addresses whether competitive or market pressures have influenced the development timeline, and confirms that safety requirements have not been compromised",
+          "stages": ["stage-1", "stage-2"]
+        },
+        {
+          "text": "The protocol describes how the investigator will ensure validation testing is not abbreviated or findings overlooked due to competitive dynamics",
+          "stages": ["stage-2"]
+        },
+        {
+          "text": "The protocol includes a commitment to transparent reporting of safety concerns regardless of potential market or competitive implications",
           "stages": ["stage-2", "stage-3"]
         }
       ]
@@ -267,23 +308,95 @@
       "shortName": "Lacking Required Oversight or Failing to Adhere to Required Standards",
       "prompts": [
         {
-          "text": "Please describe how your study aligns with FDA or other regulatory expectations for validation",
+          "text": "The protocol describes how the study aligns with FDA or other regulatory expectations for validation",
           "stages": ["stage-2"]
         },
         {
-          "text": "Please provide your governance plan for accountability: Who is responsible for oversight of AI outputs, and how will adverse events or errors be reported and acted upon?",
+          "text": "The protocol provides a governance plan for accountability, including who is responsible for oversight of AI outputs, and how adverse events or errors will be reported and acted upon",
           "stages": ["stage-3"]
         },
         {
-          "text": "Please outline the process for participant recourse if they believe they were harmed or excluded due to AI-driven decisions",
+          "text": "The protocol outlines the process for participant recourse if they believe they were harmed or excluded due to AI-driven decisions",
           "stages": ["stage-3"]
         },
         {
-          "text": "Please explain how the study ensures compliance with FDA post-market surveillance (if classified as a device) or other applicable regulatory requirements",
+          "text": "The protocol describes how the study ensures compliance with FDA post-market surveillance (if classified as a device) or other applicable regulatory requirements",
           "stages": ["stage-3"]
         },
         {
-          "text": "Please add a plan for how you will handle errors so patients are not harmed or excluded",
+          "text": "The protocol includes a plan for how errors will be handled so patients are not harmed or excluded",
+          "stages": ["stage-3"]
+        }
+      ]
+    },
+    "environmental-harm-6.6": {
+      "shortName": "Environmental Impact",
+      "prompts": [
+        {
+          "text": "The protocol documents the computational resources required for model training and acknowledges associated energy consumption",
+          "stages": ["stage-1"]
+        },
+        {
+          "text": "The protocol describes efforts to minimize environmental impact during iterative model evaluation and hyperparameter tuning",
+          "stages": ["stage-1", "stage-2"]
+        },
+        {
+          "text": "The protocol addresses the expected environmental footprint of inference at deployment scale and any plans to mitigate ongoing energy consumption",
+          "stages": ["stage-3"]
+        }
+      ]
+    },
+    "misaligned-goals-7.1": {
+      "shortName": "AI Acting Outside Human Control",
+      "prompts": [
+        {
+          "text": "The protocol describes how the objective function and training process are designed to align with intended human values and clinical goals",
+          "stages": ["stage-1"]
+        },
+        {
+          "text": "The protocol describes testing procedures to detect whether the model pursues objectives different from those intended, including in novel situations",
+          "stages": ["stage-2"]
+        },
+        {
+          "text": "The protocol includes monitoring to detect if the AI optimizes for metrics that conflict with patient welfare or games evaluation criteria during deployment",
+          "stages": ["stage-2", "stage-3"]
+        }
+      ]
+    },
+    "dangerous-capabilities-7.2": {
+      "shortName": "Mass Harm or Manipulation",
+      "prompts": [
+        {
+          "text": "The protocol addresses whether the model may have acquired unintended harmful capabilities through its training data or process",
+          "stages": ["stage-1"]
+        },
+        {
+          "text": "The protocol describes red-teaming or specialized testing to identify latent dangerous capabilities not surfaced by standard testing",
+          "stages": ["stage-2"]
+        },
+        {
+          "text": "The protocol includes safeguards to prevent the model from being exploited to provide harmful information or assist malicious actors beyond the intended healthcare context",
+          "stages": ["stage-2", "stage-3"]
+        }
+      ]
+    },
+    "lack-robustness-7.3": {
+      "shortName": "Unreliable System or Performance",
+      "prompts": [
+        {
+          "text": "The protocol describes how the training data distribution represents real-world variability and addresses potential brittleness to distribution shift",
+          "stages": ["stage-1"]
+        },
+        {
+          "text": "The protocol describes testing that includes edge cases, out-of-distribution data, and stress conditions to reveal model failures",
+          "stages": ["stage-2"]
+        },
+        {
+          "text": "The protocol includes monitoring for unpredictable failures when the model encounters unusual patient presentations, data quality issues, or conditions differing from the training distribution",
+          "stages": ["stage-2", "stage-3"]
+        },
+        {
+          "text": "The protocol describes fallback procedures when the AI system fails or produces unreliable outputs during clinical use",
           "stages": ["stage-3"]
         }
       ]
@@ -292,23 +405,23 @@
       "shortName": "Transparency/Interpretability",
       "prompts": [
         {
-          "text": "Please describe how end-users (e.g., clinicians) will provide structured feedback on the AI's usefulness, clarity, and transparency when using/testing it",
+          "text": "The protocol describes how end-users (e.g., clinicians) will provide structured feedback on the AI's usefulness, clarity, and transparency when using/testing it",
           "stages": ["stage-2"]
         },
         {
-          "text": "Your tool's output may be hard to interpret by the end-user (clinician, patient, participant, etc). Please add how you will explain results to researchers and participants",
+          "text": "The protocol addresses how the tool's output will be made interpretable to end-users (clinicians, patients, participants, etc.), including how results will be explained",
           "stages": ["stage-2", "stage-3"]
         },
         {
-          "text": "Researchers may not understand model behavior. Please add how you will explain outputs and limits",
+          "text": "The protocol describes how researchers will be informed about model behavior, outputs, and limitations",
           "stages": ["stage-2", "stage-3"]
         },
         {
-          "text": "Please explain how clinicians will be trained to interpret AI outputs",
+          "text": "The protocol describes how clinicians will be trained to interpret AI outputs",
           "stages": ["stage-2", "stage-3"]
         },
         {
-          "text": "Please describe how end-users (e.g., participants, students, clinicians, etc.) are trained to interpret AI recommendations and when to override them",
+          "text": "The protocol describes how end-users (e.g., participants, students, clinicians) are trained to interpret AI recommendations and when to override them",
           "stages": ["stage-3"]
         }
       ]
