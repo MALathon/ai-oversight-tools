@@ -537,6 +537,7 @@ body {
     <button class="view-btn" onclick="showView('graph')">Graph Model</button>
     <button class="view-btn" onclick="showView('data')">Data Files</button>
     <button class="view-btn" onclick="showView('tamiko')">Tamiko V3</button>
+    <button class="view-btn" onclick="showView('refactor')">Refactor</button>
     <button class="view-btn" onclick="showView('milestones')">Milestones</button>
   </div>
 </div>
@@ -736,6 +737,251 @@ body {
       <tr><td><span class="cat-badge cat-ux">UX</span></td><td>CFR hyperlinks to eCFR.gov</td><td>M3</td><td><span class="status-badge status-ready">Ready</span></td></tr>
     </tbody>
   </table>
+</div>
+
+<!-- ==================== REFACTOR ==================== -->
+<div id="view-refactor" class="view-section">
+  <h2 class="section-title">Data Model Refactor</h2>
+
+  <p style="font-size: 13px; color: var(--ink-2); line-height: 1.7; margin-bottom: 24px; max-width: 900px;">
+    <strong>Problem:</strong> Reviewer prompts and assessment questions address the same risks from different angles, but live in separate files with no graph connection. Adding content to one tool doesn't flow to the others. Tamiko would need to maintain content in multiple places.
+  </p>
+
+  <!-- BEFORE: Current State -->
+  <h3 class="section-title" style="margin-top: 24px; font-size: 16px;">Before: Disconnected Content</h3>
+  <div style="display: grid; grid-template-columns: 1fr auto 1fr; gap: 0; align-items: start; margin-bottom: 32px;">
+
+    <div style="background: var(--surface); border: 2px solid var(--red); border-radius: var(--r); padding: 20px;">
+      <div style="font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--red); margin-bottom: 8px;">reviewer-prompts.json</div>
+      <div style="font-size: 13px; font-weight: 500; margin-bottom: 8px;">85 prompts across 29 subdomains</div>
+      <div style="font-size: 12px; color: var(--ink-3); line-height: 1.6;">
+        Flat lookup by subdomain ID<br>
+        IRB-directed voice<br>
+        Stage-tagged<br>
+        <strong style="color: var(--red);">NOT in the graph</strong><br>
+        <strong style="color: var(--red);">No link to assessment questions</strong>
+      </div>
+      <div style="margin-top: 12px; background: var(--bg); padding: 10px; border-radius: 6px; font-size: 11px; font-family: monospace; color: var(--ink-2);">
+        "unfair-discrimination-1.1": {<br>
+        &nbsp;&nbsp;"shortName": "...",<br>
+        &nbsp;&nbsp;"prompts": [{ "text": "...", "stages": [...] }]<br>
+        }
+      </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; align-items: center; padding: 20px 16px; color: var(--ink-muted);">
+      <div style="font-size: 24px;">&#10060;</div>
+      <div style="font-size: 11px; text-align: center; margin-top: 4px;">No<br>connection</div>
+    </div>
+
+    <div style="background: var(--surface); border: 2px solid var(--red); border-radius: var(--r); padding: 20px;">
+      <div style="font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--red); margin-bottom: 8px;">assessment-questions.json</div>
+      <div style="font-size: 13px; font-weight: 500; margin-bottom: 8px;">13 questions in 4 categories</div>
+      <div style="font-size: 12px; color: var(--ink-3); line-height: 1.6;">
+        Answer types (yes/no, multi-select)<br>
+        Investigator-directed voice<br>
+        showIf conditional logic<br>
+        <strong style="color: var(--green);">Connected via traceability.json</strong><br>
+        Triggers 24 risks through graph
+      </div>
+      <div style="margin-top: 12px; background: var(--bg); padding: 10px; border-radius: 6px; font-size: 11px; font-family: monospace; color: var(--ink-2);">
+        { "id": "bias-check",<br>
+        &nbsp;&nbsp;"question": "...",<br>
+        &nbsp;&nbsp;"type": "yes-no" }<br>
+        + traceability trigger &rarr; risk
+      </div>
+    </div>
+  </div>
+
+  <!-- Tool usage matrix -->
+  <h3 class="section-title" style="font-size: 16px;">How Each Tool Uses the Data Today</h3>
+  <table class="feedback-table" style="margin-bottom: 32px;">
+    <thead>
+      <tr>
+        <th>Data File</th>
+        <th style="text-align: center;">Risk Matrix</th>
+        <th style="text-align: center;">Reviewer</th>
+        <th style="text-align: center;">Protocol Builder</th>
+        <th>Role</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>risk-subdomains.json</strong></td>
+        <td style="text-align: center;">&#9989;</td>
+        <td style="text-align: center;">&#9989;</td>
+        <td style="text-align: center;">&#9989;</td>
+        <td>Shared — risk definitions, stageGuidance</td>
+      </tr>
+      <tr>
+        <td><strong>reviewer-prompts.json</strong></td>
+        <td style="text-align: center;">—</td>
+        <td style="text-align: center; color: var(--red); font-weight: 600;">&#9989; CORE</td>
+        <td style="text-align: center;">—</td>
+        <td style="color: var(--red);">Siloed — only the reviewer sees this</td>
+      </tr>
+      <tr>
+        <td><strong>assessment-questions.json</strong></td>
+        <td style="text-align: center;">—</td>
+        <td style="text-align: center;">—</td>
+        <td style="text-align: center; color: var(--red); font-weight: 600;">&#9989; CORE</td>
+        <td style="color: var(--red);">Siloed — only the protocol builder sees this</td>
+      </tr>
+      <tr>
+        <td><strong>traceability.json</strong></td>
+        <td style="text-align: center;">—</td>
+        <td style="text-align: center; color: var(--red);">—</td>
+        <td style="text-align: center;">&#9989;</td>
+        <td style="color: var(--red);">Reviewer is NOT connected to the graph</td>
+      </tr>
+      <tr>
+        <td><strong>mitigation-strategies.json</strong></td>
+        <td style="text-align: center;">—</td>
+        <td style="text-align: center;">—</td>
+        <td style="text-align: center;">&#9989;</td>
+        <td>Protocol builder only</td>
+      </tr>
+      <tr>
+        <td><strong>technical-controls.json</strong></td>
+        <td style="text-align: center;">—</td>
+        <td style="text-align: center;">—</td>
+        <td style="text-align: center;">&#9989;</td>
+        <td>Protocol builder only</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- AFTER: Proposed -->
+  <h3 class="section-title" style="font-size: 16px;">After: Unified Review Concerns</h3>
+  <p style="font-size: 13px; color: var(--ink-2); line-height: 1.7; margin-bottom: 20px; max-width: 900px;">
+    Replace <code>reviewer-prompts.json</code> with <strong>review-concerns.json</strong> — a set of first-class graph entities that connect to risks through traceability. Each concern has audience-specific text, so Tamiko maintains <strong>one set of content</strong> and each tool renders it for its audience.
+  </p>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px;">
+    <!-- New file: review-concerns.json -->
+    <div style="background: linear-gradient(135deg, var(--surface), rgba(45,106,94,0.04)); border: 2px solid var(--teal); border-radius: var(--r); padding: 20px;">
+      <div style="font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--teal); margin-bottom: 8px;">NEW: review-concerns.json</div>
+      <div style="font-size: 13px; font-weight: 500; margin-bottom: 12px;">One set of concerns, multiple voices</div>
+      <div style="background: var(--bg); padding: 12px; border-radius: 6px; font-size: 11px; font-family: monospace; color: var(--ink-2); line-height: 1.8;">
+        {<br>
+        &nbsp;&nbsp;"id": "concern-bias-training-data",<br>
+        &nbsp;&nbsp;"riskSubdomain": "unfair-discrimination-1.1",<br>
+        &nbsp;&nbsp;"stages": ["stage-1"],<br>
+        &nbsp;&nbsp;"category": "data-governance",<br>
+        &nbsp;&nbsp;<span style="color: var(--blue);">"reviewerText"</span>: "The protocol describes the demographics of the training dataset and notes any known gaps",<br>
+        &nbsp;&nbsp;<span style="color: var(--purple);">"investigatorText"</span>: "Please report the demographics of your training dataset and note any known gaps",<br>
+        &nbsp;&nbsp;<span style="color: var(--teal);">"canonical"</span>: "Training data demographics and representation gaps are documented",<br>
+        &nbsp;&nbsp;"cfrReferences": ["45 CFR 46.111(a)(3)"]<br>
+        }
+      </div>
+    </div>
+
+    <!-- Updated graph -->
+    <div style="background: linear-gradient(135deg, var(--surface), rgba(45,106,94,0.04)); border: 2px solid var(--teal); border-radius: var(--r); padding: 20px;">
+      <div style="font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--teal); margin-bottom: 8px;">UPDATED: traceability.json</div>
+      <div style="font-size: 13px; font-weight: 500; margin-bottom: 12px;">Concerns become graph entities</div>
+      <div style="background: var(--bg); padding: 12px; border-radius: 6px; font-size: 11px; font-family: monospace; color: var(--ink-2); line-height: 1.8;">
+        New edge type: <span style="color: var(--teal); font-weight: 600;">"review"</span><br><br>
+        <span style="color: var(--amber);">Concern</span> &mdash;review&rarr; <span style="color: var(--red);">Risk Subdomain</span><br>
+        <span style="color: var(--amber);">Question</span> &mdash;trigger&rarr; <span style="color: var(--red);">Risk Subdomain</span><br><br>
+        Now the graph connects:<br>
+        Questions &rarr; Risks &larr; Concerns<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&darr;<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;Mitigations &rarr; Controls<br><br>
+        <strong style="color: var(--teal);">Any tool can traverse to any content</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- How tools use unified model -->
+  <h3 class="section-title" style="font-size: 16px;">How Each Tool Uses the Unified Model</h3>
+  <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 32px;">
+
+    <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 20px; box-shadow: var(--shadow);">
+      <div style="font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--teal); margin-bottom: 8px;">&#9635; Risk Matrix</div>
+      <div style="font-size: 13px; font-weight: 500; margin-bottom: 8px;">Concern counts per cell</div>
+      <div style="font-size: 12px; color: var(--ink-3); line-height: 1.6;">
+        For each cell (stage &times; impact), count concerns linked to subdomains in that cell.<br><br>
+        Uses: <code>canonical</code> text<br>
+        New capability: <strong>"12 review items"</strong> in each cell, click to see them
+      </div>
+    </div>
+
+    <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 20px; box-shadow: var(--shadow);">
+      <div style="font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--blue); margin-bottom: 8px;">&#9634; Reviewer Checklist</div>
+      <div style="font-size: 13px; font-weight: 500; margin-bottom: 8px;">Same concerns, IRB voice</div>
+      <div style="font-size: 12px; color: var(--ink-3); line-height: 1.6;">
+        Renders <code>reviewerText</code> for each concern.<br>
+        Filter by stage + model type (same as today).<br><br>
+        <strong>No behavior change for the user</strong> — just powered by unified data now
+      </div>
+    </div>
+
+    <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 20px; box-shadow: var(--shadow);">
+      <div style="font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--purple); margin-bottom: 8px;">&#9638; Protocol Builder</div>
+      <div style="font-size: 13px; font-weight: 500; margin-bottom: 8px;">Triggered concerns + mitigations</div>
+      <div style="font-size: 12px; color: var(--ink-3); line-height: 1.6;">
+        Question answer triggers risks (same as today).<br>
+        <strong>NEW:</strong> Triggered risks now show linked concerns as <code>investigatorText</code>.<br><br>
+        PI sees: "You should address: [concern text]" alongside mitigations
+      </div>
+    </div>
+  </div>
+
+  <!-- Updated graph diagram -->
+  <h3 class="section-title" style="font-size: 16px;">Updated Graph</h3>
+  <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 24px; text-align: center; font-family: monospace; font-size: 12px; line-height: 2.2; color: var(--ink-2); margin-bottom: 32px;">
+    <span style="background: rgba(196,138,32,0.15); padding: 4px 12px; border-radius: 4px;">Question</span>
+    &nbsp;<span style="color: var(--teal);">&mdash;trigger&rarr;</span>&nbsp;
+    <span style="background: rgba(184,66,51,0.1); padding: 4px 12px; border-radius: 4px;">Risk Subdomain</span>
+    &nbsp;<span style="color: var(--blue);">&mdash;mitigation&rarr;</span>&nbsp;
+    <span style="background: rgba(59,111,160,0.1); padding: 4px 12px; border-radius: 4px;">Strategy</span>
+    &nbsp;<span style="color: var(--purple);">&mdash;contains&rarr;</span>&nbsp;
+    <span style="background: rgba(107,76,138,0.1); padding: 4px 12px; border-radius: 4px;">Control</span>
+    <br>
+    <span style="background: rgba(58,125,64,0.12); padding: 4px 12px; border-radius: 4px; font-weight: 600;">Concern</span>
+    &nbsp;<span style="color: var(--green); font-weight: 600;">&mdash;review&rarr;</span>&nbsp;
+    <span style="background: rgba(184,66,51,0.1); padding: 4px 12px; border-radius: 4px;">Risk Subdomain</span>
+    &nbsp;<span style="color: var(--red);">&mdash;regulation&rarr;</span>&nbsp;
+    <span style="background: rgba(184,66,51,0.06); padding: 4px 12px; border-radius: 4px;">CFR Regulation</span>
+    <br><br>
+    <span style="font-family: var(--font); font-size: 13px; color: var(--teal); font-weight: 600;">
+      Concerns are now graph citizens &mdash; Tamiko maintains one set, all 3 tools share it
+    </span>
+  </div>
+
+  <!-- Migration plan -->
+  <h3 class="section-title" style="font-size: 16px;">Migration Steps</h3>
+  <div style="display: grid; gap: 10px; max-width: 700px;">
+    <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; font-size: 13px; display: flex; align-items: center; gap: 12px;">
+      <span style="font-weight: 600; color: var(--teal); min-width: 20px;">1</span>
+      <span>Create <code>review-concerns.json</code> from existing reviewer-prompts.json (add investigatorText + canonical + riskSubdomain fields)</span>
+    </div>
+    <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; font-size: 13px; display: flex; align-items: center; gap: 12px;">
+      <span style="font-weight: 600; color: var(--teal); min-width: 20px;">2</span>
+      <span>Add <code>"review"</code> edges to traceability.json (concern &rarr; risk subdomain)</span>
+    </div>
+    <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; font-size: 13px; display: flex; align-items: center; gap: 12px;">
+      <span style="font-weight: 600; color: var(--teal); min-width: 20px;">3</span>
+      <span>Update Reviewer Checklist to read from review-concerns.json (render <code>reviewerText</code>)</span>
+    </div>
+    <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; font-size: 13px; display: flex; align-items: center; gap: 12px;">
+      <span style="font-weight: 600; color: var(--teal); min-width: 20px;">4</span>
+      <span>Update Protocol Builder to show linked concerns (render <code>investigatorText</code>) when risks are triggered</span>
+    </div>
+    <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; font-size: 13px; display: flex; align-items: center; gap: 12px;">
+      <span style="font-weight: 600; color: var(--teal); min-width: 20px;">5</span>
+      <span>Update Risk Matrix to show concern counts per cell</span>
+    </div>
+    <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; font-size: 13px; display: flex; align-items: center; gap: 12px;">
+      <span style="font-weight: 600; color: var(--teal); min-width: 20px;">6</span>
+      <span>Delete <code>reviewer-prompts.json</code> (replaced by review-concerns.json)</span>
+    </div>
+    <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; font-size: 13px; display: flex; align-items: center; gap: 12px;">
+      <span style="font-weight: 600; color: var(--teal); min-width: 20px;">7</span>
+      <span>Update Admin/Traceability Editor to support concern entities + review edges</span>
+    </div>
+  </div>
 </div>
 
 <!-- ==================== MILESTONES ==================== -->
