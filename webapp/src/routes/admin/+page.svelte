@@ -4879,7 +4879,7 @@
 
 	.columns {
 		display: grid;
-		grid-template-columns: repeat(5, 1fr);
+		grid-template-columns: repeat(6, 1fr);
 		flex: 1;
 		overflow: hidden;
 	}
@@ -4918,6 +4918,7 @@
 	.subcategories .column-icon { background: var(--color-subcategory-bg); color: var(--color-subcategory); }
 	.regulations .column-icon { background: var(--color-regulation-bg); color: var(--color-regulation); }
 	.controls .column-icon { background: var(--color-control-bg); color: var(--color-control); }
+	.concerns .column-icon { background: var(--color-concern-bg); color: var(--color-concern); }
 
 	.column-header h2 {
 		font-size: 0.875rem;
@@ -6158,7 +6159,7 @@
 
 	@media (max-width: 1600px) {
 		.columns {
-			grid-template-columns: repeat(5, minmax(200px, 1fr));
+			grid-template-columns: repeat(6, minmax(180px, 1fr));
 			overflow-x: auto;
 		}
 		.node {
