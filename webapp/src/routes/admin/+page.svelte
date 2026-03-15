@@ -100,8 +100,8 @@
 	let focusMode = $state(false);
 
 	// Matrix view state - configurable row and column types
-	// 5 entity types: questions, risks, subcategories (mitigation strategies), regulations, controls
-	type EntityType = 'question' | 'risk' | 'subcategory' | 'regulation' | 'control';
+	// 6 entity types: questions, risks, subcategories (mitigation strategies), regulations, controls, concerns
+	type EntityType = 'question' | 'risk' | 'subcategory' | 'regulation' | 'control' | 'concern';
 	let matrixRowType = $state<EntityType>('question');
 	let matrixColType = $state<EntityType>('risk');
 	let matrixVerbose = $state(false);
@@ -111,14 +111,15 @@
 	let selectedIntersection = $state<{ rowType: EntityType; rowId: string; colType: EntityType; colId: string } | null>(null);
 
 	// Determine link type for entity pair
-	// Link types: trigger (Q→R), mitigation (R→S), control (R→C), regulation (R→Reg), dependency (Q→Q)
+	// Link types: trigger (Q→R), mitigation (R→S), control (R→C), regulation (R→Reg), dependency (Q→Q), review (Con→R)
 	function getLinkTypeForPair(fromType: EntityType, toType: EntityType): string | null {
 		const pairs: Record<string, string> = {
 			'question-risk': 'trigger',
 			'risk-subcategory': 'mitigation',
 			'risk-regulation': 'regulation',
 			'risk-control': 'control',
-			'question-question': 'dependency' // For showIf
+			'question-question': 'dependency', // For showIf
+			'concern-risk': 'review'
 		};
 		return pairs[`${fromType}-${toType}`] || pairs[`${toType}-${fromType}`] || null;
 	}
@@ -130,7 +131,8 @@
 			'mitigation': ['risk', 'subcategory'],
 			'regulation': ['risk', 'regulation'],
 			'control': ['risk', 'control'],
-			'dependency': ['question', 'question']
+			'dependency': ['question', 'question'],
+			'review': ['concern', 'risk']
 		};
 		const linkType = getLinkTypeForPair(fromType, toType);
 		if (!linkType || !canonical[linkType]) return false;
@@ -152,7 +154,8 @@
 			risk: new Set(),
 			subcategory: new Set(),
 			regulation: new Set(),
-			control: new Set()
+			control: new Set(),
+			concern: new Set()
 		};
 		for (const link of filteredLinks) {
 			if (link.from.entity in entities) {
@@ -752,6 +755,18 @@
 	let allRegulations = $derived(editableEntities.regulations ?? defaultRegulations);
 	let allControls = $derived(editableEntities.controls ?? defaultControls);
 
+	// Build concerns from data
+	let allConcerns = $derived((data.concerns || []).map((c: any) => ({
+		id: c.id,
+		riskSubdomain: c.riskSubdomain,
+		stages: c.stages || [],
+		category: c.category,
+		reviewerText: c.reviewerText,
+		investigatorText: c.investigatorText,
+		canonical: c.canonical,
+		cfrReferences: c.cfrReferences || []
+	})));
+
 	// Flatten subcategories from mitigation categories
 	let allSubcategories = $derived(
 		data.mitigationCategories.flatMap((cat: any) =>
@@ -765,6 +780,7 @@
 	let regulationsById = $derived(new Map(allRegulations.map(r => [r.id, r])));
 	let controlsById = $derived(new Map(allControls.map(c => [c.id, c])));
 	let subcategoriesById = $derived(new Map(allSubcategories.map(s => [s.id, s])));
+	let concernsById = $derived(new Map(allConcerns.map((c: any) => [c.id, c])));
 
 	// Build directed graph from ALL relationships using Graphology
 	// Includes: explicit links + question dependencies (showIf) + control-subcategory relationships
@@ -990,6 +1006,11 @@
 				// Regulations from allRegulations (defined later)
 				// For now, just use the ID as the name
 				name = id;
+			} else if (type === 'concern') {
+				entity = concernsById.get(id);
+				if (entity) {
+					name = entity.canonical || entity.reviewerText;
+				}
 			}
 
 			accumulated.push({
@@ -1292,6 +1313,14 @@
 		return filtered;
 	});
 
+	let graphFilteredConcerns = $derived.by(() => {
+		let filtered = filterBySearch(allConcerns, (c: any) => c.canonical + ' ' + c.reviewerText, 'concern');
+		if (selectedStage !== 'all') {
+			filtered = filtered.filter((c: any) => linkedEntities.concern.has(c.id) || (c.stages && c.stages.includes(selectedStage)));
+		}
+		return filtered;
+	});
+
 	// Visible counts for graph columns (accounting for focus mode and transitive connections)
 	let visibleQuestionCount = $derived.by(() => {
 		if (!focusMode || !selectedNode) return graphFilteredQuestions.length;
@@ -1325,6 +1354,15 @@
 		return graphFilteredRegulations.filter((r: any) => {
 			const isSelected = selectedNode?.type === 'regulation' && selectedNode?.id === r.id;
 			const connected = transitiveConnections.has(`regulation:${r.id}`);
+			return isSelected || connected;
+		}).length;
+	});
+
+	let visibleConcernCount = $derived.by(() => {
+		if (!focusMode || !selectedNode) return graphFilteredConcerns.length;
+		return graphFilteredConcerns.filter((c: any) => {
+			const isSelected = selectedNode?.type === 'concern' && selectedNode?.id === c.id;
+			const connected = transitiveConnections.has(`concern:${c.id}`);
 			return isSelected || connected;
 		}).length;
 	});
@@ -1582,6 +1620,7 @@
 	function getRegulation(id: string) { return regulationsById.get(id); }
 	function getControl(id: string) { return controlsById.get(id); }
 	function getSubcategory(id: string) { return subcategoriesById.get(id); }
+	function getConcern(id: string) { return concernsById.get(id); }
 	function getControlCategory(id: string) { return controlCategories.find((s: any) => s.id === id); }
 
 	// Get question dependencies (uses pre-computed questionDependencies for O(1) lookup)
@@ -1604,6 +1643,9 @@
 		} else if (linkType === 'dependency') {
 			// Question depends on question
 			return allQuestions.map(q => ({ id: q.id, name: q.text, code: q.id, category: q.category, type: 'question' }));
+		} else if (linkType === 'review') {
+			if (position === 'from') return allConcerns.map((c: any) => ({ id: c.id, name: c.canonical, code: c.id, category: c.category, type: 'concern' }));
+			else return allRisks.map(r => ({ id: r.id, name: r.shortName, code: r.code, category: r.domain, type: 'risk' }));
 		}
 		return [];
 	}
@@ -1743,6 +1785,7 @@
 		if (entity === 'risk') return getRisk(id)?.shortName || id;
 		if (entity === 'regulation') return getRegulation(id)?.citation || id;
 		if (entity === 'control') return getControl(id)?.name || id;
+		if (entity === 'concern') return getConcern(id)?.canonical || id;
 		return id;
 	}
 
@@ -1802,6 +1845,9 @@
 		} else if (type === 'control') {
 			const c = getControl(id);
 			return { type, item: c, connections };
+		} else if (type === 'concern') {
+			const c = getConcern(id);
+			return { type, item: c, connections };
 		}
 		return null;
 	});
@@ -1817,6 +1863,7 @@
 			if (type === 'risk') return getRisk(id);
 			if (type === 'subcategory') return getSubcategory(id);
 			if (type === 'regulation') return getRegulation(id);
+			if (type === 'concern') return getConcern(id);
 			if (type === 'control') return getControl(id);
 			return null;
 		};
@@ -2775,6 +2822,54 @@
 				</div>
 			</div>
 
+			<!-- Concerns Column -->
+			<div class="column concerns">
+				<div class="column-header">
+					<span class="column-icon">C</span>
+					<h2>Concerns</h2>
+					<span class="count" title="{visibleConcernCount} of {allConcerns.length}">{visibleConcernCount}</span>
+				</div>
+				<div class="nodes">
+					{#each graphFilteredConcerns.slice(0, 50) as c}
+						{@const linkCount = getLinkCount('concern', c.id)}
+						{@const isSelected = selectedNode?.type === 'concern' && selectedNode?.id === c.id}
+						{@const connected = isConnected('concern', c.id)}
+						{@const connectionLink = getConnectionToSelected('concern', c.id)}
+						{@const shouldHide = focusMode && selectedNode && !isSelected && !connected}
+						{#if !shouldHide}
+						<div
+							class="node concern"
+							class:selected={isSelected}
+							class:connected
+							role="button"
+							tabindex="0"
+							aria-label="Concern: {c.canonical}"
+							aria-pressed={isSelected}
+							onclick={() => handleNodeClick('concern', c.id)}
+							onkeydown={(e) => e.key === 'Enter' && handleNodeClick('concern', c.id)}
+						>
+							<div class="node-header">
+								<span class="node-code">{c.id.split('-').slice(-1)[0]}</span>
+								<span class="link-count" title="Connections">{linkCount}</span>
+							</div>
+							<div class="node-text">{c.canonical}</div>
+							<div class="node-meta">
+								<span class="stages">{c.stages?.map((p: string) => p.replace('stage-', 'S')).join(' ')}</span>
+								<span class="category-badge concern-cat">{c.category}</span>
+							</div>
+							{#if connected && connectionLink}
+								<span class="conn-indicator">{connectionLink.type}</span>
+							{/if}
+							<button class="connect-btn" title="Connect to..." onclick={(e) => startConnect('concern', c.id, e)}>+</button>
+						</div>
+						{/if}
+					{/each}
+					{#if graphFilteredConcerns.length > 50}
+						<div class="more-indicator">...and {graphFilteredConcerns.length - 50} more (use filters)</div>
+					{/if}
+				</div>
+			</div>
+
 			<!-- Controls Column (filtered by global stage/tech) -->
 			<div class="column controls">
 				<div class="column-header">
@@ -2913,6 +3008,37 @@
 					<button class="btn edit-control" onclick={() => { entityType = 'controls'; editEntity(selectedDetails.item); }}>
 						Edit Control
 					</button>
+				{:else if selectedDetails.type === 'concern' && selectedDetails.item}
+					<h3>{selectedDetails.item.canonical}</h3>
+					<div class="detail-meta">
+						<span class="meta-item">ID: {selectedDetails.item.id}</span>
+						<span class="meta-item">Risk Subdomain: {selectedDetails.item.riskSubdomain}</span>
+						<span class="meta-item">Category: {selectedDetails.item.category}</span>
+					</div>
+					<div class="detail-section">
+						<strong>Reviewer Text:</strong>
+						<p class="detail-desc">{selectedDetails.item.reviewerText}</p>
+					</div>
+					<div class="detail-section">
+						<strong>Investigator Text:</strong>
+						<p class="detail-desc">{selectedDetails.item.investigatorText}</p>
+					</div>
+					<div class="detail-section">
+						<strong>Stages:</strong>
+						<div class="stage-badges">
+							{#each selectedDetails.item.stages || [] as stg}
+								<span class="stage-badge">{stg.replace('stage-', 'S')}</span>
+							{/each}
+						</div>
+					</div>
+					{#if selectedDetails.item.cfrReferences?.length}
+						<div class="detail-section">
+							<strong>CFR References:</strong>
+							{#each selectedDetails.item.cfrReferences as ref}
+								<span class="option-tag">{ref}</span>
+							{/each}
+						</div>
+					{/if}
 				{/if}
 
 				<div class="connections-section">
@@ -3412,6 +3538,9 @@
 						} else if (editingLink.type === 'control') {
 							editingLink.from = { entity: 'risk', id: allRisks[0]?.id || '' };
 							editingLink.to = { entity: 'control', id: allControls[0]?.id || '' };
+						} else if (editingLink.type === 'review') {
+							editingLink.from = { entity: 'concern', id: allConcerns[0]?.id || '' };
+							editingLink.to = { entity: 'risk', id: allRisks[0]?.id || '' };
 						}
 					}}>
 						<option value="trigger">Trigger (Question → Risk)</option>
@@ -3419,6 +3548,7 @@
 						<option value="mitigation">Mitigation (Risk → Subcategory)</option>
 						<option value="control">Control (Risk → Control)</option>
 						<option value="regulation">Regulation (Risk → Regulation)</option>
+						<option value="review">Review (Concern → Risk)</option>
 					</select>
 				</div>
 
@@ -3556,6 +3686,8 @@
 		--color-control-bg: rgba(251, 146, 60, 0.2);
 		--color-regulation: #c084fc;
 		--color-regulation-bg: rgba(192, 132, 252, 0.2);
+		--color-concern: #f472b6;
+		--color-concern-bg: rgba(244, 114, 182, 0.2);
 
 		/* Link type colors */
 		--color-trigger: #fcd34d;
@@ -3566,6 +3698,8 @@
 		--color-mitigation-bg: rgba(74, 222, 128, 0.2);
 		--color-contains: #22d3ee;
 		--color-contains-bg: rgba(34, 211, 238, 0.2);
+		--color-review: #f472b6;
+		--color-review-bg: rgba(244, 114, 182, 0.2);
 
 		/* Focus state variables */
 		--focus-ring-color: #60a5fa;
@@ -4542,6 +4676,7 @@
 	.trace-node.subcategory, .trace-node.mitigation { border-left: 3px solid var(--color-subcategory); }
 	.trace-node.control { border-left: 3px solid var(--color-control); }
 	.trace-node.regulation { border-left: 3px solid var(--color-regulation); }
+	.trace-node.concern { border-left: 3px solid var(--color-concern); }
 	.trace-node.more { border-left: 3px solid #64748b; }
 
 	.trace-node.placeholder {
@@ -4571,6 +4706,7 @@
 	.trace-node.subcategory .trace-node-type, .trace-node.mitigation .trace-node-type { color: var(--color-subcategory); }
 	.trace-node.control .trace-node-type { color: var(--color-control); }
 	.trace-node.regulation .trace-node-type { color: var(--color-regulation); }
+	.trace-node.concern .trace-node-type { color: var(--color-concern); }
 
 	.trace-node-label {
 		font-size: 0.8125rem;
@@ -4941,6 +5077,7 @@
 	.node.risk.selected { border-color: var(--color-risk); background: rgba(239, 68, 68, 0.1); }
 	.node.subcategory.selected { border-color: var(--color-subcategory); background: rgba(34, 197, 94, 0.1); }
 	.node.regulation.selected { border-color: var(--color-regulation); background: rgba(168, 85, 247, 0.1); }
+	.node.concern.selected { border-color: var(--color-concern); background: rgba(244, 114, 182, 0.1); }
 	.node.control.selected { border-color: var(--color-control); background: rgba(249, 115, 22, 0.1); }
 	.node.control.connected { border-color: var(--color-control); opacity: 0.8; }
 	.node.subcategory.connected { border-color: var(--color-subcategory); opacity: 0.8; }
@@ -4986,6 +5123,8 @@
 	.risk .node-code { background: var(--color-risk-bg); color: var(--color-risk); }
 	.mitigation .node-code { background: var(--color-subcategory-bg); color: var(--color-subcategory); }
 	.regulation .node-code { background: var(--color-regulation-bg); color: var(--color-regulation); font-size: 0.6875rem; }
+	.concern .node-code { background: var(--color-concern-bg); color: var(--color-concern); }
+	.concern-cat { background: var(--color-concern-bg) !important; color: var(--color-concern) !important; }
 
 	.link-count {
 		font-size: 0.6875rem;

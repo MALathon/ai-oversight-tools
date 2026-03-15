@@ -2,7 +2,7 @@ import { base } from '$app/paths';
 import type { PageLoad } from './$types';
 
 export const load: PageLoad = async ({ fetch }) => {
-	const [questionsRes, traceabilityRes, subdomainsRes, domainsRes, mitigationsRes, regulationsRes, controlsRes, modelTypesRes] = await Promise.all([
+	const [questionsRes, traceabilityRes, subdomainsRes, domainsRes, mitigationsRes, regulationsRes, controlsRes, modelTypesRes, concernsRes] = await Promise.all([
 		fetch(`${base}/data/assessment-questions.json`),
 		fetch(`${base}/data/traceability.json`),
 		fetch(`${base}/data/risk-subdomains.json`),
@@ -10,7 +10,8 @@ export const load: PageLoad = async ({ fetch }) => {
 		fetch(`${base}/data/mitigation-strategies.json`),
 		fetch(`${base}/data/cfr-regulations.json`),
 		fetch(`${base}/data/technical-controls.json`),
-		fetch(`${base}/data/model-types.json`)
+		fetch(`${base}/data/model-types.json`),
+		fetch(`${base}/data/review-concerns.json`)
 	]);
 
 	const questions = await questionsRes.json();
@@ -21,6 +22,7 @@ export const load: PageLoad = async ({ fetch }) => {
 	const regulations = await regulationsRes.json();
 	const controls = await controlsRes.json();
 	const modelTypes = await modelTypesRes.json();
+	const concerns = await concernsRes.json();
 
 	return {
 		questionCategories: questions.questionCategories,
@@ -32,6 +34,7 @@ export const load: PageLoad = async ({ fetch }) => {
 		controlCategories: controls.controlCategories,
 		controlSubcategories: controls.controlSubcategories,
 		controls: controls.controls,
-		modelTypes: modelTypes.modelTypes
+		modelTypes: modelTypes.modelTypes,
+		concerns: concerns.concerns
 	};
 };
