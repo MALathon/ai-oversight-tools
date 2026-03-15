@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { base } from '$app/paths';
 	import { onMount } from 'svelte';
+	import { cfrToUrl } from '$lib/cfr-utils';
 
 	interface Cell {
 		stage: string;
@@ -182,7 +183,12 @@
 						{#if subdomain.cfrReferences.length > 0}
 							<div class="cfr-refs">
 								{#each subdomain.cfrReferences as ref}
-									<span class="cfr-badge">{ref}</span>
+									{@const url = cfrToUrl(ref)}
+									{#if url}
+										<a class="cfr-badge cfr-link" href={url} target="_blank" rel="noopener">{ref}</a>
+									{:else}
+										<span class="cfr-badge">{ref}</span>
+									{/if}
 								{/each}
 							</div>
 						{/if}
@@ -434,6 +440,17 @@
 		padding: 0.125rem 0.5rem;
 		border-radius: 0.25rem;
 		font-size: 0.6875rem;
+	}
+
+	.cfr-link {
+		text-decoration: none;
+		color: #94a3b8;
+		transition: color 0.15s ease;
+	}
+
+	.cfr-link:hover {
+		color: #60a5fa;
+		text-decoration: underline;
 	}
 
 	.action-hint {
