@@ -24,22 +24,21 @@
 		cfrReferences: string[];
 	}
 
-	interface Prompt {
-		text: string;
+	interface Concern {
+		id: string;
+		riskSubdomain: string;
 		stages: string[];
-	}
-
-	interface PromptsData {
-		[key: string]: {
-			shortName: string;
-			prompts: Prompt[];
-		};
+		category: string;
+		reviewerText: string;
+		investigatorText: string;
+		canonical: string;
+		cfrReferences: string[];
 	}
 
 	let stages: Stage[] = $state([]);
 	let modelTypes: ModelType[] = $state([]);
 	let riskSubdomains: RiskSubdomain[] = $state([]);
-	let reviewerPrompts: PromptsData = $state({});
+	let concernsBySubdomain: Record<string, Concern[]> = $state({});
 	let modelTypeRelevance: Record<string, string[]> = $state({});
 
 	let selectedStage: string = $state('');
@@ -49,24 +48,34 @@
 
 	onMount(async () => {
 		try {
-			const [stagesRes, modelsRes, subdomainsRes, promptsRes, schemaRes] = await Promise.all([
+			const [stagesRes, modelsRes, subdomainsRes, concernsRes, schemaRes] = await Promise.all([
 				fetch(`${base}/data/stages.json`),
 				fetch(`${base}/data/model-types.json`),
 				fetch(`${base}/data/risk-subdomains.json`),
-				fetch(`${base}/data/reviewer-prompts.json`),
+				fetch(`${base}/data/review-concerns.json`),
 				fetch(`${base}/data/unified-schema.json`)
 			]);
 
 			const stagesData = await stagesRes.json();
 			const modelsData = await modelsRes.json();
 			const subdomainsData = await subdomainsRes.json();
-			const promptsData = await promptsRes.json();
+			const concernsData = await concernsRes.json();
 			const schemaData = await schemaRes.json();
 
 			stages = stagesData.stages;
 			modelTypes = modelsData.modelTypes;
 			riskSubdomains = subdomainsData.riskSubdomains;
-			reviewerPrompts = promptsData.reviewerPrompts;
+
+			// Group concerns by riskSubdomain
+			const grouped: Record<string, Concern[]> = {};
+			for (const concern of concernsData.concerns) {
+				if (!grouped[concern.riskSubdomain]) {
+					grouped[concern.riskSubdomain] = [];
+				}
+				grouped[concern.riskSubdomain].push(concern);
+			}
+			concernsBySubdomain = grouped;
+
 			modelTypeRelevance = schemaData.modelTypeToSubdomainRelevance || {};
 		} catch (e) {
 			console.error('Failed to load data:', e);
@@ -95,11 +104,11 @@
 		return riskSubdomains.filter(s => relevantIds.has(s.id));
 	}
 
-	function getPromptsForSubdomain(subdomainId: string): Prompt[] {
-		const promptData = reviewerPrompts[subdomainId];
-		if (!promptData) return [];
-		if (!selectedStage) return promptData.prompts;
-		return promptData.prompts.filter(p => p.stages.includes(selectedStage));
+	function getConcernsForSubdomain(subdomainId: string): Concern[] {
+		const concerns = concernsBySubdomain[subdomainId];
+		if (!concerns) return [];
+		if (!selectedStage) return concerns;
+		return concerns.filter(c => c.stages.includes(selectedStage));
 	}
 
 	function toggleCheck(id: string) {
@@ -116,8 +125,8 @@
 		let total = 0;
 		const relevantSubdomains = getRelevantSubdomains();
 		for (const subdomain of relevantSubdomains) {
-			const prompts = getPromptsForSubdomain(subdomain.id);
-			total += prompts.length;
+			const concerns = getConcernsForSubdomain(subdomain.id);
+			total += concerns.length;
 		}
 		return { checked: checkedItems.size, total };
 	}
@@ -193,8 +202,8 @@
 	<!-- Checklist -->
 	<div class="checklist">
 		{#each getRelevantSubdomains() as subdomain}
-			{@const prompts = getPromptsForSubdomain(subdomain.id)}
-			{#if prompts.length > 0}
+			{@const concerns = getConcernsForSubdomain(subdomain.id)}
+			{#if concerns.length > 0}
 				<div class="subdomain-section">
 					<div class="subdomain-header">
 						<div class="subdomain-title">
@@ -211,17 +220,16 @@
 					</div>
 
 					<div class="prompts">
-						{#each prompts as prompt, idx}
-							{@const itemId = `${subdomain.id}-${idx}`}
-							<label class="prompt-item" class:checked={checkedItems.has(itemId)}>
+						{#each concerns as concern}
+							<label class="prompt-item" class:checked={checkedItems.has(concern.id)}>
 								<input
 									type="checkbox"
-									checked={checkedItems.has(itemId)}
-									onchange={() => toggleCheck(itemId)}
+									checked={checkedItems.has(concern.id)}
+									onchange={() => toggleCheck(concern.id)}
 								/>
-								<span class="prompt-text">{prompt.text}</span>
+								<span class="prompt-text">{concern.reviewerText}</span>
 								<span class="stage-tags">
-									{#each prompt.stages as stg}
+									{#each concern.stages as stg}
 										<span class="stage-tag">{stg.replace('stage-', 'S')}</span>
 									{/each}
 								</span>
