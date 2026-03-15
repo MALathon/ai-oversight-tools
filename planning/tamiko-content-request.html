@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Content Request for Tamiko — AI Oversight Tools</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=Newsreader:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #F7F5F0;
+  --surface: #FFFFFF;
+  --border: #E5E0D8;
+  --ink: #2A2520;
+  --ink-2: #5A524A;
+  --ink-3: #8A8078;
+  --ink-muted: #B0A898;
+  --teal: #2D6A5E;
+  --teal-light: rgba(45,106,94,0.08);
+  --red: #B84233;
+  --amber: #C48A20;
+  --green: #3A7D40;
+  --blue: #3B6FA0;
+  --purple: #6B4C8A;
+  --font: 'IBM Plex Sans', -apple-system, sans-serif;
+  --font-display: 'Newsreader', Georgia, serif;
+  --r: 12px;
+  --shadow: 0 1px 4px rgba(0,0,0,0.05);
+  --shadow-lg: 0 4px 20px rgba(0,0,0,0.08);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: var(--font); font-size: 14px; color: var(--ink); background: var(--bg); -webkit-font-smoothing: antialiased; }
+
+.header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 24px 32px;
+}
+.header h1 { font-family: var(--font-display); font-size: 24px; font-weight: 500; margin-bottom: 4px; }
+.header h1 span { color: var(--teal); }
+.header-meta { font-size: 13px; color: var(--ink-3); }
+
+.canvas { padding: 32px; max-width: 900px; margin: 0 auto; }
+
+.intro-box {
+  background: var(--surface);
+  border: 2px solid var(--teal);
+  border-radius: var(--r);
+  padding: 24px;
+  margin-bottom: 32px;
+}
+.intro-box h2 { font-family: var(--font-display); font-size: 18px; margin-bottom: 12px; color: var(--teal); }
+.intro-box p { font-size: 14px; color: var(--ink-2); line-height: 1.7; margin-bottom: 8px; }
+.intro-box p:last-child { margin-bottom: 0; }
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 500;
+  margin: 40px 0 16px;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.section-title::before {
+  content: '';
+  width: 4px;
+  height: 20px;
+  background: var(--teal);
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+/* Done items */
+.done-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 32px;
+}
+.done-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 13px;
+  color: var(--ink-2);
+  display: flex;
+  align-items: start;
+  gap: 10px;
+  line-height: 1.5;
+}
+.done-item::before {
+  content: '\2713';
+  color: var(--green);
+  font-weight: 700;
+  font-size: 14px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* Content request cards */
+.request-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 24px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow);
+}
+.request-card:hover { box-shadow: var(--shadow-lg); }
+.request-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: var(--teal);
+  color: white;
+  border-radius: 50%;
+  font-size: 13px;
+  font-weight: 600;
+  margin-right: 10px;
+  flex-shrink: 0;
+}
+.request-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.request-title { font-family: var(--font-display); font-size: 16px; font-weight: 500; }
+.request-desc {
+  font-size: 13px;
+  color: var(--ink-2);
+  line-height: 1.7;
+  margin-bottom: 16px;
+  padding: 12px 16px;
+  background: var(--bg);
+  border-radius: 8px;
+}
+.request-source {
+  font-size: 12px;
+  color: var(--teal);
+  font-weight: 500;
+  margin-bottom: 12px;
+}
+
+/* Format example */
+.format-box {
+  background: rgba(45,106,94,0.04);
+  border: 1px dashed rgba(45,106,94,0.3);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+.format-box h4 {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--teal);
+  margin-bottom: 10px;
+}
+.format-example {
+  font-size: 13px;
+  color: var(--ink-2);
+  line-height: 1.8;
+}
+.format-example .label {
+  font-weight: 600;
+  color: var(--ink);
+  display: inline-block;
+  min-width: 100px;
+}
+
+/* Prompt template */
+.prompt-template {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.prompt-template th {
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ink-3);
+  padding: 8px 12px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+}
+.prompt-template td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  color: var(--ink-muted);
+  font-style: italic;
+}
+.prompt-template tr:last-child td { border-bottom: none; }
+.prompt-template .num { width: 30px; text-align: center; font-style: normal; color: var(--ink-3); }
+.prompt-template .stages { width: 120px; }
+
+/* Decisions */
+.decision-card {
+  background: var(--surface);
+  border: 1px solid var(--amber);
+  border-radius: var(--r);
+  padding: 24px;
+  margin-bottom: 20px;
+}
+.decision-card h3 { font-family: var(--font-display); font-size: 15px; margin-bottom: 10px; }
+.decision-card p { font-size: 13px; color: var(--ink-2); line-height: 1.6; margin-bottom: 12px; }
+.option {
+  display: flex;
+  align-items: start;
+  gap: 10px;
+  padding: 10px 14px;
+  background: var(--bg);
+  border-radius: 8px;
+  margin-bottom: 8px;
+  font-size: 13px;
+  color: var(--ink-2);
+  line-height: 1.5;
+}
+.option-letter {
+  font-weight: 700;
+  color: var(--amber);
+  flex-shrink: 0;
+  min-width: 20px;
+}
+
+/* Next steps */
+.next-box {
+  background: linear-gradient(135deg, var(--surface), rgba(45,106,94,0.04));
+  border: 2px solid var(--green);
+  border-radius: var(--r);
+  padding: 24px;
+  margin-top: 40px;
+}
+.next-box h2 { font-family: var(--font-display); font-size: 18px; margin-bottom: 12px; color: var(--green); }
+.next-box ul { list-style: none; }
+.next-box li {
+  font-size: 13px;
+  color: var(--ink-2);
+  padding: 6px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  line-height: 1.5;
+}
+.next-box li::before { content: '\2192'; color: var(--green); font-weight: 600; }
+
+@media print {
+  body { background: white; }
+  .header { border: none; }
+  .canvas { padding: 16px; }
+  .request-card, .decision-card { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>AI <span>Oversight Tools</span> — Content Request</h1>
+  <div class="header-meta">For Tamiko Eto &middot; From Mark Lifson &middot; March 15, 2026</div>
+</div>
+
+<div class="canvas">
+
+  <div class="intro-box">
+    <h2>Hi Tamiko,</h2>
+    <p>We've made all the updates from your V3 feedback — terminology, voice, missing sections, CFR references, and more. The tool now uses "3-Stage" everywhere, prompts are IRB-directed, and we've added downloadable checklists.</p>
+    <p><strong>We need your help with 7 content areas</strong> that you mentioned having on TechInHSR.com. For each, we need <strong>3–5 review prompts</strong> in a specific format (shown below). We also have <strong>3 questions</strong> where we need your decision.</p>
+    <p>This should take about <strong>30–45 minutes</strong>. You can fill this in on screen or print it out.</p>
+  </div>
+
+  <!-- What We Already Did -->
+  <h2 class="section-title">What We Already Did (Your V3 Feedback)</h2>
+  <div class="done-grid">
+    <div class="done-item">"3-Phase" changed to "3-Stage" everywhere</div>
+    <div class="done-item">Stage names updated per Frontiers paper</div>
+    <div class="done-item">Credit: "Eto, Lifson &amp; Vidal"</div>
+    <div class="done-item">P1/P2/P3 badges changed to S1/S2/S3</div>
+    <div class="done-item">All prompts rewritten to IRB-directed voice</div>
+    <div class="done-item">Missing sections 6.4, 6.6, 7.1, 7.2, 7.3 added</div>
+    <div class="done-item">Consent (5.2) expanded to all stages</div>
+    <div class="done-item">CFR refs added to sections 2.2 and 5.1</div>
+    <div class="done-item">Section 6.2 "job loss" reworded</div>
+    <div class="done-item">HSR/FDA determination disclaimer added</div>
+    <div class="done-item">Instructions explaining CFR mapping added</div>
+    <div class="done-item">Checklist can now be downloaded as Word doc</div>
+    <div class="done-item">"What to do next" guidance at 100% completion</div>
+    <div class="done-item">CFR citations link to eCFR.gov</div>
+  </div>
+
+  <!-- The Format We Need -->
+  <h2 class="section-title">The Format We Need</h2>
+  <div class="format-box">
+    <h4>Each review prompt should follow this pattern:</h4>
+    <div class="format-example">
+      <span class="label">Prompt:</span> "The protocol describes / addresses / documents <em>[specific thing the IRB reviewer should check for]</em>."<br><br>
+      <span class="label">Stages:</span> Which stages does this apply to? <strong>S1</strong> (Discovery), <strong>S2</strong> (Validation), <strong>S3</strong> (Deployment), or <strong>All</strong><br><br>
+      <span class="label">Example:</span> "The protocol documents a decommission plan describing how the AI system will be retired when the study ends." — <strong>S3</strong>
+    </div>
+  </div>
+
+  <!-- 7 Content Areas -->
+  <h2 class="section-title">7 Content Areas We Need From You</h2>
+
+  <!-- 1. COI -->
+  <div class="request-card">
+    <div class="request-header">
+      <span class="request-num">1</span>
+      <span class="request-title">Conflicts of Interest</span>
+    </div>
+    <div class="request-desc">
+      Financial and professional conflicts that could influence AI tool development, validation, or deployment — including <strong>commercialization plans, licensing fees, equity positions, and financial relationships with sponsors</strong>. AI commercialization creates powerful financial incentives that can bias research design.
+    </div>
+    <div class="request-source">You mentioned: "My latest checklist in TechInHSR.com can provide this."</div>
+    <table class="prompt-template">
+      <thead><tr><th class="num">#</th><th>Review Prompt</th><th class="stages">Stages</th></tr></thead>
+      <tbody>
+        <tr><td class="num">1</td><td>"The protocol describes..."</td><td>S1 / S2 / S3 / All</td></tr>
+        <tr><td class="num">2</td><td>"The protocol addresses..."</td><td>S1 / S2 / S3 / All</td></tr>
+        <tr><td class="num">3</td><td>"The protocol documents..."</td><td>S1 / S2 / S3 / All</td></tr>
+        <tr><td class="num">4</td><td>(optional)</td><td></td></tr>
+        <tr><td class="num">5</td><td>(optional)</td><td></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 2. Decommission Plan -->
+  <div class="request-card">
+    <div class="request-header">
+      <span class="request-num">2</span>
+      <span class="request-title">Decommission Plan</span>
+    </div>
+    <div class="request-desc">
+      What happens to the AI tool after the study ends. <strong>How will it be taken out of production? Who controls continued access? How will unapproved use after study closure be prevented?</strong>
+    </div>
+    <div class="request-source">You mentioned: "My latest checklist in TechInHSR.com can provide this."</div>
+    <table class="prompt-template">
+      <thead><tr><th class="num">#</th><th>Review Prompt</th><th class="stages">Stages</th></tr></thead>
+      <tbody>
+        <tr><td class="num">1</td><td>"The protocol describes..."</td><td>S1 / S2 / S3 / All</td></tr>
+        <tr><td class="num">2</td><td>"The protocol addresses..."</td><td>S1 / S2 / S3 / All</td></tr>
+        <tr><td class="num">3</td><td>"The protocol documents..."</td><td>S1 / S2 / S3 / All</td></tr>
+        <tr><td class="num">4</td><td>(optional)</td><td></td></tr>
+        <tr><td class="num">5</td><td>(optional)</td><td></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 3. AI Risk Inversion -->
+  <div class="request-card">
+    <div class="request-header">
+      <span class="request-num">3</span>
+      <span class="request-title">AI Risk Inversion / "Forever Research Subject"</span>
+    </div>
+    <div class="request-desc">
+      The risk that <strong>AI outputs enter permanent clinical or academic records</strong>, effectively making participants permanent data subjects even after the study ends. Is the research-to-clinical-record boundary protected?
+    </div>
+    <div class="request-source">You mentioned: "My latest checklist in TechInHSR.com can provide this."</div>
+    <table class="prompt-template">
+      <thead><tr><th class="num">#</th><th>Review Prompt</th><th class="stages">Stages</th></tr></thead>
+      <tbody>
+        <tr><td class="num">1</td><td>"The protocol describes..."</td><td>S1 / S2 / S3 / All</td></tr>
+        <tr><td class="num">2</td><td>"The protocol addresses..."</td><td>S1 / S2 / S3 / All</td></tr>
+        <tr><td class="num">3</td><td>"The protocol documents..."</td><td>S1 / S2 / S3 / All</td></tr>
+        <tr><td class="num">4</td><td>(optional)</td><td></td></tr>
+        <tr><td class="num">5</td><td>(optional)</td><td></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 4. PCCP -->
+  <div class="request-card">
+    <div class="request-header">
+      <span class="request-num">4</span>
+      <span class="request-title">PCCP &amp; Stage Advancement Criteria</span>
+    </div>
+    <div class="request-desc">
+      <strong>Predetermined Change Control Plans.</strong> What documentation is required before advancing from Stage 1 to Stage 2 to Stage 3? What constitutes adequate completion of each stage before proceeding?
+    </div>
+    <div class="request-source">You mentioned: "My latest checklist in TechInHSR.com can provide this."</div>
+    <table class="prompt-template">
+      <thead><tr><th class="num">#</th><th>Review Prompt</th><th class="stages">Stages</th></tr></thead>
+      <tbody>
+        <tr><td class="num">1</td><td>"The protocol describes..."</td><td>S1 / S2 / S3 / All</td></tr>
+        <tr><td class="num">2</td><td>"The protocol addresses..."</td><td>S1 / S2 / S3 / All</td></tr>
+        <tr><td class="num">3</td><td>"The protocol documents..."</td><td>S1 / S2 / S3 / All</td></tr>
+        <tr><td class="num">4</td><td>(optional)</td><td></td></tr>
+        <tr><td class="num">5</td><td>(optional)</td><td></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 5. Ancillary Reviews -->
+  <div class="request-card">
+    <div class="request-header">
+      <span class="request-num">5</span>
+      <span class="request-title">Ancillary Review Requirements</span>
+    </div>
+    <div class="request-desc">
+      Identify likely <strong>ancillary reviews needed beyond the IRB</strong> — Information Security, Privacy Office, Legal, Technology Licensing, etc. An IRB reviewer using this tool should be prompted to flag when a protocol needs these additional reviews.
+    </div>
+    <div class="request-source">You mentioned: "My latest checklist in TechInHSR.com can provide this."</div>
+    <table class="prompt-template">
+      <thead><tr><th class="num">#</th><th>Review Prompt</th><th class="stages">Stages</th></tr></thead>
+      <tbody>
+        <tr><td class="num">1</td><td>"The protocol describes..."</td><td>S1 / S2 / S3 / All</td></tr>
+        <tr><td class="num">2</td><td>"The protocol addresses..."</td><td>S1 / S2 / S3 / All</td></tr>
+        <tr><td class="num">3</td><td>"The protocol documents..."</td><td>S1 / S2 / S3 / All</td></tr>
+        <tr><td class="num">4</td><td>(optional)</td><td></td></tr>
+        <tr><td class="num">5</td><td>(optional)</td><td></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 6. International / GDPR -->
+  <div class="request-card">
+    <div class="request-header">
+      <span class="request-num">6</span>
+      <span class="request-title">International Regulatory / GDPR</span>
+    </div>
+    <div class="request-desc">
+      Requirements for <strong>GDPR compliance, international data transfers, and non-U.S. regulatory requirements</strong>. When AI research involves data from or participants in other countries.
+    </div>
+    <div class="request-source">You mentioned: "My latest checklist in TechInHSR.com can provide this."</div>
+    <table class="prompt-template">
+      <thead><tr><th class="num">#</th><th>Review Prompt</th><th class="stages">Stages</th></tr></thead>
+      <tbody>
+        <tr><td class="num">1</td><td>"The protocol describes..."</td><td>S1 / S2 / S3 / All</td></tr>
+        <tr><td class="num">2</td><td>"The protocol addresses..."</td><td>S1 / S2 / S3 / All</td></tr>
+        <tr><td class="num">3</td><td>"The protocol documents..."</td><td>S1 / S2 / S3 / All</td></tr>
+        <tr><td class="num">4</td><td>(optional)</td><td></td></tr>
+        <tr><td class="num">5</td><td>(optional)</td><td></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 7. Vulnerable Populations -->
+  <div class="request-card">
+    <div class="request-header">
+      <span class="request-num">7</span>
+      <span class="request-title">Vulnerable Populations (Subparts B, C, D)</span>
+    </div>
+    <div class="request-desc">
+      Additional protections for <strong>children, pregnant persons, prisoners, and individuals with impaired decision-making capacity</strong> when AI tools are used in research involving these groups. 45 CFR 46 Subparts B, C, and D protections.<br><br>
+      <em>Note: You mentioned this might be better framed under "representativeness" rather than "safety" — see Question 1 below.</em>
+    </div>
+    <div class="request-source">You mentioned: "My latest checklist in TechInHSR.com can provide this."</div>
+    <table class="prompt-template">
+      <thead><tr><th class="num">#</th><th>Review Prompt</th><th class="stages">Stages</th></tr></thead>
+      <tbody>
+        <tr><td class="num">1</td><td>"The protocol describes..."</td><td>S1 / S2 / S3 / All</td></tr>
+        <tr><td class="num">2</td><td>"The protocol addresses..."</td><td>S1 / S2 / S3 / All</td></tr>
+        <tr><td class="num">3</td><td>"The protocol documents..."</td><td>S1 / S2 / S3 / All</td></tr>
+        <tr><td class="num">4</td><td>(optional)</td><td></td></tr>
+        <tr><td class="num">5</td><td>(optional)</td><td></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 3 Decisions -->
+  <h2 class="section-title">3 Questions for Your Decision</h2>
+
+  <div class="decision-card">
+    <h3>Question 1: Vulnerable Populations Framing</h3>
+    <p>You mentioned that vulnerable populations might be better framed under "representativeness" rather than "safety." How should we approach this?</p>
+    <div class="option"><span class="option-letter">A</span> Keep it under <strong>safety protections</strong> (the traditional Subparts B/C/D framing)</div>
+    <div class="option"><span class="option-letter">B</span> Reframe it around <strong>representativeness and equitable inclusion</strong></div>
+    <div class="option"><span class="option-letter">C</span> Something else — please describe</div>
+  </div>
+
+  <div class="decision-card">
+    <h3>Question 2: Two Versions of the Checklist?</h3>
+    <p>You suggested we could make two versions — one for PIs and one for IRB reviewers. Should we?</p>
+    <div class="option"><span class="option-letter">A</span> <strong>Two versions:</strong> One for PI/study teams ("Please describe...") and one for IRB reviewers ("The protocol describes...") — we already have both voice variants in the system, so this is easy to build</div>
+    <div class="option"><span class="option-letter">B</span> <strong>One version only:</strong> Keep the current IRB-directed version</div>
+  </div>
+
+  <div class="decision-card">
+    <h3>Question 3: Stage Badge Labels</h3>
+    <p>What format should the stage badges use in the tool?</p>
+    <div class="option"><span class="option-letter">A</span> Short form — <strong>S1, S2, S3</strong></div>
+    <div class="option"><span class="option-letter">B</span> Long form — <strong>Stage 1, Stage 2, Stage 3</strong></div>
+  </div>
+
+  <!-- What happens next -->
+  <div class="next-box">
+    <h2>What Happens Next</h2>
+    <ul>
+      <li>Send your completed prompts and decisions back to Mark (email, Google Doc, or however is easiest for you)</li>
+      <li>We'll integrate your content into the tool within 24 hours</li>
+      <li>You can review the live tool at <strong>malathon.github.io/ai-oversight-tools</strong> once we push updates</li>
+      <li>If you'd rather share your TechInHSR.com checklist content and have us draft the prompts for your review, that works too — just let us know</li>
+    </ul>
+  </div>
+
+</div>
+</body>
+</html>
