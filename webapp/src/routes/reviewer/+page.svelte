@@ -137,6 +137,16 @@
 	<p>Select the development stage and AI model type(s) to see applicable review prompts</p>
 </div>
 
+<div class="info-box">
+	<p>This checklist maps AI-specific risk review prompts to federal regulatory approval criteria
+	(45 CFR 46 and 21 CFR 56). Each prompt is tagged with the applicable stage(s) and linked
+	to the CFR sections that require this consideration during IRB review.</p>
+	<p class="disclaimer"><strong>Note:</strong> This checklist is intended for use after a project has been determined to be
+	subject to IRB review under 21 CFR 56. HSR determinations and FDA device determinations
+	are performed separately. For guidance on those determinations, see the
+	<a href="https://www.techinhsr.com" target="_blank" rel="noopener">AIHSR Decision Tree at TechInHSR.com</a>.</p>
+</div>
+
 {#if loading}
 	<div class="loading">Loading checklist data...</div>
 {:else}
@@ -237,6 +247,35 @@
 
 	.page-header p {
 		color: #94a3b8;
+	}
+
+	.info-box {
+		background: rgba(96, 165, 250, 0.08);
+		border: 1px solid rgba(96, 165, 250, 0.2);
+		border-radius: 8px;
+		padding: 1rem 1.25rem;
+		margin: 0 0 1.5rem 0;
+		font-size: 0.85rem;
+		line-height: 1.6;
+		color: #cbd5e1;
+	}
+
+	.info-box p + p {
+		margin-top: 0.5rem;
+	}
+
+	.info-box .disclaimer {
+		font-size: 0.8rem;
+		color: #94a3b8;
+	}
+
+	.info-box a {
+		color: #60a5fa;
+		text-decoration: none;
+	}
+
+	.info-box a:hover {
+		text-decoration: underline;
 	}
 
 	.loading {
