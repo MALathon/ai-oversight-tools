@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { base } from '$app/paths';
 	import { onMount } from 'svelte';
+	import { cfrToUrl } from '$lib/cfr-utils';
 
 	interface Stage {
 		id: string;
@@ -135,6 +136,18 @@
 		// Reset checked items when filters change
 		checkedItems = new Set();
 	});
+
+	function getSelectedStageName(): string {
+		if (!selectedStage) return 'All Stages';
+		const stage = stages.find(s => s.id === selectedStage);
+		return stage ? stage.shortName : 'All Stages';
+	}
+
+	function resetChecklist() {
+		checkedItems = new Set();
+		selectedStage = '';
+		selectedModelTypes = [];
+	}
 </script>
 
 <svelte:head>
@@ -198,6 +211,26 @@
 			<div class="progress-fill" style="width: {progress.total > 0 ? (progress.checked / progress.total) * 100 : 0}%"></div>
 		</div>
 	</div>
+
+	<!-- Completion panel -->
+	{#if progress.checked === progress.total && progress.total > 0}
+		<div class="completion-panel">
+			<div class="completion-icon">&#10003;</div>
+			<h2 class="completion-title">Review Complete</h2>
+			<p class="completion-summary">All {progress.total} items reviewed for {getSelectedStageName()}</p>
+			<div class="completion-actions">
+				<button class="completion-btn disabled" disabled title="Coming soon">
+					Download this checklist
+				</button>
+				<a href="{base}/protocol-builder" class="completion-btn primary">
+					Continue to Protocol Builder
+				</a>
+				<button class="completion-btn secondary" onclick={() => resetChecklist()}>
+					Review again with different filters
+				</button>
+			</div>
+		</div>
+	{/if}
 
 	<!-- Checklist -->
 	<div class="checklist">
@@ -487,6 +520,84 @@
 		border-radius: 0.25rem;
 		font-size: 0.625rem;
 		font-weight: 600;
+	}
+
+	.completion-panel {
+		background: rgba(34, 197, 94, 0.08);
+		border: 2px solid rgba(34, 197, 94, 0.4);
+		border-radius: 0.75rem;
+		padding: 2rem;
+		margin-bottom: 1.5rem;
+		text-align: center;
+	}
+
+	.completion-icon {
+		font-size: 2.5rem;
+		color: #22c55e;
+		margin-bottom: 0.5rem;
+	}
+
+	.completion-title {
+		font-size: 1.5rem;
+		color: #22c55e;
+		margin-bottom: 0.5rem;
+	}
+
+	.completion-summary {
+		color: #94a3b8;
+		font-size: 0.95rem;
+		margin-bottom: 1.5rem;
+	}
+
+	.completion-actions {
+		display: flex;
+		gap: 0.75rem;
+		justify-content: center;
+		flex-wrap: wrap;
+	}
+
+	.completion-btn {
+		padding: 0.625rem 1.25rem;
+		border-radius: 0.5rem;
+		font-size: 0.875rem;
+		font-weight: 600;
+		cursor: pointer;
+		border: 1px solid #334155;
+		background: #1e293b;
+		color: #e2e8f0;
+		text-decoration: none;
+		transition: all 0.15s ease;
+	}
+
+	.completion-btn:hover:not(:disabled) {
+		border-color: #60a5fa;
+	}
+
+	.completion-btn.primary {
+		background: #22c55e;
+		border-color: #22c55e;
+		color: #0f172a;
+	}
+
+	.completion-btn.primary:hover {
+		background: #16a34a;
+		border-color: #16a34a;
+	}
+
+	.completion-btn.secondary {
+		background: transparent;
+		border-color: #475569;
+		color: #94a3b8;
+	}
+
+	.completion-btn.secondary:hover {
+		border-color: #60a5fa;
+		color: #e2e8f0;
+	}
+
+	.completion-btn.disabled {
+		opacity: 0.5;
+		cursor: not-allowed;
 	}
 
 	/* Focus states for accessibility */
