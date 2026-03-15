@@ -6,7 +6,7 @@ Interactive web tools for AI research oversight and IRB review, built with Svelt
 
 This project provides web-based tools to help IRBs, researchers, and developers:
 - Identify and assess AI-specific risks in human subjects research
-- Navigate the 3-Phase IRB Review Framework
+- Navigate the 3-Stage IRB Review Framework
 - Generate protocol requirements and mitigation strategies
 - Trace connections between risks, mitigations, controls, and regulations
 
@@ -20,7 +20,7 @@ This project provides web-based tools to help IRBs, researchers, and developers:
 
 | Route | Tool | Primary User | Purpose |
 |-------|------|-------------|---------|
-| `/risk-matrix` | Risk Matrix | IRB Reviewers | Visual 3×3 risk assessment grid (Phase × Patient Impact) |
+| `/risk-matrix` | Risk Matrix | IRB Reviewers | Visual 3×3 risk assessment grid (Stage × Patient Impact) |
 | `/reviewer` | Reviewer Checklist | IRB Reviewers | Structured prompts for systematic protocol review |
 | `/innovator` | Innovator Checklist | Researchers | Self-assessment to identify risks and get mitigation guidance |
 | `/admin` | Traceability Editor | Developers | Graph-based editor for risk-mitigation-control linkages |
@@ -54,11 +54,11 @@ All derived data (link counts, connections, dependencies) are computed as cached
 
 ### Guidance Accumulation
 
-The system collects phase-specific guidance during graph traversal:
+The system collects stage-specific guidance during graph traversal:
 
-- **Risks**: `phaseGuidance` - risk context per phase
-- **Subcategories**: `phaseGuidance` + `phaseAppropriateness` - strategy guidance + importance level
-- **Controls**: `implementationNotes` - implementation guidance per phase
+- **Risks**: `stageGuidance` - risk context per stage
+- **Subcategories**: `stageGuidance` + `stageAppropriateness` - strategy guidance + importance level
+- **Controls**: `implementationNotes` - implementation guidance per stage
 
 This enables LLM synthesis by collecting all relevant guidance along traversal paths from any starting node.
 
@@ -95,21 +95,21 @@ ai-oversight-tools/
 
 | File | Content |
 |------|---------|
-| `risk-subdomains.json` | 24 risk subdomains with CFR references and phase guidance |
+| `risk-subdomains.json` | 24 risk subdomains with CFR references and stage guidance |
 | `risk-domains.json` | 7 risk domain categories |
-| `mitigation-strategies.json` | Mitigation subcategories with phase guidance and appropriateness |
+| `mitigation-strategies.json` | Mitigation subcategories with stage guidance and appropriateness |
 | `technical-controls.json` | 600+ controls from MIT AI Risk Repository with implementation notes |
 | `traceability.json` | Graph edges linking entities |
 | `assessment-questions.json` | Questions that trigger risk identification |
 | `cfr-regulations.json` | CFR regulation citations |
 
-## The 3-Phase IRB Framework
+## The 3-Stage IRB Review Framework
 
-| Phase | Name | Risk Level | Key Focus |
+| Stage | Name | Risk Level | Key Focus |
 |-------|------|------------|-----------|
-| 1 | Discovery & Algorithm Development | Low | Data governance, privacy, bias identification |
-| 2 | Validation | Moderate | Performance validation, fairness testing |
-| 3 | Clinical Investigation/Deployment | Higher | Patient safety, human-in-the-loop, monitoring |
+| 1 | Discovery & Ideation | Low | Data governance, privacy, bias identification |
+| 2 | Analytic & Performance Validation | Moderate | Performance validation, fairness testing |
+| 3 | Real-World Deployment | Higher | Safety, human-in-the-loop, ongoing monitoring |
 
 ## Technology Stack
 
@@ -142,7 +142,7 @@ MIT AI Risk Repository data used under MIT license.
 ## Credits
 
 - **AIHSR Risk Reference Tool**: Tamiko Eto, MA CIP (TechInHSR.com)
-- **3-Phase AI HSR IRB Review Framework**: Eto, Vidal, Lifson (2024)
+- **3-Stage IRB Review Framework**: Eto, Lifson, Vidal (Frontiers in Systems Biology, 2026)
 - **MIT AI Risk Repository**: Primary source for risk taxonomy and technical controls
 
 ## Contact

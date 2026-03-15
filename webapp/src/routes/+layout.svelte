@@ -151,8 +151,9 @@
 
 	<footer>
 		<p>
-			Based on <a href="https://purl.stanford.edu/zj025zw1714" target="_blank" rel="noopener">AIHSR Risk Reference Tool</a>
-			by Tamiko Eto ·
+			Based on the 3-Stage IRB Review Framework (Eto, Lifson &amp; Vidal) and the
+			<a href="https://purl.stanford.edu/zj025zw1714" target="_blank" rel="noopener">AIHSR Risk Reference Tool</a>
+			(Eto) ·
 			<a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a>
 		</p>
 	</footer>
