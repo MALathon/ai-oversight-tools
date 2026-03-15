@@ -55,9 +55,20 @@ export interface ControlSubcategory {
 	categoryId: string;
 }
 
+export interface Concern {
+	id: string;
+	riskSubdomain: string;
+	stages: string[];
+	category: string;
+	reviewerText: string;
+	investigatorText: string;
+	canonical: string;
+	cfrReferences: string[];
+}
+
 export interface Link {
 	id: string;
-	type: 'trigger' | 'mitigation' | 'regulation';
+	type: 'trigger' | 'mitigation' | 'regulation' | 'review';
 	from: { entity: string; id: string };
 	to: { entity: string; id: string };
 	stages?: string[];
@@ -71,7 +82,7 @@ export interface SelectedNode {
 
 export interface SelectedDetails {
 	type: string;
-	item: Question | Risk | Mitigation | Regulation | Control | null;
+	item: Question | Risk | Mitigation | Regulation | Control | Concern | null;
 	connections: Link[];
 }
 
@@ -80,5 +91,5 @@ export interface QuestionDependencies {
 	dependedBy: string[];
 }
 
-export type EntityType = 'questions' | 'risks' | 'regulations' | 'controls';
-export type NodeType = 'question' | 'risk' | 'mitigation' | 'regulation' | 'control';
+export type EntityType = 'questions' | 'risks' | 'regulations' | 'controls' | 'concerns';
+export type NodeType = 'question' | 'risk' | 'mitigation' | 'regulation' | 'control' | 'concern';

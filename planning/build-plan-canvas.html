@@ -690,7 +690,7 @@ body {
       <tr><td class="file-name">risk-subdomains.json</td><td>24 risk subdomains with stageGuidance</td><td><span class="version-badge">2.0.0</span></td></tr>
       <tr><td class="file-name">mitigation-strategies.json</td><td>Strategies with stageAppropriateness</td><td><span class="version-badge">2.0.0</span></td></tr>
       <tr><td class="file-name">technical-controls.json</td><td>600+ controls from MIT AI Risk Repository</td><td><span class="version-badge">2.0.0</span></td></tr>
-      <tr><td class="file-name">reviewer-prompts.json</td><td>Review prompts keyed by subdomain</td><td><span class="version-badge">1.0.0</span></td></tr>
+      <tr><td class="file-name">review-concerns.json</td><td>85 unified review concerns with reviewer/investigator/canonical text</td><td><span class="version-badge">1.0.0</span></td></tr>
       <tr><td class="file-name">assessment-questions.json</td><td>Conditional questions for protocol builder</td><td><span class="version-badge">1.1.0</span></td></tr>
       <tr><td class="file-name">traceability.json</td><td>Graph edges linking all entities</td><td><span class="version-badge">6.2.0</span></td></tr>
       <tr><td class="file-name">unified-schema.json</td><td>Risk matrix config</td><td><span class="version-badge">1.0.0</span></td></tr>
@@ -741,10 +741,10 @@ body {
 
 <!-- ==================== REFACTOR ==================== -->
 <div id="view-refactor" class="view-section">
-  <h2 class="section-title">Data Model Refactor</h2>
+  <h2 class="section-title">Data Model Refactor <span style="font-size: 12px; background: rgba(58,125,64,0.12); color: var(--green); padding: 2px 10px; border-radius: 10px; font-weight: 600; margin-left: 12px;">COMPLETE</span></h2>
 
   <p style="font-size: 13px; color: var(--ink-2); line-height: 1.7; margin-bottom: 24px; max-width: 900px;">
-    <strong>Problem:</strong> Reviewer prompts and assessment questions address the same risks from different angles, but live in separate files with no graph connection. Adding content to one tool doesn't flow to the others. Tamiko would need to maintain content in multiple places.
+    <strong>Solved:</strong> Replaced siloed reviewer-prompts.json with unified review-concerns.json. 85 concerns are now first-class graph entities with 3 audience-specific text fields. All 3 tools share one set of content. Tamiko maintains it once.
   </p>
 
   <!-- BEFORE: Current State -->
@@ -954,31 +954,31 @@ body {
   <h3 class="section-title" style="font-size: 16px;">Migration Steps</h3>
   <div style="display: grid; gap: 10px; max-width: 700px;">
     <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; font-size: 13px; display: flex; align-items: center; gap: 12px;">
-      <span style="font-weight: 600; color: var(--teal); min-width: 20px;">1</span>
+      <span style="font-weight: 600; color: var(--green); min-width: 20px;">&#10003;1</span>
       <span>Create <code>review-concerns.json</code> from existing reviewer-prompts.json (add investigatorText + canonical + riskSubdomain fields)</span>
     </div>
     <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; font-size: 13px; display: flex; align-items: center; gap: 12px;">
-      <span style="font-weight: 600; color: var(--teal); min-width: 20px;">2</span>
+      <span style="font-weight: 600; color: var(--green); min-width: 20px;">&#10003;2</span>
       <span>Add <code>"review"</code> edges to traceability.json (concern &rarr; risk subdomain)</span>
     </div>
     <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; font-size: 13px; display: flex; align-items: center; gap: 12px;">
-      <span style="font-weight: 600; color: var(--teal); min-width: 20px;">3</span>
+      <span style="font-weight: 600; color: var(--green); min-width: 20px;">&#10003;3</span>
       <span>Update Reviewer Checklist to read from review-concerns.json (render <code>reviewerText</code>)</span>
     </div>
     <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; font-size: 13px; display: flex; align-items: center; gap: 12px;">
-      <span style="font-weight: 600; color: var(--teal); min-width: 20px;">4</span>
+      <span style="font-weight: 600; color: var(--green); min-width: 20px;">&#10003;4</span>
       <span>Update Protocol Builder to show linked concerns (render <code>investigatorText</code>) when risks are triggered</span>
     </div>
     <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; font-size: 13px; display: flex; align-items: center; gap: 12px;">
-      <span style="font-weight: 600; color: var(--teal); min-width: 20px;">5</span>
+      <span style="font-weight: 600; color: var(--green); min-width: 20px;">&#10003;5</span>
       <span>Update Risk Matrix to show concern counts per cell</span>
     </div>
     <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; font-size: 13px; display: flex; align-items: center; gap: 12px;">
-      <span style="font-weight: 600; color: var(--teal); min-width: 20px;">6</span>
+      <span style="font-weight: 600; color: var(--green); min-width: 20px;">&#10003;6</span>
       <span>Delete <code>reviewer-prompts.json</code> (replaced by review-concerns.json)</span>
     </div>
     <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; font-size: 13px; display: flex; align-items: center; gap: 12px;">
-      <span style="font-weight: 600; color: var(--teal); min-width: 20px;">7</span>
+      <span style="font-weight: 600; color: var(--green); min-width: 20px;">&#10003;7</span>
       <span>Update Admin/Traceability Editor to support concern entities + review edges</span>
     </div>
   </div>

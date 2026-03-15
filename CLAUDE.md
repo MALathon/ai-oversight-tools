@@ -36,14 +36,23 @@ Note: Renamed from "Three-Phase" to "Three-Stage" per Frontiers publication.
 ```
 Questions ──trigger──→ Risk Subdomains ──mitigation──→ Mitigation Strategies ──contains──→ Technical Controls
                               │
-                              └──regulation──→ CFR Regulations
+                              ├──regulation──→ CFR Regulations
+                              │
+Concerns  ──review───→ Risk Subdomains
 
 Questions ──dependency (showIf)──→ Questions
 ```
 
-**Entity types:** Questions, Risk Subdomains (24 in 7 domains), Mitigation Strategies, Technical Controls (600+ from MIT AI Risk Repository), CFR Regulations
+**Entity types:** Questions, Risk Subdomains (24 in 7 domains), Review Concerns (85 — unified across all tools), Mitigation Strategies, Technical Controls (600+ from MIT AI Risk Repository), CFR Regulations
 
-**Edge types:** `trigger`, `mitigation`, `contains`, `regulation`, `dependency`
+**Edge types:** `trigger`, `mitigation`, `contains`, `regulation`, `review`, `dependency`
+
+**Review Concerns** are the unified content model. Each concern has 3 text fields:
+- `reviewerText` — IRB-directed ("The protocol describes...")
+- `investigatorText` — PI-directed ("Please describe...")
+- `canonical` — short neutral form for compact display
+
+All 3 user-facing tools render concerns for their audience. Tamiko maintains one set of content.
 
 ## Project Structure
 
@@ -88,7 +97,7 @@ npm run test         # Playwright tests
 | `risk-subdomains.json` | 24 risk subdomains with stageGuidance |
 | `mitigation-strategies.json` | Strategies with stageAppropriateness |
 | `technical-controls.json` | 600+ controls from MIT AI Risk Repository |
-| `reviewer-prompts.json` | Review prompts keyed by subdomain |
+| `review-concerns.json` | 85 unified review concerns with 3 audience-specific text fields |
 | `assessment-questions.json` | Conditional questions for protocol builder |
 | `traceability.json` | Graph edges linking all entities |
 | `unified-schema.json` | Risk matrix config |
@@ -105,11 +114,20 @@ npm run test         # Playwright tests
 - GitHub Pages deployment via Actions
 - DOCX export from Protocol Builder
 
-**In progress (V3 overhaul):**
-- Implementing Tamiko Eto's feedback on terminology (phase → stage)
-- Reviewer voice updates (investigator-directed → IRB-directed)
-- Missing content sections
-- CFR reference updates
+**V3 overhaul complete (M1 + M2):**
+- Terminology renamed: phase → stage per Frontiers publication
+- Reviewer voice flipped to IRB-directed
+- Missing sections added (6.4, 6.6, 7.1, 7.2, 7.3)
+- CFR references updated (2.2, 5.1)
+- Data model refactored: reviewer-prompts.json replaced by review-concerns.json (unified graph entities)
+- All 3 user-facing tools now share one set of review content
+- 7 content areas awaiting Tamiko Eto input (placeholders in place)
+
+**Remaining (M3):**
+- Checklist export (PDF/DOCX)
+- Completion guidance at 100%
+- CFR hyperlinks to eCFR.gov
+- Admin tool lay-person redesign (future)
 
 ## Credits
 
