@@ -1,0 +1,1226 @@
+{
+  "$schema": "./schemas/review-concerns.schema.json",
+  "version": "1.0.0",
+  "source": "Derived from AIHSR Risk Reference Tool v1.5 (Eto) reviewer prompts",
+  "lastUpdated": "2026-03-15",
+  "concerns": [
+    {
+      "id": "concern-unfair-discrimination-1.1-0",
+      "riskSubdomain": "unfair-discrimination-1.1",
+      "stages": [
+        "stage-1"
+      ],
+      "category": "fairness-equity",
+      "reviewerText": "The protocol reports the demographics of the training dataset and notes any known gaps or limitations",
+      "investigatorText": "Please report the demographics of the training dataset and notes any known gaps or limitations",
+      "canonical": "The demographics of the training dataset and notes any known gaps or limitations",
+      "cfrReferences": [
+        "45 CFR 46.111(a)(3) \u2013 equitable subject selection",
+        "21 CFR 56.111(a)(3)"
+      ]
+    },
+    {
+      "id": "concern-unfair-discrimination-1.1-1",
+      "riskSubdomain": "unfair-discrimination-1.1",
+      "stages": [
+        "stage-1"
+      ],
+      "category": "fairness-equity",
+      "reviewerText": "The protocol describes how potential bias in the dataset will be evaluated before model training",
+      "investigatorText": "Please describe how potential bias in the dataset will be evaluated before model training",
+      "canonical": "How potential bias in the dataset will be evaluated before model training",
+      "cfrReferences": [
+        "45 CFR 46.111(a)(3) \u2013 equitable subject selection",
+        "21 CFR 56.111(a)(3)"
+      ]
+    },
+    {
+      "id": "concern-unfair-discrimination-1.1-2",
+      "riskSubdomain": "unfair-discrimination-1.1",
+      "stages": [
+        "stage-2",
+        "stage-3"
+      ],
+      "category": "fairness-equity",
+      "reviewerText": "The protocol includes a plan for checking and reducing bias so that no group is unfairly treated",
+      "investigatorText": "Please include a plan for checking and reducing bias so that no group is unfairly treated",
+      "canonical": "A plan for checking and reducing bias so that no group is unfairly treated",
+      "cfrReferences": [
+        "45 CFR 46.111(a)(3) \u2013 equitable subject selection",
+        "21 CFR 56.111(a)(3)"
+      ]
+    },
+    {
+      "id": "concern-unfair-discrimination-1.1-3",
+      "riskSubdomain": "unfair-discrimination-1.1",
+      "stages": [
+        "stage-3"
+      ],
+      "category": "fairness-equity",
+      "reviewerText": "The protocol explains how the investigator will verify that the AI does not unfairly harm or exclude marginalized groups",
+      "investigatorText": "Please explain how the investigator will verify that the AI does not unfairly harm or exclude marginalized groups",
+      "canonical": "How the investigator will verify that the AI does not unfairly harm or exclude marginalized groups",
+      "cfrReferences": [
+        "45 CFR 46.111(a)(3) \u2013 equitable subject selection",
+        "21 CFR 56.111(a)(3)"
+      ]
+    },
+    {
+      "id": "concern-toxic-content-1.2-0",
+      "riskSubdomain": "toxic-content-1.2",
+      "stages": [
+        "stage-2",
+        "stage-3"
+      ],
+      "category": "fairness-equity",
+      "reviewerText": "The protocol describes safeguards to ensure participants will not be exposed to harmful, offensive, or distressing AI-generated content during the study",
+      "investigatorText": "Please describe safeguards to ensure participants will not be exposed to harmful, offensive, or distressing AI-generated content during the study",
+      "canonical": "Safeguards to ensure participants will not be exposed to harmful, offensive, or distressing AI-generated content during the study",
+      "cfrReferences": [
+        "45 CFR 46.111(a)(1) \u2013 minimize risks",
+        "45 CFR 46.111(a)(2) \u2013 reasonable risk-benefit",
+        "21 CFR 56.111"
+      ]
+    },
+    {
+      "id": "concern-toxic-content-1.2-1",
+      "riskSubdomain": "toxic-content-1.2",
+      "stages": [
+        "stage-2",
+        "stage-3"
+      ],
+      "category": "fairness-equity",
+      "reviewerText": "The protocol addresses what happens if participants are accidentally exposed to inappropriate or toxic material, including immediate protections (e.g., withdrawal, reporting, counseling referral)",
+      "investigatorText": "Please address what happens if participants are accidentally exposed to inappropriate or toxic material, including immediate protections (e.g., withdrawal, reporting, counseling referral)",
+      "canonical": "What happens if participants are accidentally exposed to inappropriate or toxic material, including immediate protections (e.g., withdrawal, reporting, counseling referral)",
+      "cfrReferences": [
+        "45 CFR 46.111(a)(1) \u2013 minimize risks",
+        "45 CFR 46.111(a)(2) \u2013 reasonable risk-benefit",
+        "21 CFR 56.111"
+      ]
+    },
+    {
+      "id": "concern-unequal-performance-1.3-0",
+      "riskSubdomain": "unequal-performance-1.3",
+      "stages": [
+        "stage-2"
+      ],
+      "category": "fairness-equity",
+      "reviewerText": "The protocol describes how the model will be tested on new and diverse datasets beyond those used in training",
+      "investigatorText": "Please describe how the model will be tested on new and diverse datasets beyond those used in training",
+      "canonical": "How the model will be tested on new and diverse datasets beyond those used in training",
+      "cfrReferences": [
+        "45 CFR 46.111(a)(3) & (a)(4)"
+      ]
+    },
+    {
+      "id": "concern-unequal-performance-1.3-1",
+      "riskSubdomain": "unequal-performance-1.3",
+      "stages": [
+        "stage-2"
+      ],
+      "category": "fairness-equity",
+      "reviewerText": "The protocol describes the strategy for bias evaluation and fairness testing across subgroups (e.g., race, gender, age)",
+      "investigatorText": "Please describe the strategy for bias evaluation and fairness testing across subgroups (e.g., race, gender, age)",
+      "canonical": "The strategy for bias evaluation and fairness testing across subgroups (e.g., race, gender, age)",
+      "cfrReferences": [
+        "45 CFR 46.111(a)(3) & (a)(4)"
+      ]
+    },
+    {
+      "id": "concern-unequal-performance-1.3-2",
+      "riskSubdomain": "unequal-performance-1.3",
+      "stages": [
+        "stage-2",
+        "stage-3"
+      ],
+      "category": "fairness-equity",
+      "reviewerText": "The protocol reports training data demographics and known limits of the dataset",
+      "investigatorText": "Please report training data demographics and known limits of the dataset",
+      "canonical": "Training data demographics and known limits of the dataset",
+      "cfrReferences": [
+        "45 CFR 46.111(a)(3) & (a)(4)"
+      ]
+    },
+    {
+      "id": "concern-unequal-performance-1.3-3",
+      "riskSubdomain": "unequal-performance-1.3",
+      "stages": [
+        "stage-2",
+        "stage-3"
+      ],
+      "category": "fairness-equity",
+      "reviewerText": "The protocol includes subgroup analysis or fairness checks in the prediction study",
+      "investigatorText": "Please include subgroup analysis or fairness checks in the prediction study",
+      "canonical": "Subgroup analysis or fairness checks in the prediction study",
+      "cfrReferences": [
+        "45 CFR 46.111(a)(3) & (a)(4)"
+      ]
+    },
+    {
+      "id": "concern-unequal-performance-1.3-4",
+      "riskSubdomain": "unequal-performance-1.3",
+      "stages": [
+        "stage-3"
+      ],
+      "category": "fairness-equity",
+      "reviewerText": "The protocol describes a plan for ongoing monitoring of AI performance after deployment, including how performance drift, new biases, or unintended harms will be detected over time",
+      "investigatorText": "Please describe a plan for ongoing monitoring of AI performance after deployment, including how performance drift, new biases, or unintended harms will be detected over time",
+      "canonical": "A plan for ongoing monitoring of AI performance after deployment, including how performance drift, new biases, or unintended",
+      "cfrReferences": [
+        "45 CFR 46.111(a)(3) & (a)(4)"
+      ]
+    },
+    {
+      "id": "concern-unequal-performance-1.3-5",
+      "riskSubdomain": "unequal-performance-1.3",
+      "stages": [
+        "stage-3"
+      ],
+      "category": "fairness-equity",
+      "reviewerText": "The protocol describes a plan for ongoing fairness evaluations to ensure the tool continues to perform equitably across subgroups",
+      "investigatorText": "Please describe a plan for ongoing fairness evaluations to ensure the tool continues to perform equitably across subgroups",
+      "canonical": "A plan for ongoing fairness evaluations to ensure the tool continues to perform equitably across subgroups",
+      "cfrReferences": [
+        "45 CFR 46.111(a)(3) & (a)(4)"
+      ]
+    },
+    {
+      "id": "concern-unequal-performance-1.3-6",
+      "riskSubdomain": "unequal-performance-1.3",
+      "stages": [
+        "stage-3"
+      ],
+      "category": "fairness-equity",
+      "reviewerText": "The protocol describes how the investigator will ensure subgroups are not at greater risk (e.g., checking for bias in the dataset)",
+      "investigatorText": "Please describe how the investigator will ensure subgroups are not at greater risk (e.g., checking for bias in the dataset)",
+      "canonical": "How the investigator will ensure subgroups are not at greater risk (e.g., checking for bias in the dataset)",
+      "cfrReferences": [
+        "45 CFR 46.111(a)(3) & (a)(4)"
+      ]
+    },
+    {
+      "id": "concern-privacy-breach-2.1-0",
+      "riskSubdomain": "privacy-breach-2.1",
+      "stages": [
+        "stage-1"
+      ],
+      "category": "privacy-security",
+      "reviewerText": "The protocol describes the de-identification process to reduce re-identification risk",
+      "investigatorText": "Please describe the de-identification process to reduce re-identification risk",
+      "canonical": "The de-identification process to reduce re-identification risk",
+      "cfrReferences": [
+        "45 CFR 46.111(a)(7) \u2013 confidentiality",
+        "21 CFR 812.38",
+        "21 CFR 820.30(g)"
+      ]
+    },
+    {
+      "id": "concern-privacy-breach-2.1-1",
+      "riskSubdomain": "privacy-breach-2.1",
+      "stages": [
+        "stage-1"
+      ],
+      "category": "privacy-security",
+      "reviewerText": "The protocol describes how secondary data use complies with privacy requirements and participant consent limitations",
+      "investigatorText": "Please describe how secondary data use complies with privacy requirements and participant consent limitations",
+      "canonical": "How secondary data use complies with privacy requirements and participant consent limitations",
+      "cfrReferences": [
+        "45 CFR 46.111(a)(7) \u2013 confidentiality",
+        "21 CFR 812.38",
+        "21 CFR 820.30(g)"
+      ]
+    },
+    {
+      "id": "concern-privacy-breach-2.1-2",
+      "riskSubdomain": "privacy-breach-2.1",
+      "stages": [
+        "stage-1",
+        "stage-2",
+        "stage-3"
+      ],
+      "category": "privacy-security",
+      "reviewerText": "The protocol addresses re-identification risk in AI prompts/embeddings and describes how this risk will be reduced",
+      "investigatorText": "Please address re-identification risk in AI prompts/embeddings and describes how this risk will be reduced",
+      "canonical": "Re-identification risk in AI prompts/embeddings and describes how this risk will be reduced",
+      "cfrReferences": [
+        "45 CFR 46.111(a)(7) \u2013 confidentiality",
+        "21 CFR 812.38",
+        "21 CFR 820.30(g)"
+      ]
+    },
+    {
+      "id": "concern-privacy-breach-2.1-3",
+      "riskSubdomain": "privacy-breach-2.1",
+      "stages": [
+        "stage-1",
+        "stage-2",
+        "stage-3"
+      ],
+      "category": "privacy-security",
+      "reviewerText": "The protocol describes the de-identification or aggregation methods that will be used to protect identities",
+      "investigatorText": "Please describe the de-identification or aggregation methods that will be used to protect identities",
+      "canonical": "The de-identification or aggregation methods that will be used to protect identities",
+      "cfrReferences": [
+        "45 CFR 46.111(a)(7) \u2013 confidentiality",
+        "21 CFR 812.38",
+        "21 CFR 820.30(g)"
+      ]
+    },
+    {
+      "id": "concern-privacy-breach-2.1-4",
+      "riskSubdomain": "privacy-breach-2.1",
+      "stages": [
+        "stage-1",
+        "stage-2",
+        "stage-3"
+      ],
+      "category": "privacy-security",
+      "reviewerText": "The protocol includes a plan to prevent the AI from exposing sensitive personal data",
+      "investigatorText": "Please include a plan to prevent the AI from exposing sensitive personal data",
+      "canonical": "A plan to prevent the AI from exposing sensitive personal data",
+      "cfrReferences": [
+        "45 CFR 46.111(a)(7) \u2013 confidentiality",
+        "21 CFR 812.38",
+        "21 CFR 820.30(g)"
+      ]
+    },
+    {
+      "id": "concern-privacy-breach-2.1-5",
+      "riskSubdomain": "privacy-breach-2.1",
+      "stages": [
+        "stage-3"
+      ],
+      "category": "privacy-security",
+      "reviewerText": "The protocol describes how patient privacy will be maintained during real-world use, including protections against re-identification or unintended inference",
+      "investigatorText": "Please describe how patient privacy will be maintained during real-world use, including protections against re-identification or unintended inference",
+      "canonical": "How patient privacy will be maintained during real-world use, including protections against re-identification or unintended inference",
+      "cfrReferences": [
+        "45 CFR 46.111(a)(7) \u2013 confidentiality",
+        "21 CFR 812.38",
+        "21 CFR 820.30(g)"
+      ]
+    },
+    {
+      "id": "concern-security-vulnerabilities-2.2-0",
+      "riskSubdomain": "security-vulnerabilities-2.2",
+      "stages": [
+        "stage-1"
+      ],
+      "category": "privacy-security",
+      "reviewerText": "The protocol outlines how the dataset will be secured to prevent unauthorized access or breaches",
+      "investigatorText": "Please outline how the dataset will be secured to prevent unauthorized access or breaches",
+      "canonical": "How the dataset will be secured to prevent unauthorized access or breaches",
+      "cfrReferences": [
+        "21 CFR 820.100 \u2013 Corrective & Preventive Actions (CAPA)",
+        "21 CFR 820.30(g) \u2013 Design Validation",
+        "45 CFR 46.111(a)(7) \u2013 privacy and confidentiality",
+        "45 CFR Parts 160/164 \u2013 HIPAA Security Rule"
+      ]
+    },
+    {
+      "id": "concern-security-vulnerabilities-2.2-1",
+      "riskSubdomain": "security-vulnerabilities-2.2",
+      "stages": [
+        "stage-2",
+        "stage-3"
+      ],
+      "category": "privacy-security",
+      "reviewerText": "The protocol describes how study data and AI system access will be protected against unauthorized use or cyberattacks, including who will be responsible for monitoring for breaches",
+      "investigatorText": "Please describe how study data and AI system access will be protected against unauthorized use or cyberattacks, including who will be responsible for monitoring for breaches",
+      "canonical": "How study data and AI system access will be protected against unauthorized use or cyberattacks, including who will",
+      "cfrReferences": [
+        "21 CFR 820.100 \u2013 Corrective & Preventive Actions (CAPA)",
+        "21 CFR 820.30(g) \u2013 Design Validation",
+        "45 CFR 46.111(a)(7) \u2013 privacy and confidentiality",
+        "45 CFR Parts 160/164 \u2013 HIPAA Security Rule"
+      ]
+    },
+    {
+      "id": "concern-security-vulnerabilities-2.2-2",
+      "riskSubdomain": "security-vulnerabilities-2.2",
+      "stages": [
+        "stage-2",
+        "stage-3"
+      ],
+      "category": "privacy-security",
+      "reviewerText": "The protocol addresses corrective steps if the AI system is compromised, including how to stop an attack, notify participants, and prevent harm",
+      "investigatorText": "Please address corrective steps if the AI system is compromised, including how to stop an attack, notify participants, and prevent harm",
+      "canonical": "Corrective steps if the AI system is compromised, including how to stop an attack, notify participants, and prevent harm",
+      "cfrReferences": [
+        "21 CFR 820.100 \u2013 Corrective & Preventive Actions (CAPA)",
+        "21 CFR 820.30(g) \u2013 Design Validation",
+        "45 CFR 46.111(a)(7) \u2013 privacy and confidentiality",
+        "45 CFR Parts 160/164 \u2013 HIPAA Security Rule"
+      ]
+    },
+    {
+      "id": "concern-false-information-3.1-0",
+      "riskSubdomain": "false-information-3.1",
+      "stages": [
+        "stage-1"
+      ],
+      "category": "accuracy-reliability",
+      "reviewerText": "The protocol explains how the project ensures real-world relevance (e.g., that correlations found are linked to meaningful clinical associations, not just statistical patterns)",
+      "investigatorText": "Please explain how the project ensures real-world relevance (e.g., that correlations found are linked to meaningful clinical associations, not just statistical patterns)",
+      "canonical": "How the project ensures real-world relevance (e.g., that correlations found are linked to meaningful clinical associations, not just statistical patterns)",
+      "cfrReferences": [
+        "45 CFR 46.116 \u2013 informed consent accuracy",
+        "21 CFR 50.20"
+      ]
+    },
+    {
+      "id": "concern-false-information-3.1-1",
+      "riskSubdomain": "false-information-3.1",
+      "stages": [
+        "stage-2",
+        "stage-3"
+      ],
+      "category": "accuracy-reliability",
+      "reviewerText": "The protocol includes a plan for how harm will be prevented if the tool produces wrong or misleading results",
+      "investigatorText": "Please include a plan for how harm will be prevented if the tool produces wrong or misleading results",
+      "canonical": "A plan for how harm will be prevented if the tool produces wrong or misleading results",
+      "cfrReferences": [
+        "45 CFR 46.116 \u2013 informed consent accuracy",
+        "21 CFR 50.20"
+      ]
+    },
+    {
+      "id": "concern-information-pollution-3.2-0",
+      "riskSubdomain": "information-pollution-3.2",
+      "stages": [
+        "stage-1"
+      ],
+      "category": "accuracy-reliability",
+      "reviewerText": "The protocol describes a plan for documenting early limitations of the model and how those will be addressed before moving to validation",
+      "investigatorText": "Please describe a plan for documenting early limitations of the model and how those will be addressed before moving to validation",
+      "canonical": "A plan for documenting early limitations of the model and how those will be addressed before moving to validation",
+      "cfrReferences": [
+        "45 CFR 46.111(a)(1) & (a)(2)"
+      ]
+    },
+    {
+      "id": "concern-information-pollution-3.2-1",
+      "riskSubdomain": "information-pollution-3.2",
+      "stages": [
+        "stage-2"
+      ],
+      "category": "accuracy-reliability",
+      "reviewerText": "The protocol includes a plan for testing model performance on incomplete or messy records ('edge cases')",
+      "investigatorText": "Please include a plan for testing model performance on incomplete or messy records ('edge cases')",
+      "canonical": "A plan for testing model performance on incomplete or messy records ('edge cases')",
+      "cfrReferences": [
+        "45 CFR 46.111(a)(1) & (a)(2)"
+      ]
+    },
+    {
+      "id": "concern-disinformation-surveillance-4.1-0",
+      "riskSubdomain": "disinformation-surveillance-4.1",
+      "stages": [
+        "stage-2",
+        "stage-3"
+      ],
+      "category": "safety-security",
+      "reviewerText": "The protocol describes how the investigator will ensure the AI does not mislead participants or present biased/misinformation that could influence their decisions",
+      "investigatorText": "Please describe how the investigator will ensure the AI does not mislead participants or present biased/misinformation that could influence their decisions",
+      "canonical": "How the investigator will ensure the AI does not mislead participants or present biased/misinformation that could influence their decisions",
+      "cfrReferences": [
+        "45 CFR 46.111(b) \u2013 additional safeguards for vulnerable groups"
+      ]
+    },
+    {
+      "id": "concern-disinformation-surveillance-4.1-1",
+      "riskSubdomain": "disinformation-surveillance-4.1",
+      "stages": [
+        "stage-2",
+        "stage-3"
+      ],
+      "category": "safety-security",
+      "reviewerText": "The protocol describes how participant data will be used and ensures the system does not engage in hidden tracking, surveillance, or manipulation of vulnerable groups",
+      "investigatorText": "Please describe how participant data will be used and ensures the system does not engage in hidden tracking, surveillance, or manipulation of vulnerable groups",
+      "canonical": "How participant data will be used and ensures the system does not engage in hidden tracking, surveillance",
+      "cfrReferences": [
+        "45 CFR 46.111(b) \u2013 additional safeguards for vulnerable groups"
+      ]
+    },
+    {
+      "id": "concern-cyberattacks-mass-harm-4.2-0",
+      "riskSubdomain": "cyberattacks-mass-harm-4.2",
+      "stages": [
+        "stage-2",
+        "stage-3"
+      ],
+      "category": "safety-security",
+      "reviewerText": "The protocol describes safeguards in place to prevent the AI system from being misused in ways that could cause large-scale harm (e.g., altering medical devices, mass data leaks)",
+      "investigatorText": "Please describe safeguards in place to prevent the AI system from being misused in ways that could cause large-scale harm (e.g., altering medical devices, mass data leaks)",
+      "canonical": "Safeguards in place to prevent the AI system from being misused in ways that could cause large-scale harm",
+      "cfrReferences": []
+    },
+    {
+      "id": "concern-cyberattacks-mass-harm-4.2-1",
+      "riskSubdomain": "cyberattacks-mass-harm-4.2",
+      "stages": [
+        "stage-2",
+        "stage-3"
+      ],
+      "category": "safety-security",
+      "reviewerText": "The protocol documents who is responsible for monitoring the AI system for misuse, and what steps will be taken if harmful use is detected",
+      "investigatorText": "Please document who is responsible for monitoring the AI system for misuse, and what steps will be taken if harmful use is detected",
+      "canonical": "Who is responsible for monitoring the AI system for misuse, and what steps will be taken if harmful",
+      "cfrReferences": []
+    },
+    {
+      "id": "concern-fraud-manipulation-4.3-0",
+      "riskSubdomain": "fraud-manipulation-4.3",
+      "stages": [
+        "stage-2",
+        "stage-3"
+      ],
+      "category": "safety-security",
+      "reviewerText": "The protocol describes measures to prevent the AI system from generating deceptive or manipulative outputs that could affect participant decision-making",
+      "investigatorText": "Please describe measures to prevent the AI system from generating deceptive or manipulative outputs that could affect participant decision-making",
+      "canonical": "Measures to prevent the AI system from generating deceptive or manipulative outputs that could affect participant decision-making",
+      "cfrReferences": [
+        "45 CFR 46.116",
+        "21 CFR 50.20"
+      ]
+    },
+    {
+      "id": "concern-fraud-manipulation-4.3-1",
+      "riskSubdomain": "fraud-manipulation-4.3",
+      "stages": [
+        "stage-2",
+        "stage-3"
+      ],
+      "category": "safety-security",
+      "reviewerText": "The protocol describes how participants will be informed, in plain language, about the risks of fraud or manipulation if interacting with the AI system",
+      "investigatorText": "Please describe how participants will be informed, in plain language, about the risks of fraud or manipulation if interacting with the AI system",
+      "canonical": "How participants will be informed, in plain language, about the risks of fraud or manipulation if interacting",
+      "cfrReferences": [
+        "45 CFR 46.116",
+        "21 CFR 50.20"
+      ]
+    },
+    {
+      "id": "concern-overreliance-5.1-0",
+      "riskSubdomain": "overreliance-5.1",
+      "stages": [
+        "stage-2"
+      ],
+      "category": "human-oversight",
+      "reviewerText": "The protocol describes how the AI's performance will be compared against existing practice (e.g., standard-of-care approaches) and identifies those existing practices",
+      "investigatorText": "Please describe how the AI's performance will be compared against existing practice (e.g., standard-of-care approaches) and identifies those existing practices",
+      "canonical": "How the AI's performance will be compared against existing practice (e.g., standard-of-care approaches) and identifies those existing practices",
+      "cfrReferences": [
+        "21 CFR 812.30(b)(4) \u2013 risk/benefit analysis",
+        "21 CFR 820.70 \u2013 production/process controls",
+        "45 CFR 46.111(a)(1) \u2013 minimize risks",
+        "45 CFR 46.111(a)(2) \u2013 reasonable risk-benefit"
+      ]
+    },
+    {
+      "id": "concern-overreliance-5.1-1",
+      "riskSubdomain": "overreliance-5.1",
+      "stages": [
+        "stage-2",
+        "stage-3"
+      ],
+      "category": "human-oversight",
+      "reviewerText": "The protocol describes a plan for human oversight, including who checks the AI output and how",
+      "investigatorText": "Please describe a plan for human oversight, including who checks the AI output and how",
+      "canonical": "A plan for human oversight, including who checks the AI output and how",
+      "cfrReferences": [
+        "21 CFR 812.30(b)(4) \u2013 risk/benefit analysis",
+        "21 CFR 820.70 \u2013 production/process controls",
+        "45 CFR 46.111(a)(1) \u2013 minimize risks",
+        "45 CFR 46.111(a)(2) \u2013 reasonable risk-benefit"
+      ]
+    },
+    {
+      "id": "concern-overreliance-5.1-2",
+      "riskSubdomain": "overreliance-5.1",
+      "stages": [
+        "stage-3"
+      ],
+      "category": "human-oversight",
+      "reviewerText": "The protocol outlines safeguards against automation bias (clinicians over-relying on AI without critical judgment)",
+      "investigatorText": "Please outline safeguards against automation bias (clinicians over-relying on AI without critical judgment)",
+      "canonical": "Safeguards against automation bias (clinicians over-relying on AI without critical judgment)",
+      "cfrReferences": [
+        "21 CFR 812.30(b)(4) \u2013 risk/benefit analysis",
+        "21 CFR 820.70 \u2013 production/process controls",
+        "45 CFR 46.111(a)(1) \u2013 minimize risks",
+        "45 CFR 46.111(a)(2) \u2013 reasonable risk-benefit"
+      ]
+    },
+    {
+      "id": "concern-loss-of-agency-5.2-0",
+      "riskSubdomain": "loss-of-agency-5.2",
+      "stages": [
+        "stage-1"
+      ],
+      "category": "human-oversight",
+      "reviewerText": "The protocol describes the authorization and consent process for gaining access to the data (e.g., IRB approval, consent, HIPAA authorization, data use agreements)",
+      "investigatorText": "Please describe the authorization and consent process for gaining access to the data (e.g., IRB approval, consent, HIPAA authorization, data use agreements)",
+      "canonical": "The authorization and consent process for gaining access to the data (e.g., IRB approval, consent, HIPAA authorization, data use agreements)",
+      "cfrReferences": [
+        "45 CFR 46.116(a)(8) \u2013 consent can be withdrawn anytime"
+      ]
+    },
+    {
+      "id": "concern-loss-of-agency-5.2-1",
+      "riskSubdomain": "loss-of-agency-5.2",
+      "stages": [
+        "stage-2"
+      ],
+      "category": "human-oversight",
+      "reviewerText": "The protocol describes how consent for prospective validation participation will be obtained, including how participants are informed that AI is being tested",
+      "investigatorText": "Please describe how consent for prospective validation participation will be obtained, including how participants are informed that AI is being tested",
+      "canonical": "How consent for prospective validation participation will be obtained, including how participants are informed that AI is being tested",
+      "cfrReferences": [
+        "45 CFR 46.116(a)(8) \u2013 consent can be withdrawn anytime"
+      ]
+    },
+    {
+      "id": "concern-loss-of-agency-5.2-2",
+      "riskSubdomain": "loss-of-agency-5.2",
+      "stages": [
+        "stage-2"
+      ],
+      "category": "human-oversight",
+      "reviewerText": "The protocol addresses re-consent procedures if the scope of AI use changes during the validation phase",
+      "investigatorText": "Please address re-consent procedures if the scope of AI use changes during the validation phase",
+      "canonical": "Re-consent procedures if the scope of AI use changes during the validation phase",
+      "cfrReferences": [
+        "45 CFR 46.116(a)(8) \u2013 consent can be withdrawn anytime"
+      ]
+    },
+    {
+      "id": "concern-loss-of-agency-5.2-3",
+      "riskSubdomain": "loss-of-agency-5.2",
+      "stages": [
+        "stage-2",
+        "stage-3"
+      ],
+      "category": "human-oversight",
+      "reviewerText": "The protocol describes how participants will be informed about the AI's role and how AI affects their care or data",
+      "investigatorText": "Please describe how participants will be informed about the AI's role and how AI affects their care or data",
+      "canonical": "How participants will be informed about the AI's role and how AI affects their care or data",
+      "cfrReferences": [
+        "45 CFR 46.116(a)(8) \u2013 consent can be withdrawn anytime"
+      ]
+    },
+    {
+      "id": "concern-loss-of-agency-5.2-4",
+      "riskSubdomain": "loss-of-agency-5.2",
+      "stages": [
+        "stage-2",
+        "stage-3"
+      ],
+      "category": "human-oversight",
+      "reviewerText": "The protocol describes how chatbot or AI system responses will be explained to users, including the intended use, limitations, potential hallucination, and guidance on appropriate engagement",
+      "investigatorText": "Please describe how chatbot or AI system responses will be explained to users, including the intended use, limitations, potential hallucination, and guidance on appropriate engagement",
+      "canonical": "How chatbot or AI system responses will be explained to users, including the intended use, limitations, potential hallucination",
+      "cfrReferences": [
+        "45 CFR 46.116(a)(8) \u2013 consent can be withdrawn anytime"
+      ]
+    },
+    {
+      "id": "concern-loss-of-agency-5.2-5",
+      "riskSubdomain": "loss-of-agency-5.2",
+      "stages": [
+        "stage-3"
+      ],
+      "category": "human-oversight",
+      "reviewerText": "The protocol describes the informed consent process for real-world AI use, including clear disclosure that AI contributes to clinical decisions",
+      "investigatorText": "Please describe the informed consent process for real-world AI use, including clear disclosure that AI contributes to clinical decisions",
+      "canonical": "The informed consent process for real-world AI use, including clear disclosure that AI contributes to clinical decisions",
+      "cfrReferences": [
+        "45 CFR 46.116(a)(8) \u2013 consent can be withdrawn anytime"
+      ]
+    },
+    {
+      "id": "concern-loss-of-agency-5.2-6",
+      "riskSubdomain": "loss-of-agency-5.2",
+      "stages": [
+        "stage-3"
+      ],
+      "category": "human-oversight",
+      "reviewerText": "The protocol addresses ongoing consent for adaptive AI systems where model behavior may change over time",
+      "investigatorText": "Please address ongoing consent for adaptive AI systems where model behavior may change over time",
+      "canonical": "Ongoing consent for adaptive AI systems where model behavior may change over time",
+      "cfrReferences": [
+        "45 CFR 46.116(a)(8) \u2013 consent can be withdrawn anytime"
+      ]
+    },
+    {
+      "id": "concern-loss-of-agency-5.2-7",
+      "riskSubdomain": "loss-of-agency-5.2",
+      "stages": [
+        "stage-3"
+      ],
+      "category": "human-oversight",
+      "reviewerText": "The protocol describes participants' right to contest or override AI-driven decisions affecting their care",
+      "investigatorText": "Please describe participants' right to contest or override AI-driven decisions affecting their care",
+      "canonical": "Participants' right to contest or override AI-driven decisions affecting their care",
+      "cfrReferences": [
+        "45 CFR 46.116(a)(8) \u2013 consent can be withdrawn anytime"
+      ]
+    },
+    {
+      "id": "concern-loss-of-agency-5.2-8",
+      "riskSubdomain": "loss-of-agency-5.2",
+      "stages": [
+        "stage-3"
+      ],
+      "category": "human-oversight",
+      "reviewerText": "The protocol includes a deception debriefing plan if participants were not initially informed of AI involvement",
+      "investigatorText": "Please include a deception debriefing plan if participants were not initially informed of AI involvement",
+      "canonical": "A deception debriefing plan if participants were not initially informed of AI involvement",
+      "cfrReferences": [
+        "45 CFR 46.116(a)(8) \u2013 consent can be withdrawn anytime"
+      ]
+    },
+    {
+      "id": "concern-loss-of-agency-5.2-9",
+      "riskSubdomain": "loss-of-agency-5.2",
+      "stages": [
+        "stage-3"
+      ],
+      "category": "human-oversight",
+      "reviewerText": "The protocol describes how human-in-the-loop oversight will be ensured for all AI-supported decisions that could affect patient safety or clinical outcomes",
+      "investigatorText": "Please describe how human-in-the-loop oversight will be ensured for all AI-supported decisions that could affect patient safety or clinical outcomes",
+      "canonical": "How human-in-the-loop oversight will be ensured for all AI-supported decisions that could affect patient safety or clinical outcomes",
+      "cfrReferences": [
+        "45 CFR 46.116(a)(8) \u2013 consent can be withdrawn anytime"
+      ]
+    },
+    {
+      "id": "concern-loss-of-agency-5.2-10",
+      "riskSubdomain": "loss-of-agency-5.2",
+      "stages": [
+        "stage-3"
+      ],
+      "category": "human-oversight",
+      "reviewerText": "The protocol describes how risks and limitations of the AI tool will be communicated to participants, clinicians, and other stakeholders",
+      "investigatorText": "Please describe how risks and limitations of the AI tool will be communicated to participants, clinicians, and other stakeholders",
+      "canonical": "How risks and limitations of the AI tool will be communicated to participants, clinicians, and other stakeholders",
+      "cfrReferences": [
+        "45 CFR 46.116(a)(8) \u2013 consent can be withdrawn anytime"
+      ]
+    },
+    {
+      "id": "concern-power-centralization-6.1-0",
+      "riskSubdomain": "power-centralization-6.1",
+      "stages": [
+        "stage-2",
+        "stage-3"
+      ],
+      "category": "societal-impact",
+      "reviewerText": "The protocol describes how benefits of the AI system will be shared fairly across participant groups and not restricted to one group or institution",
+      "investigatorText": "Please describe how benefits of the AI system will be shared fairly across participant groups and not restricted to one group or institution",
+      "canonical": "How benefits of the AI system will be shared fairly across participant groups and not restricted to one",
+      "cfrReferences": [
+        "45 CFR 46.111(a)(3)"
+      ]
+    },
+    {
+      "id": "concern-power-centralization-6.1-1",
+      "riskSubdomain": "power-centralization-6.1",
+      "stages": [
+        "stage-2",
+        "stage-3"
+      ],
+      "category": "societal-impact",
+      "reviewerText": "The protocol addresses steps to avoid concentrating control or decision-making power in one entity, to the detriment of research participants",
+      "investigatorText": "Please address steps to avoid concentrating control or decision-making power in one entity, to the detriment of research participants",
+      "canonical": "Steps to avoid concentrating control or decision-making power in one entity, to the detriment of research participants",
+      "cfrReferences": [
+        "45 CFR 46.111(a)(3)"
+      ]
+    },
+    {
+      "id": "concern-inequality-employment-6.2-0",
+      "riskSubdomain": "inequality-employment-6.2",
+      "stages": [
+        "stage-2",
+        "stage-3"
+      ],
+      "category": "societal-impact",
+      "reviewerText": "The protocol addresses the risk of concern or actual replacement of job loss due to penalization from AI output or general loss of a job function due to AI replacement, and describes how these concerns will be mitigated",
+      "investigatorText": "Please address the risk of concern or actual replacement of job loss due to penalization from AI output or general loss of a job function due to AI replacement, and describes how these concerns will be mitigated",
+      "canonical": "The risk of concern or actual replacement of job loss due to penalization from AI output or general",
+      "cfrReferences": []
+    },
+    {
+      "id": "concern-inequality-employment-6.2-1",
+      "riskSubdomain": "inequality-employment-6.2",
+      "stages": [
+        "stage-2",
+        "stage-3"
+      ],
+      "category": "societal-impact",
+      "reviewerText": "The protocol describes how the study will avoid worsening disparities in workforce opportunities, particularly for vulnerable or underrepresented groups",
+      "investigatorText": "Please describe how the study will avoid worsening disparities in workforce opportunities, particularly for vulnerable or underrepresented groups",
+      "canonical": "How the study will avoid worsening disparities in workforce opportunities, particularly for vulnerable or underrepresented groups",
+      "cfrReferences": []
+    },
+    {
+      "id": "concern-devaluation-human-effort-6.3-0",
+      "riskSubdomain": "devaluation-human-effort-6.3",
+      "stages": [
+        "stage-2",
+        "stage-3"
+      ],
+      "category": "societal-impact",
+      "reviewerText": "The protocol addresses concerns that the AI system may devalue human contributions (e.g., replacing teachers' feedback or clinicians' judgment) in this study",
+      "investigatorText": "Please address concerns that the AI system may devalue human contributions (e.g., replacing teachers' feedback or clinicians' judgment) in this study",
+      "canonical": "Concerns that the AI system may devalue human contributions (e.g., replacing teachers' feedback or clinicians' judgment) in this study",
+      "cfrReferences": []
+    },
+    {
+      "id": "concern-devaluation-human-effort-6.3-1",
+      "riskSubdomain": "devaluation-human-effort-6.3",
+      "stages": [
+        "stage-2",
+        "stage-3"
+      ],
+      "category": "societal-impact",
+      "reviewerText": "The protocol describes how participants will be informed that human oversight remains central, and how their input will be recognized and respected",
+      "investigatorText": "Please describe how participants will be informed that human oversight remains central, and how their input will be recognized and respected",
+      "canonical": "How participants will be informed that human oversight remains central, and how their input will be recognized and respected",
+      "cfrReferences": []
+    },
+    {
+      "id": "concern-competitive-dynamics-6.4-0",
+      "riskSubdomain": "competitive-dynamics-6.4",
+      "stages": [
+        "stage-1",
+        "stage-2"
+      ],
+      "category": "societal-impact",
+      "reviewerText": "The protocol addresses whether competitive or market pressures have influenced the development timeline, and confirms that safety requirements have not been compromised",
+      "investigatorText": "Please address whether competitive or market pressures have influenced the development timeline, and confirms that safety requirements have not been compromised",
+      "canonical": "Whether competitive or market pressures have influenced the development timeline, and confirms that safety requirements have not been compromised",
+      "cfrReferences": []
+    },
+    {
+      "id": "concern-competitive-dynamics-6.4-1",
+      "riskSubdomain": "competitive-dynamics-6.4",
+      "stages": [
+        "stage-2"
+      ],
+      "category": "societal-impact",
+      "reviewerText": "The protocol describes how the investigator will ensure validation testing is not abbreviated or findings overlooked due to competitive dynamics",
+      "investigatorText": "Please describe how the investigator will ensure validation testing is not abbreviated or findings overlooked due to competitive dynamics",
+      "canonical": "How the investigator will ensure validation testing is not abbreviated or findings overlooked due to competitive dynamics",
+      "cfrReferences": []
+    },
+    {
+      "id": "concern-competitive-dynamics-6.4-2",
+      "riskSubdomain": "competitive-dynamics-6.4",
+      "stages": [
+        "stage-2",
+        "stage-3"
+      ],
+      "category": "societal-impact",
+      "reviewerText": "The protocol includes a commitment to transparent reporting of safety concerns regardless of potential market or competitive implications",
+      "investigatorText": "Please include a commitment to transparent reporting of safety concerns regardless of potential market or competitive implications",
+      "canonical": "A commitment to transparent reporting of safety concerns regardless of potential market or competitive implications",
+      "cfrReferences": []
+    },
+    {
+      "id": "concern-governance-failure-6.5-0",
+      "riskSubdomain": "governance-failure-6.5",
+      "stages": [
+        "stage-2"
+      ],
+      "category": "societal-impact",
+      "reviewerText": "The protocol describes how the study aligns with FDA or other regulatory expectations for validation",
+      "investigatorText": "Please describe how the study aligns with FDA or other regulatory expectations for validation",
+      "canonical": "How the study aligns with FDA or other regulatory expectations for validation",
+      "cfrReferences": []
+    },
+    {
+      "id": "concern-governance-failure-6.5-1",
+      "riskSubdomain": "governance-failure-6.5",
+      "stages": [
+        "stage-3"
+      ],
+      "category": "societal-impact",
+      "reviewerText": "The protocol provides a governance plan for accountability, including who is responsible for oversight of AI outputs, and how adverse events or errors will be reported and acted upon",
+      "investigatorText": "Please provide a governance plan for accountability, including who is responsible for oversight of AI outputs, and how adverse events or errors will be reported and acted upon",
+      "canonical": "A governance plan for accountability, including who is responsible for oversight of AI outputs, and how adverse events",
+      "cfrReferences": []
+    },
+    {
+      "id": "concern-governance-failure-6.5-2",
+      "riskSubdomain": "governance-failure-6.5",
+      "stages": [
+        "stage-3"
+      ],
+      "category": "societal-impact",
+      "reviewerText": "The protocol outlines the process for participant recourse if they believe they were harmed or excluded due to AI-driven decisions",
+      "investigatorText": "Please outline the process for participant recourse if they believe they were harmed or excluded due to AI-driven decisions",
+      "canonical": "The process for participant recourse if they believe they were harmed or excluded due to AI-driven decisions",
+      "cfrReferences": []
+    },
+    {
+      "id": "concern-governance-failure-6.5-3",
+      "riskSubdomain": "governance-failure-6.5",
+      "stages": [
+        "stage-3"
+      ],
+      "category": "societal-impact",
+      "reviewerText": "The protocol describes how the study ensures compliance with FDA post-market surveillance (if classified as a device) or other applicable regulatory requirements",
+      "investigatorText": "Please describe how the study ensures compliance with FDA post-market surveillance (if classified as a device) or other applicable regulatory requirements",
+      "canonical": "How the study ensures compliance with FDA post-market surveillance (if classified as a device) or other applicable regulatory requirements",
+      "cfrReferences": []
+    },
+    {
+      "id": "concern-governance-failure-6.5-4",
+      "riskSubdomain": "governance-failure-6.5",
+      "stages": [
+        "stage-3"
+      ],
+      "category": "societal-impact",
+      "reviewerText": "The protocol includes a plan for how errors will be handled so patients are not harmed or excluded",
+      "investigatorText": "Please include a plan for how errors will be handled so patients are not harmed or excluded",
+      "canonical": "A plan for how errors will be handled so patients are not harmed or excluded",
+      "cfrReferences": []
+    },
+    {
+      "id": "concern-environmental-harm-6.6-0",
+      "riskSubdomain": "environmental-harm-6.6",
+      "stages": [
+        "stage-1"
+      ],
+      "category": "societal-impact",
+      "reviewerText": "The protocol documents the computational resources required for model training and acknowledges associated energy consumption",
+      "investigatorText": "Please document the computational resources required for model training and acknowledges associated energy consumption",
+      "canonical": "The computational resources required for model training and acknowledges associated energy consumption",
+      "cfrReferences": []
+    },
+    {
+      "id": "concern-environmental-harm-6.6-1",
+      "riskSubdomain": "environmental-harm-6.6",
+      "stages": [
+        "stage-1",
+        "stage-2"
+      ],
+      "category": "societal-impact",
+      "reviewerText": "The protocol describes efforts to minimize environmental impact during iterative model evaluation and hyperparameter tuning",
+      "investigatorText": "Please describe efforts to minimize environmental impact during iterative model evaluation and hyperparameter tuning",
+      "canonical": "Efforts to minimize environmental impact during iterative model evaluation and hyperparameter tuning",
+      "cfrReferences": []
+    },
+    {
+      "id": "concern-environmental-harm-6.6-2",
+      "riskSubdomain": "environmental-harm-6.6",
+      "stages": [
+        "stage-3"
+      ],
+      "category": "societal-impact",
+      "reviewerText": "The protocol addresses the expected environmental footprint of inference at deployment scale and any plans to mitigate ongoing energy consumption",
+      "investigatorText": "Please address the expected environmental footprint of inference at deployment scale and any plans to mitigate ongoing energy consumption",
+      "canonical": "The expected environmental footprint of inference at deployment scale and any plans to mitigate ongoing energy consumption",
+      "cfrReferences": []
+    },
+    {
+      "id": "concern-misaligned-goals-7.1-0",
+      "riskSubdomain": "misaligned-goals-7.1",
+      "stages": [
+        "stage-1"
+      ],
+      "category": "system-safety",
+      "reviewerText": "The protocol describes how the objective function and training process are designed to align with intended human values and clinical goals",
+      "investigatorText": "Please describe how the objective function and training process are designed to align with intended human values and clinical goals",
+      "canonical": "How the objective function and training process are designed to align with intended human values and clinical goals",
+      "cfrReferences": []
+    },
+    {
+      "id": "concern-misaligned-goals-7.1-1",
+      "riskSubdomain": "misaligned-goals-7.1",
+      "stages": [
+        "stage-2"
+      ],
+      "category": "system-safety",
+      "reviewerText": "The protocol describes testing procedures to detect whether the model pursues objectives different from those intended, including in novel situations",
+      "investigatorText": "Please describe testing procedures to detect whether the model pursues objectives different from those intended, including in novel situations",
+      "canonical": "Testing procedures to detect whether the model pursues objectives different from those intended, including in novel situations",
+      "cfrReferences": []
+    },
+    {
+      "id": "concern-misaligned-goals-7.1-2",
+      "riskSubdomain": "misaligned-goals-7.1",
+      "stages": [
+        "stage-2",
+        "stage-3"
+      ],
+      "category": "system-safety",
+      "reviewerText": "The protocol includes monitoring to detect if the AI optimizes for metrics that conflict with patient welfare or games evaluation criteria during deployment",
+      "investigatorText": "Please include monitoring to detect if the AI optimizes for metrics that conflict with patient welfare or games evaluation criteria during deployment",
+      "canonical": "Monitoring to detect if the AI optimizes for metrics that conflict with patient welfare or games evaluation criteria during deployment",
+      "cfrReferences": []
+    },
+    {
+      "id": "concern-dangerous-capabilities-7.2-0",
+      "riskSubdomain": "dangerous-capabilities-7.2",
+      "stages": [
+        "stage-1"
+      ],
+      "category": "system-safety",
+      "reviewerText": "The protocol addresses whether the model may have acquired unintended harmful capabilities through its training data or process",
+      "investigatorText": "Please address whether the model may have acquired unintended harmful capabilities through its training data or process",
+      "canonical": "Whether the model may have acquired unintended harmful capabilities through its training data or process",
+      "cfrReferences": []
+    },
+    {
+      "id": "concern-dangerous-capabilities-7.2-1",
+      "riskSubdomain": "dangerous-capabilities-7.2",
+      "stages": [
+        "stage-2"
+      ],
+      "category": "system-safety",
+      "reviewerText": "The protocol describes red-teaming or specialized testing to identify latent dangerous capabilities not surfaced by standard testing",
+      "investigatorText": "Please describe red-teaming or specialized testing to identify latent dangerous capabilities not surfaced by standard testing",
+      "canonical": "Red-teaming or specialized testing to identify latent dangerous capabilities not surfaced by standard testing",
+      "cfrReferences": []
+    },
+    {
+      "id": "concern-dangerous-capabilities-7.2-2",
+      "riskSubdomain": "dangerous-capabilities-7.2",
+      "stages": [
+        "stage-2",
+        "stage-3"
+      ],
+      "category": "system-safety",
+      "reviewerText": "The protocol includes safeguards to prevent the model from being exploited to provide harmful information or assist malicious actors beyond the intended healthcare context",
+      "investigatorText": "Please include safeguards to prevent the model from being exploited to provide harmful information or assist malicious actors beyond the intended healthcare context",
+      "canonical": "Safeguards to prevent the model from being exploited to provide harmful information or assist malicious actors beyond",
+      "cfrReferences": []
+    },
+    {
+      "id": "concern-lack-robustness-7.3-0",
+      "riskSubdomain": "lack-robustness-7.3",
+      "stages": [
+        "stage-1"
+      ],
+      "category": "system-safety",
+      "reviewerText": "The protocol describes how the training data distribution represents real-world variability and addresses potential brittleness to distribution shift",
+      "investigatorText": "Please describe how the training data distribution represents real-world variability and addresses potential brittleness to distribution shift",
+      "canonical": "How the training data distribution represents real-world variability and addresses potential brittleness to distribution shift",
+      "cfrReferences": []
+    },
+    {
+      "id": "concern-lack-robustness-7.3-1",
+      "riskSubdomain": "lack-robustness-7.3",
+      "stages": [
+        "stage-2"
+      ],
+      "category": "system-safety",
+      "reviewerText": "The protocol describes testing that includes edge cases, out-of-distribution data, and stress conditions to reveal model failures",
+      "investigatorText": "Please describe testing that includes edge cases, out-of-distribution data, and stress conditions to reveal model failures",
+      "canonical": "Testing that includes edge cases, out-of-distribution data, and stress conditions to reveal model failures",
+      "cfrReferences": []
+    },
+    {
+      "id": "concern-lack-robustness-7.3-2",
+      "riskSubdomain": "lack-robustness-7.3",
+      "stages": [
+        "stage-2",
+        "stage-3"
+      ],
+      "category": "system-safety",
+      "reviewerText": "The protocol includes monitoring for unpredictable failures when the model encounters unusual patient presentations, data quality issues, or conditions differing from the training distribution",
+      "investigatorText": "Please include monitoring for unpredictable failures when the model encounters unusual patient presentations, data quality issues, or conditions differing from the training distribution",
+      "canonical": "Monitoring for unpredictable failures when the model encounters unusual patient presentations, data quality issues, or conditions differing from",
+      "cfrReferences": []
+    },
+    {
+      "id": "concern-lack-robustness-7.3-3",
+      "riskSubdomain": "lack-robustness-7.3",
+      "stages": [
+        "stage-3"
+      ],
+      "category": "system-safety",
+      "reviewerText": "The protocol describes fallback procedures when the AI system fails or produces unreliable outputs during clinical use",
+      "investigatorText": "Please describe fallback procedures when the AI system fails or produces unreliable outputs during clinical use",
+      "canonical": "Fallback procedures when the AI system fails or produces unreliable outputs during clinical use",
+      "cfrReferences": []
+    },
+    {
+      "id": "concern-lack-transparency-7.4-0",
+      "riskSubdomain": "lack-transparency-7.4",
+      "stages": [
+        "stage-2"
+      ],
+      "category": "system-safety",
+      "reviewerText": "The protocol describes how end-users (e.g., clinicians) will provide structured feedback on the AI's usefulness, clarity, and transparency when using/testing it",
+      "investigatorText": "Please describe how end-users (e.g., clinicians) will provide structured feedback on the AI's usefulness, clarity, and transparency when using/testing it",
+      "canonical": "How end-users (e.g., clinicians) will provide structured feedback on the AI's usefulness, clarity, and transparency when using/testing it",
+      "cfrReferences": [
+        "45 CFR 46.116(a)(4) \u2013 adequate explanation in consent",
+        "21 CFR 50.20"
+      ]
+    },
+    {
+      "id": "concern-lack-transparency-7.4-1",
+      "riskSubdomain": "lack-transparency-7.4",
+      "stages": [
+        "stage-2",
+        "stage-3"
+      ],
+      "category": "system-safety",
+      "reviewerText": "The protocol addresses how the tool's output will be made interpretable to end-users (clinicians, patients, participants, etc.), including how results will be explained",
+      "investigatorText": "Please address how the tool's output will be made interpretable to end-users (clinicians, patients, participants, etc.), including how results will be explained",
+      "canonical": "How the tool's output will be made interpretable to end-users (clinicians, patients, participants, etc.), including how results will be explained",
+      "cfrReferences": [
+        "45 CFR 46.116(a)(4) \u2013 adequate explanation in consent",
+        "21 CFR 50.20"
+      ]
+    },
+    {
+      "id": "concern-lack-transparency-7.4-2",
+      "riskSubdomain": "lack-transparency-7.4",
+      "stages": [
+        "stage-2",
+        "stage-3"
+      ],
+      "category": "system-safety",
+      "reviewerText": "The protocol describes how researchers will be informed about model behavior, outputs, and limitations",
+      "investigatorText": "Please describe how researchers will be informed about model behavior, outputs, and limitations",
+      "canonical": "How researchers will be informed about model behavior, outputs, and limitations",
+      "cfrReferences": [
+        "45 CFR 46.116(a)(4) \u2013 adequate explanation in consent",
+        "21 CFR 50.20"
+      ]
+    },
+    {
+      "id": "concern-lack-transparency-7.4-3",
+      "riskSubdomain": "lack-transparency-7.4",
+      "stages": [
+        "stage-2",
+        "stage-3"
+      ],
+      "category": "system-safety",
+      "reviewerText": "The protocol describes how clinicians will be trained to interpret AI outputs",
+      "investigatorText": "Please describe how clinicians will be trained to interpret AI outputs",
+      "canonical": "How clinicians will be trained to interpret AI outputs",
+      "cfrReferences": [
+        "45 CFR 46.116(a)(4) \u2013 adequate explanation in consent",
+        "21 CFR 50.20"
+      ]
+    },
+    {
+      "id": "concern-lack-transparency-7.4-4",
+      "riskSubdomain": "lack-transparency-7.4",
+      "stages": [
+        "stage-3"
+      ],
+      "category": "system-safety",
+      "reviewerText": "The protocol describes how end-users (e.g., participants, students, clinicians) are trained to interpret AI recommendations and when to override them",
+      "investigatorText": "Please describe how end-users (e.g., participants, students, clinicians) are trained to interpret AI recommendations and when to override them",
+      "canonical": "How end-users (e.g., participants, students, clinicians) are trained to interpret AI recommendations and when to override them",
+      "cfrReferences": [
+        "45 CFR 46.116(a)(4) \u2013 adequate explanation in consent",
+        "21 CFR 50.20"
+      ]
+    },
+    {
+      "id": "concern-pending-coi-0",
+      "riskSubdomain": "pending-coi",
+      "stages": [
+        "stage-1",
+        "stage-2",
+        "stage-3"
+      ],
+      "category": "pending",
+      "reviewerText": "[PENDING: Awaiting content from TechInHSR.com] The protocol addresses conflicts of interest including commercialization, licensing fees, equity positions, and financial relationships with sponsors",
+      "investigatorText": "[PENDING: Awaiting content from TechInHSR.com] The protocol addresses conflicts of interest including commercialization, licensing fees, equity positions, and financial relationships with sponsors",
+      "canonical": "[PENDING: Awaiting content from TechInHSR.com] The protocol addresses conflicts of interest including commercialization, licensing fees, equity positions, and financial relationships with sponsors",
+      "cfrReferences": []
+    },
+    {
+      "id": "concern-pending-decommission-0",
+      "riskSubdomain": "pending-decommission",
+      "stages": [
+        "stage-3"
+      ],
+      "category": "pending",
+      "reviewerText": "[PENDING: Awaiting content from TechInHSR.com] The protocol describes what happens to the AI tool after the study ends, who controls continued access, and how unapproved use will be prevented",
+      "investigatorText": "[PENDING: Awaiting content from TechInHSR.com] The protocol describes what happens to the AI tool after the study ends, who controls continued access, and how unapproved use will be prevented",
+      "canonical": "[PENDING: Awaiting content from TechInHSR.com] The protocol describes what happens to the AI tool after the study ends, who controls continued access, and how unapproved use will be prevented",
+      "cfrReferences": []
+    },
+    {
+      "id": "concern-pending-risk-inversion-0",
+      "riskSubdomain": "pending-risk-inversion",
+      "stages": [
+        "stage-2",
+        "stage-3"
+      ],
+      "category": "pending",
+      "reviewerText": "[PENDING: Awaiting content from TechInHSR.com] The protocol addresses whether AI outputs may enter permanent clinical or academic records, and whether participants could become permanent data subjects",
+      "investigatorText": "[PENDING: Awaiting content from TechInHSR.com] The protocol addresses whether AI outputs may enter permanent clinical or academic records, and whether participants could become permanent data subjects",
+      "canonical": "[PENDING: Awaiting content from TechInHSR.com] The protocol addresses whether AI outputs may enter permanent clinical or academic records, and whether participants could become permanent data subjects",
+      "cfrReferences": []
+    },
+    {
+      "id": "concern-pending-pccp-0",
+      "riskSubdomain": "pending-pccp",
+      "stages": [
+        "stage-1",
+        "stage-2",
+        "stage-3"
+      ],
+      "category": "pending",
+      "reviewerText": "[PENDING: Awaiting content from TechInHSR.com] The protocol documents Predetermined Change Control Plans and criteria required before advancing from one stage to the next",
+      "investigatorText": "[PENDING: Awaiting content from TechInHSR.com] The protocol documents Predetermined Change Control Plans and criteria required before advancing from one stage to the next",
+      "canonical": "[PENDING: Awaiting content from TechInHSR.com] The protocol documents Predetermined Change Control Plans and criteria required before advancing from one stage to the next",
+      "cfrReferences": []
+    },
+    {
+      "id": "concern-pending-ancillary-reviews-0",
+      "riskSubdomain": "pending-ancillary-reviews",
+      "stages": [
+        "stage-1",
+        "stage-2",
+        "stage-3"
+      ],
+      "category": "pending",
+      "reviewerText": "[PENDING: Awaiting content from TechInHSR.com] The protocol identifies likely ancillary reviews needed (Information Security, Privacy Office, Legal, Technology Licensing, etc.)",
+      "investigatorText": "[PENDING: Awaiting content from TechInHSR.com] The protocol identifies likely ancillary reviews needed (Information Security, Privacy Office, Legal, Technology Licensing, etc.)",
+      "canonical": "[PENDING: Awaiting content from TechInHSR.com] The protocol identifies likely ancillary reviews needed (Information Security, Privacy Office, Legal, Technology Licensing, etc.)",
+      "cfrReferences": []
+    },
+    {
+      "id": "concern-pending-international-0",
+      "riskSubdomain": "pending-international",
+      "stages": [
+        "stage-1",
+        "stage-2",
+        "stage-3"
+      ],
+      "category": "pending",
+      "reviewerText": "[PENDING: Awaiting content from TechInHSR.com] The protocol addresses GDPR, international data transfer, and non-U.S. regulatory requirements where applicable",
+      "investigatorText": "[PENDING: Awaiting content from TechInHSR.com] The protocol addresses GDPR, international data transfer, and non-U.S. regulatory requirements where applicable",
+      "canonical": "[PENDING: Awaiting content from TechInHSR.com] The protocol addresses GDPR, international data transfer, and non-U.S. regulatory requirements where applicable",
+      "cfrReferences": []
+    },
+    {
+      "id": "concern-pending-vulnerable-populations-0",
+      "riskSubdomain": "pending-vulnerable-populations",
+      "stages": [
+        "stage-1",
+        "stage-2",
+        "stage-3"
+      ],
+      "category": "pending",
+      "reviewerText": "[PENDING: Awaiting content from TechInHSR.com \u2014 framing decision needed] The protocol addresses protections for children, pregnant persons, prisoners, and individuals with impaired decision-making capacity under 45 CFR 46 Subparts B, C, and D",
+      "investigatorText": "[PENDING: Awaiting content from TechInHSR.com \u2014 framing decision needed] The protocol addresses protections for children, pregnant persons, prisoners, and individuals with impaired decision-making capacity under 45 CFR 46 Subparts B, C, and D",
+      "canonical": "[PENDING: Awaiting content from TechInHSR.com \u2014 framing decision needed] The protocol addresses protections for children, pregnant persons, prisoners, and individuals with impaired decision-making capacity under 45 CFR 46 Subparts B, C, and D",
+      "cfrReferences": []
+    }
+  ]
+}
