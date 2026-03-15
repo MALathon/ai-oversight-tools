@@ -265,7 +265,7 @@
       "shortName": "Inequity/Widening Disparities",
       "prompts": [
         {
-          "text": "The protocol addresses the risk that the AI may replace or reduce the role of teachers, clinicians, or staff, and describes how participant concerns about job loss will be mitigated",
+          "text": "The protocol addresses the risk of concern or actual replacement of job loss due to penalization from AI output or general loss of a job function due to AI replacement, and describes how these concerns will be mitigated",
           "stages": ["stage-2", "stage-3"]
         },
         {
@@ -423,6 +423,69 @@
         {
           "text": "The protocol describes how end-users (e.g., participants, students, clinicians) are trained to interpret AI recommendations and when to override them",
           "stages": ["stage-3"]
+        }
+      ]
+    },
+    "pending-coi": {
+      "shortName": "Conflicts of Interest",
+      "prompts": [
+        {
+          "text": "[PENDING: Awaiting content from TechInHSR.com] The protocol addresses conflicts of interest including commercialization, licensing fees, equity positions, and financial relationships with sponsors",
+          "stages": ["stage-1", "stage-2", "stage-3"]
+        }
+      ]
+    },
+    "pending-decommission": {
+      "shortName": "Decommission Plan",
+      "prompts": [
+        {
+          "text": "[PENDING: Awaiting content from TechInHSR.com] The protocol describes what happens to the AI tool after the study ends, who controls continued access, and how unapproved use will be prevented",
+          "stages": ["stage-3"]
+        }
+      ]
+    },
+    "pending-risk-inversion": {
+      "shortName": "AI Risk Inversion / Forever Research Subject",
+      "prompts": [
+        {
+          "text": "[PENDING: Awaiting content from TechInHSR.com] The protocol addresses whether AI outputs may enter permanent clinical or academic records, and whether participants could become permanent data subjects",
+          "stages": ["stage-2", "stage-3"]
+        }
+      ]
+    },
+    "pending-pccp": {
+      "shortName": "PCCP & Stage Advancement Criteria",
+      "prompts": [
+        {
+          "text": "[PENDING: Awaiting content from TechInHSR.com] The protocol documents Predetermined Change Control Plans and criteria required before advancing from one stage to the next",
+          "stages": ["stage-1", "stage-2", "stage-3"]
+        }
+      ]
+    },
+    "pending-ancillary-reviews": {
+      "shortName": "Ancillary Review Requirements",
+      "prompts": [
+        {
+          "text": "[PENDING: Awaiting content from TechInHSR.com] The protocol identifies likely ancillary reviews needed (Information Security, Privacy Office, Legal, Technology Licensing, etc.)",
+          "stages": ["stage-1", "stage-2", "stage-3"]
+        }
+      ]
+    },
+    "pending-international": {
+      "shortName": "International Regulatory / GDPR",
+      "prompts": [
+        {
+          "text": "[PENDING: Awaiting content from TechInHSR.com] The protocol addresses GDPR, international data transfer, and non-U.S. regulatory requirements where applicable",
+          "stages": ["stage-1", "stage-2", "stage-3"]
+        }
+      ]
+    },
+    "pending-vulnerable-populations": {
+      "shortName": "Vulnerable Populations (Subparts B, C, D)",
+      "prompts": [
+        {
+          "text": "[PENDING: Awaiting content from TechInHSR.com — framing decision needed] The protocol addresses protections for children, pregnant persons, prisoners, and individuals with impaired decision-making capacity under 45 CFR 46 Subparts B, C, and D",
+          "stages": ["stage-1", "stage-2", "stage-3"]
         }
       ]
     }
