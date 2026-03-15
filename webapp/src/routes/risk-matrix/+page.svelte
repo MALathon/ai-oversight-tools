@@ -20,8 +20,17 @@
 		cfrReferences: string[];
 	}
 
+	interface ReviewConcern {
+		id: string;
+		riskSubdomain: string;
+		stages: string[];
+		category: string;
+		canonical: string;
+	}
+
 	let cells: Cell[] = [];
 	let riskSubdomains: RiskSubdomain[] = [];
+	let concerns: ReviewConcern[] = [];
 	let selectedCell: Cell | null = $state(null);
 	let loading = $state(true);
 
@@ -46,15 +55,20 @@
 
 	onMount(async () => {
 		try {
-			const [schemaRes, subdomainsRes] = await Promise.all([
+			const [schemaRes, subdomainsRes, concernsRes] = await Promise.all([
 				fetch(`${base}/data/unified-schema.json`),
-				fetch(`${base}/data/risk-subdomains.json`)
+				fetch(`${base}/data/risk-subdomains.json`),
+				fetch(`${base}/data/review-concerns.json`)
 			]);
 			const schema = await schemaRes.json();
 			const subdomainsData = await subdomainsRes.json();
+			const concernsData = await concernsRes.json();
 
 			cells = schema.riskMatrix.cells;
 			riskSubdomains = subdomainsData.riskSubdomains;
+			concerns = (concernsData.concerns as ReviewConcern[]).filter(
+				(c) => !c.canonical.startsWith('[PENDING]')
+			);
 		} catch (e) {
 			console.error('Failed to load data:', e);
 		} finally {
@@ -79,6 +93,17 @@
 		};
 		const subdomainIds = riskLevelMap[cell.riskLevel] || [];
 		return riskSubdomains.filter(s => subdomainIds.includes(s.id));
+	}
+
+	function getCellConcerns(cell: Cell): ReviewConcern[] {
+		const subdomainIds = getRelevantSubdomains(cell).map(s => s.id);
+		return concerns.filter(
+			(c) => c.stages.includes(cell.stage) && subdomainIds.includes(c.riskSubdomain)
+		);
+	}
+
+	function getCellConcernCount(cell: Cell): number {
+		return getCellConcerns(cell).length;
 	}
 </script>
 
@@ -116,6 +141,9 @@
 						>
 							<span class="risk-level" style="color: {cell.color}">{cell.riskLevel.toUpperCase()}</span>
 							<span class="oversight">{cell.oversightLevel}</span>
+							{#if getCellConcernCount(cell) > 0}
+								<span class="concern-count">{getCellConcernCount(cell)} review items</span>
+							{/if}
 						</button>
 					{/if}
 				{/each}
@@ -161,6 +189,15 @@
 					</div>
 				{/each}
 			</div>
+
+			{#if getCellConcerns(selectedCell).length > 0}
+				<h3>Review Concerns ({getCellConcerns(selectedCell).length})</h3>
+				<ul class="concerns-list">
+					{#each getCellConcerns(selectedCell) as concern}
+						<li>{concern.canonical}</li>
+					{/each}
+				</ul>
+			{/if}
 
 			<div class="action-hint">
 				<a href="{base}/reviewer">→ View full reviewer checklist for these risks</a>
@@ -446,6 +483,31 @@
 		width: 12px;
 		height: 12px;
 		border-radius: 50%;
+	}
+
+	.concern-count {
+		font-size: 0.6875rem;
+		color: #60a5fa;
+		font-weight: 500;
+	}
+
+	.concerns-list {
+		list-style: none;
+		padding: 0;
+		margin: 0 0 1.5rem 0;
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+
+	.concerns-list li {
+		background: #0f172a;
+		border: 1px solid #334155;
+		border-radius: 0.375rem;
+		padding: 0.5rem 0.75rem;
+		color: #cbd5e1;
+		font-size: 0.8125rem;
+		line-height: 1.4;
 	}
 
 	/* Focus states for accessibility */
