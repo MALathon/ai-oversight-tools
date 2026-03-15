@@ -1079,6 +1079,18 @@
 										{@const otherStrategies = risk.linkedStrategies.filter((s: any) => getAppropriateness(s) !== 'essential')}
 										<div class="risk-content">
 											{#if risk.riskContext}<p class="risk-description">{risk.riskContext}</p>{/if}
+											{#each [data.concerns.filter((c: any) => c.riskSubdomain === risk.subdomain.id && c.stages.includes(selectedStage) && !c.investigatorText.startsWith('[PENDING]'))] as linkedConcerns}
+												{#if linkedConcerns.length > 0}
+													<div class="concern-section">
+														<h4 class="concern-heading">What to Address</h4>
+														<ul class="concern-list">
+															{#each linkedConcerns as concern}
+																<li class="concern-item">{concern.investigatorText}</li>
+															{/each}
+														</ul>
+													</div>
+												{/if}
+											{/each}
 											{#snippet strategyRow(strategy: any, risk: any)}
 												{@const strategyControls = getControlsForStrategy(strategy.id)}
 												{#if strategyControls.length > 0}
@@ -1515,6 +1527,34 @@
 		color: #94a3b8;
 		line-height: 1.5;
 		margin: 0.5rem 0;
+	}
+
+	/* Review Concerns */
+	.concern-section {
+		margin: 0.5rem 0 0.75rem;
+		padding: 0.625rem 0.75rem;
+		background: rgba(96, 165, 250, 0.08);
+		border-left: 3px solid #60a5fa;
+		border-radius: 0 6px 6px 0;
+	}
+	.concern-heading {
+		font-size: 0.75rem;
+		font-weight: 600;
+		color: #60a5fa;
+		margin: 0 0 0.375rem;
+		text-transform: uppercase;
+		letter-spacing: 0.03em;
+	}
+	.concern-list {
+		margin: 0;
+		padding-left: 1.25rem;
+		list-style: disc;
+	}
+	.concern-item {
+		font-size: 0.8125rem;
+		color: #cbd5e1;
+		line-height: 1.5;
+		margin-bottom: 0.25rem;
 	}
 
 	/* Strategy Groups */

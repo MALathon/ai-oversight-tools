@@ -2,14 +2,15 @@ import { base } from '$app/paths';
 import type { PageLoad } from './$types';
 
 export const load: PageLoad = async ({ fetch }) => {
-	const [questionsRes, subdomainsRes, domainsRes, unifiedRes, traceabilityRes, mitigationsRes, controlsRes] = await Promise.all([
+	const [questionsRes, subdomainsRes, domainsRes, unifiedRes, traceabilityRes, mitigationsRes, controlsRes, concernsRes] = await Promise.all([
 		fetch(`${base}/data/assessment-questions.json`),
 		fetch(`${base}/data/risk-subdomains.json`),
 		fetch(`${base}/data/risk-domains.json`),
 		fetch(`${base}/data/unified-schema.json`),
 		fetch(`${base}/data/traceability.json`),
 		fetch(`${base}/data/mitigation-strategies.json`),
-		fetch(`${base}/data/technical-controls.json`)
+		fetch(`${base}/data/technical-controls.json`),
+		fetch(`${base}/data/review-concerns.json`)
 	]);
 
 	const questions = await questionsRes.json();
@@ -19,6 +20,7 @@ export const load: PageLoad = async ({ fetch }) => {
 	const traceability = await traceabilityRes.json();
 	const mitigations = await mitigationsRes.json();
 	const controls = await controlsRes.json();
+	const concerns = await concernsRes.json();
 
 	// Build stageMitigations from subdomains (stageGuidance is now on each subdomain)
 	const stageMitigations: Record<string, Record<string, string>> = {};
@@ -49,6 +51,7 @@ export const load: PageLoad = async ({ fetch }) => {
 		strategies,
 		mitigationCategories: mitigations.mitigationCategories,
 		defenseLayerDescriptions: mitigations.defenseLayerDescriptions,
-		controls: controls.controls
+		controls: controls.controls,
+		concerns: concerns.concerns
 	};
 };
