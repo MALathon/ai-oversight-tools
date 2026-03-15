@@ -10,7 +10,7 @@
 	<h1>AI Oversight Tools</h1>
 	<p class="subtitle">Decision support for AI research ethics review</p>
 	<p class="description">
-		Based on the 3-Stage IRB Review Framework and the AIHSR Risk Reference Tool by Tamiko Eto
+		Based on the 3-Stage IRB Review Framework (Eto, Lifson &amp; Vidal) and the AIHSR Risk Reference Tool (Eto)
 	</p>
 </div>
 
@@ -38,7 +38,7 @@
 			</svg>
 		</div>
 		<h2>Reviewer Checklist</h2>
-		<p>Structured prompts for systematic protocol review with CFR references</p>
+		<p>Structured review prompts with CFR references, downloadable as DOCX</p>
 		<span class="user-badge">For IRB Reviewers</span>
 	</a>
 
@@ -63,18 +63,18 @@
 	<div class="stages">
 		<div class="stage">
 			<div class="stage-number">1</div>
-			<h3>Discovery</h3>
-			<p>Algorithm development using retrospective data. No clinical impact.</p>
+			<h3>Discovery &amp; Ideation</h3>
+			<p>Teaching and training the system. Retrospective data, no real-world decisions.</p>
 		</div>
 		<div class="stage">
 			<div class="stage-number">2</div>
-			<h3>Validation</h3>
-			<p>Prospective testing in controlled settings. Limited clinical interaction.</p>
+			<h3>Analytic &amp; Performance Validation</h3>
+			<p>Evaluating system behavior. Outputs are tested and reviewed, not used in real situations.</p>
 		</div>
 		<div class="stage">
 			<div class="stage-number">3</div>
-			<h3>Clinical/Deployment</h3>
-			<p>Live deployment influencing clinical decisions. Ongoing monitoring required.</p>
+			<h3>Real-World Deployment</h3>
+			<p>AI outputs influence real decisions and outcomes. Highest level of oversight required.</p>
 		</div>
 	</div>
 </section>

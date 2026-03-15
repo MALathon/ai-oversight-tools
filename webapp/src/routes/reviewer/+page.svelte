@@ -68,9 +68,10 @@
 			modelTypes = modelsData.modelTypes;
 			riskSubdomains = subdomainsData.riskSubdomains;
 
-			// Group concerns by riskSubdomain
+			// Group concerns by riskSubdomain (exclude pending placeholders)
 			const grouped: Record<string, Concern[]> = {};
 			for (const concern of concernsData.concerns) {
+				if (concern.reviewerText.startsWith('[PENDING')) continue;
 				if (!grouped[concern.riskSubdomain]) {
 					grouped[concern.riskSubdomain] = [];
 				}
